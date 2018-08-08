@@ -41,8 +41,6 @@ def ABSORPTION(ps,freq,hr,Temp):
     return ABSORPTION
 
 
-#******************Unfinished*************
-
 def TIMERECONSTRUCT(sizefft,timearray,arraysize,temparray,timetemparray):
 
     import numpy as np
@@ -55,57 +53,28 @@ def TIMERECONSTRUCT(sizefft,timearray,arraysize,temparray,timetemparray):
 
     temparray = np.zeros((arraysize,sizefft/2,6))
     timetemparray= np.zeros((arraysize,sizefft,5))
+    # defining tempfft as a 1 dimensional array of size sizefft/2+1
+
+    tempfft = np.zeros((sizefft/2+1))
 
     # Author: Will
     # For loop iterating through three dimensional arrays
-    for D in range(1,arraysize):
-        for W in range(1,sizefft):
+#    for D in range(1,arraysize):
+#        for W in range(1,sizefft):
+    while D < arraysize:
+        while W < sizefft:
             timetemparray[D,W,1]=temparray[D,1,1]
             timetemparray[D,W,2]=temparray[D,1,2]
             timetemparray[D,W,3]=temparray[D,1,3]
             timetemparray[D,W,4]=timearray(W)
             timetemparray[D,W,5]=0.0
+            W +=1
+        D +=1
     print('timetemparray has been initialized')
 
     # Create the complex array to feed into the inverse fft function
 
-    #original fortran code
-
-        #C Create the complex array to feed into the inverse fft function
-        #      DO 37 D=1, arraysize
-        #         if (temparray(D,1,5).eq.0.0)then
-        #            DO 40 W=1,sizefft
-        #               timetemparray(D,W,5)=0.0
-        # 40         CONTINUE
-        #         else
-        #         DO 38 W=1,sizefft/2+1
-        #            if (W.eq.1) then
-        #               tempfft(W)=cmplx(0.0)
-        #            else
-        #            tempfft(W)=cmplx(abs(temparray(D,W-1,5))*exp(XJ*
-        #     *           temparray(D,W-1,6)))
-        #            endif
-        # 38      CONTINUE
-        #         print*, 'created temparray'
-
-    #Up to this point converted to Python
-    # Find equivalent fft functions in Numpy
-
-        #C use fftw to compute the inverse fft.
-        #         call dfftw_plan_dft_c2r_1d(invplan,sizefft,tempfft,
-        #     *        timesignal, FFTW_ESTIMATE)
-        #         call dfftw_execute(invplan, tempfft, timesignal)
-        #         call dfftw_destroy_plan(invplan)
-        #         print*, 'created time signature'
-        #         DO 39 W=1,sizefft         
-        #            timetemparray(D,W,5)=timesignal(W)
-        # 39      CONTINUE
-        #         endif
-        # 37   CONTINUE
-        #      return
-        #      end
-
-    # Author: Will, Create complex array and compue inverse fft first attempt Python
+    # Author: Will, Create complex array and compute inverse fft first attempt Python
 
     for D in range(1,arraysize):
         if temparray[D,1,5]== 0.0:
@@ -114,9 +83,9 @@ def TIMERECONSTRUCT(sizefft,timearray,arraysize,temparray,timetemparray):
         else:
             for W in range(1,(sizefft/2)+1):
                 if W == 1:
-                    tempfft(W)=complex(0.0)
+                    tempfft[W]=complex([0])
                 else:
-                    tempfft(W)=complex(abs(temparray[D,W-1,5])*m.exp(XJ*temparray[D,W-1,6]))
+                    tempfft[W]=complex(abs(temparray[D,W-1,5])*m.exp(XJ*temparray[D,W-1,6]))
         print('Created temparray')
 
     # use nummpy to compute inverse fft
@@ -131,14 +100,13 @@ def TIMERECONSTRUCT(sizefft,timearray,arraysize,temparray,timetemparray):
         print('Created time signature')       
         for W in range(1,sizefft):
             timetemparray[D,W,5]=timesignal(W)
-    return TIMERECONSTRUCT
-
+    return temparray,timetemparray
 
 
 
 def RECEIVERHITFUNC(sizefft,outputarray,arraysize,temparray):
     ##All print commands commented out were from original code but stayed for consistency
-    import math as 
+    import math as m
     
     import numpy as np
     ##This Function adds the pressures from a ray when it hits the receiver.
@@ -146,12 +114,6 @@ def RECEIVERHITFUNC(sizefft,outputarray,arraysize,temparray):
     ## Define all variables
    
     # original fortran variables
-
-    #      INTEGER sizefft,D,arraysize,W
-    #      real outputarray(sizefft/2,7)
-    #      real temparray(arraysize,sizefft/2,6)
-    #      double complex temp1, temp2,temp3
-    #      COMPLEX XJ
 
     # Define arrays with numpy zeros function
 
@@ -163,7 +125,8 @@ def RECEIVERHITFUNC(sizefft,outputarray,arraysize,temparray):
     # Add new pressures to existing pressures in temparray 
     # First Look for the correct location.
 
-    for D in range(1,arraysize):
+#    for D in range(1,arraysize):
+    while D < arraysize:
         print('outputarray2', outputarray[1,2])
         print('outputarray3', outputarray[1,3])
         print('outputarray4', outputarray[1,4])
@@ -178,7 +141,7 @@ def RECEIVERHITFUNC(sizefft,outputarray,arraysize,temparray):
             temp1=complex(abs(temparray[D,W,5])*m.exp(XJ*temparray[D,W,6]))
             if (W == 1):
                 print('temp1 fine')
-                temp2=cmplx(abs(outputarray[W,5])*m.exp(XJ*outputarray[W,6]))
+                temp2=complex(abs(outputarray[W,5])*m.exp(XJ*outputarray[W,6]))
             if (W == 1):
                 print('temp2 fine')
                 temp3=temp1+temp2
@@ -187,13 +150,15 @@ def RECEIVERHITFUNC(sizefft,outputarray,arraysize,temparray):
                 temparray[D,W,5]=abs(temp3)
             if (W == 1):
                 print('temparray 5 fine')
-                temparray[D,W,6]=ATAN2(np.imag(temp3),np.real(temp3))
+#                temparray[D,W,6]=ATAN2(np.imag(temp3),np.real(temp3))
+                temparray[D,W,6]=np.arctan2(np.imag(temp3),np.real(temp3))
     # imagpart and realpart in original code fortran functions
     # using numpy .real and .imag function to acheive same result (Probably)
 
             if (W == 1):
                 print('temparray 6 fine')
                 print(temparray[1,W,5])
+        D += 1
     # combine if statements?
     print('Got Through the end')
     return RECEIVERHITFUNC
@@ -239,16 +204,16 @@ def Grid(radius,A,B,C,D,xmin,ymin,zmin,xmax,ymax,zmax,receiverarray, arraysize,s
 
     # following line defines the array, unsure what ,s outside of parentheses does
     #real receiverarray(arraysize,3),s
-
-    np.zeros(arraysize,3)
+    
+    receiverarray=np.zeros(arraysize,3)
     s=step/radius
     if xmin == xmax:
         count = 1
         for i in range(1,int((zmax-zmin)/step)):
-            for j in range(1,innt((ymax-ymin)/(step))
-                receiverarray(count,1)=(D-B*ymin+(s*j+(1-s))*radius)-C*(zmin+(s*i+(1-s))*radius))/A
-                receiverarray(count,2)=ymin+(s*j+(1-s))*radius
-                receiverarray(count,3)=zmin+(s*i+(1-s))*radius
+            for j in range(1,innt((ymax-ymin)/(step))):
+                receiverarray[count,1]=(D-B*ymin+(s*j+(1-s))*radius)-C*(zmin+(s*i+(1-s))*radius)/A
+                receiverarray[count,2]=ymin+(s*j+(1-s))*radius
+                receiverarray[count,3]=zmin+(s*i+(1-s))*radius
                 count=count+1
         sizex=int((ymax-ymin)/(step))
         sizey=int((zmax-zmin)/step)
@@ -257,9 +222,9 @@ def Grid(radius,A,B,C,D,xmin,ymin,zmin,xmax,ymax,zmax,receiverarray, arraysize,s
         count = 1
         for i in range(1,int((xmax-xmin)/(step))):
             for j in range(1,int((zmax-zmin)/(step))):
-                receiverarray(count,1)=xmin+(s*i+(1-s))*radius
-                receiverarray(count,2)=(D-A*(xmin+(s*i+(1-s))*radius)-C*(zmin+(s*j+(1-s))*radius))/B
-                receiverarray*count,3)=zmin+(s*j+(1-s))*radius
+                receiverarray[count,1]=xmin+(s*i+(1-s))*radius
+                receiverarray[count,2]=(D-A*(xmin+(s*i+(1-s))*radius)-C*(zmin+(s*j+(1-s))*radius))/B
+                receiverarray[count,3]=zmin+(s*j+(1-s))*radius
                 count=count+1
         sizex=int((zmax-zmin)/step)
         sizey=int((xmax-xmin)/(step))
@@ -267,9 +232,9 @@ def Grid(radius,A,B,C,D,xmin,ymin,zmin,xmax,ymax,zmax,receiverarray, arraysize,s
     if zmin == zmax:
         count = 1
         for i in range(int((xmax-xmin)/(step))):
-            for j in range(int((ymax-ymin)/(step)):
-                receiverarray(count,1)=xmin+(s*i+(1-s))*radius
-                receiverarray*count,2)=ymin + (s*j+(1-s))*radius)-B*(ymin+(s*j+(1-s))*radius))/C
+            for j in range(int((ymax-ymin)/(step))):
+                receiverarray[count,1]=xmin+(s*i+(1-s))*radius
+                receiverarray[count,2]=ymin + (s*j+(1-s))*radius-B*(ymin+(s*j+(1-s))*radius)/C
                 count=count+1
         sizex=int((ymax-ymin)/(step))
         sizey=int((xmax-xmin)/step)
@@ -284,7 +249,7 @@ def InitialGrid(radius,A,B,C,D,theta,phi,xmin,ymin,zmin,xmax,ymax,zmax,receivera
         count=1      
 #        DO 1 i=1,int((zmax-zmin)/zspace),1
 #            Do 2 j=1,int((ymax-ymin)/(yspace)),1
-#does the final 1 mean that it counts in increments of one?
+#does the final 1 mean that it counts in increments of one? Will: Yes!
         for i in range(1,int((zmax-zmin)/zpace)):
             for j in range(1,int((ymax-ymin/yspace))):
                 receiverarray[count,1]=(D-B*(ymin+j*yspace)-C*(zmin+i*zspace))/A
@@ -333,7 +298,7 @@ def SPHERECHECK(Sc,Sr2,F,veci1):
     #Takes dot product of OC and OC (Dot square?)
     #F may be de[f]ined elsewhere, but [f]inding it is going to be a mess.
     t2hc=Sr2-L2OC+tca**2
-
+ 
     if L2OC == Sr2:
         dx = HUGE
     elif tca < 0.0:
@@ -368,8 +333,13 @@ def POLYGON(Vecip1,F,Q,size,Number,PointNumbers,PolyArray,BuildingPoints,normal,
     #An array defined as an array from a function of an array and a point.
     #I will recheck syntax, just getting through everything now
 
-    d=-np.dot(normal,BuildingPoints(int(PolyArray(Q,2)),1:3))
+    # This is what Kory originally had written, returning syntax error-Will
+    # d=-np.dot(normal,BuildingPoints(int(PolyArray[Q,2]),1:3))
     #^^^unsure how to translate this part
+
+    # Will's attempt (To avoid error):
+    d=-np.dot(normal,BuildingPoints(PolyArray[Q,2]))
+    # it ran, doesn't mean it's right. Will check back.
     Vd=np.dot(normal,F)
 
     if Vd >= 0.0:
@@ -425,3 +395,141 @@ def PLANE(Vecip1, B1, B2, planehit,nbox):
             Point3=(B2[1],B1[2],B2[3])
             CROSS((Point2-B2),(Point3-B2),nbox)
     return PLANE
+
+
+def BOX(B1,B2,Vecip1,F,dxnear, dxfar, hit,planehit):
+
+#    This function checks to see if the ray hits a box.  It determines which
+#    plane the ray hits
+
+    hit=5
+    HUGE=1000000.0
+    dxnear=-HUGE
+    dxfar=HUGE
+    tempF=F
+#    print(tempF)
+    if ((F(1) == 0.0) or (F(2) == 0.0) or (F(3) == 0.0)):
+        if (F(1) == 0.0):
+            if((vecip1(1) < B1(1)) or (vecip1(1) > B2(1))):
+                hit=0
+                dxnear=HUGE
+        if (F(2) == 0.0):
+            if((vecip1(2) < B1(2)) or (vecip1(2) > B2(2))):
+                hit=0
+                dxnear=HUGE
+        if (F(3) == 0.0):
+            print('Vecip1 inside',vecip1(3))
+            if((vecip1(3) < B1(3)) or (vecip1(3) > B2(3))):
+                print('does this happen?')
+                hit=0
+                dxnear=HUGE
+            
+    print('hit',hit)
+    if hit != 0.0 :
+
+        if F[1] == 0.0:
+            tempF[1]=1.0
+        if F[2] == 0.0:
+            tempF[2]=1.0
+        if F[3] == 0.0:
+            tempF[3]=1.0
+#        print(B1[1],B2[1], Vecip1[1], F[1])
+        if F[1] != 0.0 :
+            T1X= (B1(1)-Vecip1(1))/tempF(1)
+            T2X= (B2(1)-Vecip1(1))/tempF(1)
+#        print('T1X,T2x',T1X,T2X)
+#        print(T1X, T2X)
+            if T1X > T2X :
+                tmp =T1X
+                T1X =T2X
+                T2X =tmp
+            if T1X > dxnear:
+                dxnear = T1X
+            if T2X < dxfar:
+                dxfar = T2X
+            if dxnear > dxfar :
+                hit = 0
+                dxnear = HUGE
+        if F[2] != 0.0 :
+            T1Y=(B1(2)-Vecip1(2))/tempF(2)
+            T2Y=(B2(2)-Vecip1(2))/tempF(2)
+#            print('T1Z, T2Z',T1Y,T2Y)
+            if T1Y > T2Y:
+               tmp = T1Y
+               T1Y = T2Y
+               T2Y = tmp
+            if T1Y > dxnear : 
+                dxnear=T1Y
+            if T2Y < dxfar : 
+                dxfar=T2Y
+            if dxnear > dxfar :
+                hit=0
+                dxnear=huge
+               #goto 100
+            elif (dxfar < 0.0):
+                hit=0
+                dxnear=huge
+#            break
+#"break outside loop"
+#Look into it later -G
+
+                #goto 100
+        #print(B1(3), Vecip1(3), tempF(3))
+        #print(B2(3), Vecip1(3), tempF(3))
+        if F[3] != 0.0:
+            T1Z=(B1(3)-Vecip1(3))/tempF(3)
+            T2Z=(B2(3)-Vecip1(3))/tempF(3)
+            print('T1Z, T2Z',T1Z,T2Z)
+            if T1Z > T2Z:
+                tmp=T1Z
+                T1Z=T2Z
+                T2Z=tmp
+            if T1Z>dxnear:
+                dxnear=T1Z
+                if T2Z < dxfar:
+                    dxfar=T2Z
+                    if dxnear > dxfar:
+                        hit=0
+                        dxnear=HUGE
+#                        break
+                    elif dxfar < 0:
+                        hit=0
+                        dxnear=HUGE
+#                        break
+                    elif dxnear < 0:
+                        hit=0
+                        dxnear=HUGE
+#                        break
+#                break
+#            break
+        if hit != 0:
+            if dxnear < dxfar:
+                hit =1
+                if dxnear == T1X:
+                    planehit = 1
+                if dxnear == T1Y:
+                    planehit = 2
+                if dxnear == T1Z:
+                    planehit = 3
+    return hit, planehit
+
+# William Costa: Function 'BOX 2' in Functions.f appears to be another version of 'BOX'
+# 'BOX2' does not appear to be called in any instance in RayTrace.f
+# Will pass on porting for now, will port if needed
+
+def ROTATION(axis, angle, rotationmatrix):
+    axis = np.zeros(3)
+    rotationmatrix= np.zeros(3,3)
+    rotationmatrix[1,1]= axis[1]**2+(1-axis[1]**2)*m.cos(angle)
+    rotationmatrix[1,2]=axis[1]*axis[2]*(1-cos(angle))+axis[3]*m.sin(angle)
+    rotationmatrix[1,3]=axis[1]*axis[3]*(1-cos(angle))-axis[2]*m.sin(angle)                
+    rotationmatrix[2,1]=axis[1]*axis[2]*(1-cos(angle))-axis[3]*m.sin(angle)                 
+    rotationmatrix[2,2]=axis[2]**2+(1-axis[2]**2)*m.cos(angle)              
+    rotationmatrix[2,3]=axis[2]*axis[3]*(1-cos(angle))+axis[1]*m.sin(angle)
+    rotationmatrix[3,1]=axis[1]*axis[3]*(1-cos(angle))+axis[2]*m.sin(angle)
+    rotationmatrix[3,2]=axis[2]*axis[3]*(1-cos(angle))-axis[1]*m.sin(angle)
+    rotationmatrix[3,3]=axis[3]**2+(1-axis[3]**2)*m.cos(angle)
+    return rotationmatrix
+
+#We finished!?
+#ARE YOU NOT ENTERTAINED?! -G
