@@ -41,7 +41,7 @@ def ABSORPTION(ps,freq,hr,Temp):
     return ABSORPTION
 
 
-def TIMERECONSTRUCT(sizefft,timearray,arraysize,temparray,timetemparray):
+def TIMERECONSTRUCT(sizefft,timearray,arraysize,temparray):
 
     import numpy as np
     XJ=(0,1)
@@ -61,13 +61,15 @@ def TIMERECONSTRUCT(sizefft,timearray,arraysize,temparray,timetemparray):
     # For loop iterating through three dimensional arrays
 #    for D in range(1,arraysize):
 #        for W in range(1,sizefft):
+    D=0
     while D < arraysize:
+        W=0
         while W < sizefft:
-            timetemparray[D,W,1]=temparray[D,1,1]
-            timetemparray[D,W,2]=temparray[D,1,2]
-            timetemparray[D,W,3]=temparray[D,1,3]
-            timetemparray[D,W,4]=timearray(W)
-            timetemparray[D,W,5]=0.0
+            timetemparray[D,W,0]=temparray[D,0,0]
+            timetemparray[D,W,1]=temparray[D,0,1]
+            timetemparray[D,W,2]=temparray[D,0,2]
+            timetemparray[D,W,3]=timearray[W]
+            timetemparray[D,W,4]=0.0
             W +=1
         D +=1
     print('timetemparray has been initialized')
@@ -77,15 +79,15 @@ def TIMERECONSTRUCT(sizefft,timearray,arraysize,temparray,timetemparray):
     # Author: Will, Create complex array and compute inverse fft first attempt Python
 
     for D in range(1,arraysize):
-        if temparray[D,1,5]== 0.0:
+        if temparray[D,0,4]== 0.0:
             for W in range(1,sizefft):
-                timetemparray[D,W,5]= 0.0
+                timetemparray[D,W,4]= 0.0
         else:
             for W in range(1,(sizefft/2)+1):
                 if W == 1:
                     tempfft[W]=complex([0])
                 else:
-                    tempfft[W]=complex(abs(temparray[D,W-1,5])*m.exp(XJ*temparray[D,W-1,6]))
+                    tempfft[W]=complex(abs(temparray[D,W-1,4])*m.exp(XJ*temparray[D,W-1,5]))
         print('Created temparray')
 
     # use nummpy to compute inverse fft
@@ -96,15 +98,15 @@ def TIMERECONSTRUCT(sizefft,timearray,arraysize,temparray,timetemparray):
     #             call dfftw_plan_dft_c2r_1d(invplan,sizefft,tempfft,
     #     *        timesignal, FFTW_ESTIMATE)
 
-        timesignal=np.ifft(tempfft,sizefft)
+        timesignal=np.fft.ifft(tempfft,sizefft)
         print('Created time signature')       
         for W in range(1,sizefft):
-            timetemparray[D,W,5]=timesignal(W)
-    return temparray,timetemparray
+            timetemparray[D,W,4]=timesignal[W]
+    return timetemparray
 
 
 
-def RECEIVERHITFUNC(sizefft,outputarray,arraysize,temparray):
+def RECEIVERHITFUNC(sizefft,outputarray,arraysize):
     ##All print commands commented out were from original code but stayed for consistency
     import math as m
     
@@ -120,52 +122,52 @@ def RECEIVERHITFUNC(sizefft,outputarray,arraysize,temparray):
     outputarray=np.zeros(sizefft/2,7)
     temparray=np.zeros(arraysize,sizefft/2,6)
     XJ=(0,1)
-    print('everything seems to initiate')
+#    print('everything seems to initiate')
     
     # Add new pressures to existing pressures in temparray 
     # First Look for the correct location.
 
 #    for D in range(1,arraysize):
     while D < arraysize:
-        print('outputarray2', outputarray[1,2])
-        print('outputarray3', outputarray[1,3])
-        print('outputarray4', outputarray[1,4])
-        print('temparray1',temparray[D,1,1])
-        print('temparray2',temparray[D,1,2])
-        print('temparray3',temparray[D,1,3])
-        if (outputarray[1,2] == temparray[D,1,1] and outputarray[1,3] == temparray[D,1,2] and outputarray[1,4] == temparray[D,1,3]):
-            print('first If statement passed')
+ #       print('outputarray2', outputarray[1,2])
+ #       print('outputarray3', outputarray[1,3])
+ #       print('outputarray4', outputarray[1,4])
+ #       print('temparray1',temparray[D,1,1])
+ #       print('temparray2',temparray[D,1,2])
+ #       print('temparray3',temparray[D,1,3])
+ #       if (outputarray[1,2] == temparray[D,1,1] and outputarray[1,3] == temparray[D,1,2] and outputarray[1,4] == temparray[D,1,3]):
+ #           print('first If statement passed')
     # If the location is the same, loop through the frequency and add current values with new values.
 
         for W in range(1,sizefft/2):
             temp1=complex(abs(temparray[D,W,5])*m.exp(XJ*temparray[D,W,6]))
             if (W == 1):
-                print('temp1 fine')
+ #               print('temp1 fine')
                 temp2=complex(abs(outputarray[W,5])*m.exp(XJ*outputarray[W,6]))
             if (W == 1):
-                print('temp2 fine')
+  #              print('temp2 fine')
                 temp3=temp1+temp2
             if (W == 1):
-                print('temp3 fine')
+   #             print('temp3 fine')
                 temparray[D,W,5]=abs(temp3)
             if (W == 1):
-                print('temparray 5 fine')
+    #            print('temparray 5 fine')
 #                temparray[D,W,6]=ATAN2(np.imag(temp3),np.real(temp3))
                 temparray[D,W,6]=np.arctan2(np.imag(temp3),np.real(temp3))
     # imagpart and realpart in original code fortran functions
     # using numpy .real and .imag function to acheive same result (Probably)
 
-            if (W == 1):
-                print('temparray 6 fine')
-                print(temparray[1,W,5])
+    #        if (W == 1):
+    #            print('temparray 6 fine')
+    #            print(temparray[1,W,5])
         D += 1
     # combine if statements?
-    print('Got Through the end')
-    return RECEIVERHITFUNC
+ #   print('Got Through the end')
+    return temparray
 
-def Header(fileid):
+def Header(outputfile):
     #this function prints the header for the tecplot data
-    f=open(fileid,"w")
+    f=open(outputfile,"w")
 
     f.write('TITLE = "Pressure at earlevel"/n' )
     f.write('VARIABLES = "X[m]" "Y[m]" "Z[m]" "P[Pa]"/n' )
@@ -182,20 +184,17 @@ def Header(fileid):
     f.write('MFC=""/n' )
     f.write('CLIPPING=CLIPTOVIEWPORT/n' )
     f.write('T="Time = &(SOLUTIONTIME%4f)" /n'  )
-    f.close(fileid)
     Header=0
     return Header
 
 
-def TimeHeader(fileid,time,sizex,sizey,sizez,planename):
+def TimeHeader(f,time,sizex,sizey,sizez,planename):
     #This function prints the header between each time set
-    f=open(fileid,"w")
-    f.write('ZONE',' T="',planename,'"/n')
-    f.write('STRANDID=1, SOLUTIONTIME=','time, /n' )
-    f.write('I=',sizex,'J=',sizey,'K=',sizez,'ZONETYPE=Ordered/n')
+    f.write('ZONE T=" %s "/n'% (planename))
+    f.write('STRANDID=1, SOLUTIONTIME= %d /n'%time )
+    f.write('I= %d J= %d K=%d ZONETYPE=Ordered/n'% (sizex, sizey, sizez))
     f.write('DATAPACKING=POINT/n')
     f.write('DT=(SINGLE SINGLE SINGLE SINGLE )/n')
-    f.close(fileid)
     header=0
     return TimeHeader
 
@@ -241,20 +240,23 @@ def Grid(radius,A,B,C,D,xmin,ymin,zmin,xmax,ymax,zmax,receiverarray, arraysize,s
         sizez=1
     return Grid
     
-def InitialGrid(radius,A,B,C,D,theta,phi,xmin,ymin,zmin,xmax,ymax,zmax,receiverarray, arraysize,sizex,sizey,sizez):
+def InitialGrid(radius,A,B,C,D,theta,phi,xmin,ymin,zmin,xmax,ymax,zmax,arraysize):
     #This function creates an equally spaced grid of size step apart
-    yspace=radius*abs(cos(phi))
-    zspace=radius*abs(sin(theta))
+    import math as m
+    import numpy as np
+    receiverarray=np.zeros((arraysize,3))
+    yspace=radius*abs(m.cos(phi))
+    zspace=radius*abs(m.sin(theta))
     if xmin == xmax:
         count=1      
 #        DO 1 i=1,int((zmax-zmin)/zspace),1
 #            Do 2 j=1,int((ymax-ymin)/(yspace)),1
 #does the final 1 mean that it counts in increments of one? Will: Yes!
-        for i in range(1,int((zmax-zmin)/zpace)):
+        for i in range(1,int((zmax-zmin)/zspace)):
             for j in range(1,int((ymax-ymin/yspace))):
-                receiverarray[count,1]=(D-B*(ymin+j*yspace)-C*(zmin+i*zspace))/A
-                receiverarray[count,2]=ymin+j*yspace
-                receiverarray[count,3]=zmin+i*zspace
+                receiverarray[count,0]=(D-B*(ymin+j*yspace)-C*(zmin+i*zspace))/A
+                receiverarray[count,1]=ymin+j*yspace
+                receiverarray[count,2]=zmin+i*zspace
                 count=count+1
         sizex=int((ymax-ymin)/(yspace))
         sizey=int((zmax-zmin)/zspace)
@@ -263,9 +265,9 @@ def InitialGrid(radius,A,B,C,D,theta,phi,xmin,ymin,zmin,xmax,ymax,zmax,receivera
         count=1
         for i in range(1,int(xmax-xmin)/(xspace)):
             for j in range(1,int(zmax-zmin)/(zspace)):
-                receiverarray[count,1]=xmin+i*xspace
-                receiverarray[count,2]=(D-A*(xmin+i*xspace)-C*(zmin+j*zspace))/B
-                receiverarray[count,3]=zmin+j*zspace
+                receiverarray[count,0]=xmin+i*xspace
+                receiverarray[count,1]=(D-A*(xmin+i*xspace)-C*(zmin+j*zspace))/B
+                receiverarray[count,2]=zmin+j*zspace
                 count=count+1
         sizex=int((zmax-zmin)/zspace)
         sizey=int((xmax-xmin)/(xspace))
@@ -274,25 +276,26 @@ def InitialGrid(radius,A,B,C,D,theta,phi,xmin,ymin,zmin,xmax,ymax,zmax,receivera
         count = 1
         for i in range(1,int(xmax-xmin)/(xspace)):
             for j in range(1,int(ymax-ymin)/(yspace)):
-                receiverarray[count,1]=xmin+i*xspace  
-                receiverarray[count,2]=ymin+j*yspace
-                receiverarray[count,3]=(D-A*(xmin+i*xspace)-B*(ymin+j*yspace))/C
+                receiverarray[count,0]=xmin+i*xspace  
+                receiverarray[count,1]=ymin+j*yspace
+                receiverarray[count,2]=(D-A*(xmin+i*xspace)-B*(ymin+j*yspace))/C
                 count=count+1
         sizex=int((xmax-xmin)/(xspace))
         sizey=int((ymax-ymin)/yspace)
         sizez=1
-    return InitialGrid
+    return receiverarray, sizex, sizey, sizez
 
 
 
-def SPHERECHECK(Sc,Sr2,F,veci1):
+def SPHERECHECK(Sc,Sr2,F,veci):
     import numpy as np
     #This function performs a check whether a ray hits a sphere.  If
     #it does hit the function returns the distance to the sphere
     HUGE=1000000.0
+    OC=np.zeros(3)
+    OC[0]=Sc[0]-veci[0]
     OC[1]=Sc[1]-veci[1]
     OC[2]=Sc[2]-veci[2]
-    OC[3]=Sc[3]-veci[3]
     L2OC=np.dot(OC,OC)
     tca=np.dot(OC,F)
     #Takes dot product of OC and OC (Dot square?)
@@ -311,11 +314,12 @@ def SPHERECHECK(Sc,Sr2,F,veci1):
 
 def CROSS(A, B):
     #This function calculates a cross product of A and B and returns normal
-
-    normal[1]=A[2]*B[3]-A[3]*B[2]
-    normal[2]=A[3]*B[1]-A[1]*B[3]
-    normal[3]=A[1]*B[2]-A[2]*B[1]
-    length=(normal[1]**2.0+normal[2]**2+normal[3]**2)**(1/2)
+    import numpy as np
+    normal=np.zeros(3)
+    normal[0]=A[1]*B[2]-A[2]*B[1]
+    normal[1]=A[2]*B[0]-A[0]*B[2]
+    normal[2]=A[0]*B[1]-A[1]*B[0]
+    length=(normal[0]**2.0+normal[1]**2+normal[2]**2)**(1/2)
     if (length != 0.0):
         normal=normal/length
     return normal
@@ -362,42 +366,51 @@ def POLYGON(Vecip1,F,Q,size,Number,PointNumbers,PolyArray,BuildingPoints,normal,
 
 
 
-def PLANE(Vecip1, B1, B2, planehit,nbox):
+def PLANE(Vecip1, B1, B2, planehit):
 #George:It sure would be a mess if there was a typo anywhere in here
     #This function calculates the normal at the hitpoint of a box.
     if planehit == 1:
-        if Vecip1[1] == B1[1]:
-            Point2=(B1[1],B1[2],B2[3])  
-            Point3=(B1[1],B2[2],B1[3]) 
-            CROSS((Point2-B1),(Point3-B1),nbox)
-        elif Vecip1[1] == B2(1) :
-            Point1=(B2[1],B1[2],B1[3])
-            Point2=(B2[1],B1[2],B2[3])
-            Point3=(B2[1],B2[2],B1[3])
-            CROSS((Point3-Point1),(Point2-Point1),nbox)
+ #       print 'vecip1',Vecip1
+ #       print B1
+        if Vecip1[0] == B1[0]:
+            Point2=[B1[0],B1[1],B2[2]]  
+            Point3=[B1[0],B2[1],B1[2]] 
+            nbox=CROSS((Point2-B1),(Point3-B1))
+
+        elif (Vecip1[0] == B2[0]) :
+            Point1=(B2[0],B1[1],B1[2])
+            Point2=(B2[0],B1[1],B2[2])
+            Point3=(B2[0],B2[1],B1[2])
+            nbox=CROSS((Point3-Point1),(Point2-Point1))
     if planehit == 2:
-        if Vecip1[2] == B1[2]:
-            Point2=(B2[1], B1[2], B1[3])  
-            Point3=(B1[1], B1[2], B2[3]) 
-            CROSS((Point2-B1),(Point3-B1),nbox)
-        elif Vecip1[2] == B2[2]: 
-            Point1=(B1[1],B2[2],B1[1])
-            Point2=(B1[1],B2[2],B2[3])
-            Point3=(B2[1],B2[2],B1[3])
-            CROSS((Point2-Point1),(Point3-Point1),nbox)
+ #       print 'this happens 2'
+
+ #       print(Vecip1[1],B1[1])
+ #****************************************************************
+                    #This is not a good solution
+        if round(Vecip1[1]) == B1[1]:
+            Point2=(B2[0], B1[1], B1[2])  
+            Point3=(B1[0], B1[1], B2[2]) 
+            nbox=CROSS((Point2-B1),(Point3-B1))
+        elif Vecip1[1] == B2[1]: 
+            #is this really correct???
+            Point1=(B1[0],B2[1],B1[0])
+            Point2=(B1[0],B2[1],B2[2])
+            Point3=(B2[0],B2[1],B1[2])
+            nbox=CROSS((Point2-Point1),(Point3-Point1))
     if planehit == 3 :
          if Vecip1[3] == B1[3]:
-            Point2=(B2[1], B1[2], B1[3])  
-            Point3=(B1[1], B2[2], B1[3]) 
-            CROSS((Point3-B1),(Point2-B1),nbox)
-         elif Vecip1[3] == B2[3]:
-            Point2=(B1[1],B2[2],B2[3])
-            Point3=(B2[1],B1[2],B2[3])
-            CROSS((Point2-B2),(Point3-B2),nbox)
-    return PLANE
+            Point2=(B2[0], B1[1], B1[2])  
+            Point3=(B1[0], B2[1], B1[2]) 
+            nbox=CROSS((Point3-B1),(Point2-B1))
+         elif Vecip1[2] == B2[2]:
+            Point2=(B1[0],B2[1],B2[2])
+            Point3=(B2[0],B1[1],B2[2])
+            nbox=CROSS((Point2-B2),(Point3-B2))
+    return nbox
 
 
-def BOX(B1,B2,Vecip1,F,dxnear, dxfar, hit,planehit):
+def BOX(B1,B2,Vecip1,F):
 
 #    This function checks to see if the ray hits a box.  It determines which
 #    plane the ray hits
@@ -407,36 +420,35 @@ def BOX(B1,B2,Vecip1,F,dxnear, dxfar, hit,planehit):
     dxnear=-HUGE
     dxfar=HUGE
     tempF=F
+    planehit=0
 #    print(tempF)
-    if ((F(1) == 0.0) or (F(2) == 0.0) or (F(3) == 0.0)):
-        if (F(1) == 0.0):
-            if((vecip1(1) < B1(1)) or (vecip1(1) > B2(1))):
+    if ((F[0] == 0.0) or (F[1] == 0.0) or (F[2] == 0.0)):
+        if (F[0] == 0.0):
+            if((vecip1[0] < B1[0]) or (vecip1[0] > B2[0])):
                 hit=0
                 dxnear=HUGE
-        if (F(2) == 0.0):
-            if((vecip1(2) < B1(2)) or (vecip1(2) > B2(2))):
+        if (F[1] == 0.0):
+            if((vecip1[1] < B1[1]) or (vecip1[1] > B2[1])):
                 hit=0
                 dxnear=HUGE
-        if (F(3) == 0.0):
-            print('Vecip1 inside',vecip1(3))
-            if((vecip1(3) < B1(3)) or (vecip1(3) > B2(3))):
-                print('does this happen?')
+        if (F[2] == 0.0):
+            if((vecip1[2] < B1[2]) or (vecip1[2] > B2[2])):
                 hit=0
                 dxnear=HUGE
             
-    print('hit',hit)
+#    print('hit',hit)
     if hit != 0.0 :
 
+        if F[0] == 0.0:
+            tempF[0]=1.0
         if F[1] == 0.0:
             tempF[1]=1.0
         if F[2] == 0.0:
             tempF[2]=1.0
-        if F[3] == 0.0:
-            tempF[3]=1.0
 #        print(B1[1],B2[1], Vecip1[1], F[1])
-        if F[1] != 0.0 :
-            T1X= (B1(1)-Vecip1(1))/tempF(1)
-            T2X= (B2(1)-Vecip1(1))/tempF(1)
+        if (F[0] != 0.0):
+            T1X=(B1[0]-Vecip1[0])/tempF[0]
+            T2X=(B2[0]-Vecip1[0])/tempF[0]
 #        print('T1X,T2x',T1X,T2X)
 #        print(T1X, T2X)
             if T1X > T2X :
@@ -450,9 +462,9 @@ def BOX(B1,B2,Vecip1,F,dxnear, dxfar, hit,planehit):
             if dxnear > dxfar :
                 hit = 0
                 dxnear = HUGE
-        if F[2] != 0.0 :
-            T1Y=(B1(2)-Vecip1(2))/tempF(2)
-            T2Y=(B2(2)-Vecip1(2))/tempF(2)
+        if F[1] != 0.0 :
+            T1Y=(B1[1]-Vecip1[1])/tempF[1]
+            T2Y=(B2[1]-Vecip1[1])/tempF[1]
 #            print('T1Z, T2Z',T1Y,T2Y)
             if T1Y > T2Y:
                tmp = T1Y
@@ -464,11 +476,11 @@ def BOX(B1,B2,Vecip1,F,dxnear, dxfar, hit,planehit):
                 dxfar=T2Y
             if dxnear > dxfar :
                 hit=0
-                dxnear=huge
+                dxnear=HUGE
                #goto 100
             elif (dxfar < 0.0):
                 hit=0
-                dxnear=huge
+                dxnear=HUGE
 #            break
 #"break outside loop"
 #Look into it later -G
@@ -476,10 +488,10 @@ def BOX(B1,B2,Vecip1,F,dxnear, dxfar, hit,planehit):
                 #goto 100
         #print(B1(3), Vecip1(3), tempF(3))
         #print(B2(3), Vecip1(3), tempF(3))
-        if F[3] != 0.0:
-            T1Z=(B1(3)-Vecip1(3))/tempF(3)
-            T2Z=(B2(3)-Vecip1(3))/tempF(3)
-            print('T1Z, T2Z',T1Z,T2Z)
+        if F[2] != 0.0:
+            T1Z=(B1[2]-Vecip1[2])/tempF[2]
+            T2Z=(B2[2]-Vecip1[2])/tempF[2]
+#            print('T1Z, T2Z',T1Z,T2Z)
             if T1Z > T2Z:
                 tmp=T1Z
                 T1Z=T2Z
@@ -511,7 +523,7 @@ def BOX(B1,B2,Vecip1,F,dxnear, dxfar, hit,planehit):
                     planehit = 2
                 if dxnear == T1Z:
                     planehit = 3
-    return hit, planehit
+    return dxnear, dxfar,hit, planehit
 
 # William Costa: Function 'BOX 2' in Functions.f appears to be another version of 'BOX'
 # 'BOX2' does not appear to be called in any instance in RayTrace.f
