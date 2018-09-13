@@ -1,0 +1,75 @@
+For The Night is Dark and Full of Bugs
+
+Notes:
+Cross seems to be functioning strangely because it subtracts with tuples. I added 
+numpy to do that instead and it seems to be working. Will examine how it compares to Fortran after.
+
+Changed planehit. It was saying 3 was out of bounds for axis 0 with size 3
+
+The print statements (including what is commented out):
+
+look into nbox. 
+    Error reads: 
+    local variable 'nbox' referenced before assignment
+
+18000
+9000
+1.9866651512047289
+432
+created receiver array
+finished ray 0
+finished ray 1
+finished ray 2
+vecip1 [64.4322     10.61105074 -9.76915037]
+B1 is  [10. 10.  0.]
+points:  (64.4322, 10.0, 0.0) (64.4322, 10.0, 8.2423) (64.4322, 46.9316, 0.0)
+normal is  [1. 0. 0.]
+nbox work. It is [1. 0. 0.]
+vecip1 [64.4322     10.61105074  9.76915037]
+B1 is  [10. 10.  0.]
+points:  (64.4322, 10.0, 0.0) (64.4322, 10.0, 8.2423) (64.4322, 46.9316, 0.0)
+normal is  [1. 0. 0.]
+nbox work. It is [1. 0. 0.]
+vecip1 [64.4322     10.61105074  9.76915037]
+B1 is  [10. 10.  0.]
+points:  (64.4322, 10.0, 0.0) (64.4322, 10.0, 8.2423) (64.4322, 46.9316, 0.0)
+normal is  [1. 0. 0.]
+nbox work. It is [1. 0. 0.]
+vecip1 [64.4322     10.61105074  9.76915037]
+B1 is  [10. 10.  0.]
+points:  (64.4322, 10.0, 0.0) (64.4322, 10.0, 8.2423) (64.4322, 46.9316, 0.0)
+normal is  [1. 0. 0.]
+nbox work. It is [1. 0. 0.]
+vecip1 [64.4322     10.61105074  9.76915037]
+B1 is  [10. 10.  0.]
+points:  (64.4322, 10.0, 0.0) (64.4322, 10.0, 8.2423) (64.4322, 46.9316, 0.0)
+normal is  [1. 0. 0.]
+nbox work. It is [1. 0. 0.]
+vecip1 [64.4322     10.61105074  9.76915037]
+B1 is  [10. 10.  0.]
+points:  (64.4322, 10.0, 0.0) (64.4322, 10.0, 8.2423) (64.4322, 46.9316, 0.0)
+normal is  [1. 0. 0.]
+nbox work. It is [1. 0. 0.]
+vecip1 [64.4322     10.61105074  9.76915037]
+B1 is  [10. 10.  0.]
+points:  (64.4322, 10.0, 0.0) (64.4322, 10.0, 8.2423) (64.4322, 46.9316, 0.0)
+normal is  [1. 0. 0.]
+nbox work. It is [1. 0. 0.]
+vecip1 [64.4322     10.61105074  9.76915037]
+B1 is  [10. 10.  0.]
+points:  (64.4322, 10.0, 0.0) (64.4322, 10.0, 8.2423) (64.4322, 46.9316, 0.0)
+normal is  [1. 0. 0.]
+nbox work. It is [1. 0. 0.]
+vecip1 [64.4322     10.61105074  9.76915037]
+B1 is  [10. 10.  0.]
+points:  (64.4322, 10.0, 0.0) (64.4322, 10.0, 8.2423) (64.4322, 46.9316, 0.0)
+normal is  [1. 0. 0.]
+nbox work. It is [1. 0. 0.]
+vecip1 [64.4322     10.61105074  9.76915037]
+B1 is  [10. 10.  0.]
+points:  (64.4322, 10.0, 0.0) (64.4322, 10.0, 8.2423) (64.4322, 46.9316, 0.0)
+normal is  [1. 0. 0.]
+nbox work. It is [1. 0. 0.]
+vecip1 [10.         27.62734443  3.15037754]
+B1 is  [10. 10.  0.]
+normal is  [-1.  0.  0.]

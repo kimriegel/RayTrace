@@ -333,9 +333,10 @@ def CROSS(A, B):
     normal[0]=A[1]*B[2]-A[2]*B[1]
     normal[1]=A[2]*B[0]-A[0]*B[2]
     normal[2]=A[0]*B[1]-A[1]*B[0]
-    length=(normal[0]**2.0+normal[1]**2+normal[2]**2)**(1/2)
+    length=( normal[0]**2.0 + normal[1]**2 +normal[2]**2)**(1/2)
     if (length != 0.0):
         normal=normal/length
+    print('normal is ',normal)
     return normal
 
 def POLYGON(Vecip1,F,Q,size,Number,PointNumbers,PolyArray,BuildingPoints,normal,FaceNormalNo,FaceNormals,dxbuilding,behind):
@@ -383,44 +384,49 @@ def POLYGON(Vecip1,F,Q,size,Number,PointNumbers,PolyArray,BuildingPoints,normal,
 def PLANE(Vecip1, B1, B2, planehit):
 #George:It sure would be a mess if there was a typo anywhere in here
     #This function calculates the normal at the hitpoint of a box.
-    if planehit == 1:
- #       print 'vecip1',Vecip1
- #       print B1
+    import numpy as np
+    print('planehit is ', planehit)
+    if planehit == 0:
+        print('vecip1',Vecip1)
+        print('B1 is ',B1)
         if Vecip1[0] == B1[0]:
             Point2=[B1[0],B1[1],B2[2]]  
             Point3=[B1[0],B2[1],B1[2]] 
-            nbox=CROSS((Point2-B1),(Point3-B1))
+            nbox=CROSS(np.subtract(Point2,B1),np.subtract(Point3,B1))
 
         elif (Vecip1[0] == B2[0]) :
             Point1=(B2[0],B1[1],B1[2])
             Point2=(B2[0],B1[1],B2[2])
             Point3=(B2[0],B2[1],B1[2])
-            nbox=CROSS((Point3-Point1),(Point2-Point1))
-    if planehit == 2:
- #       print 'this happens 2'
+            print('points: ',Point1,Point2,Point3)
+            #nbox=CROSS((Point3-Point1),(Point2-Point1))
+            nbox=CROSS(np.subtract(Point3,Point1),np.subtract(Point2,Point1))
+            print('nbox works. It is', nbox)
+    if planehit == 1:
+        print('this happens 2')
 
- #       print(Vecip1[1],B1[1])
+        print(Vecip1[1],B1[1])
  #****************************************************************
                     #This is not a good solution
         if round(Vecip1[1]) == B1[1]:
             Point2=(B2[0], B1[1], B1[2])  
             Point3=(B1[0], B1[1], B2[2]) 
-            nbox=CROSS((Point2-B1),(Point3-B1))
+            nbox=CROSS(np.subtract(Point2,B1),np.subtract(Point3,B1))
         elif Vecip1[1] == B2[1]: 
             #is this really correct???
             Point1=(B1[0],B2[1],B1[0])
             Point2=(B1[0],B2[1],B2[2])
             Point3=(B2[0],B2[1],B1[2])
-            nbox=CROSS((Point2-Point1),(Point3-Point1))
-    if planehit == 3 :
-         if Vecip1[3] == B1[3]:
+            nbox=CROSS(np.subtract(Point2,Point1),np.subtract(Point3,Point1))
+    if planehit == 2:
+         if Vecip1[2] == B1[2]:
             Point2=(B2[0], B1[1], B1[2])  
             Point3=(B1[0], B2[1], B1[2]) 
-            nbox=CROSS((Point3-B1),(Point2-B1))
+            nbox=CROSS(np.subtract(Point3,B1),np.subtract(Point2,B1))
          elif Vecip1[2] == B2[2]:
             Point2=(B1[0],B2[1],B2[2])
             Point3=(B2[0],B1[1],B2[2])
-            nbox=CROSS((Point2-B2),(Point3-B2))
+            nbox=CROSS(np.subtract(Point2,B2),np.subtract(Point3,B2))
     return nbox
 
 
