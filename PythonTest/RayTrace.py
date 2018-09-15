@@ -46,11 +46,11 @@ inputarray=np.zeros((int(K/2),3))
 #take the fft of the input signal with fftw
 
 sizefft=K
-print(sizefft)
+#print('sizefft is ',sizefft)
 sizeffttwo=int(sizefft/2)
 outputsignal=np.fft.fft(inputsignal,sizefft)
 timearray=np.zeros(sizefft)
-print(sizeffttwo)
+#print('sizeffttwo is ',sizeffttwo)
 ampinitial=np.zeros(sizeffttwo)
 phaseinitial=np.zeros(sizeffttwo)
 
@@ -93,9 +93,9 @@ PLANEABC=[Finitial[0],Finitial[1],Finitial[2],tmp]
 #       Create initial boom array
 
 yspace=PF.boomspacing*abs(m.cos(PF.phi))
-# print(yspace)
+#print(yspace)
 zspace=PF.boomspacing*abs(m.sin(PF.theta))
-print(zspace)
+#print(zspace)
 if (PF.xmin == PF.xmax):
    RAYMAX=int((PF.ymax-PF.ymin)/yspace)*int((PF.zmax-PF.zmin)/zspace)
 elif(PF.ymin == PF.ymax):
@@ -107,7 +107,7 @@ boomarray = np.zeros((RAYMAX,3))
 #but has space 
 #czech it now -8/5/18
 #it twerks
-print(RAYMAX)
+print(RAYMAX , ' is the RAYMAX')
 boomarray,sizex,sizey,sizez=fun.InitialGrid(PF.boomspacing,PLANEABC[0],PLANEABC[1],PLANEABC[2],PLANEABC[3],PF.theta,PF.phi,PF.xmin,PF.ymin,PF.zmin,PF.xmax,PF.ymax,PF.zmax,RAYMAX)
 
 
@@ -386,7 +386,7 @@ while ray <= RAYMAX:
                         if(doublehit==1):
                               receiverhit=2
                         hitcount=hitcount+1
-#                        print('hit receiver',sum,tmpsum,receiverpoint)
+                        #print('hit receiver',sum,tmpsum,receiverpoint)
                         W=0
                         while (W < sizeffttwo):
                               m=airabsorb(W)
@@ -584,7 +584,7 @@ while ray <= RAYMAX:
                               phaseinitial[W]=phaseinitial[W]-twopi
                         W+=1
             I += 1
-      print('finished ray', ray)
+      print('finished ray', ray + 1)
       ray += 1
 #     Once all rays are complete.  Deallocate all arrays that are no longer needed
 #      boomarray=None
@@ -780,9 +780,9 @@ while ray <= RAYMAX:
 #Reconstruct the time signal
 timetemparray=fun.TIMERECONSTRUCT(sizefft, timearray, RPS.arraysize, temparray)
 #     Write out time signatures for each receiver. 
-#      OPFile=open(PF.OUTPUTFILE,"w")
+OPFile=open(PF.OUTPUTFILE,"w")
 true=fun.Header(PF.OUTPUTFILE)
-OPFile=open(PF.OUTPUTFILE,"a")
+#OPFile=open(PF.OUTPUTFILE,"a")
 if(RPS.planenum>=1):
       W=0
       while (W<sizefft):

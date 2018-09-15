@@ -8,9 +8,36 @@ Changed planehit. It was saying 3 was out of bounds for axis 0 with size 3
 
 The print statements (including what is commented out):
 
-look into nbox. 
-    Error reads: 
-    local variable 'nbox' referenced before assignment
+Was previously having troubles reading nbox.
+    Found it was an undefined list, set it to an empty list. Still had errors
+    Resolved by setting it to list with points [0,0,0] 
+****Technically it works in that it reads through, but is no doubt causing errors. Will return later
+
+
+
+
+*********************************
+Fun Bugs to look at 
+C:\Users\Kory George\Documents\RayTraceCode\PythonTest\RayTrace.py:497: RuntimeWarning: invalid value encountered in true_divide
+  nbuilding=nbox/np.sqrt(n2)
+Here is that nbox it keeps saying you're missing [0, 0, 0]
+C:\Users\Kory George\Documents\RayTraceCode\PythonTest\RayTrace.py:523: RuntimeWarning: overflow encountered in double_scalars
+  ampfinal=ampinitial[W]*(1.0-alpha)*(1.0-diffusion)*np.exp(-m*dx)
+C:\Users\Kory George\Documents\RayTraceCode\PythonTest\RayTrace.py:523: RuntimeWarning: overflow encountered in exp
+  ampfinal=ampinitial[W]*(1.0-alpha)*(1.0-diffusion)*np.exp(-m*dx)
+***********************************
+
+C:\Users\Kory George\Documents\RayTraceCode\PythonTest\RayTrace.py:497: RuntimeWarning: invalid value encountered in true_divide
+  nbuilding=nbox/np.sqrt(n2)
+C:\Users\Kory George\Documents\RayTraceCode\PythonTest\RayTrace.py:523: RuntimeWarning: overflow encountered in double_scalars
+  ampfinal=ampinitial[W]*(1.0-alpha)*(1.0-diffusion)*np.exp(-m*dx)
+C:\Users\Kory George\Documents\RayTraceCode\PythonTest\RayTrace.py:523: RuntimeWarning: overflow encountered in exp
+  ampfinal=ampinitial[W]*(1.0-alpha)*(1.0-diffusion)*np.exp(-m*dx)
+finished ray 4
+************************************
+
+
+
 
 18000
 9000
