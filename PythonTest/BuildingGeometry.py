@@ -1,6 +1,5 @@
 FaceNormalNo=5
 FaceNormals = [(-1,0,0),(0,1,0),(1,0,0),(0,-1,0),(0,0,1)]
-print(FaceNormals[2])
 #^Will's Code
 import numpy as np
 Boxnumber=1

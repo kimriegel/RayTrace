@@ -35,68 +35,154 @@ C:\Users\Kory George\Documents\RayTraceCode\PythonTest\RayTrace.py:523: RuntimeW
   ampfinal=ampinitial[W]*(1.0-alpha)*(1.0-diffusion)*np.exp(-m*dx)
 finished ray 4
 ************************************
+Traceback (most recent call last):
+  File "C:\Users\Kory George\AppData\Local\Programs\Python\Python37\lib\runpy.py", line 193, in _run_module_as_main
+    "__main__", mod_spec)
+  File "C:\Users\Kory George\AppData\Local\Programs\Python\Python37\lib\runpy.py", line 85, in _run_code
+    exec(code, run_globals)
+  File "C:\Users\Kory George\Documents\RayTraceCode\PythonTest\RayTrace.py", line 276, in <module>
+    Vinitial=[boomarray[ray,0],boomarray[ray,1],boomarray[ray,2]]
+IndexError: index 432 is out of bounds for axis 0 with size 432
+*********************************
+We defined something wrong, probably many things 
+    A lot of the Parameter file was different, resulted in 400 rays total
+
+Copied data wholesale from .f file and now yspace and zspace is consistent to 6 decimal places.
+
+boomarray is just long list of empty zeros
+
+Veci starts out with different rounding and by the time it is used in function the value reads as "nan", this may be what is causing everything to return 0s
 
 
 
 
-18000
-9000
-1.9866651512047289
-432
+
+PS C:\Users\Kory George\Documents\RayTraceCode\PythonTest> py -3 -m RayTrace
+12877  is the RAYMAX
 created receiver array
-finished ray 0
-finished ray 1
-finished ray 2
-vecip1 [64.4322     10.61105074 -9.76915037]
-B1 is  [10. 10.  0.]
-points:  (64.4322, 10.0, 0.0) (64.4322, 10.0, 8.2423) (64.4322, 46.9316, 0.0)
-normal is  [1. 0. 0.]
-nbox work. It is [1. 0. 0.]
-vecip1 [64.4322     10.61105074  9.76915037]
-B1 is  [10. 10.  0.]
-points:  (64.4322, 10.0, 0.0) (64.4322, 10.0, 8.2423) (64.4322, 46.9316, 0.0)
-normal is  [1. 0. 0.]
-nbox work. It is [1. 0. 0.]
-vecip1 [64.4322     10.61105074  9.76915037]
-B1 is  [10. 10.  0.]
-points:  (64.4322, 10.0, 0.0) (64.4322, 10.0, 8.2423) (64.4322, 46.9316, 0.0)
-normal is  [1. 0. 0.]
-nbox work. It is [1. 0. 0.]
-vecip1 [64.4322     10.61105074  9.76915037]
-B1 is  [10. 10.  0.]
-points:  (64.4322, 10.0, 0.0) (64.4322, 10.0, 8.2423) (64.4322, 46.9316, 0.0)
-normal is  [1. 0. 0.]
-nbox work. It is [1. 0. 0.]
-vecip1 [64.4322     10.61105074  9.76915037]
-B1 is  [10. 10.  0.]
-points:  (64.4322, 10.0, 0.0) (64.4322, 10.0, 8.2423) (64.4322, 46.9316, 0.0)
-normal is  [1. 0. 0.]
-nbox work. It is [1. 0. 0.]
-vecip1 [64.4322     10.61105074  9.76915037]
-B1 is  [10. 10.  0.]
-points:  (64.4322, 10.0, 0.0) (64.4322, 10.0, 8.2423) (64.4322, 46.9316, 0.0)
-normal is  [1. 0. 0.]
-nbox work. It is [1. 0. 0.]
-vecip1 [64.4322     10.61105074  9.76915037]
-B1 is  [10. 10.  0.]
-points:  (64.4322, 10.0, 0.0) (64.4322, 10.0, 8.2423) (64.4322, 46.9316, 0.0)
-normal is  [1. 0. 0.]
-nbox work. It is [1. 0. 0.]
-vecip1 [64.4322     10.61105074  9.76915037]
-B1 is  [10. 10.  0.]
-points:  (64.4322, 10.0, 0.0) (64.4322, 10.0, 8.2423) (64.4322, 46.9316, 0.0)
-normal is  [1. 0. 0.]
-nbox work. It is [1. 0. 0.]
-vecip1 [64.4322     10.61105074  9.76915037]
-B1 is  [10. 10.  0.]
-points:  (64.4322, 10.0, 0.0) (64.4322, 10.0, 8.2423) (64.4322, 46.9316, 0.0)
-normal is  [1. 0. 0.]
-nbox work. It is [1. 0. 0.]
-vecip1 [64.4322     10.61105074  9.76915037]
-B1 is  [10. 10.  0.]
-points:  (64.4322, 10.0, 0.0) (64.4322, 10.0, 8.2423) (64.4322, 46.9316, 0.0)
-normal is  [1. 0. 0.]
-nbox work. It is [1. 0. 0.]
-vecip1 [10.         27.62734443  3.15037754]
-B1 is  [10. 10.  0.]
-normal is  [-1.  0.  0.]
+debug for vecip1  [21.47620509716895, -24.0, 12.0] 50.937837718521166 [ 0.66136507  0.66748024 -0.34214965]
+Chunk of inputs coming  [55.16471145 10.         -5.42836341] [10. 10.  0.] [64.4322 46.9316  8.2423] 2
+nbox from Boxnumber  [0, 0, 0]
+debug for vecip1  [ 28.08985575 -17.32519763   8.57850349] 40.937837718521166 [ 0.66136507  0.66748024 -0.34214965]
+Chunk of inputs coming  [55.16471145 10.         -5.42836341] [10. 10.  0.] [64.4322 46.9316  8.2423] 2
+nbox from Boxnumber  [0, 0, 0]
+debug for vecip1  [ 34.7035064  -10.65039526   5.15700698] 30.937837718521166 [ 0.66136507  0.66748024 -0.34214965]
+Chunk of inputs coming  [55.16471145 10.         -5.42836341] [10. 10.  0.] [64.4322 46.9316  8.2423] 2
+nbox from Boxnumber  [0, 0, 0]
+debug for vecip1  [41.31715705 -3.97559289  1.73551047] 20.93783771852117 [ 0.66136507  0.66748024 -0.34214965]
+Chunk of inputs coming  [55.16471145 10.         -5.42836341] [10. 10.  0.] [64.4322 46.9316  8.2423] 2
+nbox from Boxnumber  [0, 0, 0]
+debug for vecip1  [44.67184699 -0.58988452  0.        ] 15.865465265019402 [0.66136507 0.66748024 0.34214965]
+Chunk of inputs coming  [55.16471145 10.          5.42836341] [10. 10.  0.] [64.4322 46.9316  8.2423] 2
+nbox from Boxnumber  [0, 0, 0]
+debug for vecip1  [51.28549764  6.08491785  3.42149651] 5.865465265019405 [0.66136507 0.66748024 0.34214965]
+Chunk of inputs coming  [55.16471145 10.          5.42836341] [10. 10.  0.] [64.4322 46.9316  8.2423] 2
+nbox from Boxnumber  [0, 0, 0]
+nbox for nbuilding:  [0, 0, 0]
+n2 0
+C:\Users\Kory George\Documents\RayTraceCode\PythonTest\RayTrace.py:505: RuntimeWarning: invalid value encountered in true_divide
+  nbuilding=nbox/np.sqrt(n2)
+debug for vecip1  [55.16471145 10.          5.42836341] -1000000.0 [nan nan nan]
+Chunk of inputs coming  [nan nan nan] [10. 10.  0.] [64.4322 46.9316  8.2423] 0
+nbox from Boxnumber  [0, 0, 0]
+nbox for nbuilding:  [0, 0, 0]
+n2 0
+C:\Users\Kory George\Documents\RayTraceCode\PythonTest\RayTrace.py:531: RuntimeWarning: overflow encountered in double_scalars
+  ampfinal=ampinitial[W]*(1.0-alpha)*(1.0-diffusion)*np.exp(-m*dx)
+C:\Users\Kory George\Documents\RayTraceCode\PythonTest\RayTrace.py:531: RuntimeWarning: overflow encountered in exp
+  ampfinal=ampinitial[W]*(1.0-alpha)*(1.0-diffusion)*np.exp(-m*dx)
+debug for vecip1  [nan nan nan] -1000000.0 [nan nan nan]
+Chunk of inputs coming  [nan nan nan] [10. 10.  0.] [64.4322 46.9316  8.2423] 0
+nbox from Boxnumber  [0, 0, 0]
+nbox for nbuilding:  [0, 0, 0]
+n2 0
+debug for vecip1  [nan nan nan] -1000000.0 [nan nan nan]
+Chunk of inputs coming  [nan nan nan] [10. 10.  0.] [64.4322 46.9316  8.2423] 0
+nbox from Boxnumber  [0, 0, 0]
+nbox for nbuilding:  [0, 0, 0]
+n2 0
+debug for vecip1  [nan nan nan] -1000000.0 [nan nan nan]
+Chunk of inputs coming  [nan nan nan] [10. 10.  0.] [64.4322 46.9316  8.2423] 0
+nbox from Boxnumber  [0, 0, 0]
+nbox for nbuilding:  [0, 0, 0]
+n2 0
+debug for vecip1  [nan nan nan] -1000000.0 [nan nan nan]
+Chunk of inputs coming  [nan nan nan] [10. 10.  0.] [64.4322 46.9316  8.2423] 0
+nbox from Boxnumber  [0, 0, 0]
+nbox for nbuilding:  [0, 0, 0]
+n2 0
+Traceback (most recent call last):
+  File "C:\Users\Kory George\AppData\Local\Programs\Python\Python37\lib\runpy.py", line 193, in _run_module_as_main
+    "__main__", mod_spec)
+  File "C:\Users\Kory George\AppData\Local\Programs\Python\Python37\lib\runpy.py", line 85, in _run_code
+    exec(code, run_globals)
+  File "C:\Users\Kory George\Documents\RayTraceCode\PythonTest\RayTrace.py", line 531, in <module>
+    ampfinal=ampinitial[W]*(1.0-alpha)*(1.0-diffusion)*np.exp(-m*dx)
+KeyboardInterrupt
+PS C:\Users\Kory George\Documents\RayTraceCode\PythonTest> py -3 -m RayTrace
+12877  is the RAYMAX
+created receiver array
+debug for vecip1  [21.47620509716895, -24.0, 12.0] 50.937837718521166 [ 0.66136507  0.66748024 -0.34214965]
+Chunk of inputs coming  [ 47.89211814  17.98047431 -21.53415922] [10. 10.  0.] [64.4322 46.9316  8.2423] 2
+nbox from Boxnumber  [0, 0, 0]
+debug for vecip1  [ 28.08985575 -17.32519763   8.57850349] 40.937837718521166 [ 0.66136507  0.66748024 -0.34214965]
+Chunk of inputs coming  [ 45.65250498  15.76097061 -16.94199887] [10. 10.  0.] [64.4322 46.9316  8.2423] 2
+nbox from Boxnumber  [0, 0, 0]
+debug for vecip1  [ 34.7035064  -10.65039526   5.15700698] 30.937837718521166 [ 0.66136507  0.66748024 -0.34214965]
+Chunk of inputs coming  [ 43.41289182  13.54146691 -12.34983852] [10. 10.  0.] [64.4322 46.9316  8.2423] 2
+nbox from Boxnumber  [0, 0, 0]
+debug for vecip1  [41.31715705 -3.97559289  1.73551047] 20.93783771852117 [ 0.66136507  0.66748024 -0.34214965]
+Chunk of inputs coming  [41.17327866 11.3219632  -7.75767817] [10. 10.  0.] [64.4322 46.9316  8.2423] 2
+nbox from Boxnumber  [0, 0, 0]
+debug for vecip1  [44.67184699 -0.58988452  0.        ] 15.865465265019402 [0.66136507 0.66748024 0.34214965]
+Chunk of inputs coming  [40.03726345 10.19614826  5.42836341] [10. 10.  0.] [64.4322 46.9316  8.2423] 2
+nbox from Boxnumber  [0, 0, 0]
+debug for vecip1  [51.28549764  6.08491785  3.42149651] 5.865465265019405 [0.66136507 0.66748024 0.34214965]
+Chunk of inputs coming  [37.7976503   7.97664456  3.17753073] [10. 10.  0.] [64.4322 46.9316  8.2423] 2
+nbox from Boxnumber  [0, 0, 0]
+nbox for nbuilding:  [0, 0, 0]
+n2 0
+C:\Users\Kory George\Documents\RayTraceCode\PythonTest\RayTrace.py:505: RuntimeWarning: invalid value encountered in true_divide
+  nbuilding=nbox/np.sqrt(n2)
+debug for vecip1  [55.16471145 10.          5.42836341] -1000000.0 [nan nan nan]
+Chunk of inputs coming  [nan nan nan] [10. 10.  0.] [64.4322 46.9316  8.2423] 0
+nbox from Boxnumber  [0, 0, 0]
+nbox for nbuilding:  [0, 0, 0]
+n2 0
+C:\Users\Kory George\Documents\RayTraceCode\PythonTest\RayTrace.py:531: RuntimeWarning: overflow encountered in double_scalars
+  ampfinal=ampinitial[W]*(1.0-alpha)*(1.0-diffusion)*np.exp(-m*dx)
+C:\Users\Kory George\Documents\RayTraceCode\PythonTest\RayTrace.py:531: RuntimeWarning: overflow encountered in exp
+  ampfinal=ampinitial[W]*(1.0-alpha)*(1.0-diffusion)*np.exp(-m*dx)
+debug for vecip1  [nan nan nan] -1000000.0 [nan nan nan]
+Chunk of inputs coming  [nan nan nan] [10. 10.  0.] [64.4322 46.9316  8.2423] 0
+nbox from Boxnumber  [0, 0, 0]
+nbox for nbuilding:  [0, 0, 0]
+n2 0
+debug for vecip1  [nan nan nan] -1000000.0 [nan nan nan]
+Chunk of inputs coming  [nan nan nan] [10. 10.  0.] [64.4322 46.9316  8.2423] 0
+nbox from Boxnumber  [0, 0, 0]
+nbox for nbuilding:  [0, 0, 0]
+n2 0
+debug for vecip1  [nan nan nan] -1000000.0 [nan nan nan]
+Chunk of inputs coming  [nan nan nan] [10. 10.  0.] [64.4322 46.9316  8.2423] 0
+nbox from Boxnumber  [0, 0, 0]
+nbox for nbuilding:  [0, 0, 0]
+n2 0
+debug for vecip1  [nan nan nan] -1000000.0 [nan nan nan]
+Chunk of inputs coming  [nan nan nan] [10. 10.  0.] [64.4322 46.9316  8.2423] 0
+nbox from Boxnumber  [0, 0, 0]
+nbox for nbuilding:  [0, 0, 0]
+n2 0
+debug for vecip1  [nan nan nan] -1000000.0 [nan nan nan]
+Chunk of inputs coming  [nan nan nan] [10. 10.  0.] [64.4322 46.9316  8.2423] 0
+nbox from Boxnumber  [0, 0, 0]
+nbox for nbuilding:  [0, 0, 0]
+n2 0
+Traceback (most recent call last):
+  File "C:\Users\Kory George\AppData\Local\Programs\Python\Python37\lib\runpy.py", line 193, in _run_module_as_main
+    "__main__", mod_spec)
+  File "C:\Users\Kory George\AppData\Local\Programs\Python\Python37\lib\runpy.py", line 85, in _run_code
+    exec(code, run_globals)
+  File "C:\Users\Kory George\Documents\RayTraceCode\PythonTest\RayTrace.py", line 531, in <module>
+    ampfinal=ampinitial[W]*(1.0-alpha)*(1.0-diffusion)*np.exp(-m*dx)
+KeyboardInterrupt

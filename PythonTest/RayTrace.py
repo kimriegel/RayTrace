@@ -93,20 +93,17 @@ PLANEABC=[Finitial[0],Finitial[1],Finitial[2],tmp]
 #       Create initial boom array
 
 yspace=PF.boomspacing*abs(m.cos(PF.phi))
-#print(yspace)
+#print('yspace: ',yspace)
 zspace=PF.boomspacing*abs(m.sin(PF.theta))
-#print(zspace)
+#print('zspace: ',zspace)
 if (PF.xmin == PF.xmax):
    RAYMAX=int((PF.ymax-PF.ymin)/yspace)*int((PF.zmax-PF.zmin)/zspace)
 elif(PF.ymin == PF.ymax):
    RAYMAX=int((PF.xmax-PF.xmin)/xspace)*int((PF.zmax-PF.zmin)/zspace)
 elif(PF.zmin == PF.zmax):
    RAYMAX=int((PF.ymax-PF.ymin)/yspace)*int((PF.xmax-PF.xmin)/xspace)
-boomarray = np.zeros((RAYMAX,3))
-#^ Looks like it will give same syntax bug as earlier, find np func that does similar to zeros
-#but has space 
-#czech it now -8/5/18
-#it twerks
+boomarray = np.zeros((RAYMAX,2))
+#print('boomarray: ', boomarray)
 print(RAYMAX , ' is the RAYMAX')
 boomarray,sizex,sizey,sizez=fun.InitialGrid(PF.boomspacing,PLANEABC[0],PLANEABC[1],PLANEABC[2],PLANEABC[3],PF.theta,PF.phi,PF.xmin,PF.ymin,PF.zmin,PF.xmax,PF.ymax,PF.zmax,RAYMAX)
 
@@ -280,6 +277,8 @@ while ray <= RAYMAX:
       F=Finitial
       # print('F1',F)
       veci=Vinitial
+      #print(Vinitial, ' is Vinitial')
+      #print('so veci is ', veci)
 # Making small steps along the ray path.  For each step we should return, 
 # location, phase and amplitude
       I=0
@@ -344,9 +343,12 @@ while ray <= RAYMAX:
                   dxnear, dxfar, hit, planehit=fun.BOX(BG.Boxarraynear[Q], BG.Boxarrayfar[Q],veci,F)
                   if (dxnear < dxbuilding):
                         dxbuilding=dxnear
-                        Vecip1=veci+dxbuilding*np.array(F)
+                        Vecip1=(veci+dxbuilding)*np.array(F)
+                        print('debug for vecip1 ',veci,dxbuilding,np.array(F))
                         whichbox=Q
+                        print('Chunk of inputs coming ',Vecip1, BG.Boxarraynear[whichbox],BG.Boxarrayfar[whichbox], planehit)
                         nbox=fun.PLANE(Vecip1, BG.Boxarraynear[whichbox],BG.Boxarrayfar[whichbox], planehit)
+                        print('nbox from Boxnumber ', nbox)
                   Q+=1
 #     Check intersection with Triangles
             if(BG.TriangleNumber > 0):
@@ -356,6 +358,7 @@ while ray <= RAYMAX:
                         if (dxnear < dxbuilding):
                               dxbuilding=dxnear
                               nbox=normal
+                              print('nbox from triangles',nbox)
                               whichbox=Q
                         Q+=1
 #    Check intersection with Squares
@@ -366,6 +369,7 @@ while ray <= RAYMAX:
                         if (dxnear < dxbuilding):
                               dxbuilding=dxnear
                               nbox=normal
+                              print('nbox from squares', nbox)
                               whichbox=Q
                         Q+=1
             buildinghit=0
@@ -456,6 +460,9 @@ while ray <= RAYMAX:
   #                      print 'nground', nground[0]
                         dot1=(F[0]*nground[0]+F[1]*nground[1]+F[2]*nground[2])
                         n2=(nground[0]*nground[0]+nground[1]*nground[1]+nground[2]*nground[2])
+                        #print('nground[0]', nground[0])
+                        #print('nground[1]', nground[1])
+                        #print('nground[2]', nground[2])                #Good
   #                      print (nground)
                         r=F-2.0*(dot1/n2)*nground
                         length=np.sqrt(r[0]*r[0]+r[1]*r[1]+r[2]*r[2])
@@ -494,6 +501,9 @@ while ray <= RAYMAX:
                         veci=Vecip1
    #                     print('hit building')
                         n2=(nbox[0]*nbox[0]+nbox[1]*nbox[1]+nbox[2]*nbox[2])
+                        print('nbox for nbuilding: ',nbox)
+                        print('n2', n2)
+                        #print('n2: ', n2)
                         nbuilding=nbox/np.sqrt(n2)
                         dot1=(F[0]*nbuilding[0]+F[1]*nbuilding[1]+F[2]*nbuilding[2])
                         r=F-2.0*(dot1/n2)*nbuilding

@@ -336,7 +336,7 @@ def CROSS(A, B):
     length=( normal[0]**2.0 + normal[1]**2 +normal[2]**2)**(1/2)
     if (length != 0.0):
         normal=normal/length
-    #print('normal is ',normal)
+    print('normal is ',normal)
     return normal
 
 def POLYGON(Vecip1,F,Q,size,Number,PointNumbers,PolyArray,BuildingPoints,normal,FaceNormalNo,FaceNormals,dxbuilding,behind):
@@ -386,7 +386,7 @@ def PLANE(Vecip1, B1, B2, planehit):
     #This function calculates the normal at the hitpoint of a box.
     import numpy as np
     #print('planehit is ', planehit)
-    global nbox
+    #global nbox
     nbox=[0,0,0]
     if planehit == 0:
         #print('vecip1',Vecip1)
