@@ -22,6 +22,9 @@ import math as m
 # port and import receiver file
 receiverhit=0
 groundhit=0
+#np.seterr(divide='ignore', invalid ='ignore')
+#only here because window gets clogged in errors. Remove when done
+
 # Initialize counters 
 PI=3.1415965358979323846
 XJ=(0.0,1.0)
@@ -275,7 +278,7 @@ while ray <= RAYMAX:
             print('h is less than 2r')
             break
       F=Finitial
-      # print('F1',F)
+      print('F1',F)
       veci=Vinitial
       #print(Vinitial, ' is Vinitial')
       #print('so veci is ', veci)
@@ -344,11 +347,11 @@ while ray <= RAYMAX:
                   if (dxnear < dxbuilding):
                         dxbuilding=dxnear
                         Vecip1=(veci+dxbuilding)*np.array(F)
-                        print('debug for vecip1 ',veci,dxbuilding,np.array(F))
+                        #print('debug for vecip1 ',veci,dxbuilding,np.array(F))
                         whichbox=Q
-                        print('Chunk of inputs coming ',Vecip1, BG.Boxarraynear[whichbox],BG.Boxarrayfar[whichbox], planehit)
+                        #print('Chunk of inputs coming ',Vecip1, BG.Boxarraynear[whichbox],BG.Boxarrayfar[whichbox], planehit)
                         nbox=fun.PLANE(Vecip1, BG.Boxarraynear[whichbox],BG.Boxarrayfar[whichbox], planehit)
-                        print('nbox from Boxnumber ', nbox)
+                        #print('nbox from Boxnumber ', nbox)
                   Q+=1
 #     Check intersection with Triangles
             if(BG.TriangleNumber > 0):
@@ -358,7 +361,7 @@ while ray <= RAYMAX:
                         if (dxnear < dxbuilding):
                               dxbuilding=dxnear
                               nbox=normal
-                              print('nbox from triangles',nbox)
+                              #print('nbox from triangles',nbox)
                               whichbox=Q
                         Q+=1
 #    Check intersection with Squares
@@ -369,7 +372,7 @@ while ray <= RAYMAX:
                         if (dxnear < dxbuilding):
                               dxbuilding=dxnear
                               nbox=normal
-                              print('nbox from squares', nbox)
+                              #print('nbox from squares', nbox)
                               whichbox=Q
                         Q+=1
             buildinghit=0
@@ -452,6 +455,7 @@ while ray <= RAYMAX:
 #     If the ray hits the ground then bounce off the ground and continue
                   if (abs(dx-dxground)< 10.0**(-13.0)):
                         Vecip1=veci+dxground*F
+                        print('F is ', F)
                         tmp=(GROUNDABC[0]*Vecip1[0]+GROUNDABC[1]*Vecip1[1]+GROUNDABC[2]*Vecip1[2]+GROUNDD)
                         if(tmp != GROUNDD): 
                               Vecip1[2]=0.0
@@ -464,9 +468,11 @@ while ray <= RAYMAX:
                         #print('nground[1]', nground[1])
                         #print('nground[2]', nground[2])                #Good
   #                      print (nground)
-                        r=F-2.0*(dot1/n2)*nground
+                        r=np.around(F-2.0*(dot1/n2)*nground,8)
                         length=np.sqrt(r[0]*r[0]+r[1]*r[1]+r[2]*r[2])
-                        F=[r[0],r[1],r[2]]
+                        F=np.around([r[0],r[1],r[2]],8)
+                        print('F is now ', F)
+                        print('r as follows: ', r[0],r[1],r[2])
                         groundhit=1
                         twopidx=twopi*dxground
 #     Loop through all the frequencies
@@ -499,10 +505,10 @@ while ray <= RAYMAX:
                   if (dx==dxbuilding):
                         Vecip1=veci+dx*np.array(F)
                         veci=Vecip1
-   #                     print('hit building')
+                        #print('hit building')
                         n2=(nbox[0]*nbox[0]+nbox[1]*nbox[1]+nbox[2]*nbox[2])
-                        print('nbox for nbuilding: ',nbox)
-                        print('n2', n2)
+                        #print('nbox for nbuilding: ',nbox)
+                        #print('n2', n2)
                         #print('n2: ', n2)
                         nbuilding=nbox/np.sqrt(n2)
                         dot1=(F[0]*nbuilding[0]+F[1]*nbuilding[1]+F[2]*nbuilding[2])

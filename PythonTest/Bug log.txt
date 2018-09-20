@@ -13,7 +13,16 @@ Was previously having troubles reading nbox.
     Resolved by setting it to list with points [0,0,0] 
 ****Technically it works in that it reads through, but is no doubt causing errors. Will return later
 
+We defined something wrong, probably many things 
+    Problem: A lot of the Parameter file was different, resulted in 400 rays total
+    Solution: Copied data wholesale from .f file and now yspace and zspace is consistent to 6 decimal places.
 
+boomarray is just long list of empty zeros
+
+Veci starts out with different rounding and by the time it is used in function the value reads as "nan", this may be what is causing everything to return 0s
+
+Successfully limited F and 'r' to 8 digits!
+  Still getting overflow issues, may have to do that for each individual variable :c 
 
 
 *********************************
@@ -44,17 +53,6 @@ Traceback (most recent call last):
     Vinitial=[boomarray[ray,0],boomarray[ray,1],boomarray[ray,2]]
 IndexError: index 432 is out of bounds for axis 0 with size 432
 *********************************
-We defined something wrong, probably many things 
-    A lot of the Parameter file was different, resulted in 400 rays total
-
-Copied data wholesale from .f file and now yspace and zspace is consistent to 6 decimal places.
-
-boomarray is just long list of empty zeros
-
-Veci starts out with different rounding and by the time it is used in function the value reads as "nan", this may be what is causing everything to return 0s
-
-
-
 
 
 PS C:\Users\Kory George\Documents\RayTraceCode\PythonTest> py -3 -m RayTrace
