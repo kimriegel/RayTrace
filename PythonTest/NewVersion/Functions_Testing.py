@@ -53,12 +53,13 @@ def ABSORPTION(ps,freq,hr,Temp):
 
     return ABSORPTION
 
-
-def TIMERECONSTRUCT(sizefft,timearray,arraysize,temparray):
+def TIMERECONSTRUCT(sizefft,arraysize,temparray):
+    #def TIMERECONSTRUCT(sizefft,timearray,arraysize,temparray):
     '''
     This Function computes the timesignal from a given fft.  It writes the
     time signal to an array
 
+    Timearray is now defined in here. Do not call it.
     Args:
 
     Returns:
@@ -72,6 +73,7 @@ def TIMERECONSTRUCT(sizefft,timearray,arraysize,temparray):
     #will create 3d arrays using numpy zeros function
 
 #    temparray = np.zeros((arraysize,sizefft//2,6))
+    timearray = np.arange(sizefft) * 1 /PF.Fs
     timetemparray= np.zeros((arraysize,sizefft,5))
     # defining tempfft as a 1 dimensional array of size sizefft/2+1
 
@@ -367,7 +369,8 @@ def SPHERECHECK(Sc,Sr2,F,veci):
 
     Returns:
     '''
-    OC2 = Sc[:,None]-veci    #My modified version. Does all rays at once for a step
+    #OC2 = Sc[:,None]-veci    #My modified version. Does all rays at once for a step
+    OC2 = Sc - veci
     HUGE=1000000.0
     #print(OC2)
     #OC=np.zeros(3)      #put a pin in this
