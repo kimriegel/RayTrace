@@ -109,18 +109,19 @@ def TIMERECONSTRUCT(sizefft,arraysize,temparray):
                 else:
                     tempfft[W]=complex(abs(temparray[D,W-1,4])*m.exp(XJ*temparray[D,W-1,5]))
         print('Created temparray')
-    # use nummpy to compute inverse fft
-    # use ifft numpy function with tempfft and sizefft as input
-    # use timesignal as output
-
-    # Original fftw function
-    #             call dfftw_plan_dft_c2r_1d(invplan,sizefft,tempfft,
-    #     *        timesignal, FFTW_ESTIMATE)
+        # use nummpy to compute inverse fft
+        # use ifft numpy function with tempfft and sizefft as input
+        # use timesignal as output
+    
+        # Original fftw function
+        #             call dfftw_plan_dft_c2r_1d(invplan,sizefft,tempfft,
+        #     *        timesignal, FFTW_ESTIMATE)
 
         timesignal=np.fft.ifft(tempfft,sizefft)
-        print('Created time signature')       
-        for W in range(0,sizefft) :
-            timetemparray[D,W,4]=timesignal[W]
+        print('Created time signature')
+        timetemparray[:,:,4] = timesignal[:]
+        #for W in range(0,sizefft) :
+            #timetemparray[D,W,4]=timesignal[W]
     #print('Absorption time: %.7f ' % (time.time()-t))  #Really low no worries
     return timetemparray
 
@@ -136,13 +137,8 @@ def receiverHITFUNC(sizefft,outputarray,arraysize,temparray):
 
     '''
     ##All print commands commented out were from original code but stayed for consistency
-    #import math as m
-    #import numpy as np
 
     # Define all variables
-
-    # Define arrays with numpy zeros function
-
     XJ=complex(0,1)
     print('everything seems to initiate')
     
@@ -151,27 +147,28 @@ def receiverHITFUNC(sizefft,outputarray,arraysize,temparray):
     #temparray[0,0,5] = 11998.0  #placeholder
     for D in range(0,arraysize):
         #print('output: ', outputarray[0,1:3],'\ntemp: ',temparray[D,0,0:2]) #bugfixes
-        if (outputarray[0,1] == temparray[D,0,0] and 
-            outputarray[0,2] == temparray[D,0,1] and 
-            outputarray[0,3] == temparray[D,0,2]):
-            print('first If statement passed')
-#        else:
-#            print('statement did not pass') #more bug fixes
+        #if (outputarray[0,1] == temparray[D,0,0] and outputarray[0,2] == temparray[D,0,1] and outputarray[0,3] == temparray[D,0,2]):
+        #    print('first If statement passed')
+
+        """ Bugs bugs bugs """
+        #else:
+            #print('statement did not pass') #more bug fixes
     # If the location is the same, loop through the frequency and add current values with new values.
         for W in range(0,(sizefft//2)):
             #print(temparray[D,W,5])
             #temp1=complex(np.multiply(abs(temparray[D,W,4]),m.e**(XJ*temparray[D,W,5])))
             temp1=abs(temparray[D,W,4])*m.e**(XJ*temparray[D,W,5])
+            # Fortran: temp1 = cmplx(abs(temparray(D,W,5))*exp(XJ*temparray(D,W,6)))
             #if D==0 and W ==0:
                 #print(temp1) 
                 #print('abs( ',temparray[D,W,4],')*m.e**( ',XJ,'*',temparray[D,W,5],')')
             #print(temp1)
-#            if (W == 0):
-# #               print('temp1 fine')
-           # temp2=complex(np.multiply(abs(outputarray[W,4]),m.e**(XJ*outputarray[W,5])))
+            #if (W == 0):
+                #print('temp1 fine')
+            #temp2=complex(np.multiply(abs(outputarray[W,4]),m.e**(XJ*outputarray[W,5])))
             temp2=abs(outputarray[W,4])*m.e**(XJ*outputarray[W,5])
-#            if (W == 0):
-  #              print('temp2 fine')
+            #if (W == 0):
+                #print('temp2 fine')
             temp3=temp1+temp2
    #             print('temp3 fine')
             temparray[D,W,4]=abs(temp3) #magnitude
