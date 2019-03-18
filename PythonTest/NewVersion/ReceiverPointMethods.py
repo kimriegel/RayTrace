@@ -58,18 +58,23 @@ class Receiver:
         Receiver.arraysize +=1
 
 
-    #def set_magnitude(self,magnitud):
-    #    """
-    #    Defines magnitude of receiver
-    #    """
-    #    self.magnitude = magnitud
+    def on_Hit(self,amplitude,phase):
+        """ 
+        My version of old receiver hit function. 
+        Modifies direction and magnitude of rays with respect to each receiver
+        """
+        XJ = complex(0,1)
+        #print('initiating hit function')
 
-    #def set_direction(self,direccion):
-    #    """
-    #    Defines direction
-    #    """
-    #    #Of receiver or vector?
-    #    self.direction = direccion
+        temp1 = abs(self.magnitude) * np.exp(XJ*self.direction)
+        temp2 = abs(amplitude[:])   * np.exp(XJ*phase[:])
+        temp3 = temp1 + temp2 
+
+        self.magnitude = np.sum( abs(temp3)                                 , axis=0)
+        self.direction = np.sum( np.arctan2(np.imag(temp3) , np.real(temp3)), axis=0)
+        #print('got through the end') 
+
+        # See bug log 3/13 for what happened with positions checks
 
     @classmethod
     def create_receiverarray(cls):
