@@ -155,8 +155,10 @@ boomarray,sizex,sizey,sizez=fun.InitialGrid(PF.boomspacing,PLANEABC[0],PLANEABC[
 
 alphanothing = np.zeros(sizeffttwo)
 
-import ReceiverPointSource as RPS 
-from ReceiverPointSource import receiverarray
+#import ReceiverPointSource as RPS 
+#from ReceiverPointSource import receiverarray
+import ReceiverPointMethods as RPS
+ears = RPS.Receiver.rlist           #easier to write
 receiverpoint = [0.,0.,0.]
 sum = 0
 
@@ -211,6 +213,9 @@ for D in range(0,RPS.arraysize):
       temparray[D,:,3]=inputarray[:,0]    #initial pressures
       temparray[D,:,4]=0.0                #magnitude
       temparray[D,:,5]=0.0                #direction
+for R in ears:
+      R.frecuencias_Ini = frecuencias[:,0]
+
 #print('temparray:(The good one?) \n',temparray)
 #       Define ground plane
 groundheight=0.000000000
