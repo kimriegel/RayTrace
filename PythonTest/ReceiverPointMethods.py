@@ -7,7 +7,6 @@
 
 import time 
 import numpy as np
-import Parameterfile_methods as PF
 
 #           Planning 
 # Create Class for Receiver 
