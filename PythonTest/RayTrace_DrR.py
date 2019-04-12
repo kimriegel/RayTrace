@@ -22,6 +22,98 @@ import math as m
 
 import time
 
+# What it does    
+"""
+      Initializes arrays 
+      Initializes receivers
+      Reads in geometry file (Boxes)
+      Has Rays interact with receivers    *New
+      Reconstructs data with respect to time * New 3/18
+      Print out results * New 3/18
+"""
+      
+# What it does not do
+"""
+      Have a way of reading in complex geometries 
+      Anything resembling radiosity
+"""
+
+def TIMERECONSTRUCT(sizefft,magnitude,direction):
+    #def TIMERECONSTRUCT(sizefft,timearray,arraysize,temparray):
+    '''
+    This Function computes the timesignal from a given fft.  It writes the
+    time signal to an array
+    Timearray is now defined in here. Do not call it.
+    Args:
+    Returns:
+    '''
+    #outputarray[:,0] = frecuencias  [:,0]
+    #outputarray[:,1] = receiverpoint[0]
+    #outputarray[:,2] = receiverpoint[1]
+    #outputarray[:,3] = receiverpoint[2]
+    #outputarray[:,4] = ampinitial   [:] / 2.0
+    #outputarray[:,5] = phaseinitial [:]
+    #temparray[D,:,3]=inputarray[W,0]    #initial pressures
+    #temparray[D,:,4]=0.0                #magnitude
+    #temparray[D,:,5]=0.0                #direction
+    #timetemparray[D,:,0]=temparray[D,0,0]
+    #timetemparray[D,:,1]=temparray[D,0,1]
+    #timetemparray[D,:,2]=temparray[D,0,2]
+    #        timetemparray[D,W,3]=timearray[W]   #Not actually used until outside function
+    #        timetemparray[D,W,4]=0.0    #timesignal
+    XJ=complex(0,1)
+    print('timeconstruct has been called')
+
+    print('timetemparray has been initialized')
+    # Create the complex array to feed into the inverse fft function
+    # Author: Will, Create complex array and compute inverse fft first attempt Python
+    #for D in range(0,arraysize) :
+
+    # timetemparray has been broken into timesignal, as it is the only thing calculated inside this function
+
+    #print('mag: ',magnitude.shape)
+    if magnitude[0] == 0.0:
+        # If first magnitude is zero then all timesignal is zero
+        timesignal = 0.0
+
+    else:
+        # If not then calculate the timesignal 
+        tempfft = abs(magnitude[:]) * np.exp(XJ*direction)
+        tempfft = np.append(0,tempfft)
+        print(tempfft.size)
+        print('Created temparray')
+        # use nummpy to compute inverse fft
+        # use ifft numpy function with tempfft and sizefft as input
+        # use timesignal as output
+        timesignal=np.fft.ifft(tempfft,sizefft)
+        print('Created time signature')
+        #for W in range(sizeffttwo) :
+            #if W == 0:
+                #tempfft[W]=complex([0])
+            #else:
+                #tempfft[W]=complex(abs(temparray[D,W-1,4])*m.exp(XJ*temparray[D,W-1,5]))
+                #tempfft = abs(magnitude[:]) * np.exp(XJ*direction)
+
+    #return timetemparray
+    return timesignal
+
+
+
+def initial_signal(signalLength,fftOutput):
+    """
+    Making the array for the initial signals.
+    Input sizefft and outputsignal
+    """
+    signalLength2 = int(signalLength//2)    # Making sizeffttwo in this function and setting it as an int again jsut to be sure
+    outputFrequency = np.zeros((signalLength2,3))    #Making output array    equivalent to inputarray in old code
+    throwarray = np.arange(1,signalLength2 + 1)     #Helps get rid of for-loops in old version
+
+    outputFrequency[:,0] = throwarray * PF.Fs / signalLength #Tried simplifying the math a bit from original
+    outputFrequency[:,1] = abs(fftOutput[:signalLength2]/signalLength) #Only go up to sizeffttwo 
+    outputFrequency[:,2] = np.arctan2( np.imag(fftOutput[:signalLength2]/signalLength) , np.real(fftOutput[:signalLength2]/signalLength)) 
+
+    return outputFrequency
+
 #Formerly RayTrace_KAR        cutting down on files -G
 # port and import receiver file
 receiverhit=0
@@ -91,11 +183,12 @@ t = time.time()
 Kbig=np.arange(0,sizefft,1)
 Knew=np.arange(1,sizeffttwo+1,1)
 
-inputarray[:,0]=Knew*PF.Fs/2*1/(sizeffttwo)
-inputarray[:,1]=abs(outputsignal[:sizeffttwo]/sizefft)
-inputarray[:,2]=np.arctan2(np.imag(outputsignal[:sizeffttwo]/sizefft),np.real(outputsignal[:sizeffttwo]/sizefft))
+#inputarray[:,0]=Knew*PF.Fs/2*1/(sizeffttwo)
+#inputarray[:,1]=abs(outputsignal[:sizeffttwo]/sizefft)
+#inputarray[:,2]=np.arctan2(np.imag(outputsignal[:sizeffttwo]/sizefft),np.real(outputsignal[:sizeffttwo]/sizefft))
 airabsorb=fun.ABSORPTION(PF.ps,inputarraynew[:,0],PF.hr,PF.Temp)
 print('Absoption time no loop: %.8f ' %(time.time()-t))
+frecuencias_Ini = initial_signal(sizefft,outputsignal)      # Equivalent to inputarray in original
 t=time.time()
 #for K in range(sizeffttwo):
 #    inputarray[K,0]=(K+1)*PF.Fs/2*1/(sizeffttwo)      #Frequenvies
@@ -105,12 +198,6 @@ t=time.time()
 #for K in range(sizefft):
 #    timearray[K]=(K)*1/PF.Fs
 #print('timearray: %.8f ' %(time.time()-t))
-#print(timearray)
-#for K in range(sizeffttwo):
-#    inputarray[K,0]=(K+1)*PF.Fs/2*1/(sizeffttwo)      #Frequenvies
-#    inputarray[K,1]=abs(outputsignal[K]/sizefft)
-#    inputarray[K,2]=np.arctan2(np.imag(outputsignal[K]/sizefft),np.real(outputsignal[K]/sizefft))
-#    airabsorb[K]=fun.ABSORPTION(PF.ps,inputarray[K,0],PF.hr,PF.Temp)
 timearray=(Kbig)*1/PF.Fs
 
 #close output signal and input #somehow
@@ -214,7 +301,7 @@ for D in range(0,RPS.arraysize):
       temparray[D,:,4]=0.0                #magnitude
       temparray[D,:,5]=0.0                #direction
 for R in ears:
-      R.frecuencias_Ini = frecuencias[:,0]
+      R.frecuencias = frecuencias_Ini[:,0]
 
 #print('temparray:(The good one?) \n',temparray)
 #       Define ground plane
@@ -334,18 +421,19 @@ count=0
 #ray=0
 print('began rays')
 #ray = 606
-for ray in range(589, 592):
+for ray in range(605,610):
       hitcount=0
       tmpsum=0.0
       doublehit=0
       ampinitial=inputarray[:,0]/normalization
       phaseinitial=inputarray[:,1]
-      Vinitial=np.array([boomarray[ray,0],boomarray[ray,1],boomarray[ray-1,2]])     #Where code diverges
+      #Vinitial=np.array([boomarray[ray,0],boomarray[ray,1],boomarray[ray-1,2]])     #Where code diverges
       if (PF.h < (2*PF.radius)): 
             print('h is less than 2r')
             break
       F=Finitial
-      veci=Vinitial
+      #veci=Vinitial
+      veci = boomarray[ray,:]
 # Making small steps along the ray path.  For each step we should return, 
 # location, phase and amplitude
 ######################################
@@ -602,26 +690,46 @@ for ray in range(589, 592):
                         groundhit=1
                         twopidx=twopi*dxground
 #     Loop through all the frequencies
-                        for W in range(0,sizeffttwo):
-                              m=airabsorb[W]
-                              lamb=PF.soundspeed/inputarray[W,0]
-                              phasefinal=phaseinitial[W]-(twopidx)/lamb
-                              ampfinal=ampinitial[W]*(1.0-alphaground[W])*(1.0-diffusionground)*np.exp(-m*dxground)
-                              phaseinitial[W]=phasefinal%twopi
-                              if (phaseinitial[W]>PI):
-                                    phaseinitial[W]=phaseinitial[W]-twopi
-                              if(PF.radiosity==1 and (diffusionground!=0.0)):
-                                    for Q in range (0,PatchNo):
-                                          if (formfactors[0,Q,1]==1):
-                                                if(veci[0]<=(patcharray[Q,W,0]+0.5*patcharray[Q,W,3]) and veci[0]>=(patcharray[Q,W,0]-0.5*patcharray[Q,W,3])):
-                                                      if(veci[1]<=(patcharray[Q,W,1]+0.5*patcharray[Q,W,4]) and veci[1]>=(patcharray[Q,W,1]-0.5*patcharray[Q,W,4])):
-                                                            if(veci[2]<=(patcharray[Q,W,2]+0.5*patcharray[Q,W,5]) and veci[2]>=(patcharray[Q,W,2]-0.5*patcharray[Q,W,5])):
-                                                                  temp2=complex(abs(patcharray[Q,W,6])*np.exp(XJ*patcharray[Q,W,7]))
-                                                                  temp3=complex(abs(ampinitial[W]*(1.0-alphaground[W])*diffusionground*exp(-m*dxground))*exp(1j*phasefinal))
-                                                                  temp4=temp2+temp3
-                                                                  patcharray[Q,W,6]=abs(temp4)
-                                                                  patcharray[Q,W,7]=np.arctan(temp4.imag,temp4.real)
-                              ampinitial[W]=ampfinal   
+                        m=airabsorb[:]
+                        lamb=PF.soundspeed/frecuencias[:,0]
+                        phasefinal=phaseinitial[:]- (twopidx/lamb)
+                        ampfinal=ampinitial[:]*(1.0-alphaground[:])*(1.0-diffusionground)*np.exp(-m[:]*dxground)
+                        phaseinitial=phasefinal%twopi
+                        if (phaseinitial[W]>PI):
+                              phaseinitial[W]=phaseinitial[W]-twopi
+                        if(PF.radiosity==1 and (diffusionground!=0.0)):
+                              for Q in range (0,PatchNo):
+                                    if (formfactors[0,Q,1]==1):
+                                          if(veci[0]<=(patcharray[Q,W,0]+0.5*patcharray[Q,W,3]) and veci[0]>=(patcharray[Q,W,0]-0.5*patcharray[Q,W,3])):
+                                                if(veci[1]<=(patcharray[Q,W,1]+0.5*patcharray[Q,W,4]) and veci[1]>=(patcharray[Q,W,1]-0.5*patcharray[Q,W,4])):
+                                                      if(veci[2]<=(patcharray[Q,W,2]+0.5*patcharray[Q,W,5]) and veci[2]>=(patcharray[Q,W,2]-0.5*patcharray[Q,W,5])):
+                                                            temp2=complex(abs(patcharray[Q,W,6])*np.exp(XJ*patcharray[Q,W,7]))
+                                                            temp3=complex(abs(ampinitial[W]*(1.0-alphaground[W])*diffusionground*exp(-m*dxground))*exp(1j*phasefinal))
+                                                            temp4=temp2+temp3
+                                                            patcharray[Q,W,6]=abs(temp4)
+                                                            patcharray[Q,W,7]=np.arctan(temp4.imag,temp4.real)
+                        ampinitial[:]=ampfinal[:]
+                     
+                        #for W in range(0,sizeffttwo):
+                        #      m=airabsorb[W]
+                        #      lamb=PF.soundspeed/inputarray[W,0]
+                        #      phasefinal=phaseinitial[W]-(twopidx)/lamb
+                        #      ampfinal=ampinitial[W]*(1.0-alphaground[W])*(1.0-diffusionground)*np.exp(-m*dxground)
+                        #      phaseinitial[W]=phasefinal%twopi
+                        #      if (phaseinitial[W]>PI):
+                        #            phaseinitial[W]=phaseinitial[W]-twopi
+                        #      if(PF.radiosity==1 and (diffusionground!=0.0)):
+                        #            for Q in range (0,PatchNo):
+                        #                  if (formfactors[0,Q,1]==1):
+                        #                        if(veci[0]<=(patcharray[Q,W,0]+0.5*patcharray[Q,W,3]) and veci[0]>=(patcharray[Q,W,0]-0.5*patcharray[Q,W,3])):
+                        #                              if(veci[1]<=(patcharray[Q,W,1]+0.5*patcharray[Q,W,4]) and veci[1]>=(patcharray[Q,W,1]-0.5*patcharray[Q,W,4])):
+                        #                                    if(veci[2]<=(patcharray[Q,W,2]+0.5*patcharray[Q,W,5]) and veci[2]>=(patcharray[Q,W,2]-0.5*patcharray[Q,W,5])):
+                        #                                          temp2=complex(abs(patcharray[Q,W,6])*np.exp(XJ*patcharray[Q,W,7]))
+                        #                                          temp3=complex(abs(ampinitial[W]*(1.0-alphaground[W])*diffusionground*exp(-m*dxground))*exp(1j*phasefinal))
+                        #                                          temp4=temp2+temp3
+                        #                                          patcharray[Q,W,6]=abs(temp4)
+                        #                                          patcharray[Q,W,7]=np.arctan(temp4.imag,temp4.real)
+                        #      ampinitial[W]=ampfinal   
                       
                
 #     if the ray hits the building then change the direction and continue
@@ -746,10 +854,13 @@ for ray in range(589, 592):
 
 
 #     Once all rays are complete.  Deallocate all arrays that are no longer needed
-boomarray=None
-receiverarray=None
-ampinitial=None
-phaseinitial=None
+
+# Inefficient and causes problems for now. We can move these to a function to get ri of them easier, commenting out for now
+
+#boomarray=None
+#receiverarray=None
+#ampinitial=None
+#phaseinitial=None
       #Gk=np.zeros(PatchNo,sizeffttwo)
       #Gkminus1=np.zeros(PatchNo,sizeffttwo)
 #COMEBACK FOR RADIOSITY
@@ -954,6 +1065,28 @@ if(RPS.planenum>=1):
                   OPFile.write('\t%f\t%f\t%f\t%f\n' %(timetemparray[D,W,0],timetemparray[D,W,1],timetemparray[D,W,2],timetemparray[D,W,4]))
                   #print('finished time',timetemparray[0,W,3] )
 #print(timetemparray[1,1,0:2])                  
+
+# New
+for R in ears:
+    #print(R.magnitude.shape)
+    #R.magnitude = np.sum(R.magnitude,axis=0)
+    #R.direction = np.sum(R.direction,axis=0)
+    #timetemparray=TIMERECONSTRUCT(sizefft, RPS.Receiver.arraysize, R.magnitude,R.direction)
+    R.timesignal = TIMERECONSTRUCT(sizefft,R.magnitude,R.direction)
+
+OPFile=open(PF.OUTPUTFILE,"w")
+true=fun.Header(PF.OUTPUTFILE)
+OPFile=open(PF.OUTPUTFILE,"a")      #redefining to print both Header and TimeHeader
+
+for W in range(sizefft):
+    true=fun.TimeHeader(OPFile,timearray[W],RPS.sizex1,RPS.sizey1,RPS.sizez1,RPS.planename1)
+    for R in ears:
+        OPFile.write('\t%f\t%f\t%f\t%f\n' %(R.position[0],R.position[1],R.position[2],R.timesignal[W]))
+
+OPFile.close()
+
+
+
 #if(RPS.planenum>=2):
 #      W=0
 #      while (W<sizefft):
