@@ -74,6 +74,37 @@ class Receiver:
 
         # See bug log 3/13 for what happened with positions checks
 
+    def SphereCheck(self,Sr2,F,veci):
+        '''
+        This function performs a check whether a ray hits a sphere.  If
+        it does hit the function returns the distance to the sphere
+        '''
+        # Sc is receiver position
+        # sr2 is radius2
+        HUGE=1000000.0
+
+        Sc = self.position
+        OC = Sc - veci 
+        #L2OC = np.sum( (OC*OC),axis=1)    
+        L2OC = np.dot(OC,OC)    #Equivalent?
+        tca = np.dot(OC,F)
+        t2hc = Sr2 - L2OC + (tca**2)
+        if L2OC == Sr2:    
+            dx = HUGE
+        elif tca < 0.0:
+            dx = HUGE
+        elif t2hc < 0.0:
+            dx = HUGE
+        else:
+            dx = tca - (t2hc**(1/2))
+        #Hey future me, remember to delete one of these later
+        self.dx = dx
+        return  dx 
+        #dxarr = np.where(L2OC == Sr2 , HUGE, tca - (t2hc**(1/2)))
+        #dxarr = np.where(tca<0.0,HUGE,dxarr)
+        #dxarr = np.where(t2hc<0.0,HUGE,dxarr)     
+        #return dxarr
+
     @classmethod
     def create_receiverarray(cls):
         """
@@ -108,6 +139,7 @@ class Receiver:
         """
         pass 
         print("Everything seems to initiate.")
+
         
 
 #Unused
@@ -144,6 +176,13 @@ def initialize_receivers():
 
 
 initialize_receivers()
+
+#R1 = Receiver(93.4428213,28.8397178,0.151)
+#R2 = Receiver(64.5832,28.5998,0.151)
+#R3 = Receiver(64.5832,28.5998,7.9423)
+#R4 = Receiver(-2.40793,31.5003401,0.151)
+#R5 = Receiver(75.11005,28.4945787,0.151)
+#R1.SphereCheck(0.0225,    [-0.94808515,-0.29638514,-0.11528397],    [138.9117595,50.99787506,8.93999318])
 
 #test = Receiver(7,94,3)
 #Receiver.frequency = 83
