@@ -105,6 +105,34 @@ class Receiver:
         #dxarr = np.where(t2hc<0.0,HUGE,dxarr)     
         #return dxarr
 
+    def timeReconstruct(self,sizefft):
+        #def TIMERECONSTRUCT(sizefft,timearray,arraysize,temparray):
+        '''
+        This Function computes the timesignal from a given fft.  It writes the
+        time signal to an array
+        Timearray is now defined in here. Do not call it.
+        '''
+
+        XJ=complex(0,1)
+        # Create the complex array to feed into the inverse fft function
+        # Create complex array and compute inverse fft first attempt Python
+
+        # timetemparray has been broken into timesignal, as it is the only thing calculated inside this function
+        if self.magnitude[0] == 0.0:
+            # If first magnitude is zero then all timesignal is zero
+            self.timesignal = np.zeros(sizefft) 
+
+        else:
+            # If not then calculate the timesignal 
+            tempfft = abs(self.magnitude[:]) * np.exp(XJ*self.direction)
+            tempfft = np.append(0,tempfft)
+            #print('Created temparray')
+            # use numpy to compute inverse fft
+            # use ifft numpy function with tempfft and sizefft as input
+            # use timesignal as output
+            self.timesignal=np.fft.ifft(tempfft,sizefft)
+            #print('Created time signature')
+
     @classmethod
     def create_receiverarray(cls):
         """
@@ -120,26 +148,25 @@ class Receiver:
         """
         cls.Array[self.recNumber]=self.position
 
-    @classmethod
-    def de_frecuencias(cls,frecuencia):
-        """
-        Sets the initial frequency.
-        1/11: Now sets one default frequency and 
-        all arrays will now use a copy when needed
-        """
-        cls.initial_frequency = frecuencia
+    #@classmethod
+    #def de_frecuencias(cls,frecuencia):
+    #    """
+    #    Sets the initial frequency.
+    #    1/11: Now sets one default frequency and 
+    #    all arrays will now use a copy when needed
+    #    """
+    #    cls.initial_frequency = frecuencia
 
-    def hitFunction(self):
-        """
-        Adds pressure from a ray when it hits a receiver
-        I don't know if I should define this as an instance
-         method because it works on each receiver
-         or a static method because it works on all once.
-         I'm leaning towards instance now, but that's subject to change 
-        """
-        pass 
-        print("Everything seems to initiate.")
-
+    #def hitFunction(self):
+    #    """
+    #    Adds pressure from a ray when it hits a receiver
+    #    I don't know if I should define this as an instance
+    #     method because it works on each receiver
+    #     or a static method because it works on all once.
+    #     I'm leaning towards instance now, but that's subject to change 
+    #    """
+    #    pass 
+    #    print("Everything seems to initiate.")
         
 
 #Unused

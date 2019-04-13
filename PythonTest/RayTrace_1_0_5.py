@@ -158,24 +158,6 @@ ampinitialnew=np.empty(sizeffttwo)
 phaseinitial=np.empty(sizeffttwo)
 phaseinitialnew=np.empty(sizeffttwo)
 
-      #def InitialSignal(sizeffttwo,inputarray,outputsignal,sizefft,hr,Temp,ps):
-      #      airabsorb = np.empty(sizeffttwo)
-      #      #t = time.time()
-      #      for K in range(sizeffttwo):
-      #          inputarray[K,0]=(K+1)*PF.Fs/2*1/(sizeffttwo)      #Frequenvies
-      #          inputarray[K,1]=abs(outputsignal[K]/sizefft)
-      #          inputarray[K,2]=np.arctan2(np.imag(outputsignal[K]/sizefft),np.real(outputsignal[K]/sizefft))
-      #          airabsorb[K]=fun.ABSORPTION(PF.ps,inputarray[K,0],PF.hr,PF.Temp)
-      #      #print('Absoption time: %.8f ' %(time.time()-t))
-      #      return
-      #
-      #t = time.time()
-      #InitialSignal(sizeffttwo,inputarray,outputsignal,sizefft,PF.hr,PF.Temp,PF.ps)
-      #print('Absoption time: %.8f ' %(time.time()-t))
-
-      #     ^Dummied out, see bug log 11/10
-      # If somebody finds some fatal procedural error slowing it down that would help 
-
 #       Create initial signal 
 airabsorb = np.empty(sizeffttwo)
 airabsorbnew = np.empty(sizeffttwo)
@@ -188,7 +170,7 @@ Knew=np.arange(1,sizeffttwo+1,1)
 #inputarray[:,2]=np.arctan2(np.imag(outputsignal[:sizeffttwo]/sizefft),np.real(outputsignal[:sizeffttwo]/sizefft))
 airabsorb=fun.ABSORPTION(PF.ps,inputarraynew[:,0],PF.hr,PF.Temp)
 print('Absoption time no loop: %.8f ' %(time.time()-t))
-frecuencias_Ini = initial_signal(sizefft,outputsignal)      # Equivalent to inputarray in original
+frecuencias = initial_signal(sizefft,outputsignal)      # Equivalent to inputarray in original
 t=time.time()
 #for K in range(sizeffttwo):
 #    inputarray[K,0]=(K+1)*PF.Fs/2*1/(sizeffttwo)      #Frequenvies
@@ -301,8 +283,8 @@ for D in range(0,RPS.Receiver.arraysize):
       temparray[D,:,3]=inputarray[:,0]    #initial pressures
       temparray[D,:,4]=0.0                #magnitude
       temparray[D,:,5]=0.0                #direction
-for R in ears:
-      R.frecuencias = frecuencias_Ini[:,0]
+#for R in ears:
+#      R.frecuencias = frecuencias[:,0]
 
 #print('temparray:(The good one?) \n',temparray)
 #       Define ground plane
@@ -410,14 +392,6 @@ count=0
 ########################################################################################################################
 ########################################################################################################################
 ########################################################################################################################
-########################################################################################################################
-########################################################################################################################
-########################################################################################################################
-########################################################################################################################
-########################################################################################################################
-########################################################################################################################
-########################################################################################################################
-########################################################################################################################
 
 #ray=0
 print('began rays')
@@ -435,9 +409,9 @@ for ray in range(605,610):
       F=Finitial
       #veci=Vinitial
       veci = boomarray[ray,:]
-# Making small steps along the ray path.  For each step we should return, 
-# location, phase and amplitude
-######################################
+      # Making small steps along the ray path.  For each step we should return, 
+      # location, phase and amplitude
+      ######################################
       for I in range(0,PF.IMAX):
             dxreceiver=HUGE
             print(veci)
@@ -518,7 +492,7 @@ for ray in range(605,610):
                   print('This happens Now')
                         #print('Well duh, this clearly happens ') #It's not supposed to   
                   dxreceiver=amin(tempreceivernew)
-#                  print('dxreceiver',dxreceiver)
+                  #print('dxreceiver',dxreceiver)
 
                   #### everything up to here looks good#### need to figure out how to get the index for the min now. 
                   receiverpoint[0]=receiverarray[Q,0]
@@ -535,7 +509,7 @@ for ray in range(605,610):
                         receiverpoint2[1]=receiverarray[Q,1]
                         receiverpoint2[2]=receiverarray[Q,2]
                         doublehit=1
-#     Check Intersection with ground plane
+            #     Check Intersection with ground plane
             GROUNDN=GROUNDABC
             GROUNDVD=GROUNDN[0]*F[0]+GROUNDN[1]*F[1]+GROUNDN[2]*F[2]
             if (groundhit==1):
@@ -558,7 +532,7 @@ for ray in range(605,610):
             t = time.time()
             for Q in range(0,BG.Boxnumber):
                   dxnear, dxfar, hit, planehit=fun.BOX(BG.Boxarraynear[Q], BG.Boxarrayfar[Q],veci,F)
- #                 print('old',dxnear, dxfar, hit, planehit)
+                  #print('old',dxnear, dxfar, hit, planehit)
 
             print('Box time loop: %.8f ' %(time.time()-t))
 
@@ -572,7 +546,7 @@ for ray in range(605,610):
             dxnearnew, dxfarnew, hitnew, planehitnew=fun.BOXnew(BG.Boxarraynear, BG.Boxarrayfar,veci,F)
             b=np.argmin(dxnearnew)
             print('Box time no loop: %.8f ' %(time.time()-t))
-#            print('new',np.amin(dxnearnew), dxfarnew, hitnew, planehitnew,b,np.amin(dxnearnew))
+            #print('new',np.amin(dxnearnew), dxfarnew, hitnew, planehitnew,b,np.amin(dxnearnew))
             if (dxnearnew[b] < dxbuilding):
                   dxbuilding=dxnearnew[b]
                   Vecip1=veci+np.multiply(dxbuilding,F)
@@ -580,7 +554,7 @@ for ray in range(605,610):
                   nboxnew=fun.PLANE(Vecip1, BG.Boxarraynear[b],BG.Boxarrayfar[b], planehit[b])
                   print(nboxnew)
             print('Box time no loop: %.8f ' %(time.time()-t))
-#             #     Check intersection with Triangles
+             #     Check intersection with Triangles
             if(BG.TriangleNumber > 0):
                   for Q in range(0, BG.TriangleNumber):
                         dxnear, behind = fun.Polygon(veci,F,Q,3,TriangleNumber,PointNumbers,Trianglearray,BuildingPoints,normal,FaceNormalNo,FaceNormals)
@@ -588,7 +562,7 @@ for ray in range(605,610):
                               dxbuilding=dxnear
                               nbox=normal
                               whichbox=Q
-#    Check intersection with Squares
+            #    Check intersection with Squares
             if(BG.SquareNumber>0):
                   for Q in range(0,BG.SquareNumber):
                         dxnear, behind=Polygon(veci,F,Q,4,SquareNumber,PointNumbers,SquareArray,BuildingPoints,normal,FaceNormalNo,FaceNormals)
@@ -600,12 +574,12 @@ for ray in range(605,610):
             buildinghit=0
             receiverhit=0
             groundhit=0
-#     Check to see if ray hits within step size
+            #     Check to see if ray hits within step size
             if (dxreceiver < PF.h or dxground < PF.h or dxbuilding < PF.h):
                   dx=min(dxreceiver,dxground,dxbuilding)
                   tmpsum=tmpsum+dx
-#     if the ray hits a receiver, store in an array.  If the ray hits twice
-#     Create two arrays to store in.
+            #     if the ray hits a receiver, store in an array.  If the ray hits twice
+            #     Create two arrays to store in.
                   if (dx==dxreceiver):
                         sum=sum+1
                         #print(veci,dx,F)
@@ -617,19 +591,31 @@ for ray in range(605,610):
                               receiverhit=2
                         hitcount=hitcount+1
                         #print('hit receiver',sum,tmpsum,receiverpoint)
+
+
+                        m=airabsorb[:]
+                        lamb=PF.soundspeed/frecuencias[:]
+                        phasefinal = phaseinitial[:] - (twopi*dx)/lamb
+                        ampfinal=ampinitial[:]*(1-alphanothing[:])* np.exp(-m[:]*dx)
+                        ampinitial = ampfinal[:]
+                        #ampinitial *= ((1-alphanothing[:])*np.exp(-m[:]*dx))
+                        phaseinitial=phasefinal[:]%twopi
+
+                        phaseinitial = np.where(      (phaseinitial[:]>=PI)   ,phaseinitial[:]-twopi     ,phaseinitial)
+
                         for W in range(0,sizeffttwo):
                               #print('airabsorb: ',airabsorb[W])
-                              m=airabsorb[W]
-                              lamb=PF.soundspeed/inputarray[W,1]
-                              phasefinal=phaseinitial[W]-(twopi*dx)/lamb   
+                              #m=airabsorb[W]
+                              #lamb=PF.soundspeed/inputarray[W,1]
+                              #phasefinal=phaseinitial[W]-(twopi*dx)/lamb   
                               #print('ampinit: ',ampinitial[W])
                               #print('alphno: ',' (1- ',alphanothing ,' ) ')
                               #print('oth: ',np.exp(-m*dx))
-                              ampfinal=ampinitial[W]*(1-alphanothing[W])*np.exp(-m*dx)
-                              ampinitial[W]=ampfinal
-                              phaseinitial[W]=phasefinal%twopi
-                              if (phaseinitial[W]>=PI):
-                                    phaseinitial[W]=phaseinitial[W]-twopi
+                              #ampfinal=ampinitial[W]*(1-alphanothing[W])*np.exp(-m*dx)
+                              #ampinitial[W]=ampfinal
+                              #phaseinitial[W]=phasefinal%twopi
+                              #if (phaseinitial[W]>=PI):
+                              #      phaseinitial[W]=phaseinitial[W]-twopi
                               if(doublehit==1):
                                     if(W==0):   #Used this loop twice before
                                           outputarray1=np.zeros((sizeffttwo, 6))
@@ -1080,12 +1066,27 @@ if(RPS.planenum>=1):
 #print(timetemparray[1,1,0:2])                  
 
 # New
+#for R in ears:
+#    #print(R.magnitude.shape)
+#    #R.magnitude = np.sum(R.magnitude,axis=0)
+#    #R.direction = np.sum(R.direction,axis=0)
+#    #timetemparray=TIMERECONSTRUCT(sizefft, RPS.Receiver.arraysize, R.magnitude,R.direction)
+#    R.timesignal = TIMERECONSTRUCT(sizefft,R.magnitude,R.direction)
+#
+#OPFile=open(PF.OUTPUTFILE,"w")
+#true=fun.Header(PF.OUTPUTFILE)
+#OPFile=open(PF.OUTPUTFILE,"a")      #redefining to print both Header and TimeHeader
+#
+#for W in range(sizefft):
+#    true=fun.TimeHeader(OPFile,timearray[W],RPS.sizex1,RPS.sizey1,RPS.sizez1,RPS.planename1)
+#    for R in ears:
+#        OPFile.write('\t%f\t%f\t%f\t%f\n' %(R.position[0],R.position[1],R.position[2],R.timesignal[W]))
+#
+#OPFile.close()
+
+# Newest
 for R in ears:
-    #print(R.magnitude.shape)
-    #R.magnitude = np.sum(R.magnitude,axis=0)
-    #R.direction = np.sum(R.direction,axis=0)
-    #timetemparray=TIMERECONSTRUCT(sizefft, RPS.Receiver.arraysize, R.magnitude,R.direction)
-    R.timesignal = TIMERECONSTRUCT(sizefft,R.magnitude,R.direction)
+    R.timeReconstruct(sizefft)
 
 OPFile=open(PF.OUTPUTFILE,"w")
 true=fun.Header(PF.OUTPUTFILE)
