@@ -1,0 +1,140 @@
+For The Night is Dark and Full of Bugs
+
+Notes:
+Cross seems to be functioning strangely because it subtracts with tuples. I added 
+numpy to do that instead and it seems to be working. Will examine how it compares to Fortran after.
+
+Changed planehit. It was saying 3 was out of bounds for axis 0 with size 3
+
+The print statements (including what is commented out):
+
+Was previously having troubles reading nbox.
+    Found it was an undefined list, set it to an empty list. Still had errors
+    Resolved by setting it to list with points [0,0,0] 
+****Technically it works in that it reads through, but is no doubt causing errors. Will return later
+
+We defined something wrong, probably many things 
+    Problem: A lot of the Parameter file was different, resulted in 400 rays total
+    Solution: Copied data wholesale from .f file and now yspace and zspace is consistent to 6 decimal places.
+
+boomarray is just long list of empty zeros
+
+Veci starts out with different rounding and by the time it is used in function the value reads as "nan", this may be what is causing everything to return 0s
+
+Successfully limited 'F' and 'r' to 8 digits!
+  Still getting overflow issues, may have to do that for each individual variable :c 
+
+Found the diversion, but diversion is at boomarray.
+
+Finally matched boomarray outputs
+    But Fortran seems to assign first up to Raymax,then goes to the next one. Python may or may not be working that way. It seems to be formatting differently
+    Ex 
+      Fortran  123456789...Raymax 12345...
+      Python   111 222 333 444 555 666 777...Raymax,Raymax,Raymax
+  In theory it shouldn't matter, they both find values from specified coordinates.
+    We'll see.
+      It's the same, no bugs here 10/2/18
+
+      Added 1's and parentheses to xmin == xmax. Remember to do that for others in initialgrid.
+
+Looked at n2, this looks like a familiar glitch
+
+vecip1 is all nan, I remember this.
+boxarraynear and boxarrayfar were giving syntax errors, but they seem to be working, regardless.
+
+veci and np.array(F) are nan 
+  veci is nan from it's first definition
+
+
+
+What I /think/ I was originally doing:
+    Says error encountered with true_divide for nbox, it is dividing by zero. 
+    The first should be -1.000, and then the rabbithole happened
+  
+Changed np.array(F) to just F and it spit out so much good data
+      It crashed immediately after, but that's still good enough
+      It gave proper results for nbox and others
+      It also started giving me a reading for normal
+
+  May have Successfully validated vecip1  up to "Check intersection with Boxes"
+      Only needed to use numpy multiply
+onwards to line 470!
+
+It's actually running.
+I'm just going to leave it running to see if it crashes at the end now 
+
+Bug spotted in spherecheck
+    Had to use RPS for receriver array, try checking if I can import it once and be done with it
+      I didn't like that solution. I'd have to copy RPS for everything from that file. I used from import instead.
+      Receiverpoint is defined weird in python 
+        threw in a placeholder
+        fixed when parameterfile was looked at
+
+New crash:     Vinitial=np.around([boomarray[ray,0],boomarray[ray,1],boomarray[ray,2]],8)
+The note means it is a known bug 
+      used ray-1 and it got to "timeconstruct has been called"
+
+Headers
+  write statements work when paste into powershell :c 
+      I forget what I did, but it works now. (The next day)
+  Slight differences in how it is displaying. This may or may not cause problems with matlab
+    but that's a problem for the future me. 
+
+Next is finally finding where the memory is going 
+    yay :/
+
+    Did we remember to deallocate all those arrays we used zeros for?
+      Is it even necessary for everything?
+
+      finding a hit is really slow
+        we seem to be importing a lot
+          Moved all imports in Functions.py to the main 
+            I think it's going faster, but I also still don't have concrete numbers
+      spherecheck works
+      I still think it's redoing something heavy
+
+    Veci and others were defined as lists, redefined them as arrays
+    f.write was only printing as ints and the input was small 0.somethings, fixed it.
+  What is the difference between using np.zeros and np.array?
+    Test afterwards
+  
+  alphanothing was defined as an array of [0.0] 
+    I'm pretty sure it's not supposed to be that
+      we defined sizeffttwo AFTER something that references it.
+        When I went to move that thing I saw we defined alphanothing right once and then redefined it as [0.0] for some reason
+          This happens twice. It might of been a patch then, maybe not 
+
+      fixed ampinitial and ampfinal 
+        it runs slower now
+      Idea: It may be all the arrays slowing it down 
+        tried using empty instead of zeros,no noticable difference
+
+    There were two more arrays we did not define. Luckily I was able to test out np.empty c:
+
+    Looking at bugs in receiverhitfunc
+      We need to use numpy to multiply the complex of te absolute value of two arrays.
+        There were a lot of words used and they sound like they may be prone to bugs and eating memory
+      Case in point: I was ACTUALLY supposed to take the complex of the product of two absolute values
+        Oops
+
+      Find how XJ behaves
+          It was a tuple instead of a complex
+        Supposed to multiply by 1199 (temparray[D,W,5]), but it's 0 instead
+        I checked where it was defined. We used 0.0 in both, the question is why is it not 0 in Fortran
+
+        I think using e to the power of the complex would solve the error but
+          1. The input is bugged anyway and I can't get what it to run the test
+          2. That's only if I understand what it's doing right 
+
+          Remeber to allocate all arrays 
+            (np.empty may reduce the need to allocate and deallocate the arrays)
+
+AFTER A FOUR HOUR RUNTIME :
+C:\Users\Kory George\AppData\Local\Programs\Python\Python37\python.exe: Error while finding module specification for 'RayTrace.py' (ModuleNotFoundError: __path__ attribute not found on 'RayTrace' while trying to find 'RayTrace.py')
+
+      Find an I vector -DR 10/23/18
+      
+
+
+I forget why I wrote this, but here it is:
+      initial boomarray:    1.13697994E-39   8.40779079E-45   1.13697994E-39   8.40779079E-45   0.00000000       0.00000000       0.00000000       0.00000000      -4.20210173E-39   1.40129846E-45   1.26116862E-44   0.00000000       0.00000000       1.40129846E-45  -2.25381705E+38   4.20389539E-45  -2.56469934E+38   4.20389539E-45   7.00649232E-45   0.00000000       1.13727141E-39   8.40779079E-45   3.50324616E-44   0.00000000       2.80259693E-45   0.00000000       1.40129846E-45   0.00000000       0.00000000       0.00000000       0.00000000       0.00000000       3.50324616E-44   0.00000000       1.40129846E-45   0.00000000       1.13740594E-39   8.40779079E-45   0.00000000       0.00000000       9.82254172E-40   8.40779079E-45  -2.63071148E+38   4.20389539E-45  -2.77977200E+21   2.80259693E-45   2.25609053E-43   0.00000000      -4.20170937E-39   1.40129846E-45  -4.20170937E-39   1.40129846E-45   1.40129846E-43   0.00000000       2.10194770E-43   0.00000000       2.80259693E-43   0.00000000       1.58346726E-43   0.00000000      -4.20157484E-39   1.40129846E-45  -4.20157484E-39   1.40129846E-45   1.02144569E-39   8.40779079E-45  -2.63071574E+38   4.20389539E-45   6.72623263E-44   0.00000000       9.24856986E-44   0.00000000       0.00000000       0.00000000       2.80259693E-44   0.00000000       5.60519386E-44   0.00000000       8.40779079E-44   0.00000000       1.12103877E-43   0.00000000      -2.63072000E+38   4.20389539E-45   6.05360937E-43   0.00000000       1.59748025E-43   0.00000000      -2.62439452E+38   4.20389539E-45   0.00000000       7.33251953       0.00000000       6.95605469       0.00000000       6.66406250       3.61446290E-11   2.94178605       0.00000000       0.00000000       0.00000000       0.00000000      -2.25751007E+38   4.20389539E-45   1.13489481E-39   8.40779079E-45   1.12103877E-44   0.00000000       2.80259693E-45   0.00000000       3.15292154E-42   0.00000000       9.00821915E-40   8.40779079E-45   6.86636248E-44   0.00000000       1.08691435E-39   8.40779079E-45   1.21045282E-39   8.40779079E-45   1.02220799E-39   8.40779079E-45  -2.63072852E+38   4.20389539E-45   8.29568691E-43   0.00000000       1.59748025E-43   0.00000000      -2.62765269E+38   4.20389539E-45   0.00000000       7.62891388       0.00000000       7.20111084       0.00000000       6.69848633       3.61446290E-11   2.97303605       5.86271298E-09   8.32894325       0.00000000       0.00000000      -2.31195455E+38   4.20389539E-45   1.13749562E-39   8.40779079E-45   1.13350472E-39   8.40779079E-45   2.24207754E-44   0.00000000       1.13628490E-39   8.40779079E-45   1.02265641E-39   8.40779079E-45   9.26118155E-42   0.00000000       1.13785435E-39   8.40779079E-45   1.13785435E-39   8.40779079E-45   0.00000000       0.00000000       0.00000000       0.00000000      -4.20210173E-39   1.40129846E-45   1.26116862E-44   0.00000000      -2.62748394E+38   4.20389539E-45   0.00000000       2.00000000       0.00000000       0.00000000       0.00000000       0.00000000       0.00000000       2.00000000       0.00000000       0.00000000       0.00000000       1.40129846E-45  -2.30980624E+38   4.20389539E-45   1.13852698E-39   8.40779079E-45   1.13857182E-39   8.40779079E-45   1.40129846E-45   0.00000000       0.00000000       0.00000000       0.00000000       0.00000000      -2.31329157E+38   4.20389539E-45   1.01673732E-39   8.40779079E-45   2.52233724E-41   0.00000000       1.68155816E-44   0.00000000       0.00000000       0.00000000       2.91470081E-43   0.00000000       2.71851902E-43   0.00000000      -2.62698418E+38   4.20389539E-45   0.00000000       2.53125000       0.00000000       2.12500000       0.00000000       2.12500000       0.00000000       0.00000000       0.00000000       0.00000000       0.00000000       1.40129846E-45  -2.30406226E+38   4.20389539E-45   1.14238335E-39   8.40779079E-45   1.14251787E-39   8.40779079E-45   1.14260756E-39   8.40779079E-45   1.14274208E-39   8.40779079E-45   1.14283177E-39   8.40779079E-45   1.14296629E-39   8.40779079E-45   7.00649232E-45   0.00000000       1.40129846E-45   0.00000000       5.04467447E-42   0.00000000       0.00000000       0.00000000       0.00000000       0.00000000       2.52233724E-41   0.00000000       7.00649232E-44   0.00000000      -2.31343436E+38   4.20389539E-45   1.01749963E-39   8.40779079E-45   1.80767502E-43   0.00000000      -4.20161968E-39   1.40129846E-45  -4.20161968E-39   1.40129846E-45   4.20389539E-45   0.00000000       1.40129846E-45   0.00000000       1.68155816E-44   0.00000000       0.00000000       0.00000000       8.96831017E-44   0.00000000       4.76441478E-44   0.00000000       0.00000000       0.00000000       2.52233724E-41   0.00000000       1.34524653E-43   0.00000000       4.76441478E-44   0.00000000       0.00000000       0.00000000       2.52233724E-41   0.00000000       7.39885589E-43   0.00000000       2.94272678E-43   0.00000000       0.00000000       0.00000000       4.20389539E-44   0.00000000       8.40779079E-44   0.00000000       1.26116862E-43   0.00000000       1.68155816E-43   0.00000000       2.10194770E-43   0.00000000       2.52233724E-43   0.00000000       2.94272678E-43   0.00000000       3.36311631E-43   0.00000000       3.78350585E-43   0.00000000       4.20389539E-43   0.00000000       4.62428493E-43   0.00000000       5.04467447E-43   0.00000000       5.46506401E-43   0.00000000       5.88545355E-43   0.00000000       6.30584309E-43   0.00000000       6.72623263E-43   0.00000000       7.14662217E-43   0.00000000       7.56701171E-43   0.00000000       7.98740125E-43   0.00000000       8.40779079E-43   0.00000000       8.82818033E-43   0.00000000       9.24856986E-43   0.00000000       9.66895940E-43   0.00000000
