@@ -1,26 +1,8 @@
 # Receiver Point 
-# Python3.7.0 
+# Python 3.7.0 
 
-#import time 
 import numpy as np
 
-#           Planning 
-# Create Class for Receiver 
-#   Define dunder init to take input(x,y,z)
-#   Include provision to increase receiver number by 1 each time it is called 
-#   Define receiver array based on number of receivers and position
-#   Read inputs into array, use number for specificity
-#   Maybe clear remaining data after?
-
-# That All Worked
-#   # Now:
-        # Read in input from file
-        # Translate input to usable data            #Broken here
-        # Use input to intialie receiver method
-        # Make it act exactly like it does now, 
-            # but without the need to touch source code
- 
-#t=time.time()
 class Receiver:
     """
     Receiver class with attributes of position (x,y,z)

@@ -40,6 +40,7 @@ import time
       Interacts with geometry
       Have a way of reading in complex geometries 
       Anything resembling radiosity
+      Run Well          *New 4/14
 """
 
 def TIMERECONSTRUCT(sizefft,magnitude,direction):
