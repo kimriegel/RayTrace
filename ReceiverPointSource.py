@@ -1,11 +1,6 @@
 # Receiver Point 
 # Python3.7.0 
 
-# Works
-#     Create a point reciever
-
-# May have to look into init method, but functions the same as original.
-
 #import time 
 import numpy as np
 
