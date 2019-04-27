@@ -2,6 +2,7 @@
 #   Same as NASABOOM1EMParameterFile
 import numpy as np
 INPUTFILE = "inputNASABOOM1.txt"
+RecInput = "PointReceivers.txt"
 Fs=24000.0
 xinitial=145.0
 yinitial=35.0

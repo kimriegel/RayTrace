@@ -735,3 +735,11 @@ Note: In my new version I tear all the rays into pieces and then make changes ea
         Terminal was running from start of folder (RayTrace), instead of the open folder
         Solved by just moving the folder.
         Less organized, but mehh
+
+    Trying to get new version running:
+      Accidentally created an unholy hybrid of itterating through objects and ints that junked everything.
+        I commented it out, will delete it later. I need to examine it to see what exactly happned 
+        Just getting through what I can now 
+
+
+    It seems to not be itterating over steps correctly, I'm going to check older editions 

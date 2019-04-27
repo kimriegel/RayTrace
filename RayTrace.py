@@ -42,6 +42,98 @@ import time
       Anything resembling radiosity
 """
 
+def TIMERECONSTRUCT(sizefft,magnitude,direction):
+    '''
+    This Function computes the timesignal from a given fft.  It writes the
+    time signal to an array
+    Timearray is now defined in here. Do not call it.
+    Args:
+    Returns:
+    '''
+    #outputarray[:,0] = frecuencias  [:,0]
+    #outputarray[:,1] = receiverpoint[0]
+    #outputarray[:,2] = receiverpoint[1]
+    #outputarray[:,3] = receiverpoint[2]
+    #outputarray[:,4] = ampinitial   [:] / 2.0
+    #outputarray[:,5] = phaseinitial [:]
+    #temparray[D,:,3]=inputarray[W,0]    #initial pressures
+    #temparray[D,:,4]=0.0                #magnitude
+    #temparray[D,:,5]=0.0                #direction
+    #timetemparray[D,:,0]=temparray[D,0,0]
+    #timetemparray[D,:,1]=temparray[D,0,1]
+    #timetemparray[D,:,2]=temparray[D,0,2]
+    #        timetemparray[D,W,3]=timearray[W]   #Not actually used until outside function
+    #        timetemparray[D,W,4]=0.0    #timesignal
+    XJ=complex(0,1)
+    print('timeconstruct has been called')
+
+    print('timetemparray has been initialized')
+    # Create the complex array to feed into the inverse fft function
+    # Author: Will, Create complex array and compute inverse fft first attempt Python
+    #for D in range(0,arraysize) :
+
+    # timetemparray has been broken into timesignal, as it is the only thing calculated inside this function
+
+    #print('mag: ',magnitude.shape)
+    if magnitude[0] == 0.0:
+        # If first magnitude is zero then all timesignal is zero
+        timesignal = 0.0
+
+    else:
+        # If not then calculate the timesignal 
+        tempfft = abs(magnitude[:]) * np.exp(XJ*direction)
+        tempfft = np.append(0,tempfft)
+        print(tempfft.size)
+        print('Created temparray')
+        # use nummpy to compute inverse fft
+        # use ifft numpy function with tempfft and sizefft as input
+        # use timesignal as output
+        timesignal=np.fft.ifft(tempfft,sizefft)
+        print('Created time signature')
+        #for W in range(sizeffttwo) :
+            #if W == 0:
+                #tempfft[W]=complex([0])
+            #else:
+                #tempfft[W]=complex(abs(temparray[D,W-1,4])*m.exp(XJ*temparray[D,W-1,5]))
+                #tempfft = abs(magnitude[:]) * np.exp(XJ*direction)
+
+    #return timetemparray
+    return timesignal
+
+def initial_signal(signalLength,fftOutput):
+    """
+    Making the array for the initial signals.
+    Input sizefft and outputsignal
+    """
+    signalLength2 = int(signalLength//2)    # Making sizeffttwo in this function and setting it as an int again jsut to be sure
+    outputFrequency = np.zeros((signalLength2,3))    #Making output array    equivalent to inputarray in old code
+    throwarray = np.arange(1,signalLength2 + 1)     #Helps get rid of for-loops in old version
+
+    outputFrequency[:,0] = throwarray * PF.Fs / signalLength #Tried simplifying the math a bit from original
+    outputFrequency[:,1] = abs(fftOutput[:signalLength2]/signalLength) #Only go up to sizeffttwo 
+    outputFrequency[:,2] = np.arctan2( np.imag(fftOutput[:signalLength2]/signalLength) , np.real(fftOutput[:signalLength2]/signalLength)) 
+
+    return outputFrequency
+
+def update(airabsorb,frequencia,phase,dx,amp,alpha,diffusion):
+      """
+      Update ray/ripple data
+      Only input first row for frequency
+      """
+      PI = np.pi
+      twopi = PI*2
+      twopidx = twopi * dx
+
+      lamb = PF.soundspeed/frequencia
+      phaseTemp = phase[:] - (twopidx/lamb)
+      ampTemp = amp[:] * (1.0-alpha) * (1.0-diffusion) * np.exp(airabsorb*dx)
+
+      phase = phaseTemp[:] % twopi
+      phase = np.where( (phase > PI),      phase-twopi,      phase)
+
+      #self.phase = phase
+      #self.amplitude = ampTemp
+      return phase, ampTemp
 
 #Formerly RayTrace_KAR        cutting down on files -G
 # port and import receiver file
@@ -154,9 +246,10 @@ boomarray,sizex,sizey,sizez=fun.InitialGrid(PF.boomspacing,PLANEABC[0],PLANEABC[
 alphanothing = np.zeros(sizeffttwo)
 
 # Making specific receiver points using receive rmodule
+RPS.Receiver.initialize(PF.RecInput)
 ears = RPS.Receiver.rList           #easier to write
 receiverpoint = [0.,0.,0.]
-receiverarray = RPS.Receiver.Array  #compatibility    Delete later
+receiverarray = RPS.Receiver.Array  # backwards compatibility    Delete later
 hitsum = 0
 
 #############################################################
@@ -194,22 +287,31 @@ temparraynew=np.empty(( RPS.Receiver.arraysize,sizeffttwo,6))
 timetemparray=np.zeros((RPS.Receiver.arraysize,sizefft,5))
 
 t=time.time()
-#for D in range(0,RPS.arraysize):
-#      for W in range(0,sizeffttwo):
-#            temparray[D,W,0]=receiverarray[D,0]
-#            temparray[D,W,1]=receiverarray[D,1]
-#            temparray[D,W,2]=receiverarray[D,2]
-#            temparray[D,W,3]=inputarray[W,0]    #initial pressures
-#            temparray[D,W,4]=0.0                #magnitude
-#            temparray[D,W,5]=0.0                #direction
-#print('temparray:(The good one?) \n',temparray)
-#       Define ground plane
 
 for D in range(0,RPS.Receiver.arraysize):
-      temparray[D,:,0:3]=RPS.Receiver.Array[D,0:3]
-      temparray[D,:,3]=inputarray[:,0]    #initial pressures
-      temparray[D,:,4]=0.0                #magnitude
-      temparray[D,:,5]=0.0                #direction
+      for W in range(0,sizeffttwo):
+            temparray[D,W,0]=receiverarray[D,0]
+            temparray[D,W,1]=receiverarray[D,1]
+            temparray[D,W,2]=receiverarray[D,2]
+            temparray[D,W,3]=inputarray[W,0]    #initial pressures
+            temparray[D,W,4]=0.0                #magnitude
+            temparray[D,W,5]=0.0                #direction
+
+#for D in range(0,RPS.Receiver.arraysize):
+#      temparray[D,:,0:3]=RPS.Receiver.Array[D,0:3]
+#      temparray[D,:,3]=inputarray[:,0]    #initial pressures
+#      temparray[D,:,4]=0.0                #magnitude
+#      temparray[D,:,5]=0.0                #direction
+
+
+#for R in ears:
+##      print(temparray[R,:,:])
+##      print(R.position)
+#      #temparray[R,:,0:3]=R.position
+#      temparray[R,:,3]=inputarray[:,0]    #initial pressures
+#      temparray[R,:,4]=0.0                #magnitude
+#      temparray[R,:,5]=0.0                #direction
+
 for R in ears:
       R.magnitude= np.zeros(sizefft)
 #      R.frecuencias = frecuencias[:,0]
@@ -640,7 +742,7 @@ for ray in range(RAYMAX):
                         tmp=(GROUNDABC[0]*Vecip1[0]+GROUNDABC[1]*Vecip1[1]+GROUNDABC[2]*Vecip1[2]+GROUNDD)
                         if(tmp != GROUNDD): 
                               Vecip1[2]=0.0
-                        print('hit ground')
+                        print('hit ground',I)
                         veci=Vecip1
                         #print('vecip1 ',Vecip1)
                         #print('nground', nground[0])
@@ -1167,98 +1269,4 @@ OPFile.close()
       #I glanced at these. I'm pretty sure they'll crash the program if they're ever used. 
       #Commenting out and we can validate this later.
 OPFile.close()
-
-
-def TIMERECONSTRUCT(sizefft,magnitude,direction):
-    '''
-    This Function computes the timesignal from a given fft.  It writes the
-    time signal to an array
-    Timearray is now defined in here. Do not call it.
-    Args:
-    Returns:
-    '''
-    #outputarray[:,0] = frecuencias  [:,0]
-    #outputarray[:,1] = receiverpoint[0]
-    #outputarray[:,2] = receiverpoint[1]
-    #outputarray[:,3] = receiverpoint[2]
-    #outputarray[:,4] = ampinitial   [:] / 2.0
-    #outputarray[:,5] = phaseinitial [:]
-    #temparray[D,:,3]=inputarray[W,0]    #initial pressures
-    #temparray[D,:,4]=0.0                #magnitude
-    #temparray[D,:,5]=0.0                #direction
-    #timetemparray[D,:,0]=temparray[D,0,0]
-    #timetemparray[D,:,1]=temparray[D,0,1]
-    #timetemparray[D,:,2]=temparray[D,0,2]
-    #        timetemparray[D,W,3]=timearray[W]   #Not actually used until outside function
-    #        timetemparray[D,W,4]=0.0    #timesignal
-    XJ=complex(0,1)
-    print('timeconstruct has been called')
-
-    print('timetemparray has been initialized')
-    # Create the complex array to feed into the inverse fft function
-    # Author: Will, Create complex array and compute inverse fft first attempt Python
-    #for D in range(0,arraysize) :
-
-    # timetemparray has been broken into timesignal, as it is the only thing calculated inside this function
-
-    #print('mag: ',magnitude.shape)
-    if magnitude[0] == 0.0:
-        # If first magnitude is zero then all timesignal is zero
-        timesignal = 0.0
-
-    else:
-        # If not then calculate the timesignal 
-        tempfft = abs(magnitude[:]) * np.exp(XJ*direction)
-        tempfft = np.append(0,tempfft)
-        print(tempfft.size)
-        print('Created temparray')
-        # use nummpy to compute inverse fft
-        # use ifft numpy function with tempfft and sizefft as input
-        # use timesignal as output
-        timesignal=np.fft.ifft(tempfft,sizefft)
-        print('Created time signature')
-        #for W in range(sizeffttwo) :
-            #if W == 0:
-                #tempfft[W]=complex([0])
-            #else:
-                #tempfft[W]=complex(abs(temparray[D,W-1,4])*m.exp(XJ*temparray[D,W-1,5]))
-                #tempfft = abs(magnitude[:]) * np.exp(XJ*direction)
-
-    #return timetemparray
-    return timesignal
-
-def initial_signal(signalLength,fftOutput):
-    """
-    Making the array for the initial signals.
-    Input sizefft and outputsignal
-    """
-    signalLength2 = int(signalLength//2)    # Making sizeffttwo in this function and setting it as an int again jsut to be sure
-    outputFrequency = np.zeros((signalLength2,3))    #Making output array    equivalent to inputarray in old code
-    throwarray = np.arange(1,signalLength2 + 1)     #Helps get rid of for-loops in old version
-
-    outputFrequency[:,0] = throwarray * PF.Fs / signalLength #Tried simplifying the math a bit from original
-    outputFrequency[:,1] = abs(fftOutput[:signalLength2]/signalLength) #Only go up to sizeffttwo 
-    outputFrequency[:,2] = np.arctan2( np.imag(fftOutput[:signalLength2]/signalLength) , np.real(fftOutput[:signalLength2]/signalLength)) 
-
-    return outputFrequency
-
-def update(airabsorb,frequencia,phase,dx,amp,alpha,diffusion):
-      """
-      Update ray/ripple data
-      Only input first row for frequency
-      """
-      PI = np.pi
-      twopi = PI*2
-      twopidx = twopi * dx
-
-      lamb = PF.soundspeed/frequencia
-      phaseTemp = phase[:] - (twopidx/lamb)
-      ampTemp = amp[:] * (1.0-alpha) * (1.0-diffusion) * np.exp(airabsorb*dx)
-
-      phase = phaseTemp[:] % twopi
-      phase = np.where( (phase > PI),      phase-twopi,      phase)
-
-      #self.phase = phase
-      #self.amplitude = ampTemp
-      return phase, ampTemp
 

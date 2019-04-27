@@ -33,7 +33,7 @@ class Receiver:
     """
     planenum=1
     planename1='Single Point'
-    arraysize=0     #Number of receivers. Supposed to be 5 for this test
+    arraysize=0     #Number of receivers. Supposed to be 5 for this test    # I use it differently now, and only in one function
     sizex=2
     sizey=2
     sizez=1
@@ -45,8 +45,23 @@ class Receiver:
     #Array = np.array([None])    
     # This is now completely overlapped by rlist
 
+    def __init__(self,position):
+        """
+        Create and defines position of receiver
+        
+        Works automatically when class is called
+        """
+        self.position=np.array(position)
+        self.recNumber = Receiver.arraysize         #planned for debugging but we don't seem to use it
+        Receiver.rList.append(self) #See append_list
+            # Initial values 
+        self.pressure = 0
+        self.magnitude = 0
+        self.direction = 0
 
-    def __init__(self,x,y,z):
+
+    def Prototype__init__(self,x,y,z):
+        #Keeping this here for now, will be deleted later
         """
         Create and defines position of receiver
         
@@ -60,7 +75,7 @@ class Receiver:
         self.magnitude = 0
         self.direction = 0
 
-        Receiver.arraysize +=1
+        #Receiver.arraysize +=1     #Now used completely differently
 
 
     def on_Hit(self,amplitude,phase):
@@ -171,8 +186,45 @@ class Receiver:
     #    """
     #    pass 
     #    print("Everything seems to initiate.")
-        
 
+    @classmethod
+    def Prototype_fromVertices(cls):
+        """
+        Reads in receiver points from the txt file and translates them to be used in our receiver method
+        """
+        ip = 'PointReceivers.txt'
+        with open(ip) as vertex:        #Read in from file
+            rho = np.genfromtxt(vertex)
+        cls.arraysize = rho.shape[0]   #Create an itterater
+        print (Receiver.arraysize)
+        for r in range(cls.arraysize): #Translate to usable format
+            Receiver(rho[r,0],rho[r,1],rho[r,2])             # Placeholder
+            print(rho[r,:])
+            #Receiver(rho[r,:])             # Come back later to change the needed inputs for method
+
+    #def fromVertices(cls,ipfile):
+    @classmethod
+    def initialize(cls,ipfile):
+        """
+        Reads in receiver points from the txt file and translates them to be used in our receiver method
+        Receivers are automatically initialized from given inputfile
+        """
+        #ip = 'PointReceivers.txt'
+        #with open(ip) as vertex:        #Read in from file
+        with open(ipfile) as vertex:        #Read in from file
+            rho = np.genfromtxt(vertex)
+        cls.Array = rho
+        cls.arraysize = rho.shape[0]   #Create an itterater
+        #print (Receiver.arraysize)
+        for r in range(cls.arraysize): #Translate to usable format
+        #    print(rho[r,:])
+            Receiver(rho[r,:])             # Come back later to change the needed inputs for method
+        print('initialized receivers')
+
+
+        
+#Receiver.fromVertices()
+#print(Receiver.rList[0].position)
 #Unused
 #class const:
 #    """
@@ -207,17 +259,26 @@ def initialize_receivers():
 
 
 #initialize_receivers()
-
-
+#def from input():
+#
 #ip = 'PointReceivers.txt'
-#with open(ip) as vertex:
+#with open(ip) as vertex:        #Read in from file
 #    #print(points)
 #    rho = np.genfromtxt(vertex)
 #    #rho=np.loadtxt(points)
-##K=len(inputsignal)
-#print(rho.shape)
-#points = np.array(rho.shape)
+#Receiver.arraysize = rho.shape[0]   #Create an itterater
+##print (Receiver.arraysize)
+##print(rho)
+#for r in range(Receiver.arraysize): #Translate to usable format
+##    print(rho[r,:])
+#    #Receiver(rho[r,:])             # Come back later to change the needed inputs for method
+#    Receiver(rho[r,0],rho[r,0],rho[r,0])             # Placeholder
+#    
 #
+#K=len(inputsignal)
+#print(rho.shape)
+#points = (rho.shape)
+#print (rho.shape[0])
 #for r in points:
 #    print(vertex[r,:])
 
@@ -293,7 +354,7 @@ sizez1=sizez
 
 # ^ These also make runtime wildly varied, nix them when possible ^
 
-print('initialized receivers')
+#print('initialized receivers')
 
 #print(R1.position)
 #print(R2.position)
