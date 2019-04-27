@@ -682,6 +682,7 @@ Note: In my new version I tear all the rays into pieces and then make changes ea
       I'm uploading now before I break it again
 
 
+
 3/18
     It seems that we define timetemparray (aka timesignal) as 0 if the first point of the respective temparray is 0.
       Else it runs the rest of the calculations
@@ -693,3 +694,38 @@ Note: In my new version I tear all the rays into pieces and then make changes ea
 
 
     The doccumentation for fft seems to say that we may get a few glitches from using odd numbered ffts, but we can burn that bridge when we get to it
+
+    Finished the printout.
+      It runs
+      Still slow but it runs
+
+3/19
+
+    The pressures that the receivers are getting is huge. It should at least start at 0, and it doesn't even do that. 
+
+    I shaved 4 minutes off the runtime by moving the propagation outside of a loop. (27 mins)
+
+    I was originally getting overflow errors starting at step 9. After moving the propagation back it moved to 46 (matches with it not taking 5x as many steps anymore)
+
+    Ran it without the receiver data. The casting time itself is about 30 seconds. Which is still a lot, but still less than half an hour
+
+
+3/21
+    Broke magnitude and timesignal (accidentally)
+    I think I broke the trace too (accidentally)
+
+    Reverting to the last uploaded version, luckily that was only days ago.
+      I /have/ found that the hit mechanism I'm using is messed up
+
+    This says it doesn't hit anything at all :/
+
+4/4
+    In Fortran it will go through all nearest objects if it is close to all
+    In python 3 it will only go through once depending on the order in the source code
+
+    I know from Space Invaders that python 2 handles that better
+    But it might just scrap all the code :/
+        This was found to be wrong, there was just a pass inside the loop (for some reason) -4/27
+
+4/27
+    Did not have computer until just now
