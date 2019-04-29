@@ -105,7 +105,7 @@ def TIMERECONSTRUCT(sizefft,timearray,arraysize,temparray):
                     tempfft[W]=complex([0])
                 else:
                     tempfft[W]=complex(abs(temparray[D,W-1,4])*m.exp(XJ*temparray[D,W-1,5]))
-        print('Created temparray')
+        #print('Created temparray')
     # use nummpy to compute inverse fft
     # use ifft numpy function with tempfft and sizefft as input
     # use timesignal as output
@@ -115,7 +115,7 @@ def TIMERECONSTRUCT(sizefft,timearray,arraysize,temparray):
     #     *        timesignal, FFTW_ESTIMATE)
 
         timesignal=np.fft.ifft(tempfft,sizefft)
-        print('Created time signature')       
+        #print('Created time signature')       
         for W in range(0,sizefft) :
             timetemparray[D,W,4]=timesignal[W]
 #    print('Absorption time: %.7f ' % (time.time()-t))  #Really low no worries
