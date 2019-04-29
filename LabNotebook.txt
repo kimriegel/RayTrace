@@ -741,5 +741,11 @@ Note: In my new version I tear all the rays into pieces and then make changes ea
         I commented it out, will delete it later. I need to examine it to see what exactly happned 
         Just getting through what I can now 
 
+4/29
+    Both versions have bugs
+    what I'm calling version X has a bug where it only checks specific steps of specific rays
+    What I'm calling version Y has many bugs because it's an older version
 
     It seems to not be itterating over steps correctly, I'm going to check older editions 
+
+    I have gotten them both to "work" individually. I'm saving my progress now. I'll sew them together later

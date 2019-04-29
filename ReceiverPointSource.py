@@ -115,6 +115,8 @@ class Receiver:
         # Create complex array and compute inverse fft first attempt Python
 
         # timetemparray has been broken into timesignal, as it is the only thing calculated inside this function
+        #try:
+            #self.magnitude[0] == 0.0
         if self.magnitude[0] == 0.0:
             # If first magnitude is zero then all timesignal is zero
             self.timesignal = np.zeros(sizefft) 

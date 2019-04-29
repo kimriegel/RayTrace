@@ -100,11 +100,11 @@ def TIMERECONSTRUCT(sizefft,timearray,arraysize,temparray):
             for W in range(0,sizefft):
                 timetemparray[D,W,4]= 0.0
         else:
-            for W in range(0,(sizefft/2)+1) :
+            for W in range(int(sizefft/2)+1) :
                 if W == 1:
                     tempfft[W]=complex([0])
                 else:
-                    tempfft[W]=complex(abs(temparray[D,W-1,4])*m.exp(XJ*temparray[D,W-1,5]))
+                    tempfft[W]=abs(temparray[D,W-1,4])*m.exp(XJ*temparray[D,W-1,5])
         #print('Created temparray')
     # use nummpy to compute inverse fft
     # use ifft numpy function with tempfft and sizefft as input
@@ -377,6 +377,7 @@ def SPHERECHECKNEW(Sc,Sr2,F,veci):
     dxarr=(np.where(t2hc<0.0,HUGE,dxarr))
     dxarr=(np.where(dxarr!=HUGE,tca-(abs(t2hc)**(1/2)),dxarr))
 #    dxarr=np.array([1,2,3,4,5])
+    #print(dxarr)
     return dxarr
 
 def SPHERECHECK(Sc,Sr2,F,veci):

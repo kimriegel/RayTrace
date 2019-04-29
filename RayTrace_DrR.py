@@ -156,8 +156,11 @@ boomarray,sizex,sizey,sizez=fun.InitialGrid(PF.boomspacing,PLANEABC[0],PLANEABC[
 alphanothing = np.zeros(sizeffttwo)
 
 import ReceiverPointSource as RPS 
+ears = RPS.Receiver.rList
 #from ReceiverPointSource import Receiver.Array as receiverarray
 RPS.Receiver.initialize(PF.RecInput)
+for R in ears:          #hotfix
+      R.magnitude = np.zeros(sizefft)
 receiverarray = RPS.Receiver.Array
 RPS.arraysize = RPS.Receiver.arraysize
 receiverpoint = [0.,0.,0.]
@@ -398,7 +401,7 @@ for ray in range(1):
                   if(np.all(receiverarray[:]==lastreceiver)):
                         tempreceiver=HUGE
                   #if((F[:]==checkdirection).all()):
-                  if np.all(F[:]==checkdirection)):
+                  if np.all(F[:]==checkdirection):
                         OCnew=receiverarray-veci
                         OCLengthnew=np.sum(OCnew*OCnew, axis=1)
                         print(OCLengthnew)
@@ -412,7 +415,7 @@ for ray in range(1):
             if (any(tempreceivernew < dxreceiver)):
                   print('This happens Now')
                         #print('Well duh, this clearly happens ') #It's not supposed to   
-                  dxreceiver=amin(tempreceivernew)
+                  dxreceiver= min(tempreceivernew)
                   #print('dxreceiver',dxreceiver)
                   #### everything up to here looks good#### need to figure out how to get the index for the min now. 
                   receiverpoint[0]=receiverarray[Q,0]
@@ -687,10 +690,10 @@ for ray in range(1):
 
 
 #     Once all rays are complete.  Deallocate all arrays that are no longer needed
-boomarray=None
-receiverarray=None
-ampinitial=None
-phaseinitial=None
+#boomarray=None
+#receiverarray=None
+#ampinitial=None
+#phaseinitial=None
       #Gk=np.zeros(PatchNo,sizeffttwo)
       #Gkminus1=np.zeros(PatchNo,sizeffttwo)
 #COMEBACK FOR RADIOSITY
@@ -878,22 +881,36 @@ phaseinitial=None
 #       endif
 
 #Reconstruct the time signal
-timetemparray=fun.TIMERECONSTRUCT(sizefft, timearray, RPS.arraysize, temparray)
-#print('temparray: ', temparray[0:20])
-#print('timearray: ',timearray[0,0,0:3])
-#     Write out time signatures for each receiver. 
+#timetemparray=fun.TIMERECONSTRUCT(sizefft, timearray, RPS.arraysize, temparray)
+##print('temparray: ', temparray[0:20])
+##print('timearray: ',timearray[0,0,0:3])
+##     Write out time signatures for each receiver. 
+#OPFile=open(PF.OUTPUTFILE,"w")
+#true=fun.Header(PF.OUTPUTFILE)
+#OPFile=open(PF.OUTPUTFILE,"a")      #redefining to print both Header and TimeHeader
+##print(RPS.arraysize1,'Arraysize')
+#if(RPS.planenum>=1):
+#      for W in range(0,sizefft):
+#            true=fun.TimeHeader(OPFile,timetemparray[0,W,3],RPS.sizex1,RPS.sizey1,RPS.sizez1,RPS.planename1)
+#            for D in range(0,RPS.arraysize1):
+#                  #if W==1:
+#                        #print(D)
+#                  OPFile.write('\t%f\t%f\t%f\t%f\n' %(timetemparray[D,W,0],timetemparray[D,W,1],timetemparray[D,W,2],timetemparray[D,W,4]))
+#                  #print('finished time',timetemparray[0,W,3] )
+
+for R in ears:
+    R.timeReconstruct(sizefft)
+
 OPFile=open(PF.OUTPUTFILE,"w")
 true=fun.Header(PF.OUTPUTFILE)
 OPFile=open(PF.OUTPUTFILE,"a")      #redefining to print both Header and TimeHeader
-#print(RPS.arraysize1,'Arraysize')
-if(RPS.planenum>=1):
-      for W in range(0,sizefft):
-            true=fun.TimeHeader(OPFile,timetemparray[0,W,3],RPS.sizex1,RPS.sizey1,RPS.sizez1,RPS.planename1)
-            for D in range(0,RPS.arraysize1):
-                  #if W==1:
-                        #print(D)
-                  OPFile.write('\t%f\t%f\t%f\t%f\n' %(timetemparray[D,W,0],timetemparray[D,W,1],timetemparray[D,W,2],timetemparray[D,W,4]))
-                  #print('finished time',timetemparray[0,W,3] )
+
+for W in range(sizefft):
+    true=fun.TimeHeader(OPFile,timearray[W],RPS.sizex1,RPS.sizey1,RPS.sizez1,RPS.planename1)
+    for R in ears:
+        OPFile.write('\t%f\t%f\t%f\t%f\n' %(R.position[0],R.position[1],R.position[2],R.timesignal[W]))
+
+OPFile.close()
 #print(timetemparray[1,1,0:2])                  
 #if(RPS.planenum>=2):
 #      W=0
