@@ -193,6 +193,7 @@ Kbig=np.arange(0,sizefft,1)
 airabsorb=fun.ABSORPTION(PF.ps,inputarraynew[:,0],PF.hr,PF.Temp)
 print('Absoption time no loop: %.8f ' %(time.time()-t))
 frecuencias = initial_signal(sizefft,outputsignal)      # Equivalent to inputarray in original
+inputarray =      frecuencias                   #hotfix for tight now
 t=time.time()
 #for K in range(sizeffttwo):
 #    inputarray[K,0]=(K+1)*PF.Fs/2*1/(sizeffttwo)      #Frequenvies
@@ -249,6 +250,9 @@ alphanothing = np.zeros(sizeffttwo)
 # Making specific receiver points using receive rmodule
 RPS.Receiver.initialize(PF.RecInput)
 ears = RPS.Receiver.rList           #easier to write
+for R in ears:          #hotfix
+      R.magnitude = np.zeros(sizefft)
+RPS.arraysize= RPS.Receiver.arraysize
 receiverpoint = [0.,0.,0.]
 receiverarray = RPS.Receiver.Array  # backwards compatibility    Delete later
 hitsum = 0
@@ -313,12 +317,11 @@ for D in range(0,RPS.Receiver.arraysize):
 #      temparray[R,:,4]=0.0                #magnitude
 #      temparray[R,:,5]=0.0                #direction
 
-for R in ears:
-      R.magnitude= np.zeros(sizefft)
+#for R in ears:
+#      R.magnitude= np.zeros(sizefft)
 #      R.frecuencias = frecuencias[:,0]
 outputarray1=np.zeros((sizeffttwo,6))
 
-#print('temparray:(The good one?) \n',temparray)
 #       Define ground plane
 groundheight=0.000000000
 GROUNDABC=np.array([0.000000000,0.000000000,1.00000000])
@@ -370,58 +373,16 @@ for W in range(1,PF.absorbplanes):        #These also look minimal
             alphabuilding[W,D] = tempalphabuilding[W,8]
 
 #        Mesh the patches for the environment.  Include patching file. 
-if PF.radiosity == 1 :
-
-      import SingleBuildingGeometry
-#    import SingleBuildingGeometryVal
-#    import NASAEMBuilding
-#    import NASAMuseBuilding
-#    import NASAMuseBuildComplex
-#    import UrbanCanyonH3L35Geo
-#    import UrbanCanyonH3L35GeoDeg90
-#    import UrbanCanyonH3L7Geo.
-#    import UrbanCanyonH3L7GeoDeg90
-#    import UrbanCanyonH3L14Geo
-#    import UrbanCanyonH3L14GeoDeg90
-#    import UrbanCanyonH6L35Geo
-#    import UrbanCanyonH6L35GeoDeg90
-#    import UrbanCanyonH6L7Geo
-#    import UrbanCanyonH6L7GeoDeg90
-#    import UrbanCanyonH6L14Geo
-#    import UrbanCanyonH6L14GeoDeg90
-#    import UrbanCanyonH12L35Geo
-#    import UrbanCanyonH12L35GeoDeg90
-#    import UrbanCanyonH12L7Geo
-#    import UrbanCanyonH12L7GeoDeg90
-#    import UrbanCanyonH12L14Geo
-#    import UrbanCanyonH12L14GeoDeg90
-#    import UrbanCanyonH24L35Geo
-#    import UrbanCanyonH24L35GeoDeg90
-#    import UrbanCanyonH24L7Geo
-#    import UrbanCanyonH24L7GeoDeg90
-#    import UrbanCanyonH24L14Geo
-#    import UrbanCanyonH24L14GeoDeg90
-#    import UrbanCanyonG2H3L55Geo
-#    import UrbanCanyonG2H3L7Geo
-#    import UrbanCanyonG2H3L14Geo
-#    import UrbanCanyonG2H6L55Geo
-#    import UrbanCanyonG2H6L7Geo
-#    import UrbanCanyonG2H6L14Geo
-#    import UrbanCanyonG2H12L55Geo
-#    import UrbanCanyonG2H12L7Geo
-#    import UrbanCanyonG2H12L14Geo
-#    import UrbanCanyonG2H24L55Geo
-#    import UrbanCanyonG2H24L7Geo
-#    import UrbanCanyonG2H24L14Geo
-      diffusion=percentdiffuse
-      diffusionground=0.0
-else:
-      diffusion=0.0
-      diffusionground=0.0
+#if PF.radiosity == 1 :
+##      import SingleBuildingGeometry
+#      diffusion=percentdiffuse
+#      diffusionground=0.0
+#else:
+#      diffusion=0.0
+#      diffusionground=0.0
 
 diffusionground = 0.0
 if PF.radiosity:  # If it exists as a non-zero number
-      import SingleBuildingGeometry.py
       import SingleBuildingGeometry
       diffusion = PF.radiosity
 else:
@@ -433,14 +394,525 @@ count=0
 ########################################################################################################################
 ########################################################################################################################
 ########################################################################################################################
+
+##ray=0
+#print('began rays')
+##ray = 606
+##for ray in range(605,610):
+#      hitcount=0
+#for ray in range(RAYMAX):
+#      tmpsum=0.0
+#      doublehit=0
+#      ampinitial=inputarray[:,0]/normalization
+#      phaseinitial=inputarray[:,1]
+#      #Vinitial=np.array([boomarray[ray,0],boomarray[ray,1],boomarray[ray-1,2]])     #Where code diverges
+#      if (PF.h < (2*PF.radius)): 
+#            print('h is less than 2r')
+#            break
+#      F=Finitial
+#      #veci=Vinitial
+#      veci = boomarray[ray,:]
+#      # Making small steps along the ray path.  For each step we should return, 
+#      # location, phase and amplitude
+#      ######################################
+#      for I in range(0,PF.IMAX):
+#      #for I in range(0,12):
+#            dxreceiver=HUGE
+#            #print(veci)
+#      # Find the closest sphere and store that as the distance
+#            #for Q in range(0,RPS.Receiver.arraysize):
+#            #      tempreceiver=fun.SPHERECHECK(RPS.Receiver.Array[Q],radius2,F,veci)
+#            #      print('old: ',tempreceiver)
+#            for R in ears:
+#                  tempreceiver=R.SphereCheck(radius2,F,veci)
+#                  #if Q==16:
+#                        #print('Spherecheck inputs :',receiverarray[Q],radius2,F,veci)
+#                  if (receiverhit >= 1):  #if you hit a receiver last time, don't hit it again
+#                        #if(
+#                        #lastreceiver[0]==receiverarray[Q,0] and 
+#                        #lastreceiver[1]==receiverarray[Q,1] and 
+#                        #lastreceiver[2]==receiverarray[Q,2]):
+#                        if np.all(lastreceiver == R.position):
+#                              tempreceiver=HUGE
+#                        #if(
+#                        #F[0]==checkdirection[0] and
+#                        #F[1] == checkdirection[1] and F[2] == checkdirection[2]):
+#                        if np.all(F == checkdirection):
+#                              OC = R.position - veci
+#                              OCLength = np.dot(OC,OC)
+#                              #OCLength = np.sum(OC*OC, axis=1)
+#                              #OC[0]=receiverarray[Q,0]-veci[0]
+#                              #OC[1]=receiverarray[Q,1]-veci[1]
+#                              #OC[2]=receiverarray[Q,2]-veci[2] 
+#                              #OCLength=OC[0]*OC[0]+OC[1]*OC[1]+OC[2]*OC[2]
+#                              #print('OCLength Orig',OCLength)
+#                              if(OCLength < radius2):
+#                                    tempreceiver=HUGE
+#                  if(receiverhit >= 2):
+#                        #print('recHit > 2 happens')        #This does not happen, good
+#                        if np.all(lastreceiver2 == R.position):
+#                        #if(lastreceiver2[0]== receiverarray[Q,0] and lastreceiver2[1]==receiverarray[Q,1] and lastreceiver2[2]==receiverarray[Q,2]):
+#                              tempreceiver=HUGE
+#                  if (tempreceiver < dxreceiver):
+#                        #print('Well duh, this clearly happens ') #It's not supposed to   
+#                        dxreceiver=tempreceiver
+#                        #receiverpoint[0]=receiverarray[Q,0]
+#                        #receiverpoint[1]=receiverarray[Q,1]
+#                        #receiverpoint[2]=receiverarray[Q,2]
+#                        receiverpoint = R.position    #I tihnk this is unnecessary now, but here for compatibility
+#                  elif (tempreceiver== dxreceiver and tempreceiver != HUGE):
+#                        #(tempreceiver == dxreceiver) *(tempreceiver !=HUGE)  #for where condition
+#                        receivercheck=tempreceiver
+#                        #print('okay, does this one happen?')           
+#                        #print('receivercheck',receivercheck)
+#                        #if(receiverarray[Q,0]==receiverpoint[0] and receiverarray[Q,1]==receiverpoint[1] and receiverarray[Q,2]==receiverpoint[2]):
+#                        if np.all(R.position == receiverpoint):
+#                              doublehit=0
+#                        else:
+#                              receiverpoint2 = R.position
+#                              #receiverpoint2[0]=receiverarray[Q,0]
+#                              #receiverpoint2[1]=receiverarray[Q,1]
+#                              #receiverpoint2[2]=receiverarray[Q,2]
+#                              doublehit=1
+#            #testing no Loop
+#            
+#            #tempreceivernew=fun.SPHERECHECKNEW(RPS.Receiver.Array,radius2,F,veci)
+#            ##print('tempreceivernew',veci,tempreceivernew)
+#            ##if Q==16:
+#            #            #print('Spherecheck inputs :',receiverarray[Q],radius2,F,veci)
+#            #if (receiverhit >= 1):  #if you hit a receiver last time, don't hit it again
+#            #      if(any((receiverarray[:]==lastreceiver).all(1))):
+#            #            tempreceiver=HUGE
+#            #      if((F[:]==checkdirection).all()):
+#            #            OCnew=receiverarray-veci
+#            #            OCLengthnew=np.sum(OCnew*OCnew, axis=1)
+#            #            print(OCLengthnew)
+#            #            if(any(OCLengthnew) < radius2):
+#            #                  tempreceiver=HUGE
+#            #if(receiverhit >= 2):
+#            #            #print('recHit > 2 happens')        #This does not happen, good
+#            #      if(any((receiverarray[:]==lastreceiver).all(1))):
+#            #            tempreceiver=HUGE
+#            #if (any(tempreceivernew < dxreceiver)):
+#            #      print('This happens Now')
+#            #            #print('Well duh, this clearly happens ') #It's not supposed to   
+#            #      dxreceiver=amin(tempreceivernew)
+#            #      #print('dxreceiver',dxreceiver)
+#            #
+#            #      #### everything up to here looks good#### need to figure out how to get the index for the min now. 
+#            #      receiverpoint[0]=receiverarray[Q,0]
+#            #      receiverpoint[1]=receiverarray[Q,1]
+#            #      receiverpoint[2]=receiverarray[Q,2]
+#            #elif (tempreceiver== dxreceiver and tempreceiver != HUGE):
+#            #      receivercheck=tempreceiver
+#            #            #print('okay, does this one happen?')           
+#            #            #print('receivercheck',receivercheck)
+#            #      if(receiverarray[Q,0]==receiverpoint[0] and receiverarray[Q,1]==receiverpoint[1] and receiverarray[Q,2]==receiverpoint[2]):
+#            #            doublehit=0
+#            #      else:
+#            #            receiverpoint2[0]=receiverarray[Q,0]
+#            #            receiverpoint2[1]=receiverarray[Q,1]
+#            #            receiverpoint2[2]=receiverarray[Q,2]
+#            #            doublehit=1
+#            #     Check Intersection with ground plane
+#            #GROUNDN=GROUNDABC
+#            #GROUNDVD=GROUNDN[0]*F[0]+GROUNDN[1]*F[1]+GROUNDN[2]*F[2]
+#            groundVD = np.dot(GROUNDABC,F)
+#            if (groundhit==1):
+#                  dxground=HUGE
+#            elif (groundVD != 0.0):
+#                  #GROUNDVO=((GROUNDN[0]*veci[0]+GROUNDN[1]*veci[1]+GROUNDN[2]*veci[2])+GROUNDD)
+#                  groundVO = np.dot(GROUNDABC,veci) + groundD
+#                  #dxground1=(-1.000)*GROUNDVO*(1.000)/GROUNDVD
+#                  #dxground=dxground1
+#                  dxground = -groundVO/groundVD
+#                  Vecip1=veci+dxground*np.array(F)
+#                  tmp = np.dot(GROUNDABC,Vecip1) +groundD
+#                  #tmp=(GROUNDABC[0]*Vecip1[0]+GROUNDABC[1]*Vecip1[1]+GROUNDABC[2]*Vecip1[2]+GROUNDD)                  
+#                  if (dxground < 0.0):
+#                        dxground=HUGE
+#            else:
+#                  dxground=HUGE
+#            #     Check intersection with building
+#            dxbuilding=HUGE
+#            hit=0
+#            planehit=0
+#            #     Check intersection with Boxes
+#            t = time.time()
+#            for Q in range(0,BG.Boxnumber):
+#                  dxnear, dxfar, hit, planehit=fun.BOX(BG.Boxarraynear[Q], BG.Boxarrayfar[Q],veci,F)
+#                  #print('old',dxnear, dxfar, hit, planehit)
+#            #print('Box time loop: %.8f ' %(time.time()-t))
+#
+#                  # if (dxnear < dxbuilding):
+#                  #       dxbuilding=dxnear
+#
+#                  #       Vecip1=veci+np.multiply(dxbuilding,F)
+#                  #       whichbox=Q
+#                  #       nbox=fun.PLANE(Vecip1, BG.Boxarraynear[whichbox],BG.Boxarrayfar[whichbox], planehit)
+#                  #       print(Vecip1, BG.Boxarraynear[b],BG.Boxarrayfar[b], planehit[b])
+#            t = time.time()
+#            #dxnearnew, dxfarnew, hitnew, planehitnew=fun.BOXnew(BG.Boxarraynear, BG.Boxarrayfar,veci,F)
+#            #b=np.argmin(dxnearnew)
+#            #print('Box time no loop: %.8f ' %(time.time()-t))
+#            ##print('new',np.amin(dxnearnew), dxfarnew, hitnew, planehitnew,b,np.amin(dxnearnew))
+#            #if (dxnearnew[b] < dxbuilding):
+#            #      dxbuilding=dxnearnew[b]
+#            #      Vecip1=veci+np.multiply(dxbuilding,F)
+#            #      print(Vecip1, BG.Boxarraynear[b],BG.Boxarrayfar[b], planehit[b])
+#            #      nboxnew=fun.PLANE(Vecip1, BG.Boxarraynear[b],BG.Boxarrayfar[b], planehit[b])
+#            #      print(nboxnew)
+#            #print('Box time no loop: %.8f ' %(time.time()-t))
+#            #      Check intersection with Triangles
+#            if(BG.TriangleNumber > 0):
+#                  for Q in range(0, BG.TriangleNumber):
+#                        dxnear, behind = fun.Polygon(veci,F,Q,3,TriangleNumber,PointNumbers,Trianglearray,BuildingPoints,normal,FaceNormalNo,FaceNormals)
+#                        if (dxnear < dxbuilding):
+#                              dxbuilding=dxnear
+#                              nbox=normal
+#                              whichbox=Q
+#            #    Check intersection with Squares
+#            if(BG.SquareNumber>0):
+#                  for Q in range(0,BG.SquareNumber):
+#                        dxnear, behind=Polygon(veci,F,Q,4,SquareNumber,PointNumbers,SquareArray,BuildingPoints,normal,FaceNormalNo,FaceNormals)
+#                        if (dxnear < dxbuilding):
+#                              dxbuilding=dxnear
+#                              nbox=normal
+#                              #print('nbox from squares', nbox)
+#                              whichbox=Q
+#            buildinghit=0
+#            receiverhit=0
+#            groundhit=0
+#            #if (ray == 606 ) and (I == 10):
+#            #      dxreceiver = dx
+#            #     Check to see if ray hits within step size
+#            if (dxreceiver < PF.h or dxground < PF.h or dxbuilding < PF.h):
+#                  dx=min(dxreceiver,dxground,dxbuilding)
+#                  tmpsum=tmpsum+dx
+#            #     if the ray hits a receiver, store in an array.  If the ray hits twice
+#            #     Create two arrays to store in.
+#                  if (dx==dxreceiver):
+#                        hitsum=hitsum+1
+#                        #print(veci,dx,F)
+#                        #Vecip1=veci+np.multiply(dx,F)
+#                        #veci=Vecip1
+#                        print('hit receiver')
+#                        veci += (dx * F) 
+#                        receiverhit=1
+#                        checkdirection=F
+#                        if(doublehit==1):
+#                              receiverhit=2
+#                        hitcount=hitcount+1
+#                        #print('hit receiver',sum,tmpsum,receiverpoint)
+#                        m=airabsorb[:]
+#                        lamb=PF.soundspeed/frecuencias[:,1]
+#
+#                        phasefinal = phaseinitial[:] - (twopi*dx)/lamb
+#                        ampfinal=ampinitial[:]*(1-alphanothing[:])* np.exp(-m[:]*dx)
+#                        ampinitial = ampfinal[:]
+#                        #ampinitial *= ((1-alphanothing[:])*np.exp(-m[:]*dx))
+#                        phaseinitial=phasefinal[:]%twopi
+#                        phaseinitial = np.where(      (phaseinitial[:]>=PI)   ,phaseinitial[:]-twopi     ,phaseinitial)
+#                        # New  ***
+#                        #print('this happens outputarray')
+#                        #if(W==0):
+#                              #outputarray1=np.zeros((sizeffttwo,6))
+#                        outputarray1[:,0]=inputarray[:,0]
+#                        #outputarray1[:,1]=receiverpoint[0]
+#                        #outputarray1[:,2]=receiverpoint[1]
+#                        #outputarray1[:,3]=receiverpoint[2]
+#                        outputarray1[:,1:4] = receiverpoint[:]
+#                        outputarray1[:,4] =   ampinitial[:]
+#                        lastreceiver=receiverpoint
+#                        if doublehit:
+#                              outputarray1[:,5] = phaseinitial[:]/2
+#                              dhoutputarray1[:,0]=inputarray[:,0]
+#                              dhoutputarray1[:,1]=receiverpoint2[0]
+#                              dhoutputarray1[:,2]=receiverpoint2[1]
+#                              dhoutputarray1[:,3]=receiverpoint2[2]
+#                              dhoutputarray1[:,4]=ampinitial[:]/2.0
+#                              dhoutputarray1[:,5]=phaseinitial[:]
+#                        else:
+#                              outputarray1[:,5] = phaseinitial[:]
+#                        #Old ***
+#                        #for W in range(0,sizeffttwo):
+#                        #      #print('airabsorb: ',airabsorb[W])
+#                        #      #m=airabsorb[W]
+#                        #      #lamb=PF.soundspeed/inputarray[W,1]
+#                        #      #phasefinal=phaseinitial[W]-(twopi*dx)/lamb   
+#                        #      #print('ampinit: ',ampinitial[W])
+#                        #      #print('alphno: ',' (1- ',alphanothing ,' ) ')
+#                        #      #print('oth: ',np.exp(-m*dx))
+#                        #      #ampfinal=ampinitial[W]*(1-alphanothing[W])*np.exp(-m*dx)
+#                        #      #ampinitial[W]=ampfinal
+#                        #      #phaseinitial[W]=phasefinal%twopi
+#                        #      #if (phaseinitial[W]>=PI):
+#                        #      #      phaseinitial[W]=phaseinitial[W]-twopi
+#                        #      if(doublehit==1):
+#                        #            if(W==0):   #Used this loop twice before
+#                        #                  outputarray1=np.zeros((sizeffttwo, 6))
+#                        #                  dhoutputarray1=np.zeros((sizeffttwo,6))  
+#                        #            outputarray1[W,0]=inputarray[W,0]
+#                        #            outputarray1[W,1]=receiverpoint[0]
+#                        #            outputarray1[W,2]=receiverpoint[1]
+#                        #            outputarray1[W,3]=receiverpoint[2]
+#                        #            outputarray1[W,4]=ampinitial[W]/2.0
+#                        #            outputarray1[W,5]=phaseinitial[W]
+#                        #            dhoutputarray1[W,0]=inputarray[W,0]
+#                        #            dhoutputarray1[W,1]=receiverpoint2[0]
+#                        #            dhoutputarray1[W,2]=receiverpoint2[1]
+#                        #            dhoutputarray1[W,3]=receiverpoint2[2]
+#                        #            dhoutputarray1[W,4]=ampinitial[W]/2.0
+#                        #            dhoutputarray1[W,5]=phaseinitial[W]
+#                        #            lastreceiver[0]=receiverpoint[0]
+#                        #            lastreceiver[1]=receiverpoint[1]
+#                        #            lastreceiver[2]=receiverpoint[2]
+#                        #            lastreceiver2[0]=receiverpoint2[0]
+#                        #            lastreceiver2[1]=receiverpoint2[1]
+#                        #            lastreceiver2[2]=receiverpoint2[2]
+#                        #      else:
+#                        #            #print('this happens outputarray')
+#                        #            #if(W==0):
+#                        #                  #outputarray1=np.zeros((sizeffttwo,6))
+#                        #            outputarray1[W,0]=inputarray[W,0]
+#                        #            outputarray1[W,1]=receiverpoint[0]
+#                        #            outputarray1[W,2]=receiverpoint[1]
+#                        #            outputarray1[W,3]=receiverpoint[2]
+#                        #            outputarray1[W,4]=ampinitial[W]
+#                        #            outputarray1[W,5]=phaseinitial[W]
+#                        #            lastreceiver[0]=receiverpoint[0]
+#                        #            lastreceiver[1]=receiverpoint[1]
+#                        #            lastreceiver[2]=receiverpoint[2]
+#                        #print('assigned to outputarray1')
+#                        #print(outputarray1[0,1], outputarray1[1,3], outputarray1[1,4])
+#                        #print('temparray before: \n',temparray)
+#                        temparray=fun.receiverHITFUNC(sizefft,outputarray1,RPS.Receiver.arraysize,temparray)
+#                        #print('temparray after: \n',temparray)
+#                        #print('receiverHITFUNC completed')
+#                        if (doublehit==1):
+#                              temparray=fun.receiverHITFUNC(sizefft,dhoutputarray1,RPS.Receiver.arraysize,temparray)
+#                              count+=1
+#                        count+=1
+#                        outputarray1=None
+#                        if(doublehit==1):
+#                              dhoutputarray1=None
+#            #     If the ray hits the ground then bounce off the ground and continue
+#                  if (abs(dx-dxground)< 10.0**(-13.0)):
+#                        Vecip1=veci+np.multiply(dxground,F)
+#                        #print('veci ', veci)
+#                        tmp=(GROUNDABC[0]*Vecip1[0]+GROUNDABC[1]*Vecip1[1]+GROUNDABC[2]*Vecip1[2]+GROUNDD)
+#                        if(tmp != GROUNDD): 
+#                              Vecip1[2]=0.0
+#                        print('hit ground',I)
+#                        veci=Vecip1
+#                        #print('vecip1 ',Vecip1)
+#                        #print('nground', nground[0])
+#                        dot1=(F[0]*nground[0]+F[1]*nground[1]+F[2]*nground[2])
+#                        n2=(nground[0]*nground[0]+nground[1]*nground[1]+nground[2]*nground[2])
+#                        #print('nground[0]', nground[0])
+#                        #print('nground[1]', nground[1])
+#                        #print('nground[2]', nground[2])                #Good
+#                        #print (nground)
+#                        r=np.around(F-2.0*(dot1/n2)*nground,8)
+#                        length=np.sqrt(r[0]*r[0]+r[1]*r[1]+r[2]*r[2])
+#                        F=np.around([r[0],r[1],r[2]],8)
+#                        #print('F is now ', F)
+#                        #print('r as follows: ', r[0],r[1],r[2])        #Good
+#                        groundhit=1
+#                        twopidx=twopi*dxground
+#                  #     Loop through all the frequencies
+#                        #     Update frequencies
+#                        #phaseNew, amplitudeNew = update(airabsorb,frecuencias[:,0],phaseinitial,dxground,ampinitial,alphaground,diffusionground)
+#                        phaseinitial, ampinitial = update(airabsorb,frecuencias[:,0],phaseinitial,dxground,ampinitial,alphaground,diffusionground)
+#                        #m=airabsorb[:]
+#                        #lamb=PF.soundspeed/frecuencias[:,0]
+#                        #phasefinal=phaseinitial[:]- (twopidx/lamb)
+#                        #ampfinal=ampinitial[:]*(1.0-alphaground[:])*(1.0-diffusionground)*np.exp(-m[:]*dxground)
+#                        #phaseinitial=phasefinal%twopi
+#                        #if (phaseinitial[W]>PI):
+#                        #      phaseinitial[W]=phaseinitial[W]-twopi
+#                        #ampinitial[:]=ampfinal[:]
+#                        if(PF.radiosity==1 and (diffusionground!=0.0)):
+#                              for Q in range (0,PatchNo):
+#                                    if (formfactors[0,Q,1]==1):
+#                                          if(veci[0]<=(patcharray[Q,W,0]+0.5*patcharray[Q,W,3]) and veci[0]>=(patcharray[Q,W,0]-0.5*patcharray[Q,W,3])):
+#                                                if(veci[1]<=(patcharray[Q,W,1]+0.5*patcharray[Q,W,4]) and veci[1]>=(patcharray[Q,W,1]-0.5*patcharray[Q,W,4])):
+#                                                      if(veci[2]<=(patcharray[Q,W,2]+0.5*patcharray[Q,W,5]) and veci[2]>=(patcharray[Q,W,2]-0.5*patcharray[Q,W,5])):
+#                                                            temp2=complex(abs(patcharray[Q,W,6])*np.exp(XJ*patcharray[Q,W,7]))
+#                                                            temp3=complex(abs(ampinitial[W]*(1.0-alphaground[W])*diffusionground*exp(-m*dxground))*exp(1j*phasefinal))
+#                                                            temp4=temp2+temp3
+#                                                            patcharray[Q,W,6]=abs(temp4)
+#                                                            patcharray[Q,W,7]=np.arctan(temp4.imag,temp4.real)
+#                     
+#                        #for W in range(0,sizeffttwo):
+#                        #      m=airabsorb[W]
+#                        #      lamb=PF.soundspeed/inputarray[W,0]
+#                        #      phasefinal=phaseinitial[W]-(twopidx)/lamb
+#                        #      ampfinal=ampinitial[W]*(1.0-alphaground[W])*(1.0-diffusionground)*np.exp(-m*dxground)
+#                        #      phaseinitial[W]=phasefinal%twopi
+#                        #      if (phaseinitial[W]>PI):
+#                        #            phaseinitial[W]=phaseinitial[W]-twopi
+#                        #      if(PF.radiosity==1 and (diffusionground!=0.0)):
+#                        #            for Q in range (0,PatchNo):
+#                        #                  if (formfactors[0,Q,1]==1):
+#                        #                        if(veci[0]<=(patcharray[Q,W,0]+0.5*patcharray[Q,W,3]) and veci[0]>=(patcharray[Q,W,0]-0.5*patcharray[Q,W,3])):
+#                        #                              if(veci[1]<=(patcharray[Q,W,1]+0.5*patcharray[Q,W,4]) and veci[1]>=(patcharray[Q,W,1]-0.5*patcharray[Q,W,4])):
+#                        #                                    if(veci[2]<=(patcharray[Q,W,2]+0.5*patcharray[Q,W,5]) and veci[2]>=(patcharray[Q,W,2]-0.5*patcharray[Q,W,5])):
+#                        #                                          temp2=complex(abs(patcharray[Q,W,6])*np.exp(XJ*patcharray[Q,W,7]))
+#                        #                                          temp3=complex(abs(ampinitial[W]*(1.0-alphaground[W])*diffusionground*exp(-m*dxground))*exp(1j*phasefinal))
+#                        #                                          temp4=temp2+temp3
+#                        #                                          patcharray[Q,W,6]=abs(temp4)
+#                        #                                          patcharray[Q,W,7]=np.arctan(temp4.imag,temp4.real)
+#                        #      ampinitial[W]=ampfinal   
+#                       # if the ray hits the building then change the direction and continue
+#                  if (dx==dxbuilding):
+#                        Vecip1=veci+dx*np.array(F)
+#                        veci=Vecip1
+#                        #veci += (dx*F)
+#                        print('hit building')
+#                        #n2=(nbox[0]*nbox[0]+nbox[1]*nbox[1]+nbox[2]*nbox[2])
+#                        n2 = np.dot(nbox,nbox)
+#                        #print('nbox for nbuilding: ',nbox)
+#                        #print('n2', n2)
+#                        #print('n2: ', n2)
+#                        nbuilding=nbox/np.sqrt(n2)
+#                        #dot1=(F[0]*nbuilding[0]+F[1]*nbuilding[1]+F[2]*nbuilding[2])
+#                        dot1 = np.dot(F,nbuilding)
+#                        r=F[:]-2.0*(dot1/n2)*nbuilding
+#                        #length=np.sqrt(r[0]*r[0]+r[1]*r[1]+r[2]*r[2])
+#                        length = np.sqrt((np.dot(r,r)))
+#                        #F=[r[0],r[1],r[2]]
+#                        F = r[:]
+#                        buildinghit=1
+#                        twopidx=twopi*dx
+#                        if(PF.complexabsorption==1):
+#                              if (PF.absorbplanes==2):
+#                                    if(veci[2]>0.0 and veci[2]< height1):
+#                                          alpha=alphabuilding[0,W]
+#                                    elif(veci[2]>height1 and veci[2]<=height2):
+#                                          alpha=alphabuilding[1,W]
+#                              if(PF.absorbplanes==3):
+#                                    if(veci[2]>height2 and veci[2] <=height3):
+#                                          alpha=alphabuilding[2,W]
+#                              if(PF.absorbplanes==4):
+#                                    if(veci[2]>height3):
+#                                          alpha=alphabuilding(4,W)
+#                        else:
+#                              alpha=alphabuilding[0,:]
+#                        # To test 
+#                        #     Update frequencies
+#                        phaseNew, amplitudeNew = update(airabsorb,frecuencias[:,0],phaseinitial,dx,ampinitial,alpha,diffusion)
+#                        m=airabsorb[:]
+#                        lamb=PF.soundspeed/inputarray[:,0]                
+#                        phasefinal=phaseinitial[:]-(twopidx)/lamb
+#                        ampfinal=ampinitial[:]*(1.0-alpha)*(1.0-diffusion)*np.exp(-m*dx)
+#                        phaseinitial[:]=phasefinal%twopi
+#                        phaseinitial = np.where((phaseinitial[:]>PI), phaseinitial[:]-twopi, phaseinitial)
+#                        #if (phaseinitial[W]>PI):
+#                        #      phaseinitial[W]=phaseinitial[W]-twopi
+#                        ampinitial[:]=ampfinal
+#                        #for W in range(0,sizeffttwo):
+#                        #      if(PF.complexabsorption==1):
+#                        #            if (PF.absorbplanes==2):
+#                        #                  if(veci[2]>0.0 and veci[2]< height1):
+#                        #                        alpha=alphabuilding[0,W]
+#                        #                  elif(veci[2]>height1 and veci[2]<=height2):
+#                        #                        alpha=alphabuilding[1,W]
+#                        #            if(PF.absorbplanes==3):
+#                        #                  if(veci[2]>height2 and veci[2] <=height3):
+#                        #                        alpha=alphabuilding[2,W]
+#                        #            if(PF.absorbplanes==4):
+#                        #                  if(veci[2]>height3):
+#                        #                        alpha=alphabuilding(4,W)
+#                        #      else:
+#                        #            alpha=alphabuilding[0,W]
+#                        #      m=airabsorb[W]
+#                        #      lamb=PF.soundspeed/inputarray[W,0]                
+#                        #      phasefinal=phaseinitial[W]-(twopidx)/lamb
+#                        #      ampfinal=ampinitial[W]*(1.0-alpha)*(1.0-diffusion)*np.exp(-m*dx)
+#                        #      phaseinitial[W]=phasefinal%twopi
+#                        #      if (phaseinitial[W]>PI):
+#                        #            phaseinitial[W]=phaseinitial[W]-twopi
+#                        #      ampinitial[W]=ampfinal
+#
+#            #for i in range(1):#Only done to take up less space on screen. Come back for radiosity
+#                  #COME BACK TO THIS FOR RADIOSITY
+#
+#                  #                         if(radiosity.eq.1)then
+#                  # C     Loop through all patches if radiosity is turned on.
+#                  #                            DO 29 Q=1,PatchNo
+#                  #                               if (formfactors(1,Q,2).eq.2.0)then
+#                  #                                  if((veci(1).le.(patcharray(Q,W,1)+0.5*
+#                  #      *                                patcharray(Q,W,4))).and.(veci(1)
+#                  #      *                                .ge.(patcharray(Q,W,1)-0.5*
+#                  #      *                                patcharray(Q,W,4))))then
+#                  #                                     if((veci(2).le.(patcharray(Q,W,2)+
+#                  #      *                                   0.5*patcharray(Q,W,5))).and.
+#                  #      *                                   (veci(2).ge.(patcharray(Q,W,2)-
+#                  #      *                                   0.5*patcharray(Q,W,5))))then
+#                  #                                        if((veci(3).le.(patcharray(Q,W,3)
+#                  #      *                                      +0.5*patcharray(Q,W,6)))
+#                  #      *                                      .and.(veci(3).ge.(patcharray
+#                  #      *                                      (Q,W,3)-0.5*patcharray(Q,W,6
+#                  #      *                                      ))))then
+#                  #                                           temp2=cmplx(abs(patcharray
+#                  #      *                                         (Q,W,7))*exp(XJ*
+#                  #      *                                         patcharray(Q,W,8)))
+#                  #                                           temp3=abs(ampinitial(W)*(1.0-
+#                  #      *                                         alpha)*diffusion*exp
+#                  #      *                                         (-m*dx))*exp(XJ*
+#                  #      *                                         phaseinitial(W))
+#                  #                                           temp4=temp2+temp3
+#                  #                                           patcharray(Q,W,7)=abs(temp4)
+#                  #                                           patcharray(Q,W,8)=ATAN2(
+#                  #      *                                         imagpart(temp4),realpart(
+#                  #      *                                         temp4))
+#                  #                                           GOTO 27
+#                  #                                        endif
+#                  #                                     endif
+#                  #                                  endif
+#                  #  27                              CONTINUE
+#                  #                               endif
+#                  #  29                     CONTINUE
+#                  #                      endif 
+#                                     #pass
+#            else:
+##     If there was no interaction with buildings then proceed with one step. 
+#                  tmpsum=tmpsum+PF.h
+#                  #Vecip1=veci+(PF.h)*np.array(F)
+#                  #veci=Vecip1
+#                  veci += (PF.h * F)
+#                  twopih=twopi*PF.h
+##     Loop through all frequencies.
+#                  # New ***
+#                  #phaseNew, amplitudeNew = update(airabsorb,frecuencias[:,0],phaseinitial,PF.h,ampinitial,alphanothing,0)  #ignore diffusion
+#                  phaseinitial, ampinitial = update(airabsorb,frecuencias[:,0],phaseinitial,PF.h,ampinitial,alphanothing,0)  #temporary
+#                  # Old ***
+#                  #for W in range (0,sizeffttwo):
+#                  #      m=airabsorb[W]
+#                  #      lamb=PF.soundspeed/frecuencias[W,0]
+#                  #      phasefinal=phaseinitial[W]-(twopih)/lamb
+#                  #      ampfinal=ampinitial[W]*(1-alphanothing)*np.exp(-m*PF.h)
+#                  #      #print('ampinit: ',ampinitial[W])
+#                  #      #print('ampfin: ',ampfinal[W])
+#                  #      ampinitial[W]=ampfinal[W]                 
+#                  #      phaseinitial[W]=phasefinal%twopi
+#                  #      if (phaseinitial[W] > PI):
+#                  #            phaseinitial[W]=phaseinitial[W]-twopi
+#      print('finished ray', ray + 1)
+#      if ray == 609:
+#            break
+########################################################################################################################
+########################################################################################################################
 ########################################################################################################################
 
-#ray=0
+
 print('began rays')
 #ray = 606
-#for ray in range(605,610):
+#for ray in range(605,607):
 for ray in range(RAYMAX):
       hitcount=0
+      #ray = 606
       tmpsum=0.0
       doublehit=0
       ampinitial=inputarray[:,0]/normalization
@@ -455,120 +927,105 @@ for ray in range(RAYMAX):
       # Making small steps along the ray path.  For each step we should return, 
       # location, phase and amplitude
       ######################################
-      for I in range(0,PF.IMAX):
-      #for I in range(0,12):
+      #for I in range(0,PF.IMAX):
+      for I in range(0,15):
             dxreceiver=HUGE
-            #print(veci)
-      # Find the closest sphere and store that as the distance
-            #for Q in range(0,RPS.Receiver.arraysize):
-            #      tempreceiver=fun.SPHERECHECK(RPS.Receiver.Array[Q],radius2,F,veci)
-            #      print('old: ',tempreceiver)
-            for R in ears:
-                  tempreceiver=R.SphereCheck(radius2,F,veci)
+            print(veci)
+            # Find the closest sphere and store that as the distance
+            for Q in range(0,RPS.arraysize):
+                  tempreceiver=fun.SPHERECHECK(receiverarray[Q],radius2,F,veci)
                   #if Q==16:
                         #print('Spherecheck inputs :',receiverarray[Q],radius2,F,veci)
                   if (receiverhit >= 1):  #if you hit a receiver last time, don't hit it again
-                        #if(
-                        #lastreceiver[0]==receiverarray[Q,0] and 
-                        #lastreceiver[1]==receiverarray[Q,1] and 
-                        #lastreceiver[2]==receiverarray[Q,2]):
-                        if np.all(lastreceiver == R.position):
+                        if(
+                        lastreceiver[0]==receiverarray[Q,0] and 
+                        lastreceiver[1]==receiverarray[Q,1] and 
+                        lastreceiver[2]==receiverarray[Q,2]):
                               tempreceiver=HUGE
-                        #if(
-                        #F[0]==checkdirection[0] and
-                        #F[1] == checkdirection[1] and F[2] == checkdirection[2]):
-                        if np.all(F == checkdirection):
-                              OC = R.position - veci
-                              OCLength = np.dot(OC,OC)
-                              #OCLength = np.sum(OC*OC, axis=1)
-                              #OC[0]=receiverarray[Q,0]-veci[0]
-                              #OC[1]=receiverarray[Q,1]-veci[1]
-                              #OC[2]=receiverarray[Q,2]-veci[2] 
-                              #OCLength=OC[0]*OC[0]+OC[1]*OC[1]+OC[2]*OC[2]
-                              #print('OCLength Orig',OCLength)
+                        if(
+                        F[0]==checkdirection[0] and
+                        F[1] == checkdirection[1] and F[2] == checkdirection[2]):
+                              OC[0]=receiverarray[Q,0]-veci[0]
+                              OC[1]=receiverarray[Q,1]-veci[1]
+                              OC[2]=receiverarray[Q,2]-veci[2] 
+                              OCLength=OC[0]*OC[0]+OC[1]*OC[1]+OC[2]*OC[2]
+                              print('OCLength Orig',OCLength)
                               if(OCLength < radius2):
                                     tempreceiver=HUGE
                   if(receiverhit >= 2):
                         #print('recHit > 2 happens')        #This does not happen, good
-                        if np.all(lastreceiver2 == R.position):
-                        #if(lastreceiver2[0]== receiverarray[Q,0] and lastreceiver2[1]==receiverarray[Q,1] and lastreceiver2[2]==receiverarray[Q,2]):
+                        if(lastreceiver2[0]== receiverarray[Q,0] and lastreceiver2[1]==receiverarray[Q,1] and lastreceiver2[2]==receiverarray[Q,2]):
                               tempreceiver=HUGE
                   if (tempreceiver < dxreceiver):
                         #print('Well duh, this clearly happens ') #It's not supposed to   
                         dxreceiver=tempreceiver
-                        #receiverpoint[0]=receiverarray[Q,0]
-                        #receiverpoint[1]=receiverarray[Q,1]
-                        #receiverpoint[2]=receiverarray[Q,2]
-                        receiverpoint = R.position    #I tihnk this is unnecessary now, but here for compatibility
+                        receiverpoint[0]=receiverarray[Q,0]
+                        receiverpoint[1]=receiverarray[Q,1]
+                        receiverpoint[2]=receiverarray[Q,2]
                   elif (tempreceiver== dxreceiver and tempreceiver != HUGE):
-                        #(tempreceiver == dxreceiver) *(tempreceiver !=HUGE)  #for where condition
                         receivercheck=tempreceiver
                         #print('okay, does this one happen?')           
                         #print('receivercheck',receivercheck)
-                        #if(receiverarray[Q,0]==receiverpoint[0] and receiverarray[Q,1]==receiverpoint[1] and receiverarray[Q,2]==receiverpoint[2]):
-                        if np.all(R.position == receiverpoint):
+                        if(receiverarray[Q,0]==receiverpoint[0] and receiverarray[Q,1]==receiverpoint[1] and receiverarray[Q,2]==receiverpoint[2]):
                               doublehit=0
                         else:
-                              receiverpoint2 = R.position
-                              #receiverpoint2[0]=receiverarray[Q,0]
-                              #receiverpoint2[1]=receiverarray[Q,1]
-                              #receiverpoint2[2]=receiverarray[Q,2]
+                              receiverpoint2[0]=receiverarray[Q,0]
+                              receiverpoint2[1]=receiverarray[Q,1]
+                              receiverpoint2[2]=receiverarray[Q,2]
                               doublehit=1
             #testing no Loop
             
-            #tempreceivernew=fun.SPHERECHECKNEW(RPS.Receiver.Array,radius2,F,veci)
-            ##print('tempreceivernew',veci,tempreceivernew)
-            ##if Q==16:
-            #            #print('Spherecheck inputs :',receiverarray[Q],radius2,F,veci)
-            #if (receiverhit >= 1):  #if you hit a receiver last time, don't hit it again
-            #      if(any((receiverarray[:]==lastreceiver).all(1))):
-            #            tempreceiver=HUGE
-            #      if((F[:]==checkdirection).all()):
-            #            OCnew=receiverarray-veci
-            #            OCLengthnew=np.sum(OCnew*OCnew, axis=1)
-            #            print(OCLengthnew)
-            #            if(any(OCLengthnew) < radius2):
-            #                  tempreceiver=HUGE
-            #if(receiverhit >= 2):
-            #            #print('recHit > 2 happens')        #This does not happen, good
-            #      if(any((receiverarray[:]==lastreceiver).all(1))):
-            #            tempreceiver=HUGE
-            #if (any(tempreceivernew < dxreceiver)):
-            #      print('This happens Now')
-            #            #print('Well duh, this clearly happens ') #It's not supposed to   
-            #      dxreceiver=amin(tempreceivernew)
-            #      #print('dxreceiver',dxreceiver)
-            #
-            #      #### everything up to here looks good#### need to figure out how to get the index for the min now. 
-            #      receiverpoint[0]=receiverarray[Q,0]
-            #      receiverpoint[1]=receiverarray[Q,1]
-            #      receiverpoint[2]=receiverarray[Q,2]
-            #elif (tempreceiver== dxreceiver and tempreceiver != HUGE):
-            #      receivercheck=tempreceiver
-            #            #print('okay, does this one happen?')           
-            #            #print('receivercheck',receivercheck)
-            #      if(receiverarray[Q,0]==receiverpoint[0] and receiverarray[Q,1]==receiverpoint[1] and receiverarray[Q,2]==receiverpoint[2]):
-            #            doublehit=0
-            #      else:
-            #            receiverpoint2[0]=receiverarray[Q,0]
-            #            receiverpoint2[1]=receiverarray[Q,1]
-            #            receiverpoint2[2]=receiverarray[Q,2]
-            #            doublehit=1
+            tempreceivernew=fun.SPHERECHECKNEW(receiverarray,radius2,F,veci)
+            #print('tempreceivernew',veci,tempreceivernew)
+            #if Q==16:
+                        #print('Spherecheck inputs :',receiverarray[Q],radius2,F,veci)
+            if (receiverhit >= 1):  #if you hit a receiver last time, don't hit it again
+                  #if(any((receiverarray[:]==lastreceiver).all(1))):
+                  if(np.all(receiverarray[:]==lastreceiver)):
+                        tempreceiver=HUGE
+                  #if((F[:]==checkdirection).all()):
+                  if np.all(F[:]==checkdirection):
+                        OCnew=receiverarray-veci
+                        OCLengthnew=np.sum(OCnew*OCnew, axis=1)
+                        print(OCLengthnew)
+                        if(any(OCLengthnew) < radius2):
+                              tempreceiver=HUGE
+            if(receiverhit >= 2):
+                        #print('recHit > 2 happens')        #This does not happen, good
+                  #if(any((receiverarray[:]==lastreceiver).all(1))):
+                  if(any((receiverarray[:]==lastreceiver).all(1))):
+                        tempreceiver=HUGE
+            if (any(tempreceivernew < dxreceiver)):
+                  print('This happens Now')
+                        #print('Well duh, this clearly happens ') #It's not supposed to   
+                  dxreceiver= min(tempreceivernew)
+                  #print('dxreceiver',dxreceiver)
+                  #### everything up to here looks good#### need to figure out how to get the index for the min now. 
+                  receiverpoint[0]=receiverarray[Q,0]
+                  receiverpoint[1]=receiverarray[Q,1]
+                  receiverpoint[2]=receiverarray[Q,2]
+            elif (tempreceiver== dxreceiver and tempreceiver != HUGE):
+                  receivercheck=tempreceiver
+                        #print('okay, does this one happen?')           
+                        #print('receivercheck',receivercheck)
+                  if(receiverarray[Q,0]==receiverpoint[0] and receiverarray[Q,1]==receiverpoint[1] and receiverarray[Q,2]==receiverpoint[2]):
+                        doublehit=0
+                  else:
+                        receiverpoint2[0]=receiverarray[Q,0]
+                        receiverpoint2[1]=receiverarray[Q,1]
+                        receiverpoint2[2]=receiverarray[Q,2]
+                        doublehit=1
             #     Check Intersection with ground plane
-            #GROUNDN=GROUNDABC
-            #GROUNDVD=GROUNDN[0]*F[0]+GROUNDN[1]*F[1]+GROUNDN[2]*F[2]
-            groundVD = np.dot(GROUNDABC,F)
+            GROUNDN=GROUNDABC
+            GROUNDVD=GROUNDN[0]*F[0]+GROUNDN[1]*F[1]+GROUNDN[2]*F[2]
             if (groundhit==1):
                   dxground=HUGE
-            elif (groundVD != 0.0):
-                  #GROUNDVO=((GROUNDN[0]*veci[0]+GROUNDN[1]*veci[1]+GROUNDN[2]*veci[2])+GROUNDD)
-                  groundVO = np.dot(GROUNDABC,veci) + groundD
-                  #dxground1=(-1.000)*GROUNDVO*(1.000)/GROUNDVD
-                  #dxground=dxground1
-                  dxground = -groundVO/groundVD
+            elif (GROUNDVD!=0.0):
+                  GROUNDVO=((GROUNDN[0]*veci[0]+GROUNDN[1]*veci[1]+GROUNDN[2]*veci[2])+GROUNDD)
+                  dxground1=(-1.000)*GROUNDVO*(1.000)/GROUNDVD
+                  dxground=dxground1
                   Vecip1=veci+dxground*np.array(F)
-                  tmp = np.dot(GROUNDABC,Vecip1) +groundD
-                  #tmp=(GROUNDABC[0]*Vecip1[0]+GROUNDABC[1]*Vecip1[1]+GROUNDABC[2]*Vecip1[2]+GROUNDD)                  
+                  tmp=(GROUNDABC[0]*Vecip1[0]+GROUNDABC[1]*Vecip1[1]+GROUNDABC[2]*Vecip1[2]+GROUNDD)                  
                   if (dxground < 0.0):
                         dxground=HUGE
             else:
@@ -582,20 +1039,18 @@ for ray in range(RAYMAX):
             for Q in range(0,BG.Boxnumber):
                   dxnear, dxfar, hit, planehit=fun.BOX(BG.Boxarraynear[Q], BG.Boxarrayfar[Q],veci,F)
                   #print('old',dxnear, dxfar, hit, planehit)
-
             #print('Box time loop: %.8f ' %(time.time()-t))
-
-                  # if (dxnear < dxbuilding):
-                  #       dxbuilding=dxnear
-                  #       Vecip1=veci+np.multiply(dxbuilding,F)
-                  #       whichbox=Q
-                  #       nbox=fun.PLANE(Vecip1, BG.Boxarraynear[whichbox],BG.Boxarrayfar[whichbox], planehit)
-                  #       print(Vecip1, BG.Boxarraynear[b],BG.Boxarrayfar[b], planehit[b])
-            t = time.time()
+                  if (dxnear < dxbuilding):
+                        dxbuilding=dxnear
+                        Vecip1=veci+np.multiply(dxbuilding,F)
+                        whichbox=Q
+                        nbox=fun.PLANE(Vecip1, BG.Boxarraynear[whichbox],BG.Boxarrayfar[whichbox], planehit)
+                        #print(Vecip1, BG.Boxarraynear[b],BG.Boxarrayfar[b], planehit[b])
+            #t = time.time()
             #dxnearnew, dxfarnew, hitnew, planehitnew=fun.BOXnew(BG.Boxarraynear, BG.Boxarrayfar,veci,F)
-            #b=np.argmin(dxnearnew)
+            ##b=np.argmin(dxnearnew)
             #print('Box time no loop: %.8f ' %(time.time()-t))
-            ##print('new',np.amin(dxnearnew), dxfarnew, hitnew, planehitnew,b,np.amin(dxnearnew))
+           # print('new',np.amin(dxnearnew), dxfarnew, hitnew, planehitnew,b,np.amin(dxnearnew))
             #if (dxnearnew[b] < dxbuilding):
             #      dxbuilding=dxnearnew[b]
             #      Vecip1=veci+np.multiply(dxbuilding,F)
@@ -603,7 +1058,7 @@ for ray in range(RAYMAX):
             #      nboxnew=fun.PLANE(Vecip1, BG.Boxarraynear[b],BG.Boxarrayfar[b], planehit[b])
             #      print(nboxnew)
             #print('Box time no loop: %.8f ' %(time.time()-t))
-            #      Check intersection with Triangles
+             #     Check intersection with Triangles
             if(BG.TriangleNumber > 0):
                   for Q in range(0, BG.TriangleNumber):
                         dxnear, behind = fun.Polygon(veci,F,Q,3,TriangleNumber,PointNumbers,Trianglearray,BuildingPoints,normal,FaceNormalNo,FaceNormals)
@@ -623,128 +1078,96 @@ for ray in range(RAYMAX):
             buildinghit=0
             receiverhit=0
             groundhit=0
-            #if (ray == 606 ) and (I == 10):
-            #      dxreceiver = dx
             #     Check to see if ray hits within step size
             if (dxreceiver < PF.h or dxground < PF.h or dxbuilding < PF.h):
                   dx=min(dxreceiver,dxground,dxbuilding)
                   tmpsum=tmpsum+dx
-            #     if the ray hits a receiver, store in an array.  If the ray hits twice
-            #     Create two arrays to store in.
+                  #     if the ray hits a receiver, store in an array.  If the ray hits twice
+                  #     Create two arrays to store in.
                   if (dx==dxreceiver):
-                        hitsum=hitsum+1
+                        print('hit receiver at step ',I)
+                        #sum=sum+1                          # this is a built in name. we also don't seem to be using this for anything else
                         #print(veci,dx,F)
-                        #Vecip1=veci+np.multiply(dx,F)
-                        #veci=Vecip1
-                        print('hit receiver')
-                        veci += (dx * F) 
+                        Vecip1=veci+np.multiply(dx,F)
+                        veci=Vecip1
+                        print(veci)
                         receiverhit=1
                         checkdirection=F
                         if(doublehit==1):
                               receiverhit=2
                         hitcount=hitcount+1
                         #print('hit receiver',sum,tmpsum,receiverpoint)
-
-                        m=airabsorb[:]
-                        lamb=PF.soundspeed/frecuencias[:,1]
-                        phasefinal = phaseinitial[:] - (twopi*dx)/lamb
-                        ampfinal=ampinitial[:]*(1-alphanothing[:])* np.exp(-m[:]*dx)
-                        ampinitial = ampfinal[:]
-                        #ampinitial *= ((1-alphanothing[:])*np.exp(-m[:]*dx))
-                        phaseinitial=phasefinal[:]%twopi
-                        phaseinitial = np.where(      (phaseinitial[:]>=PI)   ,phaseinitial[:]-twopi     ,phaseinitial)
-                        # New  ***
-                        #print('this happens outputarray')
-                        #if(W==0):
-                              #outputarray1=np.zeros((sizeffttwo,6))
-                        outputarray1[:,0]=inputarray[:,0]
-                        #outputarray1[:,1]=receiverpoint[0]
-                        #outputarray1[:,2]=receiverpoint[1]
-                        #outputarray1[:,3]=receiverpoint[2]
-                        outputarray1[:,1:4] = receiverpoint[:]
-                        outputarray1[:,4] =   ampinitial[:]
-                        lastreceiver=receiverpoint
-                        if doublehit:
-                              outputarray1[:,5] = phaseinitial[:]/2
-                              dhoutputarray1[:,0]=inputarray[:,0]
-                              dhoutputarray1[:,1]=receiverpoint2[0]
-                              dhoutputarray1[:,2]=receiverpoint2[1]
-                              dhoutputarray1[:,3]=receiverpoint2[2]
-                              dhoutputarray1[:,4]=ampinitial[:]/2.0
-                              dhoutputarray1[:,5]=phaseinitial[:]
-                        else:
-                              outputarray1[:,5] = phaseinitial[:]
-                        #Old ***
-                        #for W in range(0,sizeffttwo):
-                        #      #print('airabsorb: ',airabsorb[W])
-                        #      #m=airabsorb[W]
-                        #      #lamb=PF.soundspeed/inputarray[W,1]
-                        #      #phasefinal=phaseinitial[W]-(twopi*dx)/lamb   
-                        #      #print('ampinit: ',ampinitial[W])
-                        #      #print('alphno: ',' (1- ',alphanothing ,' ) ')
-                        #      #print('oth: ',np.exp(-m*dx))
-                        #      #ampfinal=ampinitial[W]*(1-alphanothing[W])*np.exp(-m*dx)
-                        #      #ampinitial[W]=ampfinal
-                        #      #phaseinitial[W]=phasefinal%twopi
-                        #      #if (phaseinitial[W]>=PI):
-                        #      #      phaseinitial[W]=phaseinitial[W]-twopi
-                        #      if(doublehit==1):
-                        #            if(W==0):   #Used this loop twice before
-                        #                  outputarray1=np.zeros((sizeffttwo, 6))
-                        #                  dhoutputarray1=np.zeros((sizeffttwo,6))  
-                        #            outputarray1[W,0]=inputarray[W,0]
-                        #            outputarray1[W,1]=receiverpoint[0]
-                        #            outputarray1[W,2]=receiverpoint[1]
-                        #            outputarray1[W,3]=receiverpoint[2]
-                        #            outputarray1[W,4]=ampinitial[W]/2.0
-                        #            outputarray1[W,5]=phaseinitial[W]
-                        #            dhoutputarray1[W,0]=inputarray[W,0]
-                        #            dhoutputarray1[W,1]=receiverpoint2[0]
-                        #            dhoutputarray1[W,2]=receiverpoint2[1]
-                        #            dhoutputarray1[W,3]=receiverpoint2[2]
-                        #            dhoutputarray1[W,4]=ampinitial[W]/2.0
-                        #            dhoutputarray1[W,5]=phaseinitial[W]
-                        #            lastreceiver[0]=receiverpoint[0]
-                        #            lastreceiver[1]=receiverpoint[1]
-                        #            lastreceiver[2]=receiverpoint[2]
-                        #            lastreceiver2[0]=receiverpoint2[0]
-                        #            lastreceiver2[1]=receiverpoint2[1]
-                        #            lastreceiver2[2]=receiverpoint2[2]
-                        #      else:
-                        #            #print('this happens outputarray')
-                        #            #if(W==0):
-                        #                  #outputarray1=np.zeros((sizeffttwo,6))
-                        #            outputarray1[W,0]=inputarray[W,0]
-                        #            outputarray1[W,1]=receiverpoint[0]
-                        #            outputarray1[W,2]=receiverpoint[1]
-                        #            outputarray1[W,3]=receiverpoint[2]
-                        #            outputarray1[W,4]=ampinitial[W]
-                        #            outputarray1[W,5]=phaseinitial[W]
-                        #            lastreceiver[0]=receiverpoint[0]
-                        #            lastreceiver[1]=receiverpoint[1]
-                        #            lastreceiver[2]=receiverpoint[2]
+                        for W in range(0,sizeffttwo):
+                              #print('airabsorb: ',airabsorb[W])
+                              m=airabsorb[W]
+                              lamb=PF.soundspeed/inputarray[W,1]
+                              phasefinal=phaseinitial[W]-(twopi*dx)/lamb   
+                              #print('ampinit: ',ampinitial[W])
+                              #print('alphno: ',' (1- ',alphanothing ,' ) ')
+                              #print('oth: ',np.exp(-m*dx))
+                              ampfinal=ampinitial[W]*(1-alphanothing[W])*np.exp(-m*dx)
+                              ampinitial[W]=ampfinal
+                              phaseinitial[W]=phasefinal%twopi
+                              if (phaseinitial[W]>=PI):
+                                    phaseinitial[W]=phaseinitial[W]-twopi
+                              if(doublehit==1):
+                                    if(W==0):   #Used this loop twice before
+                                          outputarray1=np.zeros((sizeffttwo, 6))
+                                          dhoutputarray1=np.zeros((sizeffttwo,6))  
+                                    outputarray1[W,0]=inputarray[W,0]
+                                    outputarray1[W,1]=receiverpoint[0]
+                                    outputarray1[W,2]=receiverpoint[1]
+                                    outputarray1[W,3]=receiverpoint[2]
+                                    outputarray1[W,4]=ampinitial[W]/2.0
+                                    outputarray1[W,5]=phaseinitial[W]
+                                    dhoutputarray1[W,0]=inputarray[W,0]
+                                    dhoutputarray1[W,1]=receiverpoint2[0]
+                                    dhoutputarray1[W,2]=receiverpoint2[1]
+                                    dhoutputarray1[W,3]=receiverpoint2[2]
+                                    dhoutputarray1[W,4]=ampinitial[W]/2.0
+                                    dhoutputarray1[W,5]=phaseinitial[W]
+                                    lastreceiver[0]=receiverpoint[0]
+                                    lastreceiver[1]=receiverpoint[1]
+                                    lastreceiver[2]=receiverpoint[2]
+                                    lastreceiver2[0]=receiverpoint2[0]
+                                    lastreceiver2[1]=receiverpoint2[1]
+                                    lastrecever2[2]=receiverpoint2[2]
+                              else:
+                                    #print('this happens outputarray')
+                                    if(W==0):
+                                          outputarray1=np.zeros((sizeffttwo,6))
+                                    outputarray1[W,0]=inputarray[W,0]
+                                    outputarray1[W,1]=receiverpoint[0]
+                                    outputarray1[W,2]=receiverpoint[1]
+                                    outputarray1[W,3]=receiverpoint[2]
+                                    outputarray1[W,4]=ampinitial[W]
+                                    outputarray1[W,5]=phaseinitial[W]
+                                    lastreceiver[0]=receiverpoint[0]
+                                    lastreceiver[1]=receiverpoint[1]
+                                    lastreceiver[2]=receiverpoint[2]
                         #print('assigned to outputarray1')
                         #print(outputarray1[0,1], outputarray1[1,3], outputarray1[1,4])
                         #print('temparray before: \n',temparray)
-                        temparray=fun.receiverHITFUNC(sizefft,outputarray1,RPS.Receiver.arraysize,temparray)
+                        temparray=fun.receiverHITFUNC(sizefft,outputarray1,RPS.arraysize,temparray)
                         #print('temparray after: \n',temparray)
                         #print('receiverHITFUNC completed')
                         if (doublehit==1):
-                              temparray=fun.receiverHITFUNC(sizefft,dhoutputarray1,RPS.Receiver.arraysize,temparray)
+                              temparray=fun.receiverHITFUNC(sizefft,dhoutputarray1,RPS.arraysize,temparray)
                               count+=1
                         count+=1
                         outputarray1=None
                         if(doublehit==1):
                               dhoutputarray1=None
-            #     If the ray hits the ground then bounce off the ground and continue
+                  #     If the ray hits the ground then bounce off the ground and continue
                   if (abs(dx-dxground)< 10.0**(-13.0)):
                         Vecip1=veci+np.multiply(dxground,F)
                         #print('veci ', veci)
                         tmp=(GROUNDABC[0]*Vecip1[0]+GROUNDABC[1]*Vecip1[1]+GROUNDABC[2]*Vecip1[2]+GROUNDD)
                         if(tmp != GROUNDD): 
                               Vecip1[2]=0.0
-                        print('hit ground',I)
+                        print('hit ground at ',I)
                         veci=Vecip1
+                        #print(veci)
                         #print('vecip1 ',Vecip1)
                         #print('nground', nground[0])
                         dot1=(F[0]*nground[0]+F[1]*nground[1]+F[2]*nground[2])
@@ -760,205 +1183,90 @@ for ray in range(RAYMAX):
                         #print('r as follows: ', r[0],r[1],r[2])        #Good
                         groundhit=1
                         twopidx=twopi*dxground
-                  #     Loop through all the frequencies
-                        #     Update frequencies
-                        #phaseNew, amplitudeNew = update(airabsorb,frecuencias[:,0],phaseinitial,dxground,ampinitial,alphaground,diffusionground)
-                        phaseinitial, ampinitial = update(airabsorb,frecuencias[:,0],phaseinitial,dxground,ampinitial,alphaground,diffusionground)
-                        #m=airabsorb[:]
-                        #lamb=PF.soundspeed/frecuencias[:,0]
-                        #phasefinal=phaseinitial[:]- (twopidx/lamb)
-                        #ampfinal=ampinitial[:]*(1.0-alphaground[:])*(1.0-diffusionground)*np.exp(-m[:]*dxground)
-                        #phaseinitial=phasefinal%twopi
-                        #if (phaseinitial[W]>PI):
-                        #      phaseinitial[W]=phaseinitial[W]-twopi
-                        #ampinitial[:]=ampfinal[:]
-                        if(PF.radiosity==1 and (diffusionground!=0.0)):
-                              for Q in range (0,PatchNo):
-                                    if (formfactors[0,Q,1]==1):
-                                          if(veci[0]<=(patcharray[Q,W,0]+0.5*patcharray[Q,W,3]) and veci[0]>=(patcharray[Q,W,0]-0.5*patcharray[Q,W,3])):
-                                                if(veci[1]<=(patcharray[Q,W,1]+0.5*patcharray[Q,W,4]) and veci[1]>=(patcharray[Q,W,1]-0.5*patcharray[Q,W,4])):
-                                                      if(veci[2]<=(patcharray[Q,W,2]+0.5*patcharray[Q,W,5]) and veci[2]>=(patcharray[Q,W,2]-0.5*patcharray[Q,W,5])):
-                                                            temp2=complex(abs(patcharray[Q,W,6])*np.exp(XJ*patcharray[Q,W,7]))
-                                                            temp3=complex(abs(ampinitial[W]*(1.0-alphaground[W])*diffusionground*exp(-m*dxground))*exp(1j*phasefinal))
-                                                            temp4=temp2+temp3
-                                                            patcharray[Q,W,6]=abs(temp4)
-                                                            patcharray[Q,W,7]=np.arctan(temp4.imag,temp4.real)
-                     
-                        #for W in range(0,sizeffttwo):
-                        #      m=airabsorb[W]
-                        #      lamb=PF.soundspeed/inputarray[W,0]
-                        #      phasefinal=phaseinitial[W]-(twopidx)/lamb
-                        #      ampfinal=ampinitial[W]*(1.0-alphaground[W])*(1.0-diffusionground)*np.exp(-m*dxground)
-                        #      phaseinitial[W]=phasefinal%twopi
-                        #      if (phaseinitial[W]>PI):
-                        #            phaseinitial[W]=phaseinitial[W]-twopi
-                        #      if(PF.radiosity==1 and (diffusionground!=0.0)):
-                        #            for Q in range (0,PatchNo):
-                        #                  if (formfactors[0,Q,1]==1):
-                        #                        if(veci[0]<=(patcharray[Q,W,0]+0.5*patcharray[Q,W,3]) and veci[0]>=(patcharray[Q,W,0]-0.5*patcharray[Q,W,3])):
-                        #                              if(veci[1]<=(patcharray[Q,W,1]+0.5*patcharray[Q,W,4]) and veci[1]>=(patcharray[Q,W,1]-0.5*patcharray[Q,W,4])):
-                        #                                    if(veci[2]<=(patcharray[Q,W,2]+0.5*patcharray[Q,W,5]) and veci[2]>=(patcharray[Q,W,2]-0.5*patcharray[Q,W,5])):
-                        #                                          temp2=complex(abs(patcharray[Q,W,6])*np.exp(XJ*patcharray[Q,W,7]))
-                        #                                          temp3=complex(abs(ampinitial[W]*(1.0-alphaground[W])*diffusionground*exp(-m*dxground))*exp(1j*phasefinal))
-                        #                                          temp4=temp2+temp3
-                        #                                          patcharray[Q,W,6]=abs(temp4)
-                        #                                          patcharray[Q,W,7]=np.arctan(temp4.imag,temp4.real)
-                        #      ampinitial[W]=ampfinal   
-                       # if the ray hits the building then change the direction and continue
+                        #     Loop through all the frequencies
+                        for W in range(0,sizeffttwo):
+                              m=airabsorb[W]
+                              lamb=PF.soundspeed/inputarray[W,0]
+                              phasefinal=phaseinitial[W]-(twopidx)/lamb
+                              ampfinal=ampinitial[W]*(1.0-alphaground[W])*(1.0-diffusionground)*np.exp(-m*dxground)
+                              phaseinitial[W]=phasefinal%twopi
+                              if (phaseinitial[W]>PI):
+                                    phaseinitial[W]=phaseinitial[W]-twopi
+                              if(PF.radiosity==1 and (diffusionground!=0.0)):
+                                    for Q in range (0,PatchNo):
+                                          if (formfactors[0,Q,1]==1):
+                                                if(veci[0]<=(patcharray[Q,W,0]+0.5*patcharray[Q,W,3]) and veci[0]>=(patcharray[Q,W,0]-0.5*patcharray[Q,W,3])):
+                                                      if(veci[1]<=(patcharray[Q,W,1]+0.5*patcharray[Q,W,4]) and veci[1]>=(patcharray[Q,W,1]-0.5*patcharray[Q,W,4])):
+                                                            if(veci[2]<=(patcharray[Q,W,2]+0.5*patcharray[Q,W,5]) and veci[2]>=(patcharray[Q,W,2]-0.5*patcharray[Q,W,5])):
+                                                                  temp2=complex(abs(patcharray[Q,W,6])*np.exp(XJ*patcharray[Q,W,7]))
+                                                                  temp3=complex(abs(ampinitial[W]*(1.0-alphaground[W])*diffusionground*exp(-m*dxground))*exp(1j*phasefinal))
+                                                                  temp4=temp2+temp3
+                                                                  patcharray[Q,W,6]=abs(temp4)
+                                                                  patcharray[Q,W,7]=np.arctan(temp4.imag,temp4.real)
+                              ampinitial[W]=ampfinal   
+                  #     if the ray hits the building then change the direction and continue
+                  print('dx: ', dx,'\ndxbuilding: ',dxbuilding)
                   if (dx==dxbuilding):
                         Vecip1=veci+dx*np.array(F)
                         veci=Vecip1
-                        #veci += (dx*F)
-                        print('hit building')
-                        #n2=(nbox[0]*nbox[0]+nbox[1]*nbox[1]+nbox[2]*nbox[2])
-                        n2 = np.dot(nbox,nbox)
+                        print('hit building at step ',I)
+                        print(veci)
+                        n2=(nbox[0]*nbox[0]+nbox[1]*nbox[1]+nbox[2]*nbox[2])
                         #print('nbox for nbuilding: ',nbox)
                         #print('n2', n2)
                         #print('n2: ', n2)
                         nbuilding=nbox/np.sqrt(n2)
-                        #dot1=(F[0]*nbuilding[0]+F[1]*nbuilding[1]+F[2]*nbuilding[2])
-                        dot1 = np.dot(F,nbuilding)
-                        r=F[:]-2.0*(dot1/n2)*nbuilding
-                        #length=np.sqrt(r[0]*r[0]+r[1]*r[1]+r[2]*r[2])
-                        length = np.sqrt((np.dot(r,r)))
-                        #F=[r[0],r[1],r[2]]
-                        F = r[:]
+                        dot1=(F[0]*nbuilding[0]+F[1]*nbuilding[1]+F[2]*nbuilding[2])
+                        r=F-2.0*(dot1/n2)*nbuilding
+                        length=np.sqrt(r[0]*r[0]+r[1]*r[1]+r[2]*r[2])
+                        F=[r[0],r[1],r[2]]
                         buildinghit=1
                         twopidx=twopi*dx
-                        if(PF.complexabsorption==1):
-                              if (PF.absorbplanes==2):
-                                    if(veci[2]>0.0 and veci[2]< height1):
-                                          alpha=alphabuilding[0,W]
-                                    elif(veci[2]>height1 and veci[2]<=height2):
-                                          alpha=alphabuilding[1,W]
-                              if(PF.absorbplanes==3):
-                                    if(veci[2]>height2 and veci[2] <=height3):
-                                          alpha=alphabuilding[2,W]
-                              if(PF.absorbplanes==4):
-                                    if(veci[2]>height3):
-                                          alpha=alphabuilding(4,W)
-                        else:
-                              alpha=alphabuilding[0,:]
-                        # To test 
-                        #     Update frequencies
-                        phaseNew, amplitudeNew = update(airabsorb,frecuencias[:,0],phaseinitial,dx,ampinitial,alpha,diffusion)
-                        m=airabsorb[:]
-                        lamb=PF.soundspeed/inputarray[:,0]                
-                        phasefinal=phaseinitial[:]-(twopidx)/lamb
-                        ampfinal=ampinitial[:]*(1.0-alpha)*(1.0-diffusion)*np.exp(-m*dx)
-                        phaseinitial[:]=phasefinal%twopi
-                        phaseinitial = np.where((phaseinitial[:]>PI), phaseinitial[:]-twopi, phaseinitial)
-                        #if (phaseinitial[W]>PI):
-                        #      phaseinitial[W]=phaseinitial[W]-twopi
-                        ampinitial[:]=ampfinal
-                        #for W in range(0,sizeffttwo):
-                        #      if(PF.complexabsorption==1):
-                        #            if (PF.absorbplanes==2):
-                        #                  if(veci[2]>0.0 and veci[2]< height1):
-                        #                        alpha=alphabuilding[0,W]
-                        #                  elif(veci[2]>height1 and veci[2]<=height2):
-                        #                        alpha=alphabuilding[1,W]
-                        #            if(PF.absorbplanes==3):
-                        #                  if(veci[2]>height2 and veci[2] <=height3):
-                        #                        alpha=alphabuilding[2,W]
-                        #            if(PF.absorbplanes==4):
-                        #                  if(veci[2]>height3):
-                        #                        alpha=alphabuilding(4,W)
-                        #      else:
-                        #            alpha=alphabuilding[0,W]
-                        #      m=airabsorb[W]
-                        #      lamb=PF.soundspeed/inputarray[W,0]                
-                        #      phasefinal=phaseinitial[W]-(twopidx)/lamb
-                        #      ampfinal=ampinitial[W]*(1.0-alpha)*(1.0-diffusion)*np.exp(-m*dx)
-                        #      phaseinitial[W]=phasefinal%twopi
-                        #      if (phaseinitial[W]>PI):
-                        #            phaseinitial[W]=phaseinitial[W]-twopi
-                        #      ampinitial[W]=ampfinal
-
-
-            #for i in range(1):#Only done to take up less space on screen. Come back for radiosity
-                  #COME BACK TO THIS FOR RADIOSITY
-                  #                         if(radiosity.eq.1)then
-                  # C     Loop through all patches if radiosity is turned on.
-                  #                            DO 29 Q=1,PatchNo
-                  #                               if (formfactors(1,Q,2).eq.2.0)then
-                  #                                  if((veci(1).le.(patcharray(Q,W,1)+0.5*
-                  #      *                                patcharray(Q,W,4))).and.(veci(1)
-                  #      *                                .ge.(patcharray(Q,W,1)-0.5*
-                  #      *                                patcharray(Q,W,4))))then
-                  #                                     if((veci(2).le.(patcharray(Q,W,2)+
-                  #      *                                   0.5*patcharray(Q,W,5))).and.
-                  #      *                                   (veci(2).ge.(patcharray(Q,W,2)-
-                  #      *                                   0.5*patcharray(Q,W,5))))then
-                  #                                        if((veci(3).le.(patcharray(Q,W,3)
-                  #      *                                      +0.5*patcharray(Q,W,6)))
-                  #      *                                      .and.(veci(3).ge.(patcharray
-                  #      *                                      (Q,W,3)-0.5*patcharray(Q,W,6
-                  #      *                                      ))))then
-                  #                                           temp2=cmplx(abs(patcharray
-                  #      *                                         (Q,W,7))*exp(XJ*
-                  #      *                                         patcharray(Q,W,8)))
-                  #                                           temp3=abs(ampinitial(W)*(1.0-
-                  #      *                                         alpha)*diffusion*exp
-                  #      *                                         (-m*dx))*exp(XJ*
-                  #      *                                         phaseinitial(W))
-                  #                                           temp4=temp2+temp3
-                  #                                           patcharray(Q,W,7)=abs(temp4)
-                  #                                           patcharray(Q,W,8)=ATAN2(
-                  #      *                                         imagpart(temp4),realpart(
-                  #      *                                         temp4))
-                  #                                           GOTO 27
-                  #                                        endif
-                  #                                     endif
-                  #                                  endif
-                  #  27                              CONTINUE
-                  #                               endif
-                  #  29                     CONTINUE
-                  #                      endif 
-                                     #pass
+                        for W in range(0,sizeffttwo):
+                              if(PF.complexabsorption==1):
+                                    if (PF.absorbplanes==2):
+                                          if(veci[2]>0.0 and veci[2]< height1):
+                                                alpha=alphabuilding[0,W]
+                                          elif(veci[2]>height1 and veci[2]<=height2):
+                                                alpha=alphabuilding[1,W]
+                                    if(PF.absorbplanes==3):
+                                          if(veci[2]>height2 and veci[2] <=height3):
+                                                alpha=alphabuilding[2,W]
+                                    if(PF.absorbplanes==4):
+                                          if(veci[2]>height3):
+                                                alpha=alphabuilding(4,W)
+                              else:
+                                    alpha=alphabuilding[0,W]
+                              m=airabsorb[W]
+                              lamb=PF.soundspeed/inputarray[W,0]                
+                              phasefinal=phaseinitial[W]-(twopidx)/lamb
+                              ampfinal=ampinitial[W]*(1.0-alpha)*(1.0-diffusion)*np.exp(-m*dx)
+                              phaseinitial[W]=phasefinal%twopi
+                              if (phaseinitial[W]>PI):
+                                    phaseinitial[W]=phaseinitial[W]-twopi
+                              ampinitial[W]=ampfinal
             else:
 #     If there was no interaction with buildings then proceed with one step. 
                   tmpsum=tmpsum+PF.h
-                  #Vecip1=veci+(PF.h)*np.array(F)
-                  #veci=Vecip1
-                  veci += (PF.h * F)
+                  Vecip1=veci+(PF.h)*np.array(F)
+                  veci=Vecip1
                   twopih=twopi*PF.h
 #     Loop through all frequencies.
-                  # New ***
-                  #phaseNew, amplitudeNew = update(airabsorb,frecuencias[:,0],phaseinitial,PF.h,ampinitial,alphanothing,0)  #ignore diffusion
-                  phaseinitial, ampinitial = update(airabsorb,frecuencias[:,0],phaseinitial,PF.h,ampinitial,alphanothing,0)  #temporary
-                  # Old ***
-                  #for W in range (0,sizeffttwo):
-                  #      m=airabsorb[W]
-                  #      lamb=PF.soundspeed/frecuencias[W,0]
-                  #      phasefinal=phaseinitial[W]-(twopih)/lamb
-                  #      ampfinal=ampinitial[W]*(1-alphanothing)*np.exp(-m*PF.h)
-                  #      #print('ampinit: ',ampinitial[W])
-                  #      #print('ampfin: ',ampfinal[W])
-                  #      ampinitial[W]=ampfinal[W]                 
-                  #      phaseinitial[W]=phasefinal%twopi
-                  #      if (phaseinitial[W] > PI):
-                  #            phaseinitial[W]=phaseinitial[W]-twopi
+                  for W in range (0,sizeffttwo):
+                        m=airabsorb[W]
+                        #lamb=PF.soundspeed/inputarray[W,0]
+                        lamb=PF.soundspeed/inputarray[W,0]
+                        phasefinal=phaseinitial[W]-(twopih)/lamb
+                        ampfinal=ampinitial[W]*(1-alphanothing)*np.exp(-m*PF.h)
+                        #print('ampinit: ',ampinitial[W])
+                        #print('ampfin: ',ampfinal[W])
+                        ampinitial[W]=ampfinal[W]                 
+                        phaseinitial[W]=phasefinal%twopi
+                        if (phaseinitial[W] > PI):
+                              phaseinitial[W]=phaseinitial[W]-twopi
       print('finished ray', ray + 1)
-
-
 #      if ray == 609:
 #            break
-########################################################################################################################
-########################################################################################################################
-########################################################################################################################
-########################################################################################################################
-########################################################################################################################
-########################################################################################################################
-########################################################################################################################
-########################################################################################################################
-########################################################################################################################
-########################################################################################################################
-########################################################################################################################
-########################################################################################################################
-########################################################################################################################
-########################################################################################################################
-########################################################################################################################
 ########################################################################################################################
 ########################################################################################################################
 ########################################################################################################################
