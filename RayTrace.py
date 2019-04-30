@@ -909,7 +909,7 @@ count=0
 print('began rays')
 #ray = 606
 #for ray in range(605,607):
-for ray in range(600,RAYMAX):
+for ray in range(RAYMAX):
       hitcount=0
       #ray = 606
       tmpsum=0.0
@@ -927,7 +927,7 @@ for ray in range(600,RAYMAX):
       # location, phase and amplitude
       ######################################
       #for I in range(0,PF.IMAX):
-      for I in range(0,15):
+      for I in range(PF.IMAX):
             dxreceiver=HUGE
             #print(veci)
             # Find the closest sphere and store that as the distance
@@ -1284,29 +1284,49 @@ for ray in range(600,RAYMAX):
                               if PF.absorbplanes==2:
                                     if (veci[2]>0.0) and (veci[2]<height1):
                                           alpha = alphabuilding[0,:]
-                        for W in range(0,sizeffttwo):
-                              if(PF.complexabsorption==1):
-                                    if (PF.absorbplanes==2):
-                                          if(veci[2]>0.0 and veci[2]< height1):
-                                                alpha=alphabuilding[0,W]
-                                          elif(veci[2]>height1 and veci[2]<=height2):
-                                                alpha=alphabuilding[1,W]
-                                    if(PF.absorbplanes==3):
-                                          if(veci[2]>height2 and veci[2] <=height3):
-                                                alpha=alphabuilding[2,W]
-                                    if(PF.absorbplanes==4):
-                                          if(veci[2]>height3):
-                                                alpha=alphabuilding(4,W)
-                              else:
-                                    alpha=alphabuilding[0,W]
-                              m=airabsorb[W]
-                              lamb=PF.soundspeed/inputarray[W,0]                
-                              phasefinal=phaseinitial[W]-(twopidx)/lamb
-                              ampfinal=ampinitial[W]*(1.0-alpha)*(1.0-diffusion)*np.exp(-m*dx)
-                              phaseinitial[W]=phasefinal%twopi
-                              if (phaseinitial[W]>PI):
-                                    phaseinitial[W]=phaseinitial[W]-twopi
-                              ampinitial[W]=ampfinal
+
+                                    elif(veci[2]>height1 and veci[2]<=height2):
+                                          alpha=alphabuilding[1,:]
+                              if(PF.absorbplanes==3):
+                                    if(veci[2]>height2 and veci[2] <=height3):
+                                          alpha=alphabuilding[2,:]
+                              if(PF.absorbplanes==4):
+                                    if(veci[2]>height3):
+                                          alpha=alphabuilding[4,:]
+                        else:
+                              alpha=alphabuilding[0,:]
+                        phaseinitial, ampinitial = update(airabsorb,frecuencias[:,0],phaseinitial,dx,ampinitial,alpha,diffusion)
+                        #m=airabsorb[W]
+                        #lamb=PF.soundspeed/inputarray[W,0]                
+                        #phasefinal=phaseinitial[W]-(twopidx)/lamb
+                        #ampfinal=ampinitial[W]*(1.0-alpha)*(1.0-diffusion)*np.exp(-m*dx)
+                        #phaseinitial[W]=phasefinal%twopi
+                        #if (phaseinitial[W]>PI):
+                        #      phaseinitial[W]=phaseinitial[W]-twopi
+                        #ampinitial[W]=ampfinal
+#                        for W in range(0,sizeffttwo):
+#                              if(PF.complexabsorption==1):
+#                                    if (PF.absorbplanes==2):
+#                                          if(veci[2]>0.0 and veci[2]< height1):
+#                                                alpha=alphabuilding[0,W]
+#                                          elif(veci[2]>height1 and veci[2]<=height2):
+#                                                alpha=alphabuilding[1,W]
+#                                    if(PF.absorbplanes==3):
+#                                          if(veci[2]>height2 and veci[2] <=height3):
+#                                                alpha=alphabuilding[2,W]
+#                                    if(PF.absorbplanes==4):
+#                                          if(veci[2]>height3):
+#                                                alpha=alphabuilding(4,W)
+#                              else:
+#                                    alpha=alphabuilding[0,W]
+#                              m=airabsorb[W]
+#                              lamb=PF.soundspeed/inputarray[W,0]                
+#                              phasefinal=phaseinitial[W]-(twopidx)/lamb
+#                              ampfinal=ampinitial[W]*(1.0-alpha)*(1.0-diffusion)*np.exp(-m*dx)
+#                              phaseinitial[W]=phasefinal%twopi
+#                              if (phaseinitial[W]>PI):
+#                                    phaseinitial[W]=phaseinitial[W]-twopi
+#                              ampinitial[W]=ampfinal
             else:
 #     If there was no interaction with buildings then proceed with one step. 
                   tmpsum=tmpsum+PF.h
