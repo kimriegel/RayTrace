@@ -655,6 +655,7 @@ C     Create two arrays to store in.
                   sum=sum+1
                   Vecip1=veci+dx*F
                   veci=Vecip1
+                  print*, 'hit receiver at step ',I
                   receiverhit=1
                   checkdirection=F
                   
@@ -735,6 +736,7 @@ C     If the ray hits the ground then bounce off the ground and continue
                   tmp=(GROUNDabc(1)*Vecip1(1)+GROUNDabc(2)*Vecip1(2)+
      *                 GROUNDabc(3)*Vecip1(3)+GROUNDD)
                   if(tmp.ne.GROUNDD) Vecip1(3)=0.0
+                  print*,'hit ground at step ', I
 C                  print*,'hit ground'
                   veci=Vecip1
                   dot1=(F(1)*nground(1)+F(2)*nground(2)+F(3)*nground(3))
@@ -799,10 +801,13 @@ C     Loop through all the frequencies
                endif
                
 C     if the ray hits the building then change the direction and continue
+               print*, 'dx: ',dx 
+               print*, 'dxbuilding: ', dxbuilding
                if (dx.eq.dxbuilding) then
                   Vecip1=veci+dx*F
                   veci=Vecip1
-C                  print*, 'hit building'
+                  print*, 'hit building at step ', I
+
                   n2=(nbox(1)*nbox(1)+nbox(2)*nbox(2)+nbox(3)*nbox(3))
                   nbuilding=nbox/sqrt(n2)
                   dot1=(F(1)*nbuilding(1)+F(2)*nbuilding(2)+F(3)*

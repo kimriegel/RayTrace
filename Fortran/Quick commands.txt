@@ -1,0 +1,25 @@
+Trying to run python file:
+cd Documents\RayTraceCode\PythonTest
+py -3 -m RayTrace
+
+for time:
+py -3 -m cProfile -s cumtime RayTrace.py
+
+for pypy
+C:\pypy3-v6.0.0-win32\pypy3.exe .\RayTrace.py
+
+C:\pypy3-v6.0.0-win32\lib-python\3
+
+Fortran:
+
+old: cd /cygdrive/c/users/kory\ george/documents/raytracecode/'Fortran Test'
+ls
+
+
+
+cd /cygdrive/c/users/kory\ george/documents/raytracecode/FortranTest
+gfortran -c raytrace.f
+gfortran -c functions.f 
+gfortran -c radiosityfunctions.f 
+gfortran raytrace.o functions.o radiosityfunctions.o -lfftw3 -o RayTrace
+time ./RayTrace

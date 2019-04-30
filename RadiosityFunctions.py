@@ -95,37 +95,38 @@ def CREATEPATCHARRAY(ddm,ddL,Nm,ddL,x1,x2,y1,y2,z1,z2,patcharray,slope,b,slope1,
                 #count is used to move thru patcharray string
                 #I think
 
- 5          CONTINUE
- 4       CONTINUE
-      elseif(x1.eq.x2)then
-         count=1
-         print*, 'XPLANE',Nl, Nm, x1, y1, z1
-         DO 6 l=1, Nl
-            DO 7 m=1, Nm
-
-               y=y1-.5*ddm(m)+SUM(ddm(1:m))
-               z=z1-.5*ddl(l)+SUM(ddl(1:l))
-               x=(-d-normal(3)*z-normal(2)*y)/normal(1)
-               if(m.eq.1)then
-                  xcenter=x
-               endif
-               if(l.eq.1)then
-                  ddx=x-x1
-               else
-                  ddx=0.5*(x-xcenter)
-               endif
-               if(z.gt.slope*y+b.or.z.lt.slope1*y+b1)then
-                  GOTO 7
-               endif
-#               patcharray(count,1)=x
-#               patcharray(count,2)=y
-#               patcharray(count,3)=z
-#               patcharray(count,4)=ddx
-#               patcharray(count,5)=ddm(m)
-#               patcharray(count,6)=ddl(l)
-                patcharray = [x,y,z,ddx,ddm(m),ddL(L)]
-               count=count+1
- 7          CONTINUE
- 6       CONTINUE
-      endif
-      END
+# 5          CONTINUE
+# 4       CONTINUE
+#      elseif(x1.eq.x2)then
+#         count=1
+#         print*, 'XPLANE',Nl, Nm, x1, y1, z1
+#         DO 6 l=1, Nl
+#            DO 7 m=1, Nm
+#
+#               y=y1-.5*ddm(m)+SUM(ddm(1:m))
+#               z=z1-.5*ddl(l)+SUM(ddl(1:l))
+#               x=(-d-normal(3)*z-normal(2)*y)/normal(1)
+#               if(m.eq.1)then
+#                  xcenter=x
+#               endif
+#               if(l.eq.1)then
+#                  ddx=x-x1
+#               else
+#                  ddx=0.5*(x-xcenter)
+#               endif
+#               if(z.gt.slope*y+b.or.z.lt.slope1*y+b1)then
+#                  GOTO 7
+#               endif
+##               patcharray(count,1)=x
+##               patcharray(count,2)=y
+##               patcharray(count,3)=z
+##               patcharray(count,4)=ddx
+##               patcharray(count,5)=ddm(m)
+##               patcharray(count,6)=ddl(l)
+#                patcharray = [x,y,z,ddx,ddm(m),ddL(L)]
+#               count=count+1
+# 7          CONTINUE
+# 6       CONTINUE
+#      endif
+#      END
+#
