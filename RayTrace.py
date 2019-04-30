@@ -471,8 +471,7 @@ count=0
 #                        else:
 #                              receiverpoint2 = R.position
 #                              #receiverpoint2[0]=receiverarray[Q,0]
-#                              #receiverpoint2[1]=receiverarray[Q,1]
-#                              #receiverpoint2[2]=receiverarray[Q,2]
+#                              #receiverpoint2[1]=receiverarray[Q,1]#                              #receiverpoint2[2]=receiverarray[Q,2]
 #                              doublehit=1
 #            #testing no Loop
 #            

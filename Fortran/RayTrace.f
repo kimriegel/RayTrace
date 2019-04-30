@@ -497,8 +497,7 @@ C         INCLUDE 'UrbanCanyonG2H24L14Geo.f'
       count=0
 C      print*, 'normalization',normalization
 C     Loop through the intial ray locations
-C      DO 40 ray=1,RAYMAX,1
-      DO 40 ray=600,610,1
+      DO 40 ray=1,RAYMAX,1
          hitcount=0
          tmpsum=0.0
          doublehit=0
@@ -517,11 +516,10 @@ C            print*, 'h is less than 2r'
          veci=Vinitial
 C     Making small steps along the ray path.  For each step we should return, 
 C     location, phase and amplitude
-C         DO 10 I=1,IMAX,1
-         DO 10 I=1,15,1
+         DO 10 I=1,IMAX,1
             dxreceiver=HUGE
 C     Find the closest sphere and store that as the distance
-            print*, veci
+C            print*, veci
             DO 16 Q=1,arraysize,1 
                CALL SPHERECHECK(receiverarray(Q,1:3),
      *              radius2,F,veci,tempreceiver)
@@ -739,6 +737,7 @@ C     If the ray hits the ground then bounce off the ground and continue
      *                 GROUNDabc(3)*Vecip1(3)+GROUNDD)
                   if(tmp.ne.GROUNDD) Vecip1(3)=0.0
                   print*,'hit ground at step ', I
+C                  print*,'hit ground'
                   veci=Vecip1
                   dot1=(F(1)*nground(1)+F(2)*nground(2)+F(3)*nground(3))
                   n2=(nground(1)*nground(1)+nground(2)*nground(2)+
@@ -808,6 +807,7 @@ C     if the ray hits the building then change the direction and continue
                   Vecip1=veci+dx*F
                   veci=Vecip1
                   print*, 'hit building at step ', I
+
                   n2=(nbox(1)*nbox(1)+nbox(2)*nbox(2)+nbox(3)*nbox(3))
                   nbuilding=nbox/sqrt(n2)
                   dot1=(F(1)*nbuilding(1)+F(2)*nbuilding(2)+F(3)*
