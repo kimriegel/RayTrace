@@ -791,3 +791,5 @@ Note: In my new version I tear all the rays into pieces and then make changes ea
 
     It now registers hits, but the magnitudes don't seem to be adding in right
       Seemingly the last big bug
+
+    It seems we were checking the receiver hit twice. When I removed only one of these checks the ray bounced normally from the receiver again
