@@ -749,3 +749,36 @@ Note: In my new version I tear all the rays into pieces and then make changes ea
     It seems to not be itterating over steps correctly, I'm going to check older editions 
 
     I have gotten them both to "work" individually. I'm saving my progress now. I'll sew them together later
+
+5/2
+    Ray was being held by receiver on hit. 
+      Suspect this to be caused by veci never chnaging.
+      I noticed that veci is usually altered by adding the product of dx and F 
+      Found that neither changes after hit (@607)
+        Surprised to find that it's supposed to do that exactly
+
+        Fortran keeps the values the same, but has veci speeding away after a hit 
+        Python keeps the values the same and thus makes veci slow to a crawl in leaving, registering more hits 
+
+      Hotfix: I made it change in relation to H instead of dx so it would be far enough to keep going
+        The new veci values are not exactly the same, but they're close enough that I can move on
+
+    I seem to have also solved a glitch where the outputfile was messing up one receiver
+      Old:
+      	93.442821	28.839718	0.151000	0.000000
+      	93.442821	28.839718	0.151000	0.000000
+	      64.583200	28.599800	7.942300	0.000000
+	      -2.407930	31.500340	0.151000	0.000000
+	      75.110050	28.494579	0.151000	0.000000
+      New:
+      	93.442821	28.839718	0.151000	0.000000
+	      64.583200	28.599800	0.151000	0.000000
+	      64.583200	28.599800	7.942300	0.000000
+	      -2.407930	31.500340	0.151000	0.000000
+	      75.110050	28.494579	0.151000	0.000000
+      Expected: 
+      93.4428213 28.8397178 0.151
+      64.5832    28.5998    0.151
+      64.5832    28.5998    7.9423
+      -2.40793   31.5003401 0.151
+      75.11005   28.4945787 0.151

@@ -141,17 +141,17 @@ def receiverHITFUNC(sizefft,outputarray,arraysize,temparray):
     # Define arrays with numpy zeros function
 
     XJ=complex(0,1)
-    print('everything seems to initiate')
+    #print('everything seems to initiate')
     
     # Add new pressures to existing pressures in temparray 
     # First Look for the correct location.
     #temparray[0,0,5] = 11998.0  #placeholder
     for D in range(0,arraysize):
         #print('output: ', outputarray[0,1:3],'\ntemp: ',temparray[D,0,0:2]) #bugfixes
-        if (outputarray[0,1] == temparray[D,0,0] and 
-        outputarray[0,2] == temparray[D,0,1] and 
-        outputarray[0,3] == temparray[D,0,2]):
-            print('first If statement passed')
+        #if (outputarray[0,1] == temparray[D,0,0] and 
+        #outputarray[0,2] == temparray[D,0,1] and 
+        #outputarray[0,3] == temparray[D,0,2]):
+            #print('first If statement passed')
 #        else:
 #            print('statement did not pass') #more bug fixes
     # If the location is the same, loop through the frequency and add current values with new values.
@@ -181,7 +181,7 @@ def receiverHITFUNC(sizefft,outputarray,arraysize,temparray):
     #            print(temparray[1,W,5])
 #            print(temparray[D,W,4:5])
     #print('final temparray: ',temparray[1,0,4], ' and ', temparray[1,0,5])
-    print('Got Through the end')
+    #print('Got Through the end')
     #print(temparray[1,1,4])
     return temparray
 
