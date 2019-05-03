@@ -65,10 +65,13 @@ class Receiver:
 
         temp1 = abs(self.magnitude) * np.exp(XJ*self.direction)
         temp2 = abs(amplitude[:])   * np.exp(XJ*phase[:])
+        print(temp1[-1],temp2[-1])
         temp3 = temp1 + temp2 
 
-        self.magnitude = np.sum( abs(temp3)                                 , axis=0)
-        self.direction = np.sum( np.arctan2(np.imag(temp3) , np.real(temp3)), axis=0)
+        #self.magnitude = np.sum( abs(temp3)                                 , axis=0)  #From when it was multi array
+        self.magnitude =  abs(temp3)                                 
+        #self.direction = np.sum( np.arctan2(np.imag(temp3) , np.real(temp3)), axis=0)  #From when it was multi array
+        self.direction =  np.arctan2(np.imag(temp3) , np.real(temp3))
         # See bug log 3/13 for what happened with positions checks
 
     def SphereCheck(self,Sr2,F,veci):

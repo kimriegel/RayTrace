@@ -179,7 +179,8 @@ def receiverHITFUNC(sizefft,outputarray,arraysize,temparray):
     #        if (W == 1):
     #            print('temparray 6 fine')
     #            print(temparray[1,W,5])
-#            print(temparray[D,W,4:5])
+            #print(temparray[D,W,4:5])
+    #print(temp2,temp1)
     #print('final temparray: ',temparray[1,0,4], ' and ', temparray[1,0,5])
     #print('Got Through the end')
     #print(temparray[1,1,4])

@@ -380,6 +380,9 @@ C     initialize normalization factor
             temparray(D,W,6)=0.0 
  15      CONTINUE
  18   CONTINUE
+            print*,temparray(1,sizeffttwo,4)
+            print*,temparray(1,sizeffttwo+1,4)
+
 
 C     Define ground plane
 
@@ -497,7 +500,8 @@ C         INCLUDE 'UrbanCanyonG2H24L14Geo.f'
       count=0
 C      print*, 'normalization',normalization
 C     Loop through the intial ray locations
-      DO 40 ray=1,RAYMAX,1
+C      DO 40 ray=1,RAYMAX,1
+      ray = 607
          hitcount=0
          tmpsum=0.0
          doublehit=0
@@ -519,7 +523,9 @@ C     location, phase and amplitude
          DO 10 I=1,IMAX,1
             dxreceiver=HUGE
 C     Find the closest sphere and store that as the distance
-C            print*, veci
+            print*, veci
+C            print*, 'F: ',F 
+C            print*, 'dx: ', dx
             DO 16 Q=1,arraysize,1 
                CALL SPHERECHECK(receiverarray(Q,1:3),
      *              radius2,F,veci,tempreceiver)
@@ -801,8 +807,8 @@ C     Loop through all the frequencies
                endif
                
 C     if the ray hits the building then change the direction and continue
-               print*, 'dx: ',dx 
-               print*, 'dxbuilding: ', dxbuilding
+C               print*, 'dx: ',dx 
+C               print*, 'dxbuilding: ', dxbuilding
                if (dx.eq.dxbuilding) then
                   Vecip1=veci+dx*F
                   veci=Vecip1
@@ -890,10 +896,11 @@ C     Loop through all patches if radiosity is turned on.
                   ampinitial(W)=ampfinal
  22            CONTINUE
             endif
-         else
 C     If there was no interaction with buildings then proceed with one step. 
+         else
             tmpsum=tmpsum+h
             Vecip1=veci+(h)*F
+C            print*, 'no hit'
             veci=Vecip1
             twopih=twopi*h
             DO 23 W=1, sizeffttwo

@@ -231,9 +231,11 @@ alphanothing = np.zeros(sizeffttwo)
 RPS.Receiver.initialize(PF.RecInput)
 ears = RPS.Receiver.rList           #easier to write
 for R in ears:          #hotfix
-      R.magnitude = np.zeros(sizefft)
+      R.magnitude = np.zeros(sizeffttwo)
+      R.direction = np.zeros(sizeffttwo)
 RPS.arraysize= RPS.Receiver.arraysize
-receiverpoint = [0.,0.,0.]
+receiverpoint  = np.zeros(3)
+receiverpoint2 = np.zeros(3)
 receiverarray = RPS.Receiver.Array  # backwards compatibility    Delete later
 hitsum = 0
 
@@ -298,7 +300,6 @@ for D in range(0,RPS.Receiver.arraysize):
 #      R.frecuencias = frecuencias[:,0]
 outputarray1=np.zeros((sizeffttwo,6))
 dhoutputarray1=np.zeros((sizeffttwo,6))  
-
 
 #       Define ground plane
 groundheight=0.000000000
@@ -374,14 +375,15 @@ count=0
 
 print('began rays')
 #ray = 606
-#for ray in range(RAYMAX):
-for ray in range(605,607):
+for ray in range(RAYMAX):
+#for ray in range(605,607):
+#for ray in range(1):
       hitcount=0
       #ray = 606
       tmpsum=0.0
       doublehit=0
-      ampinitial=inputarray[:,0]/normalization
-      phaseinitial=inputarray[:,1]
+      ampinitial  =frecuencias[:,0]/normalization
+      phaseinitial=frecuencias[:,1]
       #Vinitial=np.array([boomarray[ray,0],boomarray[ray,1],boomarray[ray-1,2]])     #Where code diverges
       if (PF.h < (2*PF.radius)): 
             print('h is less than 2r')
@@ -391,10 +393,10 @@ for ray in range(605,607):
       veci = boomarray[ray,:]
       # Making small steps along the ray path.  For each step we should return, 
       # location, phase and amplitude
-      #for I in range(PF.IMAX):
-      for I in range(15):
+      #for I in range(15):
+      for I in range(PF.IMAX):
             dxreceiver=HUGE
-            print(veci)
+            #print(veci)
             # Find the closest sphere and store that as the distance
             #for Q in range(0,RPS.arraysize):
             for R in ears:
@@ -600,18 +602,63 @@ for ray in range(605,607):
                               receiverhit=2
                         hitcount=hitcount+1
                         #print('hit receiver',sum,tmpsum,receiverpoint)
+                        #print('airabsorb: ',airabsorb[W])
+                        m=airabsorb[:]
+                        lamb=PF.soundspeed/frecuencias[:,0]
+                        phasefinal=phaseinitial[:]-(twopi*dx)/lamb   
+                        #print('ampinit: ',ampinitial[W])
+                        #print('alphno: ',' (1- ',alphanothing ,' ) ')
+                        #print('oth: ',np.exp(-m*dx))
+                        ampfinal=ampinitial[:]*(1-alphanothing[:])*np.exp(-m*dx)
+                        ampinitial=ampfinal[:]
+                        phaseinitial=phasefinal[:]%twopi
+
+                        phaseinitial = np.where((phaseinitial>=PI),(phaseinitial-twopi),phaseinitial)
+
+                        #if (phaseinitial[W]>=PI):
+                        #      phaseinitial[W]=phaseinitial[W]-twopi
+                        if(doublehit==1):
+                              outputarray1[:,0]=inputarray[W,0]
+                              outputarray1[:,1]=receiverpoint[0]
+                              outputarray1[:,2]=receiverpoint[1]
+                              outputarray1[:,3]=receiverpoint[2]
+                              outputarray1[:,4]=ampinitial[:]/2.0
+                              outputarray1[:,5]=phaseinitial[:]
+                              dhoutputarray1[:,0]=inputarray[:,0]
+                              dhoutputarray1[:,1]=receiverpoint2[0]
+                              dhoutputarray1[:,2]=receiverpoint2[1]
+                              dhoutputarray1[:,3]=receiverpoint2[2]
+                              dhoutputarray1[:,4]=ampinitial[:]/2.0
+                              dhoutputarray1[:,5]=phaseinitial[:]
+                              lastreceiver[0]=receiverpoint[0]
+                              lastreceiver[1]=receiverpoint[1]
+                              lastreceiver[2]=receiverpoint[2]
+                              lastreceiver2[0]=receiverpoint2[0]
+                              lastreceiver2[1]=receiverpoint2[1]
+                              lastreceiver2[2]=receiverpoint2[2]
+                        else:
+                              outputarray1[:,0]=inputarray[:,0]
+                              outputarray1[:,1]=receiverpoint[0]
+                              outputarray1[:,2]=receiverpoint[1]
+                              outputarray1[:,3]=receiverpoint[2]
+                              outputarray1[:,4]=ampinitial[:]
+                              outputarray1[:,5]=phaseinitial[:]
+                              lastreceiver[0]=receiverpoint[0]
+                              lastreceiver[1]=receiverpoint[1]
+                              lastreceiver[2]=receiverpoint[2]
+
                         for W in range(0,sizeffttwo):
-                              #print('airabsorb: ',airabsorb[W])
-                              m=airabsorb[W]
-                              #lamb=PF.soundspeed/inputarray[W,1]
-                              lamb=PF.soundspeed/frecuencias[W,1]
-                              phasefinal=phaseinitial[W]-(twopi*dx)/lamb   
-                              #print('ampinit: ',ampinitial[W])
-                              #print('alphno: ',' (1- ',alphanothing ,' ) ')
-                              #print('oth: ',np.exp(-m*dx))
-                              ampfinal=ampinitial[W]*(1-alphanothing[W])*np.exp(-m*dx)
-                              ampinitial[W]=ampfinal
-                              phaseinitial[W]=phasefinal%twopi
+                              ##print('airabsorb: ',airabsorb[W])
+                              #m=airabsorb[W]
+                              ##lamb=PF.soundspeed/inputarray[W,1]
+                              #lamb=PF.soundspeed/frecuencias[W,0]
+                              #phasefinal=phaseinitial[W]-(twopi*dx)/lamb   
+                              ##print('ampinit: ',ampinitial[W])
+                              ##print('alphno: ',' (1- ',alphanothing ,' ) ')
+                              ##print('oth: ',np.exp(-m*dx))
+                              #ampfinal=ampinitial[W]*(1-alphanothing[W])*np.exp(-m*dx)
+                              #ampinitial[W]=ampfinal
+                              #phaseinitial[W]=phasefinal%twopi
                               if (phaseinitial[W]>=PI):
                                     phaseinitial[W]=phaseinitial[W]-twopi
                               if(doublehit==1):
@@ -653,6 +700,11 @@ for ray in range(605,607):
                         #print(outputarray1[0,1], outputarray1[1,3], outputarray1[1,4])
                         #print('temparray before: \n',temparray)
                         temparray=fun.receiverHITFUNC(sizefft,outputarray1,RPS.arraysize,temparray)
+                        print('ampinitial shape: ',ampinitial.shape)                        
+                        print('phaseinitial shape: ',phaseinitial.shape)
+                        print('R.magnitude shape: ',R.magnitude.shape)
+                        print('R.direction shape: ',R.direction.shape)
+                        R.on_Hit(ampinitial,phaseinitial)
                         #print('non-double hit')
                         #print('temparray after: \n',temparray)
                         #print('receiverHITFUNC completed')
@@ -1049,7 +1101,8 @@ for ray in range(605,607):
 
 # Newest
 for R in ears:
-    R.timeReconstruct(sizefft)
+      #print(R.position,R.magnitude)
+      R.timeReconstruct(sizefft)
 
 OPFile=open(PF.OUTPUTFILE,"w")
 true=fun.Header(PF.OUTPUTFILE)

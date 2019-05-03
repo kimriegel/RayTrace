@@ -782,3 +782,12 @@ Note: In my new version I tear all the rays into pieces and then make changes ea
       64.5832    28.5998    7.9423
       -2.40793   31.5003401 0.151
       75.11005   28.4945787 0.151
+
+    I either just broke my receiver hit function or copied it from the wrong version, because all the values are zero
+      Copied it wrong, I don't even call the new version 
+
+    In Fortran temparray has space for 18k numbers but only uses half of it
+      Scratch that. it says sizefft/2 and I missed the two 
+
+    It now registers hits, but the magnitudes don't seem to be adding in right
+      Seemingly the last big bug
