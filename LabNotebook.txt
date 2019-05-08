@@ -797,3 +797,13 @@ Note: In my new version I tear all the rays into pieces and then make changes ea
 5/7
     Ray is registering as hitting receiver 5 but has the coordinates of hitting receiver 3
         This is because it calculates R as each object in the list, then after that loop it targets R, which will logically be the last receiver in the list not matter what.
+
+    Looking at geometry parser
+    I'm not sleeping so it's hard to understand. I'm just reverse engineering it
+
+      Does the vertex list double the number of points but not use the latter half?
+
+      I checked how it's using the faces. It makes six faces, we need five.
+        I deleted one face. It printed six.
+        I deleted all faces. It printed six.
+        Is it creating its own faces independently of the obj file?

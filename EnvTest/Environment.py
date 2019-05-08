@@ -8,7 +8,7 @@
 import numpy as np
 import pywavefront as pwf
 from pywavefront import ObjParser
-import Parameterfile_methods
+#import Parameterfile_methods
 
 class environment():
     """
@@ -17,7 +17,8 @@ class environment():
     def __init__(self,file_name):
         self.wavefront=pwf.Wavefront(file_name)
         environment=ObjParser(self.wavefront,file_name, strict=False, encoding="utf-8", create_materials=False, collect_faces=True, parse=True, cache=False)
-        environment.parse_f
+        #print(environment.parse_f)     # supposed to add .mtl file if it doesn't exist 
+
         self.normals=environment.normals
         self.vertices=environment.wavefront.vertices[0:len(environment.wavefront.vertices)//2]
         self.faces=environment.mesh.faces
@@ -82,12 +83,31 @@ class environment():
         #print(len(subfaces))
         return
 
-environment=environment('/Users/lovelace/Will Costa Version/monkey.obj')
-environment.sortvert(environment.vertices,2)
+if __name__ != "__main__":      # Old code
+
+    environment=environment('/Users/lovelace/Will Costa Version/monkey.obj')
+    environment.sortvert(environment.vertices,2)
+    environment.rayinteraction([10,20,0],2,100)
+
+if __name__ == "__main__":          # What I'm writing now
+    """
+    when running file from here it will do this, else nothing
+    """
+    #env = environment('EnvTest\SingleBuildingGeometry.obj')
+    env = environment('EnvTest/SingleBuilding.obj')
+    #print(env.vertices)
+        # trying to target specific vertex from face
+    #print(env.faces)
+    #print(env.faces[1][2])
+    #print(env.vertices[env.faces[1][2]])        # works
+    #testVert = env.vertices[env.faces[1][2]]
+    #print(testVert)                             # output is value of specified vertex in list
+    print(env.normals)
+
+
 #print(len(environment.vertices))
 #print(environment.vertices)
 #print(environment.sortvert)
 #print(len(environment.faces))
-environment.rayinteraction([10,20,0],2,100)
 #print(environment.bandwidth)
 #print(environment.sortvert)
