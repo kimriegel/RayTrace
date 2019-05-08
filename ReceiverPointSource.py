@@ -36,6 +36,7 @@ class Receiver:
         self.magnitude = 0
         self.direction = 0
 
+        Receiver.arraysize += 1
 
     def Prototype__init__(self,x,y,z):
         #Keeping this here for now, will be deleted later
@@ -45,7 +46,7 @@ class Receiver:
         Works automatically when class is called
         """
         self.position=np.array((x,y,z))
-        self.recNumber = Receiver.arraysize
+        self.recNumber = Receiver.arraysize 
         Receiver.rList.append(self) #See append_list
         
         self.pressure = 0
@@ -65,12 +66,10 @@ class Receiver:
 
         temp1 = abs(self.magnitude) * np.exp(XJ*self.direction)
         temp2 = abs(amplitude[:])   * np.exp(XJ*phase[:])
-        print(temp1[-1],temp2[-1])
+        #print(temp1[-1],temp2[-1])
         temp3 = temp1 + temp2 
 
-        #self.magnitude = np.sum( abs(temp3)                                 , axis=0)  #From when it was multi array
         self.magnitude =  abs(temp3)                                 
-        #self.direction = np.sum( np.arctan2(np.imag(temp3) , np.real(temp3)), axis=0)  #From when it was multi array
         self.direction =  np.arctan2(np.imag(temp3) , np.real(temp3))
         # See bug log 3/13 for what happened with positions checks
 
@@ -100,13 +99,8 @@ class Receiver:
         #Hey future me, remember to delete one of these later
         self.dx = dx
         return  dx 
-        #dxarr = np.where(L2OC == Sr2 , HUGE, tca - (t2hc**(1/2)))
-        #dxarr = np.where(tca<0.0,HUGE,dxarr)
-        #dxarr = np.where(t2hc<0.0,HUGE,dxarr)     
-        #return dxarr
 
     def timeReconstruct(self,sizefft):
-        #def TIMERECONSTRUCT(sizefft,timearray,arraysize,temparray):
         '''
         This Function computes the timesignal from a given fft.  It writes the
         time signal to an array
@@ -116,47 +110,14 @@ class Receiver:
         XJ=complex(0,1)
         # Create the complex array to feed into the inverse fft function
         # Create complex array and compute inverse fft first attempt Python
-
-        # timetemparray has been broken into timesignal, as it is the only thing calculated inside this function
-        #try:
-            #self.magnitude[0] == 0.0
-        if self.magnitude[0] == 0.0:
-            # If first magnitude is zero then all timesignal is zero
+        if self.magnitude[0] == 0.0:            # If first magnitude is zero then all timesignal is zero
             self.timesignal = np.zeros(sizefft) 
 
-        else:
-            # If not then calculate the timesignal 
+        else:                                   # If not then calculate the timesignal 
             tempfft = abs(self.magnitude[:]) * np.exp(XJ*self.direction)
             tempfft = np.append(0,tempfft)
-            # use numpy to compute inverse fft
-            # use ifft numpy function with tempfft and sizefft as input
-            # use timesignal as output
+            # Compute ifft using numpy
             self.timesignal=np.fft.ifft(tempfft,sizefft)
-            #print('Created time signature')
-
-    #@classmethod
-    #def create_receiverarray(cls):
-    #    """
-    #    Creates receiverarray based on the number of receivers created.
-    #    """
-    #    cls.Array = np.zeros((cls.arraysize,3))
-
-    #@classmethod
-    #def from_receiver(cls,self):
-    #    """
-    #    Adds the receiver to the Receiver array.
-    #    No input needed besides the specific Receiver.
-    #    """
-    #    cls.Array[self.recNumber]=self.position
-
-    #@classmethod
-    #def de_frecuencias(cls,frecuencia):
-    #    """
-    #    Sets the initial frequency.
-    #    1/11: Now sets one default frequency and 
-    #    all arrays will now use a copy when needed
-    #    """
-    #    cls.initial_frequency = frecuencia
 
     #def hitFunction(self):
     #    """
@@ -168,21 +129,6 @@ class Receiver:
     #    """
     #    pass 
     #    print("Everything seems to initiate.")
-
-    @classmethod
-    def Prototype_fromVertices(cls):
-        """
-        Reads in receiver points from the txt file and translates them to be used in our receiver method
-        """
-        ip = 'PointReceivers.txt'
-        with open(ip) as vertex:        #Read in from file
-            rho = np.genfromtxt(vertex)
-        cls.arraysize = rho.shape[0]   #Create an itterater
-        print (Receiver.arraysize)
-        for r in range(cls.arraysize): #Translate to usable format
-            Receiver(rho[r,0],rho[r,1],rho[r,2])             # Placeholder
-            print(rho[r,:])
-            #Receiver(rho[r,:])             # Come back later to change the needed inputs for method
 
     #def fromVertices(cls,ipfile):
     @classmethod
@@ -196,9 +142,9 @@ class Receiver:
         with open(ipfile) as vertex:        #Read in from file
             rho = np.genfromtxt(vertex)
         cls.Array = rho
-        cls.arraysize = rho.shape[0]   #Create an itterater
+        pointNo = rho.shape[0]   #Create an itterater, Number of Receiver Points
         #print (Receiver.arraysize)
-        for r in range(cls.arraysize): #Translate to usable format
+        for r in range(pointNo): #Translate to usable format
         #    print(rho[r,:])
             Receiver(rho[r,:])             # Come back later to change the needed inputs for method
         print('initialized receivers')
@@ -224,11 +170,11 @@ class Receiver:
 # Initializing receivers
 def initialize_receivers():
     """Create Individual receivers"""
-    R1 = Receiver(93.4428213,28.8397178,0.151)
-    R2 = Receiver(64.5832,28.5998,0.151)
-    R3 = Receiver(64.5832,28.5998,7.9423)
-    R4 = Receiver(-2.40793,31.5003401,0.151)
-    R5 = Receiver(75.11005,28.4945787,0.151)
+    R1 = Receiver((93.4428213,28.8397178,0.151))
+    R2 = Receiver((64.5832,28.5998,0.151))
+    R3 = Receiver((64.5832,28.5998,7.9423))
+    R4 = Receiver((-2.40793,31.5003401,0.151))
+    R5 = Receiver((75.11005,28.4945787,0.151))
 
     #"""Create Array of receiver positions"""
     #Receiver.create_receiverarray()
@@ -239,8 +185,19 @@ def initialize_receivers():
     #Receiver.from_receiver(R5)
     return 
 
+if __name__ == "__main__" :
+    initialize_receivers()
 
-#initialize_receivers()
+    ears = Receiver.rList
+    for R in ears:
+        print(R)
+
+    #Receiver.initialize("PointReceivers.txt")
+    #print(Receiver.rList)
+    #print(Receiver.arraysize)
+
+    pass
+
 #def from input():
 #
 #ip = 'PointReceivers.txt'
@@ -265,12 +222,15 @@ def initialize_receivers():
 #    print(vertex[r,:])
 
 
-#R1 = Receiver(93.4428213,28.8397178,0.151)
-#R2 = Receiver(64.5832,28.5998,0.151)
-#R3 = Receiver(64.5832,28.5998,7.9423)
-#R4 = Receiver(-2.40793,31.5003401,0.151)
-#R5 = Receiver(75.11005,28.4945787,0.151)
+#R1 = Receiver((93.4428213,28.8397178,0.151))
+#R2 = Receiver((64.5832,28.5998,0.151))
+#R3 = Receiver((64.5832,28.5998,7.9423))
+#R4 = Receiver((-2.40793,31.5003401,0.151))
+#R5 = Receiver((75.11005,28.4945787,0.151))
 #R1.SphereCheck(0.0225,    [-0.94808515,-0.29638514,-0.11528397],    [138.9117595,50.99787506,8.93999318])
+
+#print(R1.recNumber)
+#print(R4.recNumber)
 
 #test = Receiver(7,94,3)
 #Receiver.frequency = 83
@@ -317,17 +277,21 @@ def initialize_receivers():
 #Receiver.from_receiver(R4)
 #Receiver.from_receiver(R5)
 
-# For backwards compatibility
-planenum=1
-planename1='Single Point'
-#arraysize=5
-arraysize1= Receiver.arraysize
-sizex=2
-sizey=2
-sizez=1
-sizex1=sizex
-sizey1=sizey
-sizez1=sizez
+    # For backwards compatibility
+if __name__ != "__main__":
+    planenum = 1
+    planename1 = 'Single Point'
+    #arraysize=5
+    arraysize1 = Receiver.arraysize
+    sizex = 2
+    sizey = 2
+    sizez = 1
+    sizex1 = sizex
+    sizey1 = sizey
+    sizez1 = sizez
+
+    
+    pass
 
 #receiverarray = Receiver.Array  #For compatibility with rest of data
 #print(receiverarray)

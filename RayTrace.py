@@ -439,45 +439,7 @@ for ray in range(RAYMAX):
             #                  receiverpoint2[1]=receiverarray[Q,1]
             #                  receiverpoint2[2]=receiverarray[Q,2]
             #                  doublehit=1
-            #testing no Loop
             
-            #tempreceivernew=fun.SPHERECHECKNEW(receiverarray,radius2,F,veci)
-            #if (receiverhit >= 1):  #if you hit a receiver last time, don't hit it again
-            #      #if(any((receiverarray[:]==lastreceiver).all(1))):
-            #      if(np.all(receiverarray[:]==lastreceiver)):
-            #            tempreceiver=HUGE
-            #      #if((F[:]==checkdirection).all()):
-            #      if np.all(F[:]==checkdirection):
-            #            OCnew=receiverarray-veci
-            #            OCLengthnew=np.sum(OCnew*OCnew, axis=1)
-            #            #print(OCLengthnew)
-            #            if(any(OCLengthnew) < radius2):
-            #                  tempreceiver=HUGE
-            #if(receiverhit >= 2):
-            #            #print('recHit > 2 happens')        #This does not happen, good
-            #      #if(any((receiverarray[:]==lastreceiver).all(1))):
-            #      if(any((receiverarray[:]==lastreceiver).all(1))):
-            #            tempreceiver=HUGE
-            #if (any(tempreceivernew < dxreceiver)):
-            #      #print('This happens Now')
-            #            #print('Well duh, this clearly happens ') #It's not supposed to   
-            #      dxreceiver= min(tempreceivernew)
-            #      #print('dxreceiver',dxreceiver)
-            #      #### everything up to here looks good#### need to figure out how to get the index for the min now. 
-            #      receiverpoint[0]=receiverarray[Q,0]
-            #      receiverpoint[1]=receiverarray[Q,1]
-            #      receiverpoint[2]=receiverarray[Q,2]
-            #elif (tempreceiver== dxreceiver and tempreceiver != HUGE):
-            #      receivercheck=tempreceiver
-            #            #print('okay, does this one happen?')           
-            #            #print('receivercheck',receivercheck)
-            #      if(receiverarray[Q,0]==receiverpoint[0] and receiverarray[Q,1]==receiverpoint[1] and receiverarray[Q,2]==receiverpoint[2]):
-            #            doublehit=0
-            #      else:
-            #            receiverpoint2[0]=receiverarray[Q,0]
-            #            receiverpoint2[1]=receiverarray[Q,1]
-            #            receiverpoint2[2]=receiverarray[Q,2]
-            #            doublehit=1
             #     Check Intersection with ground plane
             GROUNDN=GROUNDABC
             GROUNDVD=GROUNDN[0]*F[0]+GROUNDN[1]*F[1]+GROUNDN[2]*F[2]
@@ -528,15 +490,16 @@ for ray in range(RAYMAX):
             #     Check to see if ray hits within step size
             if (dxreceiver < PF.h or dxground < PF.h or dxbuilding < PF.h):
                   dx=min(dxreceiver,dxground,dxbuilding)
-                  tmpsum=tmpsum+dx
+                  tmpsum = tmpsum + dx
                   #     if the ray hits a receiver, store in an array.  If the ray hits twice
                   #     Create two arrays to store in.
                   if (dx==dxreceiver):
-                        print('hit receiver at step ',I)
+                        print('Ray ',ray +1,' hit receiver ',R.recNumber,' at step ',I)
                         #print(veci,dx,F)
                         Vecip1=veci+np.multiply(dx,F)
                         #Vecip1=veci+np.multiply(PF.h,F)
                         veci=Vecip1
+                        print(veci)
                         receiverhit=1
                         checkdirection=F
                         if(doublehit==1):
@@ -644,7 +607,7 @@ for ray in range(RAYMAX):
                         tmp=(GROUNDABC[0]*Vecip1[0]+GROUNDABC[1]*Vecip1[1]+GROUNDABC[2]*Vecip1[2]+GROUNDD)
                         if(tmp != GROUNDD): 
                               Vecip1[2]=0.0
-                        print('hit ground at ',I)
+                        #print('hit ground at ',I)
                         veci=Vecip1
                         #print(veci)
                         dot1=(F[0]*nground[0]+F[1]*nground[1]+F[2]*nground[2])
@@ -693,7 +656,7 @@ for ray in range(RAYMAX):
                   if (dx==dxbuilding):
                         Vecip1=veci+dx*np.array(F)
                         veci=Vecip1
-                        print('hit building at step ',I)
+                        #print('hit building at step ',I)
                         #print(veci)
                         #n21=(nbox[0]*nbox[0]+nbox[1]*nbox[1]+nbox[2]*nbox[2])
                         n2 = np.dot(nbox,nbox)
@@ -781,9 +744,11 @@ for ray in range(RAYMAX):
                   #      phaseinitial[W]=phasefinal%twopi
                   #      if (phaseinitial[W] > PI):
                   #            phaseinitial[W]=phaseinitial[W]-twopi
-      print('finished ray', ray + 1)
-#      if ray == 609:
-#            break
+
+      if (ray % 50) == 0:     # For debugging
+            print('finished ray ',ray+1)
+      #print('finished ray', ray + 1)
+
 ########################################################################################################################
 ########################################################################################################################
 ########################################################################################################################

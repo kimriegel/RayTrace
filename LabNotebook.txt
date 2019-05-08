@@ -793,3 +793,7 @@ Note: In my new version I tear all the rays into pieces and then make changes ea
       Seemingly the last big bug
 
     It seems we were checking the receiver hit twice. When I removed only one of these checks the ray bounced normally from the receiver again
+
+5/7
+    Ray is registering as hitting receiver 5 but has the coordinates of hitting receiver 3
+        This is because it calculates R as each object in the list, then after that loop it targets R, which will logically be the last receiver in the list not matter what.
