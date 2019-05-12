@@ -97,7 +97,11 @@ class Receiver:
         else:
             dx = tca - (t2hc**(1/2))
         #Hey future me, remember to delete one of these later
+        #if dx < self.dx:    # may or may not work right now
+        #    self.dx = dx
+
         self.dx = dx
+        self.dxreceiver = 0
         return  dx 
 
     def timeReconstruct(self,sizefft):
@@ -278,7 +282,7 @@ if __name__ == "__main__" :
 #Receiver.from_receiver(R5)
 
     # For backwards compatibility
-if __name__ != "__main__":
+if __name__ != "__main__":      # only runs if opened outside this file
     planenum = 1
     planename1 = 'Single Point'
     #arraysize=5

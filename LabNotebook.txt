@@ -807,3 +807,24 @@ Note: In my new version I tear all the rays into pieces and then make changes ea
         I deleted one face. It printed six.
         I deleted all faces. It printed six.
         Is it creating its own faces independently of the obj file?
+
+
+5/12
+    Finals week, taking things slow. 
+      Examining exactly /what/ things /are/
+        veci is not the boom array, but a copy of the boomarray that we are working with for the specified ray (good)
+
+
+    Looking at two things today: global variables and memory locations
+        Global variables would let me cut down on inputs for functions. The increased readability will make this even easier to maintain if done right
+        Memory locations will let me target what I want where ever I want.
+          specifically being used to get rid of receiver bug. It's a nasty bug that I haven't gotten rid of yet
+
+    
+    Looking at this code after I've had a good night's sleep:
+      I think the bug is just that a chunk of code is tabbed wrong. I'll see how that goes 
+        It recognizes which ray hits which receiver (again), but it only recognizes if I'm testing at ray 606. It seems to skip otherwise
+
+    Imported a small part of Will's env function. Since it reliably hits the building now I want to verify his module by seeing 
+    if the rays would interact with his box in the same way. 
+      The positions work, I will check the interaction later

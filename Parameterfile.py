@@ -3,34 +3,34 @@
 import numpy as np
 INPUTFILE = "inputNASABOOM1.txt"
 RecInput = "PointReceivers.txt"
-Fs=24000.0
-xinitial=145.0
-yinitial=35.0
-zinitial=0.0
-radius=.15
-soundspeed=348.537
-ps=1.0
-Temp=302.182778
-time=.01
-hr=20.0
-theta=1.6863372
-phi=3.44458181
-boomspacing=1   #.6
+Fs = 24000.0
+xinitial = 145.0
+yinitial = 35.0
+zinitial = 0.0
+radius = .15
+soundspeed = 348.537
+ps = 1.0
+Temp = 302.182778
+time = .01
+hr = 20.0
+theta = 1.6863372
+phi = 3.44458181
+boomspacing = 1   #.6
 #boomspacing= 0.6
-xmin=-1
-ymin=30.0
-zmin=0.0
-xmax=-1
-ymax=100.0
-zmax=25.0
-IMAX=75
-h=10.0
-absorbplanes=1
+xmin = -1
+ymin = 30.0
+zmin = 0.0
+xmax = -1
+ymax = 100.0
+zmax = 25.0
+IMAX = 75
+h = 10.0
+absorbplanes = 1
 #allocate(tempalphabuilding(absorbplanes,8))
 #Find way to rephrase
 OUTPUTFILE = 'PythonTest.txt'
 #Turn Radiosity on or off.  This will include diffuse reflections
-radiosity=0
+radiosity = 0
 #Turn on complex absorption
 complexabsorption = 0
 
