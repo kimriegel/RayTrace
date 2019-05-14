@@ -126,26 +126,13 @@ def TIMERECONSTRUCT(sizefft,timearray,arraysize,temparray):
 def receiverHITFUNC(sizefft,outputarray,arraysize,temparray):
     '''
     This Function adds the pressures from a ray when it hits the receiver.
-
-    Args:
-
-    Returns:
-
     '''
-    ##All print commands commented out were from original code but stayed for consistency
-    #import math as m
-    #import numpy as np
-
-    # Define all variables
-
     # Define arrays with numpy zeros function
-
     XJ=complex(0,1)
     #print('everything seems to initiate')
     
     # Add new pressures to existing pressures in temparray 
     # First Look for the correct location.
-    #temparray[0,0,5] = 11998.0  #placeholder
     for D in range(0,arraysize):
         #print('output: ', outputarray[0,1:3],'\ntemp: ',temparray[D,0,0:2]) #bugfixes
         #if (outputarray[0,1] == temparray[D,0,0] and 

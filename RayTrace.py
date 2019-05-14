@@ -1,5 +1,5 @@
 # RayTrace
-# version 1.0.5
+# version 1.1.0
 
 # Kimberly Lefkowitz created this program to propagate sonic booms around
 # large structures, and to graduate. It is a ray tracing model that 
@@ -19,11 +19,8 @@ import ReceiverPointSource as RPS
 
 import time
 
-# It now recognizes which ray hits which receiver (again), but it only recognizes if I'm testing a small number of rays. It seems to skip otherwise
-
 # What it does    
 """
-      Initializes arrays 
       Initializes receivers
       Reads in geometry file (Boxes)
       Has Rays interact with receivers    
@@ -36,19 +33,11 @@ import time
 # What it does not do
 """
       Interacts with geometry
-      Have a way of reading in complex geometries 
+      Have a way of reading in complex geometries - Yes, but not yet integrated
       Anything resembling radiosity
-      Run Well          *New 4/14
+      Run Well          - TBD 5/14
 """
 
-def TIMERECONSTRUCT(sizefft,magnitude,direction):
-    '''
-    This Function computes the timesignal from a given fft.  It writes the
-    time signal to an array
-    Timearray is now defined in here. Do not call it.
-    Args:
-    Returns:
-    '''
     #outputarray[:,0] = frecuencias  [:,0]
     #outputarray[:,1] = receiverpoint[0]
     #outputarray[:,2] = receiverpoint[1]
@@ -63,41 +52,6 @@ def TIMERECONSTRUCT(sizefft,magnitude,direction):
     #timetemparray[D,:,2]=temparray[D,0,2]
     #        timetemparray[D,W,3]=timearray[W]   #Not actually used until outside function
     #        timetemparray[D,W,4]=0.0    #timesignal
-    XJ=complex(0,1)
-    print('timeconstruct has been called')
-
-    print('timetemparray has been initialized')
-    # Create the complex array to feed into the inverse fft function
-    # Author: Will, Create complex array and compute inverse fft first attempt Python
-    #for D in range(0,arraysize) :
-
-    # timetemparray has been broken into timesignal, as it is the only thing calculated inside this function
-
-    #print('mag: ',magnitude.shape)
-    if magnitude[0] == 0.0:
-        # If first magnitude is zero then all timesignal is zero
-        timesignal = 0.0
-
-    else:
-        # If not then calculate the timesignal 
-        tempfft = abs(magnitude[:]) * np.exp(XJ*direction)
-        tempfft = np.append(0,tempfft)
-        print(tempfft.size)
-        print('Created temparray')
-        # use nummpy to compute inverse fft
-        # use ifft numpy function with tempfft and sizefft as input
-        # use timesignal as output
-        timesignal=np.fft.ifft(tempfft,sizefft)
-        print('Created time signature')
-        #for W in range(sizeffttwo) :
-            #if W == 0:
-                #tempfft[W]=complex([0])
-            #else:
-                #tempfft[W]=complex(abs(temparray[D,W-1,4])*m.exp(XJ*temparray[D,W-1,5]))
-                #tempfft = abs(magnitude[:]) * np.exp(XJ*direction)
-
-    #return timetemparray
-    return timesignal
 
 def initial_signal(signalLength,fftOutput):
     """
@@ -127,45 +81,6 @@ def updateFreq(dx,alpha,diffusion):
       phase = np.where( (tempphase > PI),      tempphase-twopi,      tempphase)
       amplitude *= ((1.0-alpha) * (1.0-diffusion) * np.exp(airabsorb*dx))
 
-#def updateFreq(airabsorb,frequencia,dx,alpha,diffusion):
-#      """
-#      Update ray phase and amplitude
-#      Only input first row for frequency
-#
-#      Can be made to operate on globals. Does not do that yet, but would be helpful
-#      """
-#      global phase,amplitude
-#
-#      twopidx = twopi * dx
-#      lamb = PF.soundspeed/frequencia
-#
-#      tempphase = phase[:] - (twopidx/lamb)
-#      tempphase %= twopi
-#
-#      phase = np.where( (tempphase > PI),      tempphase-twopi,      tempphase)
-#      amplitude *= ((1.0-alpha) * (1.0-diffusion) * np.exp(airabsorb*dx))
-
-#def updateFreq(airabsorb,frequencia,phase,dx,amp,alpha,diffusion):
-#      """
-#      Update ray data
-#      Only input first row for frequency
-#
-#      Can be made to operate on globals. Does not do that yet, but would be helpful
-#      """
-#      twopidx = twopi * dx
-#
-#      lamb = PF.soundspeed/frequencia
-#      phaseTemp = phase[:] - (twopidx/lamb)
-#      ampTemp = amp[:] * (1.0-alpha) * (1.0-diffusion) * np.exp(airabsorb*dx)
-#
-#      phase = phaseTemp[:] % twopi
-#      phase = np.where( (phase > PI),      phase-twopi,      phase)
-#
-#      #self.phase = phase
-#      #self.amplitude = ampTemp
-#      return phase, ampTemp
-
-
 # port and import receiver file
 receiverhit=0
 groundhit=0
@@ -175,8 +90,6 @@ PI = np.pi
 twopi = PI*2
 XJ=(0.0,1.0)
 radius2 = PF.radius**2
-#PI=3.1415965358979323846
-#twopi= 2.0*PI
 S=1
 K=0
 raysum=0
@@ -198,7 +111,6 @@ F=np.empty([1,3])
 outputsignal=np.empty(int(K/2+1))
 inputarray=np.empty((int(K/2),3))
 inputarraynew=np.empty((int(K/2),3))
-#print(inputarraynew.shape)
 #take the fft of the input signal with fftw
 
 sizefft=K
@@ -220,7 +132,6 @@ frecuencias = initial_signal(sizefft,outputsignal)      # Equivalent to inputarr
 inputarray =      frecuencias                   #hotfix for right now
 
 lamb = PF.soundspeed/frecuencias[:,0]     # Used for updating frequencies in update function
-
 timearray = np.arange(K) /PF.Fs
 
 #       Set initial values
@@ -392,9 +303,7 @@ for ray in range(RAYMAX):
       hitcount=0
       tmpsum=0.0
       doublehit=0
-      #ampinitial  =frecuencias[:,0]/normalization
       amplitude = frecuencias[:,0]/normalization
-      #phaseinitial=frecuencias[:,1]
       phase=frecuencias[:,1]
       if (PF.h < (2*PF.radius)): 
             print('h is less than 2r')
@@ -526,8 +435,6 @@ for ray in range(RAYMAX):
                               if(doublehit==1):
                                     receiverhit=2
                               hitcount=hitcount+1
-                              #phaseinitial, ampinitial = updateFreq(airabsorb,frecuencias[:,0],phaseinitial,dx,ampinitial,alphanothing,0)
-                              #updateFreq(airabsorb,frecuencias[:,0],dx,alphanothing,0)
                               updateFreq(dx,alphanothing,0)
                               lastreceiver = receiverpoint
                               outputarray1[:,0] = frecuencias[:,0]
@@ -542,10 +449,10 @@ for ray in range(RAYMAX):
                                     lastreceiver2 = receiverpoint2
                               else:
                                     outputarray1[:,4]=amplitude[:]
-                              temparray=fun.receiverHITFUNC(sizefft,outputarray1,RPS.arraysize,temparray)
+                              temparray=fun.receiverHITFUNC(sizefft,outputarray1,RPS.arraysize,temparray)   # looks like it does the same thing as onHit. Here later
                               R.on_Hit(amplitude,phase)
                               if (doublehit==1):
-                                    temparray=fun.receiverHITFUNC(sizefft,dhoutputarray1,RPS.arraysize,temparray)
+                                    temparray=fun.receiverHITFUNC(sizefft,dhoutputarray1,RPS.arraysize,temparray) #Using objects may circumvent the need to have this, but it stays for now
                                     count+=1
                               count+=1
                   #if (dx==dxreceiver):
@@ -600,30 +507,18 @@ for ray in range(RAYMAX):
                   if (abs(dx-dxground)< 10.0**(-13.0)):                  #     If the ray hits the ground then bounce off the ground and continue
                         #Vecip1=veci+np.multiply(dxground,F)
                         veci += (dxground*F)
-                        #tmp=(GROUNDABC[0]*Vecip1[0]+GROUNDABC[1]*Vecip1[1]+GROUNDABC[2]*Vecip1[2]+GROUNDD)
                         tmp = np.dot(GROUNDABC,veci)
 
                         if(tmp != GROUNDD): 
                               veci[2] = 0
-                              #Vecip1[2]=0.0
                         print('hit ground at ',I)
-                        #veci=Vecip1
-                        #print(veci)
                         dot1 = np.dot(F,nground)
                         n2 = np.dot(nground,nground)
-                        #dot1=(F[0]*nground[0]+F[1]*nground[1]+F[2]*nground[2])
-                        #n2=(nground[0]*nground[0]+nground[1]*nground[1]+nground[2]*nground[2])
-                        #r=np.around(F-2.0*(dot1/n2)*nground,8)
-                        #length=np.sqrt(r[0]*r[0]+r[1]*r[1]+r[2]*r[2])
-                        #F=np.around([r[0],r[1],r[2]],8)
                         F -= (2.0*(dot1/n2 *nground))
                         length = np.sqrt(np.dot(F,F))
                         groundhit=1
                         twopidx=twopi*dxground
                         #     Loop through all the frequencies
-                        #phaseinitial, ampinitial = update(airabsorb,frecuencias[:,0],phaseinitial,dxground,ampinitial,alphaground,diffusionground)
-                        #phaseinitial, ampinitial = updateFreq(airabsorb,frecuencias[:,0],phaseinitial,dxground,ampinitial,alphaground,diffusionground)
-                        #updateFreq(airabsorb,frecuencias[:,0],dxground,alphaground,diffusionground)
                         updateFreq(dxground,alphaground,diffusionground)
                         if(PF.radiosity==1 and (diffusionground!=0.0)):
                               for Q in range (0,PatchNo):
@@ -632,7 +527,6 @@ for ray in range(RAYMAX):
                                                 if(veci[1]<=(patcharray[Q,W,1]+0.5*patcharray[Q,W,4]) and veci[1]>=(patcharray[Q,W,1]-0.5*patcharray[Q,W,4])):
                                                       if(veci[2]<=(patcharray[Q,W,2]+0.5*patcharray[Q,W,5]) and veci[2]>=(patcharray[Q,W,2]-0.5*patcharray[Q,W,5])):
                                                             temp2=complex(abs(patcharray[Q,W,6])*np.exp(XJ*patcharray[Q,W,7]))
-                                                            #temp3=complex(abs(ampinitial[W]*(1.0-alphaground[W])*diffusionground*exp(-m*dxground))*exp(1j*phasefinal))
                                                             temp3=complex(abs(amplitude[W]*(1.0-alphaground[W])*diffusionground*exp(-m*dxground))*exp(1j*phasefinal))
                                                             temp4=temp2+temp3
                                                             patcharray[Q,W,6]=abs(temp4)
@@ -666,11 +560,7 @@ for ray in range(RAYMAX):
                         #print(veci)
                         n2 = np.dot(nbox,nbox)
                         nbuilding=nbox/np.sqrt(n2)
-                        #dot1=(F[0]*nbuilding[0]+F[1]*nbuilding[1]+F[2]*nbuilding[2])
                         dot1= np.dot(F,nbuilding)
-                        #r=F-2.0*(dot1/n2)*nbuilding
-                        #length = np.sqrt( np.dot(r,r))
-                        #F = r
                         F -= (2.0*(dot1/n2 *nbuilding))
                         length = np.sqrt(np.dot(F,F))
                         buildinghit=1
@@ -698,8 +588,6 @@ for ray in range(RAYMAX):
                                           alpha=alphabuilding[4,:]
                         else:
                               alpha=alphabuilding[0,:]
-                        #phaseinitial, ampinitial = updateFreq(airabsorb,frecuencias[:,0],phaseinitial,dx,ampinitial,alpha,diffusion)
-                        #updateFreq(airabsorb,frecuencias[:,0],dx,alpha,diffusion)
                         updateFreq(dx,alpha,diffusion)
                         
             else:
@@ -709,8 +597,6 @@ for ray in range(RAYMAX):
                   veci=Vecip1
                   twopih=twopi*PF.h
                   #     Loop through all frequencies.
-                  #phaseinitial, ampinitial = updateFreq(airabsorb,frecuencias[:,0],phaseinitial,PF.h,ampinitial,alphanothing,0)  #temporary
-                  #updateFreq(airabsorb,frecuencias[:,0],PF.h,alphanothing,0)  #temporary
                   updateFreq(PF.h,alphanothing,0)
                   #for W in range (0,sizeffttwo):
                   #      m=airabsorb[W]

@@ -828,3 +828,21 @@ Note: In my new version I tear all the rays into pieces and then make changes ea
     Imported a small part of Will's env function. Since it reliably hits the building now I want to verify his module by seeing 
     if the rays would interact with his box in the same way. 
       The positions work, I will check the interaction later
+
+5/14
+    F was the same object as Finitial. Causing it to only ever point up
+      Changed that and now it runs separately
+
+    Using spacing 0.35 for a good spacing size and speed  (For context on how fast it's running now)
+
+    Updated some functions that could of ran better with constants.
+      It seems to be running faster but I haven't checked that.
+
+    Removed old comments that refered to things we no longer use/care about
+
+    Removed timereconstruct in main file, as it exists in another file and we don't even use it in main
+
+    Tempreceiver is only used when checking the nearest array, but I'm keeping it there as a placeholder for now
+
+    Temparray seems to be completely dummied out, it also looks as if it's running alongside on_Hit, which does the same goal.
+      The only reason I can think to keep temparray is for double hits, and I think using objects may have eliminated the need for that
