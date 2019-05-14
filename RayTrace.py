@@ -114,38 +114,69 @@ def initial_signal(signalLength,fftOutput):
 
     return outputFrequency
 
-#def update(airabsorb,frequencia,phase,dx,amp,alpha,diffusion):
-def updateFreq(airabsorb,frequencia,phase,dx,amp,alpha,diffusion):
+def updateFreq(dx,alpha,diffusion):
       """
-      Update ray/ripple data
-      Only input first row for frequency
+      Update ray phase and amplitude
+      """
+      global phase,amplitude        # works directly
 
-      Can be made to operate on globals. Does not do that yet, but would be helpful
-      """
-      PI = np.pi
-      twopi = PI*2
       twopidx = twopi * dx
+      tempphase = phase[:] - (twopidx/lamb)
+      tempphase %= twopi
 
-      lamb = PF.soundspeed/frequencia
-      phaseTemp = phase[:] - (twopidx/lamb)
-      ampTemp = amp[:] * (1.0-alpha) * (1.0-diffusion) * np.exp(airabsorb*dx)
+      phase = np.where( (tempphase > PI),      tempphase-twopi,      tempphase)
+      amplitude *= ((1.0-alpha) * (1.0-diffusion) * np.exp(airabsorb*dx))
 
-      phase = phaseTemp[:] % twopi
-      phase = np.where( (phase > PI),      phase-twopi,      phase)
+#def updateFreq(airabsorb,frequencia,dx,alpha,diffusion):
+#      """
+#      Update ray phase and amplitude
+#      Only input first row for frequency
+#
+#      Can be made to operate on globals. Does not do that yet, but would be helpful
+#      """
+#      global phase,amplitude
+#
+#      twopidx = twopi * dx
+#      lamb = PF.soundspeed/frequencia
+#
+#      tempphase = phase[:] - (twopidx/lamb)
+#      tempphase %= twopi
+#
+#      phase = np.where( (tempphase > PI),      tempphase-twopi,      tempphase)
+#      amplitude *= ((1.0-alpha) * (1.0-diffusion) * np.exp(airabsorb*dx))
 
-      #self.phase = phase
-      #self.amplitude = ampTemp
-      return phase, ampTemp
+#def updateFreq(airabsorb,frequencia,phase,dx,amp,alpha,diffusion):
+#      """
+#      Update ray data
+#      Only input first row for frequency
+#
+#      Can be made to operate on globals. Does not do that yet, but would be helpful
+#      """
+#      twopidx = twopi * dx
+#
+#      lamb = PF.soundspeed/frequencia
+#      phaseTemp = phase[:] - (twopidx/lamb)
+#      ampTemp = amp[:] * (1.0-alpha) * (1.0-diffusion) * np.exp(airabsorb*dx)
+#
+#      phase = phaseTemp[:] % twopi
+#      phase = np.where( (phase > PI),      phase-twopi,      phase)
+#
+#      #self.phase = phase
+#      #self.amplitude = ampTemp
+#      return phase, ampTemp
+
 
 # port and import receiver file
 receiverhit=0
 groundhit=0
 
 # Initialize counters 
-PI=3.1415965358979323846
+PI = np.pi
+twopi = PI*2
 XJ=(0.0,1.0)
 radius2 = PF.radius**2
-twopi= 2.0*PI
+#PI=3.1415965358979323846
+#twopi= 2.0*PI
 S=1
 K=0
 raysum=0
@@ -183,22 +214,12 @@ phaseinitialnew=np.empty(sizeffttwo)
 #       Create initial signal 
 airabsorb = np.empty(sizeffttwo)
 airabsorbnew = np.empty(sizeffttwo)
-t = time.time()
-#Kbig=np.arange(0,sizefft,1)
 
 airabsorb=fun.ABSORPTION(PF.ps,inputarraynew[:,0],PF.hr,PF.Temp)
 frecuencias = initial_signal(sizefft,outputsignal)      # Equivalent to inputarray in original
 inputarray =      frecuencias                   #hotfix for right now
-t=time.time()
-#for K in range(sizeffttwo):
-#    inputarray[K,0]=(K+1)*PF.Fs/2*1/(sizeffttwo)      #Frequenvies
-#    inputarray[K,1]=abs(outputsignal[K]/sizefft)
-#    inputarray[K,2]=np.arctan2(np.imag(outputsignal[K]/sizefft),np.real(outputsignal[K]/sizefft))
-#    airabsorb[K]=fun.ABSORPTION(PF.ps,inputarray[K,0],PF.hr,PF.Temp)
-#for K in range(sizefft):
-#    timearray[K]=(K)*1/PF.Fs
-#print('timearray: %.8f ' %(time.time()-t))
-#timearray=(Kbig)*1/PF.Fs
+
+lamb = PF.soundspeed/frecuencias[:,0]     # Used for updating frequencies in update function
 
 timearray = np.arange(K) /PF.Fs
 
@@ -371,22 +392,21 @@ for ray in range(RAYMAX):
       hitcount=0
       tmpsum=0.0
       doublehit=0
-      ampinitial  =frecuencias[:,0]/normalization
-      phaseinitial=frecuencias[:,1]
+      #ampinitial  =frecuencias[:,0]/normalization
+      amplitude = frecuencias[:,0]/normalization
+      #phaseinitial=frecuencias[:,1]
+      phase=frecuencias[:,1]
       if (PF.h < (2*PF.radius)): 
             print('h is less than 2r')
             break
-      F = np.array(Finitial)         # If not defined this way it will make them the same object. This will break the entire program. No not change
+      F = np.array(Finitial)         # If not defined this way it will make them the same object. This will break the entire program. Do not change
       veci = boomarray[ray,:]
-      # Making small steps along the ray path.  For each step we should return, location, phase and amplitude
-      #for I in range(15):
-      for I in range(PF.IMAX):
+      for I in range(PF.IMAX):      # Making small steps along the ray path.  For each step we should return, location, phase and amplitude
             dxreceiver=HUGE
-            #print(Finitial is F)
             #print(veci)
             # Find the closest sphere and store that as the distance
             for R in ears:
-                  #tempreceiver=fun.SPHERECHECK(receiverarray[Q],radius2,F,veci)
+                  # The way that tempreceiver works now, it's only used here and only should be used here. It's not defined inside the receiver because it's ray dependant.
                   tempreceiver = R.SphereCheck(radius2,F,veci)    #distrance to receiver
                   if (receiverhit >= 1):  #if you hit a receiver last time, don't hit it again
                         if np.all(R.position ==lastreceiver):
@@ -506,22 +526,24 @@ for ray in range(RAYMAX):
                               if(doublehit==1):
                                     receiverhit=2
                               hitcount=hitcount+1
-                              phaseinitial, ampinitial = updateFreq(airabsorb,frecuencias[:,0],phaseinitial,dx,ampinitial,alphanothing,0)
+                              #phaseinitial, ampinitial = updateFreq(airabsorb,frecuencias[:,0],phaseinitial,dx,ampinitial,alphanothing,0)
+                              #updateFreq(airabsorb,frecuencias[:,0],dx,alphanothing,0)
+                              updateFreq(dx,alphanothing,0)
                               lastreceiver = receiverpoint
                               outputarray1[:,0] = frecuencias[:,0]
                               outputarray1[:,1:4] = receiverpoint[:]
-                              outputarray1[:,5] = phaseinitial[:]
+                              outputarray1[:,5] = phase[:]
                               if(doublehit==1):
-                                    outputarray1[:,4]=ampinitial[:]/2.0
+                                    outputarray1[:,4]=amplitude[:]/2.0
                                     dhoutputarray1[:,0]=inputarray[:,0]
                                     dhoutputarray1[:,1:4]=receiverpoint2[:]
-                                    dhoutputarray1[:,4]=ampinitial[:]/2.0
-                                    dhoutputarray1[:,5]=phaseinitial[:]
+                                    dhoutputarray1[:,4]=amplitude[:]/2.0
+                                    dhoutputarray1[:,5]=phase[:]
                                     lastreceiver2 = receiverpoint2
                               else:
-                                    outputarray1[:,4]=ampinitial[:]
+                                    outputarray1[:,4]=amplitude[:]
                               temparray=fun.receiverHITFUNC(sizefft,outputarray1,RPS.arraysize,temparray)
-                              R.on_Hit(ampinitial,phaseinitial)
+                              R.on_Hit(amplitude,phase)
                               if (doublehit==1):
                                     temparray=fun.receiverHITFUNC(sizefft,dhoutputarray1,RPS.arraysize,temparray)
                                     count+=1
@@ -600,7 +622,9 @@ for ray in range(RAYMAX):
                         twopidx=twopi*dxground
                         #     Loop through all the frequencies
                         #phaseinitial, ampinitial = update(airabsorb,frecuencias[:,0],phaseinitial,dxground,ampinitial,alphaground,diffusionground)
-                        phaseinitial, ampinitial = updateFreq(airabsorb,frecuencias[:,0],phaseinitial,dxground,ampinitial,alphaground,diffusionground)
+                        #phaseinitial, ampinitial = updateFreq(airabsorb,frecuencias[:,0],phaseinitial,dxground,ampinitial,alphaground,diffusionground)
+                        #updateFreq(airabsorb,frecuencias[:,0],dxground,alphaground,diffusionground)
+                        updateFreq(dxground,alphaground,diffusionground)
                         if(PF.radiosity==1 and (diffusionground!=0.0)):
                               for Q in range (0,PatchNo):
                                     if (formfactors[0,Q,1]==1):
@@ -608,7 +632,8 @@ for ray in range(RAYMAX):
                                                 if(veci[1]<=(patcharray[Q,W,1]+0.5*patcharray[Q,W,4]) and veci[1]>=(patcharray[Q,W,1]-0.5*patcharray[Q,W,4])):
                                                       if(veci[2]<=(patcharray[Q,W,2]+0.5*patcharray[Q,W,5]) and veci[2]>=(patcharray[Q,W,2]-0.5*patcharray[Q,W,5])):
                                                             temp2=complex(abs(patcharray[Q,W,6])*np.exp(XJ*patcharray[Q,W,7]))
-                                                            temp3=complex(abs(ampinitial[W]*(1.0-alphaground[W])*diffusionground*exp(-m*dxground))*exp(1j*phasefinal))
+                                                            #temp3=complex(abs(ampinitial[W]*(1.0-alphaground[W])*diffusionground*exp(-m*dxground))*exp(1j*phasefinal))
+                                                            temp3=complex(abs(amplitude[W]*(1.0-alphaground[W])*diffusionground*exp(-m*dxground))*exp(1j*phasefinal))
                                                             temp4=temp2+temp3
                                                             patcharray[Q,W,6]=abs(temp4)
                                                             patcharray[Q,W,7]=np.arctan(temp4.imag,temp4.real)
@@ -673,9 +698,10 @@ for ray in range(RAYMAX):
                                           alpha=alphabuilding[4,:]
                         else:
                               alpha=alphabuilding[0,:]
-                        phaseinitial, ampinitial = updateFreq(airabsorb,frecuencias[:,0],phaseinitial,dx,ampinitial,alpha,diffusion)
-                        #phaseinitial, ampinitial = update(airabsorb,frecuencias[:,0],phaseinitial,dx,ampinitial,alpha,diffusion)
-
+                        #phaseinitial, ampinitial = updateFreq(airabsorb,frecuencias[:,0],phaseinitial,dx,ampinitial,alpha,diffusion)
+                        #updateFreq(airabsorb,frecuencias[:,0],dx,alpha,diffusion)
+                        updateFreq(dx,alpha,diffusion)
+                        
             else:
                   #     If there was no interaction with buildings then proceed with one step. 
                   tmpsum=tmpsum+PF.h
@@ -683,7 +709,9 @@ for ray in range(RAYMAX):
                   veci=Vecip1
                   twopih=twopi*PF.h
                   #     Loop through all frequencies.
-                  phaseinitial, ampinitial = updateFreq(airabsorb,frecuencias[:,0],phaseinitial,PF.h,ampinitial,alphanothing,0)  #temporary
+                  #phaseinitial, ampinitial = updateFreq(airabsorb,frecuencias[:,0],phaseinitial,PF.h,ampinitial,alphanothing,0)  #temporary
+                  #updateFreq(airabsorb,frecuencias[:,0],PF.h,alphanothing,0)  #temporary
+                  updateFreq(PF.h,alphanothing,0)
                   #for W in range (0,sizeffttwo):
                   #      m=airabsorb[W]
                   #      #lamb=PF.soundspeed/inputarray[W,0]
