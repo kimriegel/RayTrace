@@ -38,24 +38,6 @@ class Receiver:
 
         Receiver.arraysize += 1
 
-    def Prototype__init__(self,x,y,z):
-        #Keeping this here for now, will be deleted later
-        """
-        Create and defines position of receiver
-        
-        Works automatically when class is called
-        """
-        self.position=np.array((x,y,z))
-        self.recNumber = Receiver.arraysize 
-        Receiver.rList.append(self) #See append_list
-        
-        self.pressure = 0
-        self.magnitude = 0
-        self.direction = 0
-
-        #Receiver.arraysize +=1     #Now used completely differently
-
-
     def on_Hit(self,amplitude,phase):
         """ 
         My version of old receiver hit function. 
@@ -66,7 +48,6 @@ class Receiver:
 
         temp1 = abs(self.magnitude) * np.exp(XJ*self.direction)
         temp2 = abs(amplitude[:])   * np.exp(XJ*phase[:])
-        #print(temp1[-1],temp2[-1])
         temp3 = temp1 + temp2 
 
         self.magnitude =  abs(temp3)                                 
@@ -97,8 +78,6 @@ class Receiver:
         else:
             dx = tca - (t2hc**(1/2))
         #Hey future me, remember to delete one of these later
-        #if dx < self.dx:    # may or may not work right now
-        #    self.dx = dx
 
         self.dx = dx
         self.dxreceiver = 0
@@ -123,18 +102,6 @@ class Receiver:
             # Compute ifft using numpy
             self.timesignal=np.fft.ifft(tempfft,sizefft)
 
-    #def hitFunction(self):
-    #    """
-    #    Adds pressure from a ray when it hits a receiver
-    #    I don't know if I should define this as an instance
-    #     method because it works on each receiver
-    #     or a static method because it works on all once.
-    #     I'm leaning towards instance now, but that's subject to change 
-    #    """
-    #    pass 
-    #    print("Everything seems to initiate.")
-
-    #def fromVertices(cls,ipfile):
     @classmethod
     def initialize(cls,ipfile):
         """
@@ -154,16 +121,8 @@ class Receiver:
         print('initialized receivers')
 
 
-        
-#Receiver.fromVertices()
 #print(Receiver.rList[0].position)
-#Unused
-#class const:
-#    """
-#    If you're wondering where these came from:
-#    Some scrap paper that I never uploaded
-#    Defining all constants here instead of redefining them again
-#    """
+#constants:
 #    PI = 3.1415965358979323846
 #    XJ = complex(0.0,1.0)
 #    radius = PF.radius # use this or pf
@@ -180,26 +139,17 @@ def initialize_receivers():
     R4 = Receiver((-2.40793,31.5003401,0.151))
     R5 = Receiver((75.11005,28.4945787,0.151))
 
-    #"""Create Array of receiver positions"""
-    #Receiver.create_receiverarray()
-    #Receiver.from_receiver(R1)
-    #Receiver.from_receiver(R2)
-    #Receiver.from_receiver(R3)
-    #Receiver.from_receiver(R4)
-    #Receiver.from_receiver(R5)
     return 
 
 if __name__ == "__main__" :
+    #Only exists for checking bugs with specific parameters now
     initialize_receivers()
-
     ears = Receiver.rList
     for R in ears:
         print(R)
-
     #Receiver.initialize("PointReceivers.txt")
     #print(Receiver.rList)
     #print(Receiver.arraysize)
-
     pass
 
 #def from input():
@@ -270,9 +220,6 @@ if __name__ == "__main__" :
 #print(Receiver.rList[0].__dict__)   #Show attributes for receiver
 # The receiver can now be accessed from two separate places. This may eliminate the need for Receiver.Array completely
 
-#for i in range(len(Receiver.rList)):
-#    print(Receiver.rList[i].position)
-
 ## Adding receivers to Array
 #Receiver.create_receiverarray()
 #Receiver.from_receiver(R1)
@@ -285,7 +232,6 @@ if __name__ == "__main__" :
 if __name__ != "__main__":      # only runs if opened outside this file
     planenum = 1
     planename1 = 'Single Point'
-    #arraysize=5
     arraysize1 = Receiver.arraysize
     sizex = 2
     sizey = 2
@@ -297,21 +243,7 @@ if __name__ != "__main__":      # only runs if opened outside this file
     
     pass
 
-#receiverarray = Receiver.Array  #For compatibility with rest of data
-#print(receiverarray)
-#receiverarray is Receiver.Array #trying to refer to same object instead of equal value
-#print(receiverarray)
-
-# ^ These also make runtime wildly varied, nix them when possible ^
-
-#print('initialized receivers')
-
 #print(R1.position)
 #print(R2.position)
 #print(Receiver.Array)
 #print(Receiver.arraysize)
-
-#print("%8f " % (time.time()-t))
-#print(time.time()-t)
-
-#from ReceiverPointMethods import Receiver.Array as receiverarray # copy for backwards compatibility
