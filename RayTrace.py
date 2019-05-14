@@ -364,10 +364,10 @@ count=0
 
 print('began rays')
 #ray = 606
-for ray in range(1):
-#for ray in range(RAYMAX):
+#for ray in range(1):
+for ray in range(RAYMAX):
 #for ray in range(605,607):
-      ray = 606
+      #ray = 606
       hitcount=0
       tmpsum=0.0
       doublehit=0
@@ -376,12 +376,13 @@ for ray in range(1):
       if (PF.h < (2*PF.radius)): 
             print('h is less than 2r')
             break
-      F=Finitial
+      F = np.array(Finitial)         # If not defined this way it will make them the same object. This will break the entire program. No not change
       veci = boomarray[ray,:]
       # Making small steps along the ray path.  For each step we should return, location, phase and amplitude
       #for I in range(15):
       for I in range(PF.IMAX):
             dxreceiver=HUGE
+            #print(Finitial is F)
             #print(veci)
             # Find the closest sphere and store that as the distance
             for R in ears:
@@ -400,7 +401,6 @@ for ray in range(1):
                               tempreceiver=HUGE
                   if (tempreceiver < dxreceiver):   
                         R.dxreceiver=tempreceiver
-                        #print(R.recNumber,R.dxreceiver)
                         dxreceiver=tempreceiver
                         receiverpoint= R.position
                   elif (tempreceiver== dxreceiver and tempreceiver != HUGE):
