@@ -292,8 +292,8 @@ print('began rays')
 #ray = 455174                    # @ PF.boomspacing = 0.06
 #for ray in range(1):
 #for ray in range(605,607):   
-#for ray in range(RAYMAX):
-for ray in range(455172,455176):   
+#for ray in range(455172,455176):   
+for ray in range(RAYMAX):
       #ray = 606
       hitcount=0
       tmpsum=0.0
