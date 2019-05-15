@@ -1,4 +1,3 @@
-#!/bin/python3
 # RayTrace
 # version 1.1.0
 
@@ -20,23 +19,12 @@ import ReceiverPointSource as RPS
 
 import time
 t = time.time()
-# What it does    
-"""
-      Initializes receivers
-      Reads in geometry file (Boxes)
-      Has Rays interact with receivers    
-      Reconstructs data with respect to time 
-      Print out results 
-      Run fast          *New 4/14
-      Recognizes which receiver is hit    *New 5/12
-"""
       
 # What it does not do
 """
-      Interacts with geometry
+      Interacts with geometry parser
       Have a way of reading in complex geometries - Yes, but not yet integrated
       Anything resembling radiosity
-      Run Well          - TBD 5/14
 """
 
     #outputarray[:,0] = frecuencias  [:,0]
@@ -91,8 +79,6 @@ PI = np.pi
 twopi = PI*2
 XJ=(0.0,1.0)
 radius2 = PF.radius**2
-S=1
-K=0
 raysum=0
 
 # Initiailize receiver variables
@@ -107,11 +93,6 @@ K=len(inputsignal)
 HUGE=1000000.0
 
 # Allocate the correct size to the signal and fft arrays
-
-outputsignal=np.empty(int(K/2+1))
-inputarraynew=np.empty((int(K/2),3))
-#take the fft of the input signal with fftw
-
 sizefft=K
 sizeffttwo=sizefft//2
 outputsignal=np.fft.fft(inputsignal,sizefft)
@@ -119,9 +100,7 @@ ampinitial=np.empty(sizeffttwo)
 phaseinitial=np.empty(sizeffttwo)
 
 #       Create initial signal 
-airabsorb = np.empty(sizeffttwo)
-
-airabsorb=fun.ABSORPTION(PF.ps,inputarraynew[:,0],PF.hr,PF.Temp)
+airabsorb=fun.ABSORPTION(PF.ps,inputarraynew[:,0],PF.hr,PF.Temp)        #sizeffttwo
 frecuencias = initial_signal(sizefft,outputsignal)      # Equivalent to inputarray in original
 inputarray =      frecuencias                   #hotfix for right now
 
@@ -139,7 +118,6 @@ tmp=(Finitial[0]*Vinitial[0]+Finitial[1]*Vinitial[1]+Finitial[2]*Vinitial[2])
 PLANEABC=np.array([Finitial[0],Finitial[1],Finitial[2],tmp])
 
 #       Create initial boom array
-
 yspace=PF.boomspacing*abs(np.cos(PF.phi))
 zspace=PF.boomspacing*abs(np.sin(PF.theta))
 if (PF.xmin == PF.xmax):
@@ -153,7 +131,6 @@ print(RAYMAX , ' is the RAYMAX')
 boomarray,sizex,sizey,sizez=fun.InitialGrid(PF.boomspacing,PLANEABC[0],PLANEABC[1],PLANEABC[2],PLANEABC[3],PF.theta,PF.phi,PF.xmin,PF.ymin,PF.zmin,PF.xmax,PF.ymax,PF.zmax,RAYMAX)
 
 #     Create a receiver array, include a receiver file. 
-
 alphanothing = np.zeros(sizeffttwo)
 
 # Making specific receiver points using receiver module
@@ -165,8 +142,6 @@ for R in ears:          #hotfix
 RPS.arraysize = RPS.Receiver.arraysize
 receiverpoint  = np.zeros(3)
 receiverpoint2 = np.zeros(3)
-#receiverarray = RPS.Receiver.Array  # backwards compatibility    Delete later
-hitsum = 0
 
 #############################################################
 #      deallocate(receiverarray1)
@@ -196,7 +171,6 @@ hitsum = 0
 #       Initialize normalization factor 
 normalization=(PI*radius2)/(PF.boomspacing**2) 
 temparray=np.empty((    RPS.Receiver.arraysize,sizeffttwo,6))
-temparraynew=np.empty(( RPS.Receiver.arraysize,sizeffttwo,6))
 timetemparray=np.zeros((RPS.Receiver.arraysize,sizefft,5))
 
 outputarray1=np.zeros((sizeffttwo,6))
@@ -424,8 +398,6 @@ for ray in range(RAYMAX):
                                                             patcharray[Q,W,6]=abs(temp4)
                                                             patcharray[Q,W,7]=np.arctan(temp4.imag,temp4.real)
                   if (dx==dxbuilding):                  #     if the ray hits the building then change the direction and continue
-                        #Vecip1=veci+dx*np.array(F)
-                        #veci=Vecip1
                         veci += (dx*F)
                         print('hit building at step ',I)
                         n2 = np.dot(nbox,nbox)
@@ -662,4 +634,3 @@ for W in range(sizefft):
 
 OPFile.close()
 print(time.time()-t)
-#
