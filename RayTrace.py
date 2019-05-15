@@ -104,28 +104,21 @@ with open(PF.INPUTFILE) as IPFile:
       inputsignal=np.loadtxt(IPFile)
 K=len(inputsignal)
 HUGE=1000000.0
-F=np.empty([1,3])
 
 # Allocate the correct size to the signal and fft arrays
 
 outputsignal=np.empty(int(K/2+1))
-inputarray=np.empty((int(K/2),3))
 inputarraynew=np.empty((int(K/2),3))
 #take the fft of the input signal with fftw
 
 sizefft=K
 sizeffttwo=sizefft//2
 outputsignal=np.fft.fft(inputsignal,sizefft)
-#timearray=np.empty(sizefft)
-timearraynew=np.empty(sizefft)
 ampinitial=np.empty(sizeffttwo)
-ampinitialnew=np.empty(sizeffttwo)
 phaseinitial=np.empty(sizeffttwo)
-phaseinitialnew=np.empty(sizeffttwo)
 
 #       Create initial signal 
 airabsorb = np.empty(sizeffttwo)
-airabsorbnew = np.empty(sizeffttwo)
 
 airabsorb=fun.ABSORPTION(PF.ps,inputarraynew[:,0],PF.hr,PF.Temp)
 frecuencias = initial_signal(sizefft,outputsignal)      # Equivalent to inputarray in original
@@ -295,10 +288,10 @@ count=0
 ########################################################################################################################
 
 print('began rays')
-#ray = 606
+#ray = 606                    # @ PF.boomspacing = 1
 #for ray in range(1):
+#for ray in range(605,607):   
 for ray in range(RAYMAX):
-#for ray in range(605,607):
       #ray = 606
       hitcount=0
       tmpsum=0.0
@@ -440,6 +433,13 @@ for ray in range(RAYMAX):
                               outputarray1[:,0] = frecuencias[:,0]
                               outputarray1[:,1:4] = receiverpoint[:]
                               outputarray1[:,5] = phase[:]
+                              if doublehit == 1 :
+                                    R2 = R      #Supposed to be other R, but just a placeholder for now
+                                    R.on_Hit(amplitude/2,phase)
+                                    R2.on_Hit(amplitude/2,phase)
+                              else:
+                                    R.on_Hit(amplitude,phase)
+
                               if(doublehit==1):
                                     outputarray1[:,4]=amplitude[:]/2.0
                                     dhoutputarray1[:,0]=inputarray[:,0]
@@ -449,10 +449,10 @@ for ray in range(RAYMAX):
                                     lastreceiver2 = receiverpoint2
                               else:
                                     outputarray1[:,4]=amplitude[:]
-                              temparray=fun.receiverHITFUNC(sizefft,outputarray1,RPS.arraysize,temparray)   # looks like it does the same thing as onHit. Here later
-                              R.on_Hit(amplitude,phase)
+                              #temparray=fun.receiverHITFUNC(sizefft,outputarray1,RPS.arraysize,temparray)   # looks like it does the same thing as on_Hit. Here later
+                              #R.on_Hit(amplitude,phase)
                               if (doublehit==1):
-                                    temparray=fun.receiverHITFUNC(sizefft,dhoutputarray1,RPS.arraysize,temparray) #Using objects may circumvent the need to have this, but it stays for now
+                                    #temparray=fun.receiverHITFUNC(sizefft,dhoutputarray1,RPS.arraysize,temparray) #Using objects may circumvent the need to have this, but it stays for now
                                     count+=1
                               count+=1
                   #if (dx==dxreceiver):
@@ -593,9 +593,10 @@ for ray in range(RAYMAX):
             else:
                   #     If there was no interaction with buildings then proceed with one step. 
                   tmpsum=tmpsum+PF.h
-                  Vecip1=veci+(PF.h)*np.array(F)
-                  veci=Vecip1
-                  twopih=twopi*PF.h
+                  #Vecip1=veci+(PF.h)*np.array(F)
+                  #veci=Vecip1
+                  veci += (PF.h*F)
+                  #twopih=twopi*PF.h
                   #     Loop through all frequencies.
                   updateFreq(PF.h,alphanothing,0)
                   #for W in range (0,sizeffttwo):
