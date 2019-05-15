@@ -1,8 +1,8 @@
 ####################################
 #unfinished
 import numpy as np
-import Functions as F 
-PatchNox=4
+import RadiosityFunctions as F 
+PatchNox = 4
 xlimit = np.zeros(PatchNox)
 Nx = np.zeros(PatchNox-1)
 xlimit[0]=0.0
@@ -17,7 +17,7 @@ Nx[2]=10
 qx=3.0
       
 PatchNoy=4
-ylimit = np.zero(PatchNoy)
+ylimit = np.zeros(PatchNoy)
 Ny = np.zeros(PatchNoy -1)
 
 ylimit[0]=0.0
@@ -316,7 +316,7 @@ while Q + increment < (increment + tempsize - 1):
                 patcharray[Q,W,6]=0.0
                 patcharray[Q,W,7]=0.0
                 patcharray[Q,W,8]=9.0
-                patcharray[Q,W,9]=4 .0
+                patcharray[Q,W,9]=4.0
                 W +=1
         Q += 1
 

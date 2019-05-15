@@ -849,3 +849,21 @@ Note: In my new version I tear all the rays into pieces and then make changes ea
 
 5/15
     Double functionality seems to have been neglected. We shouldn't be getting those errors with these parameters, but that's a different problem entirely 
+
+    The error from this morning has disappeared, but doubehit functionality seems to
+      just be a placeholder for now. I stacked two receivers to see what their reading
+      would be and only one was actually even registered
+
+    I'll come back to it. I'll start radiosity now
+
+    Looking at the filesizes on disk: Python's filesize (217kb), including the scraps, 
+      is smaller than Fortran's executable at (252kb)
+      Even accounting for space on disk, python still only takes up (236kb)
+
+    New file runtime with same parameters (1825 rays):
+      Python:   44.030 seconds
+      Fortran:  54.359 seconds
+
+
+    Python runs faster than Fortran now. Accuracy is off. Python only registers a hit on receiver 2 with pressure -5.450707
+    Fortran registers a hit only on receiver 2 with pressure -2.23565674     

@@ -1,3 +1,4 @@
+#!/bin/python3
 # RayTrace
 # version 1.1.0
 
@@ -18,7 +19,7 @@ import ReceiverPointSource as RPS
 #import GeometryParser as BG
 
 import time
-
+t = time.time()
 # What it does    
 """
       Initializes receivers
@@ -161,10 +162,10 @@ ears = RPS.Receiver.rList           #easier to write
 for R in ears:          #hotfix
       R.magnitude = np.zeros(sizeffttwo)
       R.direction = np.zeros(sizeffttwo)
-RPS.arraysize= RPS.Receiver.arraysize
+RPS.arraysize = RPS.Receiver.arraysize
 receiverpoint  = np.zeros(3)
 receiverpoint2 = np.zeros(3)
-receiverarray = RPS.Receiver.Array  # backwards compatibility    Delete later
+#receiverarray = RPS.Receiver.Array  # backwards compatibility    Delete later
 hitsum = 0
 
 #############################################################
@@ -178,19 +179,19 @@ hitsum = 0
 #############################################################
 #Find function to deallocate 
 
-receiverarray1=None
-if RPS.planenum >=2 :
-    RPS.receiverarray2=None
-if RPS.planenum >=3 :
-    RPS.receiverarray3=None
-if RPS.planenum >=4 :
-    RPS.receiverarray4=None
-if RPS.planenum >=5 :
-    RPS.receiverarray5=None
-if RPS.planenum >=6 :
-    RPS.receiverarray6=None
-if RPS.planenum >=7 :
-    RPS.receiverarray7=None
+#receiverarray1=None                #It looks like in the new version we make this, don't use it, then delete it
+#if RPS.planenum >=2 :
+#    RPS.receiverarray2=None
+#if RPS.planenum >=3 :
+#    RPS.receiverarray3=None
+#if RPS.planenum >=4 :
+#    RPS.receiverarray4=None
+#if RPS.planenum >=5 :
+#    RPS.receiverarray5=None
+#if RPS.planenum >=6 :
+#    RPS.receiverarray6=None
+#if RPS.planenum >=7 :
+#    RPS.receiverarray7=None
 
 #       Initialize normalization factor 
 normalization=(PI*radius2)/(PF.boomspacing**2) 
@@ -198,20 +199,6 @@ temparray=np.empty((    RPS.Receiver.arraysize,sizeffttwo,6))
 temparraynew=np.empty(( RPS.Receiver.arraysize,sizeffttwo,6))
 timetemparray=np.zeros((RPS.Receiver.arraysize,sizefft,5))
 
-t=time.time()
-
-for D in range(0,RPS.Receiver.arraysize):
-      for W in range(0,sizeffttwo):
-            temparray[D,W,0]=receiverarray[D,0]
-            temparray[D,W,1]=receiverarray[D,1]
-            temparray[D,W,2]=receiverarray[D,2]
-            temparray[D,W,3]=inputarray[W,0]    #initial pressures
-            temparray[D,W,4]=0.0                #magnitude
-            temparray[D,W,5]=0.0                #direction
-
-#for R in ears:
-#      R.magnitude= np.zeros(sizefft)
-#      R.frecuencias = frecuencias[:,0]
 outputarray1=np.zeros((sizeffttwo,6))
 dhoutputarray1=np.zeros((sizeffttwo,6))  
 
@@ -221,10 +208,9 @@ GROUNDABC=np.array([0.000000000,0.000000000,1.00000000])
 GROUNDD=-groundheight
 groundD= -groundheight
 nground=np.array([0.0,0.0,1.0])
-alphaground=np.zeros(sizeffttwo)
 
 #     Allocate absorption coefficients for each surface for each frequency
-
+alphaground=np.zeros(sizeffttwo)
 for D in range(1,sizeffttwo):       #This loop has a minimal impact on performance
     if inputarray[D,1] >= 0.0 or inputarray[D,1] < 88.0 :
         alphaground[D]=PF.tempalphaground[1]
@@ -244,7 +230,6 @@ for D in range(1,sizeffttwo):       #This loop has a minimal impact on performan
         alphaground[D]=PF.tempalphaground[8]
 
 alphabuilding = np.zeros((PF.absorbplanes,sizeffttwo))
-
 for W in range(1,PF.absorbplanes):        #These also look minimal
     for D in range(1,PF.absorbplanes):
         if  inputarray[D,1] >= 0.0 or inputarray[D,1] < 88.0:
@@ -265,14 +250,6 @@ for W in range(1,PF.absorbplanes):        #These also look minimal
             alphabuilding[W,D] = tempalphabuilding[W,8]
 
 #        Mesh the patches for the environment.  Include patching file. 
-#if PF.radiosity == 1 :
-##      import SingleBuildingGeometry
-#      diffusion=percentdiffuse
-#      diffusionground=0.0
-#else:
-#      diffusion=0.0
-#      diffusionground=0.0
-
 diffusionground = 0.0
 if PF.radiosity:  # If it exists as a non-zero number
       import SingleBuildingGeometry
@@ -280,21 +257,14 @@ if PF.radiosity:  # If it exists as a non-zero number
 else:
       diffusion = 0.0
 
-count=0
-
+#count=0
 #     Loop through the intial ray locations
-########################################################################################################################
-########################################################################################################################
-########################################################################################################################
-
 print('began rays')
 #ray = 606                    # @ PF.boomspacing = 1
 #ray = 455174                    # @ PF.boomspacing = 0.06
-#for ray in range(1):
-#for ray in range(605,607):   
-#for ray in range(455172,455176):   
+#for ray in range(605,607):
+#for ray in range(455172,455176):
 for ray in range(RAYMAX):
-      #ray = 606
       hitcount=0
       tmpsum=0.0
       doublehit=0
@@ -327,48 +297,16 @@ for ray in range(RAYMAX):
                         R.dxreceiver=tempreceiver
                         dxreceiver=tempreceiver
                         receiverpoint= R.position
-                  elif (tempreceiver== dxreceiver and tempreceiver != HUGE):
+                  elif (tempreceiver == dxreceiver and tempreceiver != HUGE):
                         receivercheck=tempreceiver          
                         if np.all(R.position==receiverpoint):
                               doublehit=0
                         else:
-                              receiverpoint2 = R.position
+                              #receiverpoint2 = R.position
                               R2 = R
                               doublehit=1
-            #      tempreceiver=fun.SPHERECHECK(receiverarray[Q],radius2,F,veci)
-            #      if (receiverhit >= 1):  #if you hit a receiver last time, don't hit it again
-            #            if(   lastreceiver[0]==receiverarray[Q,0] and      lastreceiver[1]==receiverarray[Q,1] and  lastreceiver[2]==receiverarray[Q,2]):
-            #                  tempreceiver=HUGE
-            #            if(  F[0]==checkdirection[0] and  F[1] == checkdirection[1] and F[2] == checkdirection[2]):
-            #                  OC[0]=receiverarray[Q,0]-veci[0]
-            #                  OC[1]=receiverarray[Q,1]-veci[1]
-            #                  OC[2]=receiverarray[Q,2]-veci[2] 
-            #                  OCLength=OC[0]*OC[0]+OC[1]*OC[1]+OC[2]*OC[2]
-            #                  #print('OCLength Orig',OCLength)
-            #                  if(OCLength < radius2):
-            #                        tempreceiver=HUGE
-            #      if(receiverhit >= 2):
-            #            #print('recHit > 2 happens')        #This does not happen, good
-            #            if(lastreceiver2[0]== receiverarray[Q,0] and lastreceiver2[1]==receiverarray[Q,1] and lastreceiver2[2]==receiverarray[Q,2]):
-            #                  tempreceiver=HUGE
-            #      if (tempreceiver < dxreceiver):
-            #            #print('Well duh, this clearly happens ') #It's not supposed to   
-            #            dxreceiver=tempreceiver
-            #            receiverpoint[0]=receiverarray[Q,0]
-            #            receiverpoint[1]=receiverarray[Q,1]
-            #            receiverpoint[2]=receiverarray[Q,2]
-            #      elif (tempreceiver== dxreceiver and tempreceiver != HUGE):
-            #            receivercheck=tempreceiver
-            #            #print('okay, does this one happen?')           
-            #            #print('receivercheck',receivercheck)
-            #            if(receiverarray[Q,0]==receiverpoint[0] and receiverarray[Q,1]==receiverpoint[1] and receiverarray[Q,2]==receiverpoint[2]):
-            #                  doublehit=0
-            #            else:
-            #                  receiverpoint2[0]=receiverarray[Q,0]
-            #                  receiverpoint2[1]=receiverarray[Q,1]
-            #                  receiverpoint2[2]=receiverarray[Q,2]
-            #                  doublehit=1
-            
+                              print('double hit')
+
             #     Check Intersection with ground plane
             GROUNDN=GROUNDABC
             GROUNDVD=GROUNDN[0]*F[0]+GROUNDN[1]*F[1]+GROUNDN[2]*F[2]
@@ -384,12 +322,12 @@ for ray in range(RAYMAX):
                         dxground=HUGE
             else:
                   dxground=HUGE
+
             #     Check intersection with building
             dxbuilding=HUGE
             hit=0
             planehit=0
             #     Check intersection with Boxes
-            t = time.time()
             for Q in range(0,BG.Boxnumber):
                   dxnear, dxfar, hit, planehit=fun.BOX(BG.Boxarraynear[Q], BG.Boxarrayfar[Q],veci,F)
                   if (dxnear < dxbuilding):
@@ -416,13 +354,13 @@ for ray in range(RAYMAX):
             buildinghit=0
             receiverhit=0
             groundhit=0
+
             #     Check to see if ray hits within step size
             if (dxreceiver < PF.h or dxground < PF.h or dxbuilding < PF.h):
                   dx=min(dxreceiver,dxground,dxbuilding)
                   tmpsum = tmpsum + dx
                   #     if the ray hits a receiver, store in an array.  If the ray hits two, create two arrays to store in.
                   for R in ears:
-                        #print(R)
                         if dx == R.dxreceiver:
                               print('Ray ',ray +1,' hit receiver ',R.recNumber,' at step ',I)
                               veci += (dx*F)
@@ -443,70 +381,21 @@ for ray in range(RAYMAX):
                               else:
                                     R.on_Hit(amplitude,phase)
 
-                              if(doublehit==1):
-                                    outputarray1[:,4]=amplitude[:]/2.0
-                                    dhoutputarray1[:,0]=inputarray[:,0]
-                                    dhoutputarray1[:,1:4]=receiverpoint2[:]
-                                    dhoutputarray1[:,4]=amplitude[:]/2.0
-                                    dhoutputarray1[:,5]=phase[:]
-                                    lastreceiver2 = receiverpoint2
-                              else:
-                                    outputarray1[:,4]=amplitude[:]
+                              #if(doublehit==1):
+                              #      outputarray1[:,4]=amplitude[:]/2.0
+                              #      dhoutputarray1[:,0]=inputarray[:,0]
+                              #      dhoutputarray1[:,1:4]=receiverpoint2[:]
+                              #      dhoutputarray1[:,4]=amplitude[:]/2.0
+                              #      dhoutputarray1[:,5]=phase[:]
+                              #      lastreceiver2 = receiverpoint2
+                              #else:
+                              #      outputarray1[:,4]=amplitude[:]
                               #temparray=fun.receiverHITFUNC(sizefft,outputarray1,RPS.arraysize,temparray)   # looks like it does the same thing as on_Hit. Here later
                               #R.on_Hit(amplitude,phase)
-                              if (doublehit==1):
-                                    #temparray=fun.receiverHITFUNC(sizefft,dhoutputarray1,RPS.arraysize,temparray) #Using objects may circumvent the need to have this, but it stays for now
-                                    count+=1
-                              count+=1
-                  #if (dx==dxreceiver):
-                  #      #print(veci,dx,F)
-                  #      #Vecip1=veci+np.multiply(dx,F)
-                  #      #Vecip1=veci+np.multiply(PF.h,F)
-                  #      #veci=Vecip1
-                  #      #print(veci)
-                  #      veci += (dx*F)
-                  #      receiverhit=1
-                  #      checkdirection=F
-                  #      if(doublehit==1):
-                  #            receiverhit=2
-                  #      hitcount=hitcount+1
-                  #      phaseinitial, ampinitial = updateFreq(airabsorb,frecuencias[:,0],phaseinitial,dx,ampinitial,alphanothing,0)
-                  #      #m=airabsorb[:]
-                  #      #lamb=PF.soundspeed/frecuencias[:,0]
-                  #      #phasefinal=phaseinitial[:]-(twopi*dx)/lamb   
-                  #      #ampfinal=ampinitial[:]*(1-alphanothing[:])*np.exp(-m*dx)
-                  #      #ampinitial=ampfinal[:]
-                  #      #phaseinitial=phasefinal[:]%twopi
-                  #      #phaseinitial = np.where((phaseinitial>=PI),(phaseinitial-twopi),phaseinitial)
-                  #
-                  #      #phaseinitial, ampinitial = updateFreq(airabsorb,frecuencias[:,0],phaseinitial,dxground,ampinitial,alphaground,diffusionground)
-                  #
-                  #      lastreceiver = receiverpoint
-                  #      outputarray1[:,0] = frecuencias[:,0]
-                  #      outputarray1[:,1:4] = receiverpoint[:]
-                  #      outputarray1[:,5] = phaseinitial[:]
-                  #      if(doublehit==1):
-                  #            outputarray1[:,4]=ampinitial[:]/2.0
-                  #            dhoutputarray1[:,0]=inputarray[:,0]
-                  #            dhoutputarray1[:,1]=receiverpoint2[0]
-                  #            dhoutputarray1[:,2]=receiverpoint2[1]
-                  #            dhoutputarray1[:,3]=receiverpoint2[2]
-                  #            dhoutputarray1[:,4]=ampinitial[:]/2.0
-                  #            dhoutputarray1[:,5]=phaseinitial[:]
-                  #            lastreceiver2[0]=receiverpoint2[0]
-                  #            lastreceiver2[1]=receiverpoint2[1]
-                  #            lastreceiver2[2]=receiverpoint2[2]
-                  #      else:
-                  #            outputarray1[:,4]=ampinitial[:]
-                  #
-                  #      temparray=fun.receiverHITFUNC(sizefft,outputarray1,RPS.arraysize,temparray)
-                  #      R.on_Hit(ampinitial,phaseinitial)
-                  #      #print('non-double hit')
-                  #      if (doublehit==1):
-                  #            #print('doublehit')
-                  #            temparray=fun.receiverHITFUNC(sizefft,dhoutputarray1,RPS.arraysize,temparray)
-                  #            count+=1
-                  #      count+=1
+                              #if (doublehit==1):
+                              #      #temparray=fun.receiverHITFUNC(sizefft,dhoutputarray1,RPS.arraysize,temparray) #Using objects may circumvent the need to have this, but it stays for now
+                              #      count+=1
+                              #count+=1
                   if (abs(dx-dxground)< 10.0**(-13.0)):                  #     If the ray hits the ground then bounce off the ground and continue
                         #Vecip1=veci+np.multiply(dxground,F)
                         veci += (dxground*F)
@@ -534,48 +423,17 @@ for ray in range(RAYMAX):
                                                             temp4=temp2+temp3
                                                             patcharray[Q,W,6]=abs(temp4)
                                                             patcharray[Q,W,7]=np.arctan(temp4.imag,temp4.real)
-
-                        #for W in range(0,sizeffttwo):
-                        #      m=airabsorb[W]
-                        #      lamb=PF.soundspeed/inputarray[W,0]
-                        #      phasefinal=phaseinitial[W]-(twopidx)/lamb
-                        #      ampfinal=ampinitial[W]*(1.0-alphaground[W])*(1.0-diffusionground)*np.exp(-m*dxground)
-                        #      phaseinitial[W]=phasefinal%twopi
-                        #      if (phaseinitial[W]>PI):
-                        #            phaseinitial[W]=phaseinitial[W]-twopi
-                        #      if(PF.radiosity==1 and (diffusionground!=0.0)):
-                        #            for Q in range (0,PatchNo):
-                        #                  if (formfactors[0,Q,1]==1):
-                        #                        if(veci[0]<=(patcharray[Q,W,0]+0.5*patcharray[Q,W,3]) and veci[0]>=(patcharray[Q,W,0]-0.5*patcharray[Q,W,3])):
-                        #                              if(veci[1]<=(patcharray[Q,W,1]+0.5*patcharray[Q,W,4]) and veci[1]>=(patcharray[Q,W,1]-0.5*patcharray[Q,W,4])):
-                        #                                    if(veci[2]<=(patcharray[Q,W,2]+0.5*patcharray[Q,W,5]) and veci[2]>=(patcharray[Q,W,2]-0.5*patcharray[Q,W,5])):
-                        #                                          temp2=complex(abs(patcharray[Q,W,6])*np.exp(XJ*patcharray[Q,W,7]))
-                        #                                          temp3=complex(abs(ampinitial[W]*(1.0-alphaground[W])*diffusionground*exp(-m*dxground))*exp(1j*phasefinal))
-                        #                                          temp4=temp2+temp3
-                        #                                          patcharray[Q,W,6]=abs(temp4)
-                        #                                          patcharray[Q,W,7]=np.arctan(temp4.imag,temp4.real)
-                        #      ampinitial[W]=ampfinal   
                   if (dx==dxbuilding):                  #     if the ray hits the building then change the direction and continue
                         #Vecip1=veci+dx*np.array(F)
                         #veci=Vecip1
                         veci += (dx*F)
                         print('hit building at step ',I)
-                        #print(veci)
                         n2 = np.dot(nbox,nbox)
                         nbuilding=nbox/np.sqrt(n2)
                         dot1= np.dot(F,nbuilding)
                         F -= (2.0*(dot1/n2 *nbuilding))
                         length = np.sqrt(np.dot(F,F))
                         buildinghit=1
-                        twopidx=twopi*dx
-                        #phaseNew, amplitudeNew = update(airabsorb,frecuencias[:,0],phaseinitial,dx,ampinitial,alpha,diffusion)
-                        #m=airabsorb[:]
-                        #lamb=PF.soundspeed/inputarray[:,0]                
-                        #phasefinal=phaseinitial[:]-(twopidx)/lamb
-                        #ampfinal=ampinitial[:]*(1.0-alpha)*(1.0-diffusion)*np.exp(-m*dx)
-                        #phaseinitial[:]=phasefinal%twopi
-                        #phaseinitial = np.where((phaseinitial[:]>PI), phaseinitial[:]-twopi, phaseinitial)
-                        #ampinitial[:]=ampfinal
                         if PF.complexabsorption:
                               if PF.absorbplanes==2:
                                     if (veci[2]>0.0) and (veci[2]<height1):
@@ -596,62 +454,11 @@ for ray in range(RAYMAX):
             else:
                   #     If there was no interaction with buildings then proceed with one step. 
                   tmpsum=tmpsum+PF.h
-                  #Vecip1=veci+(PF.h)*np.array(F)
-                  #veci=Vecip1
                   veci += (PF.h*F)
-                  #twopih=twopi*PF.h
-                  #     Loop through all frequencies.
                   updateFreq(PF.h,alphanothing,0)
-                  #for W in range (0,sizeffttwo):
-                  #      m=airabsorb[W]
-                  #      #lamb=PF.soundspeed/inputarray[W,0]
-                  #      lamb=PF.soundspeed/inputarray[W,0]
-                  #      phasefinal=phaseinitial[W]-(twopih)/lamb
-                  #      ampfinal=ampinitial[W]*(1-alphanothing)*np.exp(-m*PF.h)
-                  #      #print('ampinit: ',ampinitial[W])
-                  #      #print('ampfin: ',ampfinal[W])
-                  #      ampinitial[W]=ampfinal[W]                 
-                  #      phaseinitial[W]=phasefinal%twopi
-                  #      if (phaseinitial[W] > PI):
-                  #            phaseinitial[W]=phaseinitial[W]-twopi
-
       #if (ray % 50) == 0:     # For debugging
       #      print('finished ray ',ray+1)
       print('finished ray', ray + 1)
-
-########################################################################################################################
-########################################################################################################################
-########################################################################################################################
-
-# Experiments     - They don't run until I tell them to
-if __name__ != "__main__":
-      if (dx==dxbuilding):                  #     if the ray hits the building then change the direction and continue
-            veci += (dx*F)
-            #print('hit building at step ',I)
-            n2 = np.dot(nbox,nbox)
-            nbuilding=nbox/np.sqrt(n2)
-            dot1= np.dot(F,nbuilding)
-            F -= (2.0*(dot1/n2 *nbuilding))
-            length = np.sqrt(np.dot(F,F))
-            buildinghit=1
-            twopidx=twopi*dx
-      if (abs(dx-dxground)< 10.0**(-13.0)):                  #     If the ray hits the ground then bounce off the ground and continue
-            veci += (dxground*F)
-            tmp = np.dot(GROUNDABC,veci)
-            if(tmp != GROUNDD): 
-                  veci[2] = 0
-            #print('hit ground at ',I)
-            dot1 = np.dot(F,nground)
-            n2 = np.dot(nground,nground)
-            F -= (2.0*(dot1/n2 *nground))
-            length = np.sqrt(np.dot(F,F))
-            groundhit=1
-            twopidx=twopi*dxground
-
-if __name__ != "__main__":
-
-      length = np.sqrt(np.dot(F,F))
-
 
 #Gk=np.zeros(PatchNo,sizeffttwo)
 #Gkminus1=np.zeros(PatchNo,sizeffttwo)
@@ -840,11 +647,10 @@ if __name__ != "__main__":
 #       endif
 
 #Reconstruct the time signal
-
 for R in ears:
-      #print(R.position,R.magnitude)
       R.timeReconstruct(sizefft)
 
+print('Writing to output file')
 OPFile=open(PF.OUTPUTFILE,"w")
 true=fun.Header(PF.OUTPUTFILE)
 OPFile=open(PF.OUTPUTFILE,"a")      #redefining to print both Header and TimeHeader
@@ -852,29 +658,8 @@ OPFile=open(PF.OUTPUTFILE,"a")      #redefining to print both Header and TimeHea
 for W in range(sizefft):
     true=fun.TimeHeader(OPFile,timearray[W],RPS.sizex1,RPS.sizey1,RPS.sizez1,RPS.planename1)
     for R in ears:
-        OPFile.write('\t%f\t%f\t%f\t%f\n' %(R.position[0],R.position[1],R.position[2],R.timesignal[W]))
+        OPFile.write('\t%f\t%f\t%f\t%f\n' %(R.position[0],R.position[1],R.position[2],np.real(R.timesignal[W])))
 
 OPFile.close()
-
-
-
-#if(RPS.planenum>=2):
-#      W=0
-#      while (W<sizefft):
-#            true=fun.TimeHeader(OPFile,timetemparray[0,W,3],sizex2,sizey2,sizez2,planename2)
-#            D=RPS.arraysize1
-#            while (D<RPS.arraysize1+RPS.arraysize2):
-#                  OPFile.write(timetemparray[D,W,0:2],timetemparray[D,W,4])
-#                  D+=1
-#            W+=1
-#if(RPS.planenum>=5):
-#      W=0
-#      while (W<sizefft):
-#            true=fun.TimeHeader(OPFile,timetemparray[0,W,3],sizex5,sizey5,sizez5,planename5)
-#            D=arraysize1+arraysize2+arraysize3+arraysize4
-#            while(D<(arraysize1+arraysize2+arraysize3+arraysize4+arraysize5)):
-#                  OPFile.write(timetemparray[D,W,0:2],timetemparray[D,W,4])
-#                  D+=1
-#            W+=1
-OPFile.close()
-
+print(time.time()-t)
+#
