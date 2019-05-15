@@ -846,3 +846,6 @@ Note: In my new version I tear all the rays into pieces and then make changes ea
 
     Temparray seems to be completely dummied out, it also looks as if it's running alongside on_Hit, which does the same goal.
       The only reason I can think to keep temparray is for double hits, and I think using objects may have eliminated the need for that
+
+5/15
+    Double functionality seems to have been neglected. We shouldn't be getting those errors with these parameters, but that's a different problem entirely 

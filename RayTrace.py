@@ -289,9 +289,11 @@ count=0
 
 print('began rays')
 #ray = 606                    # @ PF.boomspacing = 1
+#ray = 455174                    # @ PF.boomspacing = 0.06
 #for ray in range(1):
 #for ray in range(605,607):   
-for ray in range(RAYMAX):
+#for ray in range(RAYMAX):
+for ray in range(455172,455176):   
       #ray = 606
       hitcount=0
       tmpsum=0.0
@@ -331,6 +333,7 @@ for ray in range(RAYMAX):
                               doublehit=0
                         else:
                               receiverpoint2 = R.position
+                              R2 = R
                               doublehit=1
             #      tempreceiver=fun.SPHERECHECK(receiverarray[Q],radius2,F,veci)
             #      if (receiverhit >= 1):  #if you hit a receiver last time, don't hit it again
@@ -434,7 +437,7 @@ for ray in range(RAYMAX):
                               outputarray1[:,1:4] = receiverpoint[:]
                               outputarray1[:,5] = phase[:]
                               if doublehit == 1 :
-                                    R2 = R      #Supposed to be other R, but just a placeholder for now
+                                    #R2 = R      #Supposed to be other R, but just a placeholder for now
                                     R.on_Hit(amplitude/2,phase)
                                     R2.on_Hit(amplitude/2,phase)
                               else:

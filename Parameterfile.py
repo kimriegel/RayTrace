@@ -15,8 +15,8 @@ time = .01
 hr = 20.0
 theta = 1.6863372
 phi = 3.44458181
-boomspacing = 0.06   #.6
-#boomspacing= 0.35
+#boomspacing = 0.06   #.6
+boomspacing= 0.035
 xmin = -1
 ymin = 30.0
 zmin = 0.0
@@ -55,3 +55,6 @@ percentdiffuse = 0.0
 #     tempalphaground=np.array([[0.55,0.55,0.25,0.18,0.12,0.07,0.04,0.04],
 #     [0.01,0.01,0.01,0.02,0.02,0.02,0.03,0.03],[0.01,0.01,0.01,0.02,0.02,0.02,0.03,0.03]])
 # print(tempalphaground)
+
+if __name__ == "__main__":      #being lazy. You can run from here now
+    import RayTrace
