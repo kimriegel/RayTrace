@@ -513,7 +513,8 @@ def POLYGON(Vecip1,F,Q,size,Number,PointNumbers,PolyArray,BuildingPoints,normal,
             else:
                 NSH = 1 
         else:
-            
+            pass
+
  #  DO 11 P=1,size
  #        if(P.eq.size)then
  #           if(G(P,2).lt.0.0)then
