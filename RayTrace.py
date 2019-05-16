@@ -234,8 +234,8 @@ else:
 #count=0
 #     Loop through the intial ray locations
 print('began rays')
-ray = 606                    # @ PF.boomspacing = 1
-#ray = 455174                    # @ PF.boomspacing = 0.06
+ray = 606                     # @ PF.boomspacing = 1
+#ray = 455174                 # @ PF.boomspacing = 0.06
 if ray:
 #for ray in range(RAYMAX):
       hitcount=0

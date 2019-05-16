@@ -21,6 +21,7 @@ import ReceiverPointSource as RPS
 
 import time
 #Using to check how long functions take
+HUGE=1000000.0
 
 def ABSORPTION(ps,freq,hr,Temp):
     ''' This function computes the air absorption for a given frequency, 
@@ -273,11 +274,7 @@ def TimeHeader(f,time,sizex,sizey,sizez,planename):
     
 def InitialGrid(radius,A,B,C,D,theta,phi,xmin,ymin,zmin,xmax,ymax,zmax,arraysize):
     '''
-    This function creates an equally spaced grid of size step apart
-
-    Args:
-
-    Returns:
+    This function creates an equally spaced grid of size "step" apart
     '''
 #    print('all the inputs for initialgrid: ',radius,A,B,C,D,theta,phi)
 #    print('mins and maxes ',xmin,ymin,zmin,xmax,ymax,zmax,)
@@ -372,10 +369,6 @@ def SPHERECHECK(Sc,Sr2,F,veci):
     '''
     This function performs a check whether a ray hits a sphere.  If
     it does hit the function returns the distance to the sphere
-
-    Args:
-
-    Returns:
     '''
     HUGE=1000000.0
     OC=np.zeros(3)      #put a pin in this
@@ -403,10 +396,6 @@ def SPHERECHECK(Sc,Sr2,F,veci):
 def CROSS(A, B):
     '''
     This function calculates a cross product of A and B and returns normal
-
-    Args: Two arrays of size three (A, B)
-
-    Returns: One array of size three. The cross product
     '''
     normal=np.zeros(3)
     normal[0]=A[1]*B[2]-A[2]*B[1]
@@ -418,23 +407,16 @@ def CROSS(A, B):
     #print('normal is ',normal)
     return normal
 
-def POLYGON(Vecip1,F,Q,size,Number,PointNumbers,PolyArray,BuildingPoints,normal,FaceNormalNo,FaceNormals,dxbuilding,behind):
-    '''
-    ********************************Unfinished***********************************
-
-    Is it still? I'm only leaving this note here because it said unfinished.
-    Otherwise:
-
-    [No Description given in Fortran]
-
-
-
-    '''
-
-    #import numpy as np
-    HUGE=1000000.0
+#def POLYGON(Vecip1,F,Q,size,Number,PointNumbers,PolyArray,BuildingPoints,normal,FaceNormalNo,FaceNormals,dxbuilding,behind):
+def tri(veci,F,Q,size,Number,PointNumbers,PolyArray,BuildingPoints,normal,FaceNormalNo,vn,dxbuilding,behind):
+    """
+    Lab notebook 5/16
+    This is an attempt to merge box and polygon into one function since
+    we are working entirely in triangular meshes now
+    """
     NC=0
     behind=0
+    normal = vn[PolyArray[Q,1]]
     normal[1]=FaceNormals[int(PolyArray[Q,1]),1]
     normal[2]=FaceNormals[int(PolyArray[Q,1]),2]
     normal[3]=FaceNormals[int(PolyArray[Q,1]),3]
@@ -457,14 +439,127 @@ def POLYGON(Vecip1,F,Q,size,Number,PointNumbers,PolyArray,BuildingPoints,normal,
     if(t < 0.0):
         dxbuilding=HUGE
         behind=1
-
-    intersection[1]=Vecip1[1]+F[1]*t
-    intersection[2]=Vecip1[2]+F[2]*t
-    intersection[3]=Vecip1[3]+F[3]*t
+    intersect = veci+  F*t
+    #intersection[1]=Vecip1[1]+F[1]*t
+    #intersection[2]=Vecip1[2]+F[2]*t
+    #intersection[3]=Vecip1[3]+F[3]*t
     maximum=max(abs(normal[1]),abs(normal[2]),abs(normal[3]))
     if(maximum == abs(normal[1])):
         for P in range(1,size):
             G[P,1:2]= (intersection[2]-BuildingPoints[int(PolyArray[Q,1+P]),2],intersection[3]-BuildingPoints[int(PolyArray(Q,1+P)),3])
+            #syntax check
+    #*****************************************************************************
+
+def POLYGON(Vecip1,F,Q,size,Number,PointNumbers,PolyArray,BuildingPoints,normal,FaceNormalNo,FaceNormals,dxbuilding,behind):
+    '''
+    ********************************Unfinished***********************************
+    Is it still? I'm only leaving this note here because it said unfinished.
+    Otherwise:    [No Description given in Fortran]
+    '''
+
+    G = np.zeros((size,2))
+    HUGE=1000000.0
+    NC=0
+    behind=0
+    normal[1]=FaceNormals[int(PolyArray[Q,1]),1]
+    normal[2]=FaceNormals[int(PolyArray[Q,1]),2]
+    normal[3]=FaceNormals[int(PolyArray[Q,1]),3]
+    #An array defined as an array from a function of an array and a point.
+    #I will recheck syntax, just getting through everything now
+
+    # This is what Kory originally had written, returning syntax error-Will
+    # d=-np.dot(normal,BuildingPoints(int(PolyArray[Q,2]),1:3))
+    #^^^unsure how to translate this part
+
+    # Will's attempt (To avoid error):
+    d=-np.dot(normal,BuildingPoints(PolyArray[Q,2]))
+    # it ran, doesn't mean it's right. Will check back.
+    Vd=np.dot(normal,F)
+
+    if Vd >= 0.0:
+        dxbuilding = HUGE
+    V0= -(np.dot(normal,Vecip1)+d)
+    t=V0/Vd
+    if(t < 0.0):
+        dxbuilding=HUGE
+        behind=1
+    
+    intersection = Vecip1 + F*t
+    #intersection[1]=Vecip1[1]+F[1]*t
+    #intersection[2]=Vecip1[2]+F[2]*t
+    #intersection[3]=Vecip1[3]+F[3]*t
+    maximum = max(abs(normal))
+    if(maximum == abs(normal[0])):
+        for P in range(size):
+            G[P,:2] = (intersection[1]-BuildingPoints[int(PolyArray[Q,1+P]),1]
+                      ,intersection[2]-BuildingPoints[int(PolyArray[Q,1+P]),2])
+    elif (maximum == normal[1]):
+        for P in range(size):
+            G[P,:2] = (intersection[0]-BuildingPoints[int(PolyArray[Q,1+P]),0]
+                      ,intersection[2]-BuildingPoints[int(PolyArray[Q,1+P]),2])
+    elif (maximum == normal[2]):
+        for P in range(size):
+            G[P,:2] = (intersection[0]-BuildingPoints[int(PolyArray[Q,1+P]),0]
+                      ,intersection[1]-BuildingPoints[int(PolyArray[Q,1+P]),1])
+    for P in range(size):
+        pass
+        if P == size:
+            if G[P,1] < 0.0:
+                SH = -1
+            else:
+                SH = 1
+            if G[0,1] < 0.0:
+                NSH = -1
+            else:
+                NSH = 1 
+        else:
+            
+ #  DO 11 P=1,size
+ #        if(P.eq.size)then
+ #           if(G(P,2).lt.0.0)then
+ #              SH=-1
+ #           else
+ #              SH=1
+ #           endif
+ #           if(G(1,2).lt.0.0)then
+ #              NSH=-1
+ #           else
+ #              NSH=1
+ #           endif
+ #        else
+ #           if(G(P,2).lt.0.0)then
+ #              SH=-1
+ #           else
+ #              SH=1
+ #           endif
+ #           if(G(P+1,2).lt.0.0)then
+ #              NSH=-1
+ #           else
+ #              NSH=1
+ #           endif
+ #        endif
+ #        if(SH.ne.NSH)then
+ #           if(P.eq.size)then
+ #              if(G(P,1).gt.0.0.and.G(1,1).gt.0.0)then
+ #                 NC=NC+1
+ #              elseif(G(P,1).gt.0.0.or.G(1,1).gt.0.0)then
+ #                 IF((G(P,1)-(G(P,2)*(G(P+1,1)-G(P,1))/(G(P+1,2)-G(P,2))
+ #    *                 )).GT.0.0)THEN
+ #                    NC=NC+1
+ #                 endif
+ #              endif
+ #           else
+ #              if(G(P,1).gt.0.0.and.G(P+1,1).gt.0.0)then
+ #                 NC=NC+1
+ #              elseif(G(P,1).gt.0.0.or.G(P+1,1).gt.0.0)then
+ #                 IF((G(P,1)-(G(P,2)*(G(P+1,1)-G(P,1))/(G(P+1,2)-G(P,2))
+ #    *                 )).GT.0.0)THEN
+ #                    NC=NC+1
+ #                 endif
+ #              endif
+ #           endif
+ #        endif         
+ #11   CONTINUE
             #syntax check
     #*****************************************************************************
 
@@ -473,7 +568,6 @@ def POLYGON(Vecip1,F,Q,size,Number,PointNumbers,PolyArray,BuildingPoints,normal,
 def PLANE(Vecip1, B1, B2, planehit):
     '''
     This function calculates the normal at the hitpoint of a box.
-
     '''
 #George:It sure would be a mess if there was a typo anywhere in here
     #This function calculates the normal at the hitpoint of a box.
@@ -528,19 +622,15 @@ def PLANE(Vecip1, B1, B2, planehit):
     return nbox
     #return
 
+# Call: for Q in range(0,BG.Boxnumber):
+#           dxnear, dxfar, hit, planehit=fun.BOX(BG.Boxarraynear[Q], BG.Boxarrayfar[Q],veci,F)
 
 def BOX(B1,B2,Vecip1,F):
     '''
     This function checks to see if the ray hits a box.  It determines which
     plane the ray hits
-                    
         T1x is the distance to the close side
         T2x is th distance to the far side
-
-
-    Args:
-
-    Returns:
     '''
     hit=5
     HUGE=1000000.0
@@ -548,7 +638,6 @@ def BOX(B1,B2,Vecip1,F):
     dxfar=HUGE
     tempF=F
     planehit=0
-    #print(tempF)
     if ((F[0] == 0.0) or (F[1] == 0.0) or (F[2] == 0.0)):
         if (F[0] == 0.0):
             if((vecip1[0] < B1[0]) or (vecip1[0] > B2[0])):
@@ -673,9 +762,6 @@ def BOX(B1,B2,Vecip1,F):
 def ROTATION(axis, angle, rotationmatrix):
     '''
     [No Description given in Fortran]
-
-
-
     '''
     #axis = np.zeros(3)
     #rotationmatrix= np.zeros(3,3)
@@ -690,5 +776,6 @@ def ROTATION(axis, angle, rotationmatrix):
     rotationmatrix[3,3]=axis[3]**2+(1-axis[3]**2)*m.cos(angle)
     return rotationmatrix
 
+#print(__name__ ,"__main__")
 #We finished!?
 #ARE YOU NOT ENTERTAINED?! -G

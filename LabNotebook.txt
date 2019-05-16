@@ -873,3 +873,14 @@ Note: In my new version I tear all the rays into pieces and then make changes ea
 
       python signal starts with 0
       fortran signal ends with 0
+
+5/16
+    Made a file to create a receiver cluster from a geometry file 
+
+    Examining geometry interaction:
+      It seems like Box is too contextual to use here so I looked at the Polygon function.
+      (Which says it is unfinished)
+      In the original we used one for box, triangle and squares respectively.
+      Here everything is triangles. so Polygon makes the most sense for that.
+        I don't know what some of these inputs are becuase they're undefined in the main file.
+        I'll just see what happens.
