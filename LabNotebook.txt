@@ -867,3 +867,9 @@ Note: In my new version I tear all the rays into pieces and then make changes ea
 
     Python runs faster than Fortran now. Accuracy is off. Python only registers a hit on receiver 2 with pressure -5.450707
     Fortran registers a hit only on receiver 2 with pressure -2.23565674     
+
+    outputsignal seems to be shifted slightly phase and amplitude are affected because
+      they are based on them
+
+      python signal starts with 0
+      fortran signal ends with 0

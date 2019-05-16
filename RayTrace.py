@@ -57,6 +57,8 @@ def initial_signal(signalLength,fftOutput):
 
     return outputFrequency
 
+
+
 def updateFreq(dx,alpha,diffusion):
       """
       Update ray phase and amplitude
@@ -96,14 +98,12 @@ HUGE=1000000.0
 sizefft=K
 sizeffttwo=sizefft//2
 outputsignal=np.fft.fft(inputsignal,sizefft)
-ampinitial=np.empty(sizeffttwo)
-phaseinitial=np.empty(sizeffttwo)
+#ampinitial=np.empty(sizeffttwo)
+#phaseinitial=np.empty(sizeffttwo)
 
 #       Create initial signal 
-airabsorb=fun.ABSORPTION(PF.ps,inputarraynew[:,0],PF.hr,PF.Temp)        #sizeffttwo
 frecuencias = initial_signal(sizefft,outputsignal)      # Equivalent to inputarray in original
-inputarray =      frecuencias                   #hotfix for right now
-
+airabsorb=fun.ABSORPTION(PF.ps,frecuencias[:,0],PF.hr,PF.Temp)        #sizeffttwo
 lamb = PF.soundspeed/frecuencias[:,0]     # Used for updating frequencies in update function
 timearray = np.arange(K) /PF.Fs
 
@@ -186,41 +186,41 @@ nground=np.array([0.0,0.0,1.0])
 #     Allocate absorption coefficients for each surface for each frequency
 alphaground=np.zeros(sizeffttwo)
 for D in range(1,sizeffttwo):       #This loop has a minimal impact on performance
-    if inputarray[D,1] >= 0.0 or inputarray[D,1] < 88.0 :
+    if   frecuencias[D,1] >= 0.0 or    frecuencias[D,1] < 88.0 :
         alphaground[D]=PF.tempalphaground[1]
-    elif inputarray[D,1] >= 88.0 or inputarray[D,1] < 177.0 :
+    elif frecuencias[D,1] >= 88.0 or   frecuencias[D,1] < 177.0 :
         alphaground[D]=PF.tempalphaground[2]
-    elif inputarray[D,1] >= 177.0 or inputarray[D,1] < 355.0 :
+    elif frecuencias[D,1] >= 177.0 or  frecuencias[D,1] < 355.0 :
         alphaground[D]=PF.tempalphaground[3]
-    elif inputarray[D,1] >= 355.0 or inputarray[D,1] < 710.0 :
+    elif frecuencias[D,1] >= 355.0 or  frecuencias[D,1] < 710.0 :
         alphaground[D]=PF.tempalphaground[4]
-    elif inputarray[D,1] >= 710.0 or inputarray[D,1] < 1420.0 :
+    elif frecuencias[D,1] >= 710.0 or  frecuencias[D,1] < 1420.0 :
         alphaground[D]=PF.tempalphaground[5]
-    elif inputarray[D,1] >= 1420.0 or inputarray[D,1] < 2840.0 :
+    elif frecuencias[D,1] >= 1420.0 or frecuencias[D,1] < 2840.0 :
         alphaground[D]=PF.tempalphaground[6]
-    elif inputarray[D,1] >= 2840.0 or inputarray[D,1] < 5680.0 :
+    elif frecuencias[D,1] >= 2840.0 or frecuencias[D,1] < 5680.0 :
         alphaground[D]=PF.tempalphaground[7]
-    elif inputarray[D,1] >= 5680.0 or inputarray[D,1] < inputarray[sizeffttwo,1]:
+    elif frecuencias[D,1] >= 5680.0 or frecuencias[D,1] < frecuencias[sizeffttwo,1]:
         alphaground[D]=PF.tempalphaground[8]
 
 alphabuilding = np.zeros((PF.absorbplanes,sizeffttwo))
 for W in range(1,PF.absorbplanes):        #These also look minimal
     for D in range(1,PF.absorbplanes):
-        if  inputarray[D,1] >= 0.0 or inputarray[D,1] < 88.0:
+        if   frecuencias[D,1] >= 0.0   or  frecuencias[D,1] < 88.0:
             alphabuilding[W,D]=PF.tempalphabuilding[W,1]
-        elif inputarray[D,1] >= 88.0 or inputarray[D,1] < 177.0:
+        elif frecuencias[D,1] >= 88.0  or  frecuencias[D,1] < 177.0:
             alphabuilding[W,D] = PF.tempalphabuilding [W,2]
-        elif inputarray[D,1] >= 177.0 or inputarray[D,1] < 355.0 :
+        elif frecuencias[D,1] >= 177.0 or  frecuencias[D,1] < 355.0 :
             alphabuilding[W,D] = tempalphabuilding[W,3]
-        elif inputarray[D,1] >= 355.0 or inputarray[D,1] < 710.0 :
+        elif frecuencias[D,1] >= 355.0 or  frecuencias[D,1] < 710.0 :
             alphabuilding[W,D] = tempalphabuilding[W,4]
-        elif inputarray[D,1] >= 710.0 or inputarray[D,1] < 1420.0 :
+        elif frecuencias[D,1] >= 710.0 or  frecuencias[D,1] < 1420.0 :
             alphabuilding[W,D] = tempalphabuilding[W,5]
-        elif inputarray[D,1] >= 1420.0 or inputarray[D,1] < 2840.0 :
+        elif frecuencias[D,1] >= 1420.0 or frecuencias[D,1] < 2840.0 :
             alphabuilding[W,D] = tempalphabuilding[W,6]
-        elif inputarray[D,1] >= 2840.0 or inputarray[D,1] < 5680.0 :
+        elif frecuencias[D,1] >= 2840.0 or frecuencias[D,1] < 5680.0 :
             alphabuilding[W,D] = tempalphabuilding[W,7]
-        elif inputarray[D,1] >= 5680.0 or inputarray[D,1] < inputarray[sizeffttwo,1] :
+        elif frecuencias[D,1] >= 5680.0 or frecuencias[D,1] < frecuencias[sizeffttwo,1] :
             alphabuilding[W,D] = tempalphabuilding[W,8]
 
 #        Mesh the patches for the environment.  Include patching file. 
@@ -234,24 +234,23 @@ else:
 #count=0
 #     Loop through the intial ray locations
 print('began rays')
-#ray = 606                    # @ PF.boomspacing = 1
+ray = 606                    # @ PF.boomspacing = 1
 #ray = 455174                    # @ PF.boomspacing = 0.06
-#for ray in range(605,607):
-#for ray in range(455172,455176):
-for ray in range(RAYMAX):
+if ray:
+#for ray in range(RAYMAX):
       hitcount=0
-      tmpsum=0.0
+      #tmpsum=0.0
       doublehit=0
-      amplitude = frecuencias[:,0]/normalization
-      phase=frecuencias[:,1]
+      amplitude = frecuencias[:,1]/normalization
+      phase=frecuencias[:,2]
+      #print(list(phase))
       if (PF.h < (2*PF.radius)): 
             print('h is less than 2r')
-            break
+            #break
       F = np.array(Finitial)         # If not defined this way it will make them the same object. This will break the entire program. Do not change
       veci = boomarray[ray,:]
       for I in range(PF.IMAX):      # Making small steps along the ray path.  For each step we should return, location, phase and amplitude
             dxreceiver=HUGE
-            #print(veci)
             # Find the closest sphere and store that as the distance
             for R in ears:
                   # The way that tempreceiver works now, it's only used here and only should be used here. It's not defined inside the receiver because it's ray dependant.
@@ -290,7 +289,7 @@ for ray in range(RAYMAX):
                   GROUNDVO=((GROUNDN[0]*veci[0]+GROUNDN[1]*veci[1]+GROUNDN[2]*veci[2])+GROUNDD)
                   dxground1=(-1.000)*GROUNDVO*(1.000)/GROUNDVD
                   dxground=dxground1
-                  Vecip1=veci+dxground*np.array(F)
+                  Vecip1=veci+dxground*F
                   tmp=(GROUNDABC[0]*Vecip1[0]+GROUNDABC[1]*Vecip1[1]+GROUNDABC[2]*Vecip1[2]+GROUNDD)                  
                   if (dxground < 0.0):
                         dxground=HUGE
@@ -332,7 +331,7 @@ for ray in range(RAYMAX):
             #     Check to see if ray hits within step size
             if (dxreceiver < PF.h or dxground < PF.h or dxbuilding < PF.h):
                   dx=min(dxreceiver,dxground,dxbuilding)
-                  tmpsum = tmpsum + dx
+                  #tmpsum = tmpsum + dx
                   #     if the ray hits a receiver, store in an array.  If the ray hits two, create two arrays to store in.
                   for R in ears:
                         if dx == R.dxreceiver:
@@ -425,7 +424,8 @@ for ray in range(RAYMAX):
                         
             else:
                   #     If there was no interaction with buildings then proceed with one step. 
-                  tmpsum=tmpsum+PF.h
+                  #tmpsum=tmpsum+PF.h
+                  #print(phase[:5])
                   veci += (PF.h*F)
                   updateFreq(PF.h,alphanothing,0)
       #if (ray % 50) == 0:     # For debugging
@@ -434,7 +434,6 @@ for ray in range(RAYMAX):
 
 #Gk=np.zeros(PatchNo,sizeffttwo)
 #Gkminus1=np.zeros(PatchNo,sizeffttwo)
-#COMEBACK FOR RADIOSITY
 #       if (radiosity.eq.1)then
 # C     If radiosity is turned on then do the energy exchange. 
 #          KMAX=3

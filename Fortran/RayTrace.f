@@ -261,6 +261,7 @@ C  Take the fft of the input signal with fftw
 
 C     Create initial signal
       allocate(airabsorb(sizeffttwo))
+C      print*, outputsignal
       DO 13 K=1, sizeffttwo
          inputarray(K,1)=(K)*Fs/2*1/(sizeffttwo)
          inputarray(K,2)=abs(outputsignal(K+1)/sizefft)
@@ -268,6 +269,7 @@ C     Create initial signal
      *        realpart(outputsignal(K+1)/sizefft))
          airabsorb(K)=ABSORPTION(ps,inputarray(K,1),hr,Temp)
  13   CONTINUE
+C      print*, airabsorb
       DO 14 K=1, sizefft
          timearray(K)=(K-1)*1/Fs
  14   CONTINUE
@@ -500,7 +502,8 @@ C         INCLUDE 'UrbanCanyonG2H24L14Geo.f'
       count=0
 C      print*, 'normalization',normalization
 C     Loop through the intial ray locations
-      DO 40 ray=1,RAYMAX,1
+C      DO 40 ray=1,RAYMAX,1
+         ray = 607
          hitcount=0
          tmpsum=0.0
          doublehit=0
@@ -508,6 +511,7 @@ C     Loop through the intial ray locations
             ampinitial(W)=inputarray(W,2)/normalization
             phaseinitial(W)=inputarray(W,3)
  24      CONTINUE
+            print*, phaseinitial
          Vinitial=(/BOOMARRAY(ray,1),BOOMARRAY(ray,2),
      *        BOOMARRAY(ray,3)/)
          if (h.lt.2*radius)then 
@@ -900,6 +904,7 @@ C     If there was no interaction with buildings then proceed with one step.
             tmpsum=tmpsum+h
             Vecip1=veci+(h)*F
 C            print*, 'no hit'
+C            print*, phaseinitial(:5)
             veci=Vecip1
             twopih=twopi*h
             DO 23 W=1, sizeffttwo
