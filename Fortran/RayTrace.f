@@ -261,7 +261,7 @@ C  Take the fft of the input signal with fftw
 
 C     Create initial signal
       allocate(airabsorb(sizeffttwo))
-C      print*, outputsignal
+      print*, outputsignal
       DO 13 K=1, sizeffttwo
          inputarray(K,1)=(K)*Fs/2*1/(sizeffttwo)
          inputarray(K,2)=abs(outputsignal(K+1)/sizefft)
@@ -382,8 +382,8 @@ C     initialize normalization factor
             temparray(D,W,6)=0.0 
  15      CONTINUE
  18   CONTINUE
-            print*,temparray(1,sizeffttwo,4)
-            print*,temparray(1,sizeffttwo+1,4)
+C            print*,temparray(1,sizeffttwo,4)
+C            print*,temparray(1,sizeffttwo+1,4)
 
 
 C     Define ground plane
@@ -511,7 +511,7 @@ C      DO 40 ray=1,RAYMAX,1
             ampinitial(W)=inputarray(W,2)/normalization
             phaseinitial(W)=inputarray(W,3)
  24      CONTINUE
-            print*, phaseinitial
+C            print*, phaseinitial
          Vinitial=(/BOOMARRAY(ray,1),BOOMARRAY(ray,2),
      *        BOOMARRAY(ray,3)/)
          if (h.lt.2*radius)then 

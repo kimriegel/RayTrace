@@ -273,14 +273,7 @@ def TimeHeader(f,time,sizex,sizey,sizez,planename):
 #********************************************
     
 def InitialGrid(radius,A,B,C,D,theta,phi,xmin,ymin,zmin,xmax,ymax,zmax,arraysize):
-    '''
-    This function creates an equally spaced grid of size "step" apart
-    '''
-#    print('all the inputs for initialgrid: ',radius,A,B,C,D,theta,phi)
-#    print('mins and maxes ',xmin,ymin,zmin,xmax,ymax,zmax,)
-#    print('Arraysize: ', arraysize)
-    #import math as m
-    #import numpy as np
+    """This function creates an equally spaced grid of size "step" apart"""
     receiverarray=np.zeros((arraysize,3))
     yspace=radius*abs(m.cos(phi))
     zspace=radius*abs(m.sin(theta))
@@ -288,27 +281,17 @@ def InitialGrid(radius,A,B,C,D,theta,phi,xmin,ymin,zmin,xmax,ymax,zmax,arraysize
     i=0
     j=0
     #this works for bug fixes. But it's not that great.
-#    print(ymin,yspace,ymax)
-#    print('zvals ',zmin,zspace,zmax)
     if xmin == xmax:
-        for i in range(0,int((zmax-zmin)//zspace)):        #while i < int((zmax-zmin)/zspace):
-            for j in range(0,int((ymax-ymin)//yspace)):            #while j < int(((ymax-ymin)/yspace)):
+        for i in range(0,int((zmax-zmin)//zspace)):
+            for j in range(0,int((ymax-ymin)//yspace)):
                 receiverarray[count,0]=(D-B*(ymin+(j+1)*yspace)-C*(zmin+(i+1)*zspace))/A
                 receiverarray[count,1]=ymin+(j+1)*yspace
                 receiverarray[count,2]=zmin+(i+1)*zspace
-                #print('third ')
-                #print('vsye: ',zmin,' + ', i + 1,' * ',zspace ,' = ',
-                #print(receiverarray[count,2])
                 count=count+1
-            #print(i, int(((zmax-zmin)/zspace)))
-        #I think // is faster than using int after dividing. I can change it back to int if needed
-        #It doesn't change them to the correct datatype, I'll come back to in once I'm done
+        # // by itself does not convert to an int
         sizex=int((ymax-ymin)//(yspace))
         sizey=int((zmax-zmin)//zspace)
         sizez=1
-        #print('xmin is xmax: ', receiverarray)
-        #Bugs are here 
-        #Hopefully
     if ymin == ymax:
         for i in range(0,int(xmax-xmin)//(xspace)):
             for j in range(0,int((zmax-zmin)//(zspace))):
@@ -319,11 +302,9 @@ def InitialGrid(radius,A,B,C,D,theta,phi,xmin,ymin,zmin,xmax,ymax,zmax,arraysize
         sizex=int((zmax-zmin)/zspace)
         sizey=int((xmax-xmin)/(xspace))
         sizez=1
-#        print('ymin is ymax: ', receiverarray)
     if zmin == zmax:
         for i in range(int((xmax-xmin)/(xspace))):
             for j in range(int((ymax-ymin)/(yspace))):
-
                 receiverarray[count,0]=xmin+(i+1)*xspace  
                 receiverarray[count,1]=ymin+(j+1)*yspace
                 receiverarray[count,2]=(D-A*(xmin+(i+1)*xspace)-B*(ymin+(j+1)*yspace))/C
@@ -331,39 +312,7 @@ def InitialGrid(radius,A,B,C,D,theta,phi,xmin,ymin,zmin,xmax,ymax,zmax,arraysize
         sizex=int((xmax-xmin)/(xspace))
         sizey=int((ymax-ymin)/yspace)
         sizez=1
-#        print('zmin is zmax: ', receiverarray)
-#    print('outputs (hopefully): ', receiverarray, sizex, sizey, sizez)
     return receiverarray, sizex, sizey, sizez
-
-def SPHERECHECKNEW(Sc,Sr2,F,veci):
-    '''
-    This function performs a check whether a ray hits a sphere.  If
-    it does hit the function returns the distance to the sphere
-
-    Args:
-
-    Returns:
-    '''
-    HUGE=1000000.0
-    OC=np.zeros([RPS.arraysize,3])      #put a pin in this
-    dxarr=np.zeros([RPS.arraysize])
-    OC[:,0]=Sc[:,0]-veci[0]
-    OC[:,1]=Sc[:,1]-veci[1]
-    OC[:,2]=Sc[:,2]-veci[2]
-    L2OC=np.sum(OC*OC, axis=1)
-    tca=np.dot(OC,F)
-    #print('OC: ',OC)
-    #print('tca: ',tca)
-    #I /think/ these are working
-    #Takes dot product of OC and OC (Dot square?)
-    t2hc=Sr2-L2OC+tca**2
-    dxarr=(np.where((L2OC==Sr2),HUGE,dxarr))
-    dxarr=(np.where(tca<0.0,HUGE,dxarr))
-    dxarr=(np.where(t2hc<0.0,HUGE,dxarr))
-    dxarr=(np.where(dxarr!=HUGE,tca-(abs(t2hc)**(1/2)),dxarr))
-#    dxarr=np.array([1,2,3,4,5])
-    #print(dxarr)
-    return dxarr
 
 def SPHERECHECK(Sc,Sr2,F,veci):
     '''
@@ -378,9 +327,6 @@ def SPHERECHECK(Sc,Sr2,F,veci):
     OC[2]=Sc[2]-veci[2]
     L2OC=np.dot(OC,OC)
     tca=np.dot(OC,F)
-    #print('OC: ',OC)
-    #print('tca: ',tca)
-    #I /think/ these are working
     #Takes dot product of OC and OC (Dot square?)
     t2hc=Sr2-L2OC+tca**2
     if L2OC == Sr2:
@@ -444,11 +390,7 @@ def tri(veci,F,Q,Number,PointNumbers,PolyArray,v,normal,FaceNormalNo,vn,dxbuildi
         #Stage 1
     intersection = veci + F*t
     maximum = max(abs(normal))
-        # What if two normal values are the same? Anyway:
-    #intersect = veci + F* t
-    #broly = max(abs(normal))    # His power is MAXIMUM
-    #if broly == abs(normal[0]):
-
+        # G: What if two normal values are the same? Anyway:
     if(maximum == abs(normal[0])):
         for P in range(size):
             G[P,:] = (intersection[1]-v[int(PolyArray[Q,1+P]),1]

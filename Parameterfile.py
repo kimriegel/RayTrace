@@ -59,3 +59,4 @@ percentdiffuse = 0.0
 
 if __name__ == "__main__":      #being lazy. You can run from here now
     import RayTrace
+    #pass

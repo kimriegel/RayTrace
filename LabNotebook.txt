@@ -897,3 +897,24 @@ Note: In my new version I tear all the rays into pieces and then make changes ea
       Question about maximum, what if two values are the same?
       Building points seems to be equivalent to vertices, which are just called v in obj format
         If not I'll change it, but for now I'll call it v to make the line short enough to read
+
+5/21
+    Tried separating the main ray trace file into smaller modules.
+      Ran into the problem of using all the variables initialized at different places in the code.
+      Also ran into the problem of breaking variables and function. 
+        Some needed to be obtained through other modules afterwords
+        It's just a matryoshka doll of glitches. I just put it in a wip folder (work in progress)
+
+      Did a slightly thorough look at Radiosity. It seems to be intertwined with Trace, so that'll be
+        a problem to separate
+    
+    I noticed that the old fft file we used for Fortran was written in C. Is there a way to use that here instead
+      of examining the small differences of how numpy does it? 
+
+    Tempalpha definitely needs to be redone. It works fine with these parameters, but it looks like it'll be a problem when we upscale it
+
+    Blender has a new update, 2.80
+      The key bindings and the layout have changed. It's still written in python from what I can tell, so if we wanted we may be able to use some of its functionality
+      (we probably won't but it's an option)
+
+      
