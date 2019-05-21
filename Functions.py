@@ -407,48 +407,101 @@ def CROSS(A, B):
     #print('normal is ',normal)
     return normal
 
-#def POLYGON(Vecip1,F,Q,size,Number,PointNumbers,PolyArray,BuildingPoints,normal,FaceNormalNo,FaceNormals,dxbuilding,behind):
-def tri(veci,F,Q,size,Number,PointNumbers,PolyArray,BuildingPoints,normal,FaceNormalNo,vn,dxbuilding,behind):
+#def tri(veci,F,Q,Number,PointNumbers,PolyArray,BuildingPoints,normal,FaceNormalNo,vn,dxbuilding,behind):
+#def tri(veci,F,Q,Number,PointNumbers,PolyArray,vertices,normal,FaceNormalNo,vn,dxbuilding,behind):
+def tri(veci,F,Q,Number,PointNumbers,PolyArray,v,normal,FaceNormalNo,vn,dxbuilding,behind):
     """
     Lab notebook 5/16
     This is an attempt to merge box and polygon into one function since
     we are working entirely in triangular meshes now
+
+    ********************************Untested***********************************
+    A 1:1 translation was made from Fortran. This is the closest match to
+    what we are trying to do with triangle geometry. However there is no 
+    readily available geometry file to test this. 
+    [No Description given in Fortran]
     """
+    size = 3
+    G = np.zeros((size,2))  # (3,2)
+    # inits
     NC=0
     behind=0
-    normal = vn[PolyArray[Q,1]]
-    normal[1]=FaceNormals[int(PolyArray[Q,1]),1]
-    normal[2]=FaceNormals[int(PolyArray[Q,1]),2]
-    normal[3]=FaceNormals[int(PolyArray[Q,1]),3]
-    #An array defined as an array from a function of an array and a point.
-    #I will recheck syntax, just getting through everything now
+    normal = vn[PolyArray[Q,1],:]
+    #normal[0]=FaceNormals[int(PolyArray[Q,1]),0]
+    #normal[1]=FaceNormals[int(PolyArray[Q,1]),1]
+    #normal[2]=FaceNormals[int(PolyArray[Q,1]),2]
 
-    # This is what Kory originally had written, returning syntax error-Will
-    # d=-np.dot(normal,BuildingPoints(int(PolyArray[Q,2]),1:3))
-    #^^^unsure how to translate this part
-
-    # Will's attempt (To avoid error):
-    d=-np.dot(normal,BuildingPoints(PolyArray[Q,2]))
-    # it ran, doesn't mean it's right. Will check back.
+    d=-np.dot(normal,ValueError(PolyArray[Q,2]))
     Vd=np.dot(normal,F)
 
     if Vd >= 0.0:
         dxbuilding = HUGE
-    V0=-[np.dot(normal,Vecip1)+d]
+    V0= -(np.dot(normal,veci)+d)
     t=V0/Vd
     if(t < 0.0):
         dxbuilding=HUGE
-        behind=1
-    intersect = veci+  F*t
-    #intersection[1]=Vecip1[1]+F[1]*t
-    #intersection[2]=Vecip1[2]+F[2]*t
-    #intersection[3]=Vecip1[3]+F[3]*t
-    maximum=max(abs(normal[1]),abs(normal[2]),abs(normal[3]))
-    if(maximum == abs(normal[1])):
-        for P in range(1,size):
-            G[P,1:2]= (intersection[2]-BuildingPoints[int(PolyArray[Q,1+P]),2],intersection[3]-BuildingPoints[int(PolyArray(Q,1+P)),3])
-            #syntax check
-    #*****************************************************************************
+        behind = 1
+        #Stage 1
+    intersection = veci + F*t
+    maximum = max(abs(normal))
+        # What if two normal values are the same? Anyway:
+    #intersect = veci + F* t
+    #broly = max(abs(normal))    # His power is MAXIMUM
+    #if broly == abs(normal[0]):
+
+    if(maximum == abs(normal[0])):
+        for P in range(size):
+            G[P,:] = (intersection[1]-v[int(PolyArray[Q,1+P]),1]
+                      ,intersection[2]-v[int(PolyArray[Q,1+P]),2])
+    elif (maximum == normal[1]):
+        for P in range(size):
+            G[P,:] = (intersection[0]-v[int(PolyArray[Q,1+P]),0]
+                      ,intersection[2]-v[int(PolyArray[Q,1+P]),2])
+    elif (maximum == normal[2]):
+        for P in range(size):
+            G[P,:] = (intersection[0]-v[int(PolyArray[Q,1+P]),0]
+                      ,intersection[1]-v[int(PolyArray[Q,1+P]),1])
+    #Stage 2
+    for P in range(size):
+        if P == size:
+            if G[P,1] < 0.0:
+                SH = -1
+            else:
+                SH = 1
+            if G[0,1] < 0.0:
+                NSH = -1
+            else:
+                NSH = 1 
+        else:
+            if G[P,1] < 0.0:
+                SH = -1
+            else:
+                SH = 1
+            if G[P+1,2] < 0.0:
+                NSH = -1
+            else:
+                NSH = 1
+        if SH != NSH:
+            if (P == size):
+                if (G[P,0] > 0.0) and (G[0,0]>0.0):
+                    NC += 1
+                elif (G[P,0]> 0.0) or (G[0,0] > 0.0):
+                    if (G[P,0]-(G[P,1]*(G[P+1,0]-G[P,0])/(G[P+1,1]-G[P,1]))) > 0.0:
+                        NC += 1
+            else:
+                if (G[P,0] > 0.0) and (G[P+1,0] > 0.0):
+                    NC += 1
+                elif (G[P,0] > 0.0) or (G[P+1,1] > 0.0):
+                    if (G[P,0]-(G[P,1]*(G[P+1,0]-G[P,0])/(G[P+1,1]-G[P,1]))) > 0.0:
+                        NC += 1
+        odd = NC % 2    #get remainder to find if odd or not
+        # This was this way in original fortran
+        if odd:
+            dxbuilding = t
+        else:
+            dxbuilding = HUGE
+
+        return dxbuilding,behind
 
 def POLYGON(Vecip1,F,Q,size,Number,PointNumbers,PolyArray,BuildingPoints,normal,FaceNormalNo,FaceNormals,dxbuilding):
     '''
@@ -464,9 +517,9 @@ def POLYGON(Vecip1,F,Q,size,Number,PointNumbers,PolyArray,BuildingPoints,normal,
     HUGE=1000000.0
     NC=0
     behind=0
-    normal[1]=FaceNormals[int(PolyArray[Q,1]),1]
-    normal[2]=FaceNormals[int(PolyArray[Q,1]),2]
-    normal[3]=FaceNormals[int(PolyArray[Q,1]),3]
+    normal[1]=FaceNormals[int(PolyArray[Q,1]),0]
+    normal[2]=FaceNormals[int(PolyArray[Q,1]),1]
+    normal[3]=FaceNormals[int(PolyArray[Q,1]),2]
     #An array defined as an array from a function of an array and a point.
     #I will recheck syntax, just getting through everything now
 
@@ -548,58 +601,6 @@ def POLYGON(Vecip1,F,Q,size,Number,PointNumbers,PolyArray,BuildingPoints,normal,
         else:
             dxbuilding = HUGE
         return dxbuilding,behind
-
-
- #  DO 11 P=1,size
- #        if(P.eq.size)then
- #           if(G(P,2).lt.0.0)then
- #              SH=-1
- #           else
- #              SH=1
- #           endif
- #           if(G(1,2).lt.0.0)then
- #              NSH=-1
- #           else
- #              NSH=1
- #           endif
- #        else
- #           if(G(P,2).lt.0.0)then
- #              SH=-1
- #           else
- #              SH=1
- #           endif
- #           if(G(P+1,2).lt.0.0)then
- #              NSH=-1
- #           else
- #              NSH=1
- #           endif
- #        endif
- #        if(SH.ne.NSH)then
- #           if(P.eq.size)then
- #              if(G(P,1).gt.0.0.and.G(1,1).gt.0.0)then
- #                 NC=NC+1
- #              elseif(G(P,1).gt.0.0.or.G(1,1).gt.0.0)then
- #                 IF((G(P,1)-(G(P,2)*(G(P+1,1)-G(P,1))/(G(P+1,2)-G(P,2))
- #    *                 )).GT.0.0)THEN
- #                    NC=NC+1
- #                 endif
- #              endif
- #           else
- #              if(G(P,1).gt.0.0.and.G(P+1,1).gt.0.0)then
- #                 NC=NC+1
- #              elseif(G(P,1).gt.0.0.or.G(P+1,1).gt.0.0)then
- #                 IF((G(P,1)-(G(P,2)*(G(P+1,1)-G(P,1))/(G(P+1,2)-G(P,2))
- #    *                 )).GT.0.0)THEN
- #                    NC=NC+1
- #                 endif
- #              endif
- #           endif
- #        endif         
- #11   CONTINUE
-            #syntax check
-    #*****************************************************************************
-
-
 
 def PLANE(Vecip1, B1, B2, planehit):
     '''

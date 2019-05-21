@@ -888,3 +888,12 @@ Note: In my new version I tear all the rays into pieces and then make changes ea
 5/20
     Finished the 1:1 translation of Polygon.
       I know better than to say that it's done. It's just a translation. 
+    
+    Since that's ready, I can start my actual triangle function
+      size here seems to be amount of vertices
+      Since that's automatically 3 I can take out that input
+      Now I know the concrete dimensions of G 
+
+      Question about maximum, what if two values are the same?
+      Building points seems to be equivalent to vertices, which are just called v in obj format
+        If not I'll change it, but for now I'll call it v to make the line short enough to read
