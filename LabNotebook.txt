@@ -884,3 +884,7 @@ Note: In my new version I tear all the rays into pieces and then make changes ea
       Here everything is triangles. so Polygon makes the most sense for that.
         I don't know what some of these inputs are becuase they're undefined in the main file.
         I'll just see what happens.
+
+5/20
+    Finished the 1:1 translation of Polygon.
+      I know better than to say that it's done. It's just a translation. 

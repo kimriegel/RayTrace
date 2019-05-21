@@ -450,11 +450,14 @@ def tri(veci,F,Q,size,Number,PointNumbers,PolyArray,BuildingPoints,normal,FaceNo
             #syntax check
     #*****************************************************************************
 
-def POLYGON(Vecip1,F,Q,size,Number,PointNumbers,PolyArray,BuildingPoints,normal,FaceNormalNo,FaceNormals,dxbuilding,behind):
+def POLYGON(Vecip1,F,Q,size,Number,PointNumbers,PolyArray,BuildingPoints,normal,FaceNormalNo,FaceNormals,dxbuilding):
     '''
-    ********************************Unfinished***********************************
-    Is it still? I'm only leaving this note here because it said unfinished.
-    Otherwise:    [No Description given in Fortran]
+    ********************************Untested***********************************
+    A 1:1 translation was made from Fortran. This is the closest match to
+    what we are trying to do with triangle geometry. However there is no 
+    readily available geometry file to test this.
+    
+    [No Description given in Fortran]
     '''
 
     G = np.zeros((size,2))
@@ -482,7 +485,7 @@ def POLYGON(Vecip1,F,Q,size,Number,PointNumbers,PolyArray,BuildingPoints,normal,
     t=V0/Vd
     if(t < 0.0):
         dxbuilding=HUGE
-        behind=1
+        behind = 1
     
     intersection = Vecip1 + F*t
     #intersection[1]=Vecip1[1]+F[1]*t
@@ -502,7 +505,6 @@ def POLYGON(Vecip1,F,Q,size,Number,PointNumbers,PolyArray,BuildingPoints,normal,
             G[P,:2] = (intersection[0]-BuildingPoints[int(PolyArray[Q,1+P]),0]
                       ,intersection[1]-BuildingPoints[int(PolyArray[Q,1+P]),1])
     for P in range(size):
-        pass
         if P == size:
             if G[P,1] < 0.0:
                 SH = -1
@@ -513,7 +515,40 @@ def POLYGON(Vecip1,F,Q,size,Number,PointNumbers,PolyArray,BuildingPoints,normal,
             else:
                 NSH = 1 
         else:
-            pass
+            if G[P,1] < 0.0:
+                SH = -1
+            else:
+                SH = 1
+            if G[P+1,2] < 0.0:
+                NSH = -1
+            else:
+                NSH = 1
+        if SH != NSH:
+            if (P == size):
+                if (G[P,0] > 0.0) and (G[0,0]>0.0):
+                    NC += 1
+                elif (G[P,0]> 0.0) or (G[0,0] > 0.0):
+                    if (G[P,0]-(G[P,1]*(G[P+1,0]-G[P,0])/(G[P+1,1]-G[P,1]))) > 0.0:
+                        NC += 1
+            else:
+                if (G[P,0] > 0.0) and (G[P+1,0] > 0.0):
+                    NC += 1
+                elif (G[P,0] > 0.0) or (G[P+1,1] > 0.0):
+                    if (G[P,0]-(G[P,1]*(G[P+1,0]-G[P,0])/(G[P+1,1]-G[P,1]))) > 0.0:
+                        NC += 1
+        odd = NC % 2    #get remainder to find if odd or not
+        # This was this way in original fortran
+        #if odd== 0:     
+        #    dxbuilding = HUGE
+        #else:
+        #    dxbuilding = t
+        # Setting it this way myself:
+        if odd:
+            dxbuilding = t
+        else:
+            dxbuilding = HUGE
+        return dxbuilding,behind
+
 
  #  DO 11 P=1,size
  #        if(P.eq.size)then
