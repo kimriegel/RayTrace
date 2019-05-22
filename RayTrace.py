@@ -90,12 +90,16 @@ OC = np.empty(3)
 with open(PF.INPUTFILE) as IPFile:
       inputsignal=np.loadtxt(IPFile)
 K=len(inputsignal)
+masque = inputsignal>0
 HUGE=1000000.0
 
 # Allocate the correct size to the signal and fft arrays
 sizefft=K
 sizeffttwo=sizefft//2
-outputsignal=np.fft.fft(inputsignal,sizefft)
+#outputsignal=np.fft.fft(inputsignal,sizefft)
+#print(list(outputsignal[:5]))
+outputsignal=np.fft.rfft(inputsignal,sizefft)
+#print(list(outputsignal[-5:]))
 #ampinitial=np.empty(sizeffttwo)
 #phaseinitial=np.empty(sizeffttwo)
 

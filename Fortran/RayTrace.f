@@ -261,7 +261,7 @@ C  Take the fft of the input signal with fftw
 
 C     Create initial signal
       allocate(airabsorb(sizeffttwo))
-      print*, outputsignal
+C      print*, outputsignal
       DO 13 K=1, sizeffttwo
          inputarray(K,1)=(K)*Fs/2*1/(sizeffttwo)
          inputarray(K,2)=abs(outputsignal(K+1)/sizefft)

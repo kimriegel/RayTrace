@@ -917,4 +917,7 @@ Note: In my new version I tear all the rays into pieces and then make changes ea
       The key bindings and the layout have changed. It's still written in python from what I can tell, so if we wanted we may be able to use some of its functionality
       (we probably won't but it's an option)
 
-      
+    Examining why fft is off. It seems in the original we used a real to complex absorption. In our newer version we were only doing discrete.
+    This seems to work.
+
+    Outputsignal now has the same values in both versions

@@ -115,7 +115,7 @@ def TIMERECONSTRUCT(sizefft,timearray,arraysize,temparray):
     #             call dfftw_plan_dft_c2r_1d(invplan,sizefft,tempfft,
     #     *        timesignal, FFTW_ESTIMATE)
 
-        timesignal=np.fft.ifft(tempfft,sizefft)
+        timesignal=np.fft.irfft(tempfft,sizefft)
         #print('Created time signature')       
         for W in range(0,sizefft) :
             timetemparray[D,W,4]=timesignal[W]
