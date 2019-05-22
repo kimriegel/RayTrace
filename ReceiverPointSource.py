@@ -100,7 +100,7 @@ class Receiver:
             tempfft = abs(self.magnitude[:]) * np.exp(XJ*self.direction)
             tempfft = np.append(0,tempfft)
             # Compute ifft using numpy
-            self.timesignal=np.fft.ifft(tempfft,sizefft)
+            self.timesignal=np.fft.irfft(tempfft,sizefft)
 
     @classmethod
     def initialize(cls,ipfile):

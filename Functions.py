@@ -22,15 +22,11 @@ import ReceiverPointSource as RPS
 import time
 #Using to check how long functions take
 HUGE=1000000.0
+XJ=complex(0,1)
 
 def ABSORPTION(ps,freq,hr,Temp):
     ''' This function computes the air absorption for a given frequency, 
     ambient pressure, relative humidity and temperature.
-    
-    Args:
-
-    Returns: 
-
     '''
     #t=time.time()   #Start time counter
 # Define all variables and reference values
@@ -48,79 +44,47 @@ def ABSORPTION(ps,freq,hr,Temp):
     term1=0.01275*(m.exp((-2239.1/Temp))/(FrO+F**2/FrO))
     term2=0.1068*(m.exp(-3352/Temp)/(FrN+F**2/FrN))
     ABSORPTION=ps0*F**2*((1.84*10**(-11.0)*(Temp/T0)**(0.5)*ps0)+(Temp/T0)**(-5.0/2.0)*(term1+term2))
-
-    #print('Absorption time: %.7f ' % (time.time()-t))  #Really low no worries
-
     return ABSORPTION
 
-
-def TIMERECONSTRUCT(sizefft,timearray,arraysize,temparray):
-    '''
-    This Function computes the timesignal from a given fft.  It writes the
-    time signal to an array
-
-    Args:
-
-    Returns:
-    '''
-    #import numpy as np
-    XJ=complex(0,1)
-
-    print('timeconstruct has been called')
-
-    #temparray and timetemparray are three dimensional arrays
-    #will create 3d arrays using numpy zeros function
-
-#    temparray = np.zeros((arraysize,sizefft//2,6))
-    timetemparray= np.zeros((arraysize,sizefft,5))
-    # defining tempfft as a 1 dimensional array of size sizefft/2+1
-
-    tempfft = np.zeros((sizefft//2+1))
-    #print('defining dimensions: ',arraysize,sizefft//2)
-
-    # Author: Will
-    # For loop iterating through three dimensional arrays
-#    for D in range(1,arraysize):
-#        for W in range(1,sizefft):
-    for D in range(0,arraysize):
-        for W in range(0,sizefft):
-            timetemparray[D,W,0]=temparray[D,0,0]
-            timetemparray[D,W,1]=temparray[D,0,1]
-            timetemparray[D,W,2]=temparray[D,0,2]
-            timetemparray[D,W,3]=timearray[W]
-            timetemparray[D,W,4]=0.0
-
-    #print(temparray[1,1,0:4])
-    print('timetemparray has been initialized')
-
-    # Create the complex array to feed into the inverse fft function
-
-    # Author: Will, Create complex array and compute inverse fft first attempt Python
-    for D in range(0,arraysize) :
-        if temparray[D,0,4] == 0.0:
-            for W in range(0,sizefft):
-                timetemparray[D,W,4]= 0.0
-        else:
-            for W in range(int(sizefft/2)+1) :
-                if W == 1:
-                    tempfft[W]=complex([0])
-                else:
-                    tempfft[W]=abs(temparray[D,W-1,4])*m.exp(XJ*temparray[D,W-1,5])
-        #print('Created temparray')
-    # use nummpy to compute inverse fft
-    # use ifft numpy function with tempfft and sizefft as input
-    # use timesignal as output
-
-    # Original fftw function
-    #             call dfftw_plan_dft_c2r_1d(invplan,sizefft,tempfft,
-    #     *        timesignal, FFTW_ESTIMATE)
-
-        timesignal=np.fft.irfft(tempfft,sizefft)
-        #print('Created time signature')       
-        for W in range(0,sizefft) :
-            timetemparray[D,W,4]=timesignal[W]
-#    print('Absorption time: %.7f ' % (time.time()-t))  #Really low no worries
-    return timetemparray
+# This doesn't get used. But it keeps getting changed when I forget >:{
+#def TIMERECONSTRUCT(sizefft,timearray,arraysize,temparray):
+#    '''
+#    This Function computes the timesignal from a given fft.  It writes the
+#    time signal to an array
+#    '''
+#    print('timeconstruct has been called')
+#    #temparray and timetemparray are three dimensional arrays
+#    #will create 3d arrays using numpy zeros function
+#    timetemparray= np.zeros((arraysize,sizefft,5))
+#    # defining tempfft as a 1 dimensional array of size sizefft/2+1
+#    tempfft = np.zeros((sizefft//2+1))
+#    for D in range(0,arraysize):
+#        for W in range(0,sizefft):
+#            timetemparray[D,W,0]=temparray[D,0,0]
+#            timetemparray[D,W,1]=temparray[D,0,1]
+#            timetemparray[D,W,2]=temparray[D,0,2]
+#            timetemparray[D,W,3]=timearray[W]
+#            timetemparray[D,W,4]=0.0
+#    print('timetemparray has been initialized')
+#    # Create the complex array to feed into the inverse fft function
+#    for D in range(0,arraysize) :
+#        if temparray[D,0,4] == 0.0:
+#            for W in range(0,sizefft):
+#                timetemparray[D,W,4]= 0.0
+#        else:
+#            for W in range(int(sizefft/2)+1) :
+#                if W == 1:
+#                    tempfft[W]=complex([0])
+#                else:
+#                    tempfft[W]=abs(temparray[D,W-1,4])*m.exp(XJ*temparray[D,W-1,5])
+#    # use nummpy to compute inverse fft
+#    # Original fftw function
+#    #             call dfftw_plan_dft_c2r_1d(invplan,sizefft,tempfft,
+#    #     *        timesignal, FFTW_ESTIMATE)
+#        timesignal=np.fft.irfft(tempfft,sizefft)
+#        for W in range(0,sizefft) :
+#            timetemparray[D,W,4]=timesignal[W]
+#    return timetemparray
 
 
 

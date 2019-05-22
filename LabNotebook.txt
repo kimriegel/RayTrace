@@ -920,4 +920,6 @@ Note: In my new version I tear all the rays into pieces and then make changes ea
     Examining why fft is off. It seems in the original we used a real to complex absorption. In our newer version we were only doing discrete.
     This seems to work.
 
-    Outputsignal now has the same values in both versions
+    Outputsignal now has the same values in both versions. The final pressure is still low.
+
+    frequencias were still staggered. I staggered them the other way. This is the final stretch. All annoying bugs will be brute forced

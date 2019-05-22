@@ -511,7 +511,7 @@ C      DO 40 ray=1,RAYMAX,1
             ampinitial(W)=inputarray(W,2)/normalization
             phaseinitial(W)=inputarray(W,3)
  24      CONTINUE
-C            print*, phaseinitial
+            print*, phaseinitial
          Vinitial=(/BOOMARRAY(ray,1),BOOMARRAY(ray,2),
      *        BOOMARRAY(ray,3)/)
          if (h.lt.2*radius)then 

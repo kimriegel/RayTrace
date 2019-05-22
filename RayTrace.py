@@ -52,8 +52,8 @@ def initial_signal(signalLength,fftOutput):
     throwarray = np.arange(1,signalLength2 + 1)     #Helps get rid of for-loops in old version
 
     outputFrequency[:,0] = throwarray * PF.Fs / signalLength #Tried simplifying the math a bit from original
-    outputFrequency[:,1] = abs(fftOutput[:signalLength2]/signalLength) #Only go up to sizeffttwo 
-    outputFrequency[:,2] = np.arctan2( np.imag(fftOutput[:signalLength2]/signalLength) , np.real(fftOutput[:signalLength2]/signalLength)) 
+    outputFrequency[:,1] = abs(fftOutput[1:1+signalLength2]/signalLength) #Only go up to sizeffttwo 
+    outputFrequency[:,2] = np.arctan2( np.imag(fftOutput[1:1+signalLength2]/signalLength) , np.real(fftOutput[1:1+signalLength2]/signalLength)) 
 
     return outputFrequency
 
@@ -220,10 +220,11 @@ if ray:
       doublehit=0
       amplitude = frecuencias[:,1]/normalization
       phase=frecuencias[:,2]
+      print(list(phase))
       if (PF.h < (2*PF.radius)): 
             print('h is less than 2r')
             #break
-      F = np.array(Finitial)         # If not defined this way it will make them the same object. This will break the entire program. Do not change
+      F = Finitial[:]
       veci = boomarray[ray,:]
       for I in range(PF.IMAX):      # Making small steps along the ray path.  For each step we should return, location, phase and amplitude
             dxreceiver=HUGE
@@ -414,7 +415,8 @@ OPFile=open(PF.OUTPUTFILE,"a")      #redefining to print both Header and TimeHea
 for W in range(sizefft):
     true=fun.TimeHeader(OPFile,timearray[W],RPS.sizex1,RPS.sizey1,RPS.sizez1,RPS.planename1)
     for R in ears:
-        OPFile.write('\t%f\t%f\t%f\t%f\n' %(R.position[0],R.position[1],R.position[2],np.real(R.timesignal[W])))
+        #OPFile.write('\t%f\t%f\t%f\t%f\n' %(R.position[0],R.position[1],R.position[2],np.real(R.timesignal[W])))
+        OPFile.write('\t%f\t%f\t%f\t%f\n' %(R.position[0],R.position[1],R.position[2],R.timesignal[W]))
 
 OPFile.close()
 print(time.time()-t)
