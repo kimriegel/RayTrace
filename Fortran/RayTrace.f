@@ -511,7 +511,7 @@ C      DO 40 ray=1,RAYMAX,1
             ampinitial(W)=inputarray(W,2)/normalization
             phaseinitial(W)=inputarray(W,3)
  24      CONTINUE
-            print*, phaseinitial
+C            print*, phaseinitial
          Vinitial=(/BOOMARRAY(ray,1),BOOMARRAY(ray,2),
      *        BOOMARRAY(ray,3)/)
          if (h.lt.2*radius)then 
@@ -746,7 +746,6 @@ C     If the ray hits the ground then bounce off the ground and continue
      *                 GROUNDabc(3)*Vecip1(3)+GROUNDD)
                   if(tmp.ne.GROUNDD) Vecip1(3)=0.0
                   print*,'hit ground at step ', I
-C                  print*,'hit ground'
                   veci=Vecip1
                   dot1=(F(1)*nground(1)+F(2)*nground(2)+F(3)*nground(3))
                   n2=(nground(1)*nground(1)+nground(2)*nground(2)+
@@ -808,6 +807,8 @@ C     Loop through all the frequencies
                      ampinitial(W)=ampfinal                           
  21               CONTINUE
                endif
+               print*,phaseinitial
+
                
 C     if the ray hits the building then change the direction and continue
 C               print*, 'dx: ',dx 

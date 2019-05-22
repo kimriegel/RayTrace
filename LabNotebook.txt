@@ -923,3 +923,24 @@ Note: In my new version I tear all the rays into pieces and then make changes ea
     Outputsignal now has the same values in both versions. The final pressure is still low.
 
     frequencias were still staggered. I staggered them the other way. This is the final stretch. All annoying bugs will be brute forced
+
+    For reference: 
+        #outputarray[:,0] = frecuencias  [:,0]
+        #outputarray[:,1] = receiverpoint[0]
+        #outputarray[:,2] = receiverpoint[1]
+        #outputarray[:,3] = receiverpoint[2]
+        #outputarray[:,4] = ampinitial   [:] / 2.0
+        #outputarray[:,5] = phaseinitial [:]
+        #temparray[D,:,3]=inputarray[W,0]    #initial pressures
+        #temparray[D,:,4]=0.0                #magnitude
+        #temparray[D,:,5]=0.0                #direction
+        #timetemparray[D,:,0]=temparray[D,0,0]
+        #timetemparray[D,:,1]=temparray[D,0,1]
+        #timetemparray[D,:,2]=temparray[D,0,2]
+        #        timetemparray[D,W,3]=timearray[W]   #Not actually used until outside function
+        #        timetemparray[D,W,4]=0.0    #timesignal
+
+      After more pruning of comments and code, we have 397 lines in the file
+
+    Ray frequencies are consistent in air, but change after a ground hit.
+      alphaground was offset. Even after changing bounds the values are still innacurate

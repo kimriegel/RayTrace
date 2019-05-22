@@ -27,21 +27,6 @@ t = time.time()
       Anything resembling radiosity
 """
 
-    #outputarray[:,0] = frecuencias  [:,0]
-    #outputarray[:,1] = receiverpoint[0]
-    #outputarray[:,2] = receiverpoint[1]
-    #outputarray[:,3] = receiverpoint[2]
-    #outputarray[:,4] = ampinitial   [:] / 2.0
-    #outputarray[:,5] = phaseinitial [:]
-    #temparray[D,:,3]=inputarray[W,0]    #initial pressures
-    #temparray[D,:,4]=0.0                #magnitude
-    #temparray[D,:,5]=0.0                #direction
-    #timetemparray[D,:,0]=temparray[D,0,0]
-    #timetemparray[D,:,1]=temparray[D,0,1]
-    #timetemparray[D,:,2]=temparray[D,0,2]
-    #        timetemparray[D,W,3]=timearray[W]   #Not actually used until outside function
-    #        timetemparray[D,W,4]=0.0    #timesignal
-
 def initial_signal(signalLength,fftOutput):
     """
     Making the array for the initial signals.
@@ -96,12 +81,7 @@ HUGE=1000000.0
 # Allocate the correct size to the signal and fft arrays
 sizefft=K
 sizeffttwo=sizefft//2
-#outputsignal=np.fft.fft(inputsignal,sizefft)
-#print(list(outputsignal[:5]))
 outputsignal=np.fft.rfft(inputsignal,sizefft)
-#print(list(outputsignal[-5:]))
-#ampinitial=np.empty(sizeffttwo)
-#phaseinitial=np.empty(sizeffttwo)
 
 #       Create initial signal 
 frecuencias = initial_signal(sizefft,outputsignal)      # Equivalent to inputarray in original
@@ -141,14 +121,12 @@ ears = RPS.Receiver.rList           #easier to write
 for R in ears:          #hotfix
       R.magnitude = np.zeros(sizeffttwo)
       R.direction = np.zeros(sizeffttwo)
-RPS.arraysize = RPS.Receiver.arraysize
 receiverpoint  = np.zeros(3)
 receiverpoint2 = np.zeros(3)
 
 #       Initialize normalization factor 
 normalization=(PI*radius2)/(PF.boomspacing**2) 
 temparray=np.empty((    RPS.Receiver.arraysize,sizeffttwo,6))
-timetemparray=np.zeros((RPS.Receiver.arraysize,sizefft,5))
 
 outputarray1=np.zeros((sizeffttwo,6))
 dhoutputarray1=np.zeros((sizeffttwo,6))  
@@ -162,23 +140,23 @@ nground=np.array([0.0,0.0,1.0])
 
 #     Allocate absorption coefficients for each surface for each frequency
 alphaground=np.zeros(sizeffttwo)
-for D in range(1,sizeffttwo):       #This loop has a minimal impact on performance
-    if   frecuencias[D,1] >= 0.0 or    frecuencias[D,1] < 88.0 :
+for D in range(0,sizeffttwo):       #This loop has a minimal impact on performance
+    if   frecuencias[D,0] >= 0.0 or    frecuencias[D,0] < 88.0 :
+        alphaground[D]=PF.tempalphaground[0]
+    elif frecuencias[D,0] >= 88.0 or   frecuencias[D,0] < 177.0 :
         alphaground[D]=PF.tempalphaground[1]
-    elif frecuencias[D,1] >= 88.0 or   frecuencias[D,1] < 177.0 :
+    elif frecuencias[D,0] >= 177.0 or  frecuencias[D,0] < 355.0 :
         alphaground[D]=PF.tempalphaground[2]
-    elif frecuencias[D,1] >= 177.0 or  frecuencias[D,1] < 355.0 :
+    elif frecuencias[D,0] >= 355.0 or  frecuencias[D,0] < 710.0 :
         alphaground[D]=PF.tempalphaground[3]
-    elif frecuencias[D,1] >= 355.0 or  frecuencias[D,1] < 710.0 :
+    elif frecuencias[D,0] >= 710.0 or  frecuencias[D,0] < 1420.0 :
         alphaground[D]=PF.tempalphaground[4]
-    elif frecuencias[D,1] >= 710.0 or  frecuencias[D,1] < 1420.0 :
+    elif frecuencias[D,0] >= 1420.0 or frecuencias[D,0] < 2840.0 :
         alphaground[D]=PF.tempalphaground[5]
-    elif frecuencias[D,1] >= 1420.0 or frecuencias[D,1] < 2840.0 :
+    elif frecuencias[D,0] >= 2840.0 or frecuencias[D,0] < 5680.0 :
         alphaground[D]=PF.tempalphaground[6]
-    elif frecuencias[D,1] >= 2840.0 or frecuencias[D,1] < 5680.0 :
+    elif frecuencias[D,0] >= 5680.0 or frecuencias[D,0] < frecuencias[sizeffttwo,0]:
         alphaground[D]=PF.tempalphaground[7]
-    elif frecuencias[D,1] >= 5680.0 or frecuencias[D,1] < frecuencias[sizeffttwo,1]:
-        alphaground[D]=PF.tempalphaground[8]
 
 alphabuilding = np.zeros((PF.absorbplanes,sizeffttwo))
 for W in range(1,PF.absorbplanes):        #These also look minimal
@@ -216,11 +194,9 @@ ray = 606                     # @ PF.boomspacing = 1
 if ray:
 #for ray in range(RAYMAX):
       hitcount=0
-      #tmpsum=0.0
       doublehit=0
       amplitude = frecuencias[:,1]/normalization
       phase=frecuencias[:,2]
-      print(list(phase))
       if (PF.h < (2*PF.radius)): 
             print('h is less than 2r')
             #break
@@ -346,7 +322,6 @@ if ray:
                               #      count+=1
                               #count+=1
                   if (abs(dx-dxground)< 10.0**(-13.0)):                  #     If the ray hits the ground then bounce off the ground and continue
-                        #Vecip1=veci+np.multiply(dxground,F)
                         veci += (dxground*F)
                         tmp = np.dot(GROUNDABC,veci)
                         if(tmp != GROUNDD): 
@@ -371,6 +346,7 @@ if ray:
                                                             temp4=temp2+temp3
                                                             patcharray[Q,W,6]=abs(temp4)
                                                             patcharray[Q,W,7]=np.arctan(temp4.imag,temp4.real)
+                        print(list(phase))
                   if (dx==dxbuilding):                  #     if the ray hits the building then change the direction and continue
                         veci += (dx*F)
                         print('hit building at step ',I)
@@ -384,7 +360,6 @@ if ray:
                               if PF.absorbplanes==2:
                                     if (veci[2]>0.0) and (veci[2]<height1):
                                           alpha = alphabuilding[0,:]
-
                                     elif(veci[2]>height1 and veci[2]<=height2):
                                           alpha=alphabuilding[1,:]
                               if(PF.absorbplanes==3):
@@ -415,8 +390,6 @@ OPFile=open(PF.OUTPUTFILE,"a")      #redefining to print both Header and TimeHea
 for W in range(sizefft):
     true=fun.TimeHeader(OPFile,timearray[W],RPS.sizex1,RPS.sizey1,RPS.sizez1,RPS.planename1)
     for R in ears:
-        #OPFile.write('\t%f\t%f\t%f\t%f\n' %(R.position[0],R.position[1],R.position[2],np.real(R.timesignal[W])))
         OPFile.write('\t%f\t%f\t%f\t%f\n' %(R.position[0],R.position[1],R.position[2],R.timesignal[W]))
-
 OPFile.close()
 print(time.time()-t)
