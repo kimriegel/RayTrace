@@ -166,18 +166,18 @@ def Header(outputfile):
     return Header
 
 
-def TimeHeader(f,time,sizex,sizey,sizez,planename):
-    """
-    This function prints the header between each time set
-    """
-    #This function prints the header between each time set
-    f.write('ZONE T=" %s "\n' %(planename, ) )  #this worked in the command line
-    f.write('STRANDID=1, SOLUTIONTIME= %d \n'%(time,) )
-    f.write('I= %d\t J= %d\t K=%d\t ZONETYPE=Ordered\n' %(sizex, sizey, sizez))
-    f.write('DATAPACKING=POINT\n')
-    f.write('DT=(SINGLE SINGLE SINGLE SINGLE )\n')
-    header=0
-    return TimeHeader
+#def TimeHeader(f,time,sizex,sizey,sizez,planename):
+#    """
+#    This function prints the header between each time set
+#    """
+#    #This function prints the header between each time set
+#    f.write('ZONE T=" %s "\n' %(planename, ) )  #this worked in the command line
+#    f.write('STRANDID=1, SOLUTIONTIME= %d \n'%(time,) )
+#    f.write('I= %d\t J= %d\t K=%d\t ZONETYPE=Ordered\n' %(sizex, sizey, sizez))
+#    f.write('DATAPACKING=POINT\n')
+#    f.write('DT=(SINGLE SINGLE SINGLE SINGLE )\n')
+#    header=0
+#    return TimeHeader
 
 
 #*****Grid is Unused*****************    

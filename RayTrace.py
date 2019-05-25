@@ -49,27 +49,12 @@ def updateFreq(dx,alpha,diffusion):
       global phase,amplitude        # works directly
 
       twopidx = twopi * dx
-      #tempphase = phase[:] - (twopidx/lamb)
-      #tempphase %= twopi
-
-      # less than pi
       ein  = phase - (twopidx/lamb)
       zwei = ein % twopi
       masque = zwei> PI
       drei = masque * zwei - twopi
-      #print(masque[:5])
-      #print('phases: \n',phase[:5],'\n',ein[:5])
-      #print('zhu: \n',phase[:5],'\n',twopidx,'\n',lamb[:5])
-      #phase = drei           ###works
-
-      #uno = phase - twopidx/lamb
-      #dos = uno % twopi
-      #mask = dos > PI 
-      #phase = dos
-      #print(mask[:5])
+ 
       phase =np.where(masque,drei,ein)
-
-      #phase = np.where( (tempphase > PI),      tempphase-twopi,      tempphase)
       amplitude *= ((1.0-alpha) * (1.0-diffusion) * np.exp(airabsorb*dx))
 
 # port and import receiver file
@@ -174,26 +159,6 @@ for D in range(0,sizeffttwo):       #This loop has a minimal impact on performan
     elif frecuencias[D,0] >= 5680.0 or frecuencias[D,0] < frecuencias[sizeffttwo,0]:
         alphaground[D]=PF.tempalphaground[7]
 
-##     Allocate absorption coefficients for each surface for each frequency
-#alphaground=np.zeros(sizeffttwo)
-#for D in range(0,sizeffttwo):       #This loop has a minimal impact on performance
-#    if   frecuencias[D,0] >= 0.0 and    frecuencias[D,0] < 88.0 :
-#        alphaground[D]=PF.tempalphaground[0]
-#    elif frecuencias[D,0] >= 88.0 and   frecuencias[D,0] < 177.0 :
-#        alphaground[D]=PF.tempalphaground[1]
-#    elif frecuencias[D,0] >= 177.0 and  frecuencias[D,0] < 355.0 :
-#        alphaground[D]=PF.tempalphaground[2]
-#    elif frecuencias[D,0] >= 355.0 and  frecuencias[D,0] < 710.0 :
-#        alphaground[D]=PF.tempalphaground[3]
-#    elif frecuencias[D,0] >= 710.0 and  frecuencias[D,0] < 1420.0 :
-#        alphaground[D]=PF.tempalphaground[4]
-#    elif frecuencias[D,0] >= 1420.0 and frecuencias[D,0] < 2840.0 :
-#        alphaground[D]=PF.tempalphaground[5]
-#    elif frecuencias[D,0] >= 2840.0 and frecuencias[D,0] < 5680.0 :
-#        alphaground[D]=PF.tempalphaground[6]
-#    elif frecuencias[D,0] >= 5680.0 and frecuencias[D,0] < frecuencias[-1,0]:
-#        alphaground[D]=PF.tempalphaground[7]
-
 alphabuilding = np.zeros((PF.absorbplanes,sizeffttwo))
 for W in range(PF.absorbplanes):        #These also look minimal
     for D in range(sizeffttwo):
@@ -233,13 +198,11 @@ if ray:                 #for debugging
       doublehit=0
       amplitude = frecuencias[:,1]/normalization
       phase=frecuencias[:,2]
-      #print('initial: ',amplitude[:5])
       if (PF.h < (2*PF.radius)): 
             print('h is less than 2r')
             #break
       F = Finitial[:]
       veci = boomarray[ray,:]
-      #for I in range(5):      # Making small steps along the ray path.  For each step we should return, location, phase and amplitude
       for I in range(PF.IMAX):      # Making small steps along the ray path.  For each step we should return, location, phase and amplitude
             dxreceiver=HUGE
             # Find the closest sphere and store that as the distance
@@ -333,7 +296,6 @@ if ray:                 #for debugging
                                     receiverhit=2
                               hitcount=hitcount+1
                               updateFreq(dx,alphanothing,0)
-                              #print('receiver: ',amplitude[:5])
                               lastreceiver = receiverpoint
                               outputarray1[:,0] = frecuencias[:,0]
                               outputarray1[:,1:4] = receiverpoint[:]
@@ -373,13 +335,7 @@ if ray:                 #for debugging
                         groundhit=1
                         twopidx=twopi*dxground
                         #     Loop through all the frequencies
-                        #print(list(phase))
                         updateFreq(dxground,alphaground,diffusionground)
-                        #print('ground: ',amplitude[:5])
-                        #print('dxground: ', dxground)
-                        #print('alphaground: ', alphaground)
-                        #print('diffusionground: ', diffusionground)
-
                         if(PF.radiosity==1 and (diffusionground!=0.0)):
                               for Q in range (0,PatchNo):
                                     if (formfactors[0,Q,1]==1):
@@ -391,7 +347,6 @@ if ray:                 #for debugging
                                                             temp4=temp2+temp3
                                                             patcharray[Q,W,6]=abs(temp4)
                                                             patcharray[Q,W,7]=np.arctan(temp4.imag,temp4.real)
-                        #print(list(phase))
                   if (dx==dxbuilding):                  #     if the ray hits the building then change the direction and continue
                         veci += (dx*F)
                         #print('hit building at step ',I)
@@ -416,28 +371,23 @@ if ray:                 #for debugging
                         else:
                               alpha=alphabuilding[0,:]
                         updateFreq(dx,alpha,diffusion) 
-                        #print(alpha)
-                        #print(alphabuilding) 
-                        #for w in range(5):
-                        #      print('amps: (1.0-', alpha[w],
-                        #      ')*(1.0-',diffusion,')*exp(-',airabsorb[w],'*',
-                        #      dx)
-                        #print(alpha[:5])
-                        #print(diffusion)
-                        #print(airabsorb[:5])
-                        #print(dx)
-                        #print('building: ',amplitude[:5])
             else:     #     If there was no interaction with buildings then proceed with one step. 
                   veci += (PF.h*F)
                   updateFreq(PF.h,alphanothing,0)
-                  #print('non: ',amplitude[:5])
       print('finished ray', ray + 1)
 
 # Radiosity removed for readability
 
+
 #Reconstruct the time signal and print to output file
 for R in ears:
       R.timeReconstruct(sizefft)
+
+#print(list(ears[1].magnitude))
+print(list(ears[1].direction))
+#print(ears[1].signal)
+      #TIMERECONSTRUCT(sizefft, timearray, arraysize, temparray, timetemparray)
+#print(timearray[:5])   #magnitude, initial pressure,direction, timearray, timesignal
 
 print('Writing to output file')
 fileid = PF.outputfile 

@@ -968,3 +968,10 @@ Note: In my new version I tear all the rays into pieces and then make changes ea
 
     found old bug from when we were first writing this.
     phase and amp seem to match now
+
+
+    Checking right at the end:
+      Magnitude starts good, then ends bigger than it should
+      Direction is perfect all through
+
+      Timesignal is based on the others, so I can't check it yet
