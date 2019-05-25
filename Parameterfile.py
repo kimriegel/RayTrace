@@ -38,7 +38,8 @@ complexabsorption = 0
 tempalphabuilding=np.zeros([absorbplanes,8])
 if(complexabsorption == 1):
     
-    tempalphabuilding[1] = [0.55,0.55,0.25,0.18,0.12,0.07,0.04,0.04]
+    #tempalphabuilding[1] = [0.55,0.55,0.25,0.18,0.12,0.07,0.04,0.04]
+    tempalphabuilding[:,1] = [0.55,0.55,0.25,0.18,0.12,0.07,0.04,0.04]
 else:
     tempalphabuilding = np.zeros([1,8])
 #Enter an array for absorption of alpha ground octave bands between
@@ -46,7 +47,7 @@ else:
 tempalphaground = [0.01,0.01,0.01,0.02,0.02,0.02,0.03,0.03]
 #Enter an array for absorption of Alpha Building octave bands between
 #63 and 8000
-tempalphabuilding[0] = [0.01,0.01,0.01,0.02,0.02,0.02,0.03,0.03]
+tempalphabuilding[0,:] = [0.01,0.01,0.01,0.02,0.02,0.02,0.03,0.03]
 #what percentage of the energy is reflected diffusely between 0,1
 percentdiffuse = 0.0
 

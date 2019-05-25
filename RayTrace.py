@@ -49,15 +49,17 @@ def updateFreq(dx,alpha,diffusion):
       global phase,amplitude        # works directly
 
       twopidx = twopi * dx
-      tempphase = phase[:] - (twopidx/lamb)
-      tempphase %= twopi
+      #tempphase = phase[:] - (twopidx/lamb)
+      #tempphase %= twopi
 
       # less than pi
-      ein  = phase - twopidx/lamb
+      ein  = phase - (twopidx/lamb)
       zwei = ein % twopi
       masque = zwei> PI
       drei = masque * zwei - twopi
-      print(masque[:5])
+      #print(masque[:5])
+      #print('phases: \n',phase[:5],'\n',ein[:5])
+      #print('zhu: \n',phase[:5],'\n',twopidx,'\n',lamb[:5])
       #phase = drei           ###works
 
       #uno = phase - twopidx/lamb
@@ -65,7 +67,7 @@ def updateFreq(dx,alpha,diffusion):
       #mask = dos > PI 
       #phase = dos
       #print(mask[:5])
-      phase =np.where(masque,drei,zwei)
+      phase =np.where(masque,drei,ein)
 
       #phase = np.where( (tempphase > PI),      tempphase-twopi,      tempphase)
       amplitude *= ((1.0-alpha) * (1.0-diffusion) * np.exp(airabsorb*dx))
@@ -193,24 +195,24 @@ for D in range(0,sizeffttwo):       #This loop has a minimal impact on performan
 #        alphaground[D]=PF.tempalphaground[7]
 
 alphabuilding = np.zeros((PF.absorbplanes,sizeffttwo))
-for W in range(1,PF.absorbplanes):        #These also look minimal
-    for D in range(1,PF.absorbplanes):
-        if   frecuencias[D,1] >= 0.0   or  frecuencias[D,1] < 88.0:
-            alphabuilding[W,D]=PF.tempalphabuilding[W,1]
-        elif frecuencias[D,1] >= 88.0  or  frecuencias[D,1] < 177.0:
-            alphabuilding[W,D] = PF.tempalphabuilding [W,2]
-        elif frecuencias[D,1] >= 177.0 or  frecuencias[D,1] < 355.0 :
-            alphabuilding[W,D] = tempalphabuilding[W,3]
-        elif frecuencias[D,1] >= 355.0 or  frecuencias[D,1] < 710.0 :
-            alphabuilding[W,D] = tempalphabuilding[W,4]
-        elif frecuencias[D,1] >= 710.0 or  frecuencias[D,1] < 1420.0 :
-            alphabuilding[W,D] = tempalphabuilding[W,5]
-        elif frecuencias[D,1] >= 1420.0 or frecuencias[D,1] < 2840.0 :
-            alphabuilding[W,D] = tempalphabuilding[W,6]
-        elif frecuencias[D,1] >= 2840.0 or frecuencias[D,1] < 5680.0 :
-            alphabuilding[W,D] = tempalphabuilding[W,7]
-        elif frecuencias[D,1] >= 5680.0 or frecuencias[D,1] < frecuencias[sizeffttwo,1] :
-            alphabuilding[W,D] = tempalphabuilding[W,8]
+for W in range(PF.absorbplanes):        #These also look minimal
+    for D in range(sizeffttwo):
+        if   frecuencias[D,0] >= 0.0   or  frecuencias[D,0] < 88.0:
+            alphabuilding[W,D]    =    PF.tempalphabuilding[W,0]
+        elif frecuencias[D,0] >= 88.0  or  frecuencias[D,0] < 177.0:
+            alphabuilding[W,D]    =    PF.tempalphabuilding[W,1]
+        elif frecuencias[D,0] >= 177.0 or  frecuencias[D,0] < 355.0 :
+            alphabuilding[W,D]    =    PF.tempalphabuilding[W,2]
+        elif frecuencias[D,0] >= 355.0 or  frecuencias[D,0] < 710.0 :
+            alphabuilding[W,D]    =    PF.tempalphabuilding[W,3]
+        elif frecuencias[D,0] >= 710.0 or  frecuencias[D,0] < 1420.0 :
+            alphabuilding[W,D]    =    PF.tempalphabuilding[W,4]
+        elif frecuencias[D,0] >= 1420.0 or frecuencias[D,0] < 2840.0 :
+            alphabuilding[W,D]    =    PF.tempalphabuilding[W,5]
+        elif frecuencias[D,0] >= 2840.0 or frecuencias[D,0] < 5680.0 :
+            alphabuilding[W,D]    =    PF.tempalphabuilding[W,6]
+        elif frecuencias[D,0] >= 5680.0 or frecuencias[D,0] < frecuencias[sizeffttwo,0] :
+            alphabuilding[W,D]    =    PF.tempalphabuilding[W,7]
 
 #        Mesh the patches for the environment.  Include patching file. 
 diffusionground = 0.0
@@ -231,7 +233,7 @@ if ray:                 #for debugging
       doublehit=0
       amplitude = frecuencias[:,1]/normalization
       phase=frecuencias[:,2]
-      print('initial: ',phase[:5])
+      #print('initial: ',amplitude[:5])
       if (PF.h < (2*PF.radius)): 
             print('h is less than 2r')
             #break
@@ -331,7 +333,7 @@ if ray:                 #for debugging
                                     receiverhit=2
                               hitcount=hitcount+1
                               updateFreq(dx,alphanothing,0)
-                              print('receiver: ',phase[:5])
+                              #print('receiver: ',amplitude[:5])
                               lastreceiver = receiverpoint
                               outputarray1[:,0] = frecuencias[:,0]
                               outputarray1[:,1:4] = receiverpoint[:]
@@ -373,7 +375,7 @@ if ray:                 #for debugging
                         #     Loop through all the frequencies
                         #print(list(phase))
                         updateFreq(dxground,alphaground,diffusionground)
-                        print('ground: ',phase[:5])
+                        #print('ground: ',amplitude[:5])
                         #print('dxground: ', dxground)
                         #print('alphaground: ', alphaground)
                         #print('diffusionground: ', diffusionground)
@@ -413,12 +415,22 @@ if ray:                 #for debugging
                                           alpha=alphabuilding[4,:]
                         else:
                               alpha=alphabuilding[0,:]
-                        updateFreq(dx,alpha,diffusion)  
-                        print('building: ',phase[:5])
+                        updateFreq(dx,alpha,diffusion) 
+                        #print(alpha)
+                        #print(alphabuilding) 
+                        #for w in range(5):
+                        #      print('amps: (1.0-', alpha[w],
+                        #      ')*(1.0-',diffusion,')*exp(-',airabsorb[w],'*',
+                        #      dx)
+                        #print(alpha[:5])
+                        #print(diffusion)
+                        #print(airabsorb[:5])
+                        #print(dx)
+                        #print('building: ',amplitude[:5])
             else:     #     If there was no interaction with buildings then proceed with one step. 
                   veci += (PF.h*F)
                   updateFreq(PF.h,alphanothing,0)
-                  print('non: ',phase[:5])
+                  #print('non: ',amplitude[:5])
       print('finished ray', ray + 1)
 
 # Radiosity removed for readability

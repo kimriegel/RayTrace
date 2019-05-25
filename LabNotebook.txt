@@ -960,3 +960,11 @@ Note: In my new version I tear all the rays into pieces and then make changes ea
 
 5/24
     I'll come back to the last thing, just messing with the file frinting now
+
+    fixed phase. I was saving the wrong one in the hit function.
+
+    Amplitude has the wrong reading for alphabuilding
+    The alphabuilding values are incorrect
+
+    found old bug from when we were first writing this.
+    phase and amp seem to match now
