@@ -167,14 +167,10 @@ def Header(outputfile):
 
 
 def TimeHeader(f,time,sizex,sizey,sizez,planename):
-    '''
+    """
     This function prints the header between each time set
-
-    '''
-    #print('tiempo: ',time)
-    #print('sizes: ',  sizex, sizey, sizez)
+    """
     #This function prints the header between each time set
-    #print(planename)
     f.write('ZONE T=" %s "\n' %(planename, ) )  #this worked in the command line
     f.write('STRANDID=1, SOLUTIONTIME= %d \n'%(time,) )
     f.write('I= %d\t J= %d\t K=%d\t ZONETYPE=Ordered\n' %(sizex, sizey, sizez))

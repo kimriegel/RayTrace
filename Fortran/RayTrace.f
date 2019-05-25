@@ -511,7 +511,7 @@ C      DO 40 ray=1,RAYMAX,1
             ampinitial(W)=inputarray(W,2)/normalization
             phaseinitial(W)=inputarray(W,3)
  24      CONTINUE
-C            print*, phaseinitial
+            print*, 'initial: ',phaseinitial(:5)
          Vinitial=(/BOOMARRAY(ray,1),BOOMARRAY(ray,2),
      *        BOOMARRAY(ray,3)/)
          if (h.lt.2*radius)then 
@@ -523,7 +523,8 @@ C            print*, 'h is less than 2r'
          veci=Vinitial
 C     Making small steps along the ray path.  For each step we should return, 
 C     location, phase and amplitude
-         DO 10 I=1,IMAX,1
+C         DO 10 I=1,IMAX,1
+         DO 10 I=1,6,1
             dxreceiver=HUGE
 C     Find the closest sphere and store that as the distance
 C            print*, veci
@@ -664,7 +665,7 @@ C     Create two arrays to store in.
                   sum=sum+1
                   Vecip1=veci+dx*F
                   veci=Vecip1
-                  print*, 'hit receiver at step ',I
+C                  print*, 'hit receiver at step ',I
                   receiverhit=1
                   checkdirection=F
                   
@@ -738,6 +739,7 @@ C                  print*, 'receiverHITFUNC completed'
                      deallocate(dhoutputarray1)
                   endif
 C                  print*, 'got to the end of receiver hit'
+                  print*, 'receiver: ', phaseinitial(:5)
                endif
 C     If the ray hits the ground then bounce off the ground and continue
                if (abs(dx-dxground).lt.10.0**(-13.0)) then
@@ -745,7 +747,7 @@ C     If the ray hits the ground then bounce off the ground and continue
                   tmp=(GROUNDabc(1)*Vecip1(1)+GROUNDabc(2)*Vecip1(2)+
      *                 GROUNDabc(3)*Vecip1(3)+GROUNDD)
                   if(tmp.ne.GROUNDD) Vecip1(3)=0.0
-                  print*,'hit ground at step ', I
+C                  print*,'hit ground at step ', I
                   veci=Vecip1
                   dot1=(F(1)*nground(1)+F(2)*nground(2)+F(3)*nground(3))
                   n2=(nground(1)*nground(1)+nground(2)*nground(2)+
@@ -806,8 +808,12 @@ C     Loop through all the frequencies
                         endif   
                      ampinitial(W)=ampfinal                           
  21               CONTINUE
+                     print*,'ground',phaseinitial(:5)
                endif
-               print*,phaseinitial
+C               print*,phaseinitial
+C               print*, 'dxground: ', dxground
+C               print*, 'alphaground: ', alphaground
+C               print*, 'diffusionground: ', diffusionground
 
                
 C     if the ray hits the building then change the direction and continue
@@ -816,8 +822,7 @@ C               print*, 'dxbuilding: ', dxbuilding
                if (dx.eq.dxbuilding) then
                   Vecip1=veci+dx*F
                   veci=Vecip1
-                  print*, 'hit building at step ', I
-
+C                  print*, 'hit building at step ', I
                   n2=(nbox(1)*nbox(1)+nbox(2)*nbox(2)+nbox(3)*nbox(3))
                   nbuilding=nbox/sqrt(n2)
                   dot1=(F(1)*nbuilding(1)+F(2)*nbuilding(2)+F(3)*
@@ -899,6 +904,7 @@ C     Loop through all patches if radiosity is turned on.
                      endif 
                   ampinitial(W)=ampfinal
  22            CONTINUE
+                     print*,'building: ',phaseinitial(:5)
             endif
 C     If there was no interaction with buildings then proceed with one step. 
          else
@@ -921,6 +927,7 @@ C     Loop through all frequencies.
                   phaseinitial(W)=phaseinitial(W)-twopi
                endif
  23         CONTINUE
+               print*, 'non: ', phaseinitial(:5)
          endif
  10   CONTINUE
       print*, 'finished ray', ray

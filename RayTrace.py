@@ -1,5 +1,5 @@
 # RayTrace
-# version 1.1.0
+# version 1.0.10
 
 # Kimberly Lefkowitz created this program to propagate sonic booms around
 # large structures, and to graduate. It is a ray tracing model that 
@@ -52,7 +52,22 @@ def updateFreq(dx,alpha,diffusion):
       tempphase = phase[:] - (twopidx/lamb)
       tempphase %= twopi
 
-      phase = np.where( (tempphase > PI),      tempphase-twopi,      tempphase)
+      # less than pi
+      ein  = phase - twopidx/lamb
+      zwei = ein % twopi
+      masque = zwei> PI
+      drei = masque * zwei - twopi
+      print(masque[:5])
+      #phase = drei           ###works
+
+      #uno = phase - twopidx/lamb
+      #dos = uno % twopi
+      #mask = dos > PI 
+      #phase = dos
+      #print(mask[:5])
+      phase =np.where(masque,drei,zwei)
+
+      #phase = np.where( (tempphase > PI),      tempphase-twopi,      tempphase)
       amplitude *= ((1.0-alpha) * (1.0-diffusion) * np.exp(airabsorb*dx))
 
 # port and import receiver file
@@ -62,13 +77,15 @@ groundhit=0
 # Initialize counters 
 PI = np.pi
 twopi = PI*2
-XJ=(0.0,1.0)
+XJ=complex(0.0,1.0)
 radius2 = PF.radius**2
 raysum=0
 
 # Initiailize receiver variables
-lastreceiver = np.empty(3)
-lastreceiver2 = np.empty(3)
+lastreceiver = np.zeros(3)
+lastreceiver2 = np.zeros(3)
+receiverpoint  = np.zeros(3)
+receiverpoint2 = np.zeros(3)
 OC = np.empty(3)
 
 # Read in input file
@@ -108,7 +125,6 @@ elif(PF.ymin == PF.ymax):
    RAYMAX=int((PF.xmax-PF.xmin)/xspace)*int((PF.zmax-PF.zmin)/zspace)
 elif(PF.zmin == PF.zmax):
    RAYMAX=int((PF.ymax-PF.ymin)/yspace)*int((PF.xmax-PF.xmin)/xspace)
-boomarray = np.zeros((RAYMAX,2))
 print(RAYMAX , ' is the RAYMAX')
 boomarray,sizex,sizey,sizez=fun.InitialGrid(PF.boomspacing,PLANEABC[0],PLANEABC[1],PLANEABC[2],PLANEABC[3],PF.theta,PF.phi,PF.xmin,PF.ymin,PF.zmin,PF.xmax,PF.ymax,PF.zmax,RAYMAX)
 
@@ -121,12 +137,10 @@ ears = RPS.Receiver.rList           #easier to write
 for R in ears:          #hotfix
       R.magnitude = np.zeros(sizeffttwo)
       R.direction = np.zeros(sizeffttwo)
-receiverpoint  = np.zeros(3)
-receiverpoint2 = np.zeros(3)
 
 #       Initialize normalization factor 
 normalization=(PI*radius2)/(PF.boomspacing**2) 
-temparray=np.empty((    RPS.Receiver.arraysize,sizeffttwo,6))
+#temparray=np.empty((    RPS.Receiver.arraysize,sizeffttwo,6))
 
 outputarray1=np.zeros((sizeffttwo,6))
 dhoutputarray1=np.zeros((sizeffttwo,6))  
@@ -157,6 +171,26 @@ for D in range(0,sizeffttwo):       #This loop has a minimal impact on performan
         alphaground[D]=PF.tempalphaground[6]
     elif frecuencias[D,0] >= 5680.0 or frecuencias[D,0] < frecuencias[sizeffttwo,0]:
         alphaground[D]=PF.tempalphaground[7]
+
+##     Allocate absorption coefficients for each surface for each frequency
+#alphaground=np.zeros(sizeffttwo)
+#for D in range(0,sizeffttwo):       #This loop has a minimal impact on performance
+#    if   frecuencias[D,0] >= 0.0 and    frecuencias[D,0] < 88.0 :
+#        alphaground[D]=PF.tempalphaground[0]
+#    elif frecuencias[D,0] >= 88.0 and   frecuencias[D,0] < 177.0 :
+#        alphaground[D]=PF.tempalphaground[1]
+#    elif frecuencias[D,0] >= 177.0 and  frecuencias[D,0] < 355.0 :
+#        alphaground[D]=PF.tempalphaground[2]
+#    elif frecuencias[D,0] >= 355.0 and  frecuencias[D,0] < 710.0 :
+#        alphaground[D]=PF.tempalphaground[3]
+#    elif frecuencias[D,0] >= 710.0 and  frecuencias[D,0] < 1420.0 :
+#        alphaground[D]=PF.tempalphaground[4]
+#    elif frecuencias[D,0] >= 1420.0 and frecuencias[D,0] < 2840.0 :
+#        alphaground[D]=PF.tempalphaground[5]
+#    elif frecuencias[D,0] >= 2840.0 and frecuencias[D,0] < 5680.0 :
+#        alphaground[D]=PF.tempalphaground[6]
+#    elif frecuencias[D,0] >= 5680.0 and frecuencias[D,0] < frecuencias[-1,0]:
+#        alphaground[D]=PF.tempalphaground[7]
 
 alphabuilding = np.zeros((PF.absorbplanes,sizeffttwo))
 for W in range(1,PF.absorbplanes):        #These also look minimal
@@ -191,17 +225,19 @@ else:
 print('began rays')
 ray = 606                     # @ PF.boomspacing = 1
 #ray = 455174                 # @ PF.boomspacing = 0.06
-if ray:
+if ray:                 #for debugging
 #for ray in range(RAYMAX):
       hitcount=0
       doublehit=0
       amplitude = frecuencias[:,1]/normalization
       phase=frecuencias[:,2]
+      print('initial: ',phase[:5])
       if (PF.h < (2*PF.radius)): 
             print('h is less than 2r')
             #break
       F = Finitial[:]
       veci = boomarray[ray,:]
+      #for I in range(5):      # Making small steps along the ray path.  For each step we should return, location, phase and amplitude
       for I in range(PF.IMAX):      # Making small steps along the ray path.  For each step we should return, location, phase and amplitude
             dxreceiver=HUGE
             # Find the closest sphere and store that as the distance
@@ -287,7 +323,7 @@ if ray:
                   #     if the ray hits a receiver, store in an array.  If the ray hits two, create two arrays to store in.
                   for R in ears:
                         if dx == R.dxreceiver:
-                              print('Ray ',ray +1,' hit receiver ',R.recNumber,' at step ',I)
+                              #print('Ray ',ray +1,' hit receiver ',R.recNumber,' at step ',I)
                               veci += (dx*F)
                               receiverhit=1
                               checkdirection=F
@@ -295,6 +331,7 @@ if ray:
                                     receiverhit=2
                               hitcount=hitcount+1
                               updateFreq(dx,alphanothing,0)
+                              print('receiver: ',phase[:5])
                               lastreceiver = receiverpoint
                               outputarray1[:,0] = frecuencias[:,0]
                               outputarray1[:,1:4] = receiverpoint[:]
@@ -326,7 +363,7 @@ if ray:
                         tmp = np.dot(GROUNDABC,veci)
                         if(tmp != GROUNDD): 
                               veci[2] = 0
-                        print('hit ground at ',I)
+                        #print('hit ground at ',I)
                         dot1 = np.dot(F,nground)
                         n2 = np.dot(nground,nground)
                         F -= (2.0*(dot1/n2 *nground))
@@ -334,7 +371,13 @@ if ray:
                         groundhit=1
                         twopidx=twopi*dxground
                         #     Loop through all the frequencies
+                        #print(list(phase))
                         updateFreq(dxground,alphaground,diffusionground)
+                        print('ground: ',phase[:5])
+                        #print('dxground: ', dxground)
+                        #print('alphaground: ', alphaground)
+                        #print('diffusionground: ', diffusionground)
+
                         if(PF.radiosity==1 and (diffusionground!=0.0)):
                               for Q in range (0,PatchNo):
                                     if (formfactors[0,Q,1]==1):
@@ -346,10 +389,10 @@ if ray:
                                                             temp4=temp2+temp3
                                                             patcharray[Q,W,6]=abs(temp4)
                                                             patcharray[Q,W,7]=np.arctan(temp4.imag,temp4.real)
-                        print(list(phase))
+                        #print(list(phase))
                   if (dx==dxbuilding):                  #     if the ray hits the building then change the direction and continue
                         veci += (dx*F)
-                        print('hit building at step ',I)
+                        #print('hit building at step ',I)
                         n2 = np.dot(nbox,nbox)
                         nbuilding=nbox/np.sqrt(n2)
                         dot1= np.dot(F,nbuilding)
@@ -371,9 +414,11 @@ if ray:
                         else:
                               alpha=alphabuilding[0,:]
                         updateFreq(dx,alpha,diffusion)  
+                        print('building: ',phase[:5])
             else:     #     If there was no interaction with buildings then proceed with one step. 
                   veci += (PF.h*F)
                   updateFreq(PF.h,alphanothing,0)
+                  print('non: ',phase[:5])
       print('finished ray', ray + 1)
 
 # Radiosity removed for readability
@@ -383,13 +428,12 @@ for R in ears:
       R.timeReconstruct(sizefft)
 
 print('Writing to output file')
-OPFile=open(PF.OUTPUTFILE,"w")
-true=fun.Header(PF.OUTPUTFILE)
-OPFile=open(PF.OUTPUTFILE,"a")      #redefining to print both Header and TimeHeader
+fileid = PF.outputfile 
+with open (fileid,'w') as f:
+      fun.Header(fileid)
 
-for W in range(sizefft):
-    true=fun.TimeHeader(OPFile,timearray[W],RPS.sizex1,RPS.sizey1,RPS.sizez1,RPS.planename1)
-    for R in ears:
-        OPFile.write('\t%f\t%f\t%f\t%f\n' %(R.position[0],R.position[1],R.position[2],R.timesignal[W]))
-OPFile.close()
+with open (fileid,'a') as f:
+      for w in range(sizefft):
+            RPS.Receiver.timeHeader(f,timearray[w],w)
 print(time.time()-t)
+#

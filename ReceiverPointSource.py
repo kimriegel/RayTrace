@@ -94,13 +94,35 @@ class Receiver:
         # Create the complex array to feed into the inverse fft function
         # Create complex array and compute inverse fft first attempt Python
         if self.magnitude[0] == 0.0:            # If first magnitude is zero then all timesignal is zero
-            self.timesignal = np.zeros(sizefft) 
+            self.signal = np.zeros(sizefft) 
 
         else:                                   # If not then calculate the timesignal 
             tempfft = abs(self.magnitude[:]) * np.exp(XJ*self.direction)
             tempfft = np.append(0,tempfft)
             # Compute ifft using numpy
-            self.timesignal=np.fft.irfft(tempfft,sizefft)
+            self.signal=np.fft.irfft(tempfft,sizefft)
+
+    #def timeheader(cls,f,time,sizex,sizey,sizez,planename):
+    @classmethod
+    def timeHeader(cls,f,time,w):
+        """
+        This function prints the header between each time set
+        Time is the real time that the event happens
+        omega (w) is the signal in that receiver at the specified time
+
+        """
+        #time = pass
+        #This function prints the header between each time set
+        f.write('ZONE T=" %s "\n' %(planename, ) )  #this worked in the command line
+        f.write('STRANDID=1, SOLUTIONTIME= %d \n'%(time,) )                                     #timearray tiempo/PF.Fs 
+        f.write('I= %d\t J= %d\t K=%d\t ZONETYPE=Ordered\n' %(sizex, sizey, sizez))
+        f.write('DATAPACKING=POINT\n')
+        f.write('DT=(SINGLE SINGLE SINGLE SINGLE )\n')
+
+        for R in cls.rList:
+          print('\t%f\t%f\t%f\t%f' %(R.position[0],R.position[1],R.position[2],R.signal[w]),file=f)    #time signal
+
+        return 
 
     @classmethod
     def initialize(cls,ipfile):
@@ -108,31 +130,20 @@ class Receiver:
         Reads in receiver points from the txt file and translates them to be used in our receiver method
         Receivers are automatically initialized from given inputfile
         """
-        #ip = 'PointReceivers.txt'
-        #with open(ip) as vertex:        #Read in from file
         with open(ipfile) as vertex:        #Read in from file
             rho = np.genfromtxt(vertex)
         cls.Array = rho
         pointNo = rho.shape[0]   #Create an itterater, Number of Receiver Points
-        #print (Receiver.arraysize)
         for r in range(pointNo): #Translate to usable format
-        #    print(rho[r,:])
             Receiver(rho[r,:])             # Come back later to change the needed inputs for method
         print('initialized receivers')
 
-
-#print(Receiver.rList[0].position)
-#constants:
-#    PI = 3.1415965358979323846
-#    XJ = complex(0.0,1.0)
-#    radius = PF.radius # use this or pf
-#    radius2 = PF.radius * PF.radius
-#    twopi= 2.0 * PI
-#    HUGE=1000000.0
-
 # Initializing receivers
-def initialize_receivers():
-    """Create Individual receivers"""
+def initialize_receivers():     
+    """
+    Create Individual receivers
+    For debugging, do not use
+    """
     R1 = Receiver((93.4428213,28.8397178,0.151))
     R2 = Receiver((64.5832,28.5998,0.151))
     R3 = Receiver((64.5832,28.5998,7.9423))
@@ -232,6 +243,7 @@ if __name__ == "__main__" :
 if __name__ != "__main__":      # only runs if opened outside this file
     planenum = 1
     planename1 = 'Single Point'
+    planename = 'Single Point'
     arraysize1 = Receiver.arraysize
     sizex = 2
     sizey = 2

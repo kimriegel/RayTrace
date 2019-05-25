@@ -29,7 +29,7 @@ h = 10.0
 absorbplanes = 1
 #allocate(tempalphabuilding(absorbplanes,8))
 #Find way to rephrase
-OUTPUTFILE = 'PythonTest.txt'
+outputfile = 'PythonTest.txt'
 #Turn Radiosity on or off.  This will include diffuse reflections
 radiosity = 0
 #Turn on complex absorption

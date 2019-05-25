@@ -944,3 +944,19 @@ Note: In my new version I tear all the rays into pieces and then make changes ea
 
     Ray frequencies are consistent in air, but change after a ground hit.
       alphaground was offset. Even after changing bounds the values are still innacurate
+
+5/22
+    Alphaground is 0.009999978 in fortran, 0.01 in python. That sounds like a rounding error, but python should have more accuracy.
+      I found it is more accurate. The value is 0.01 in both, but Fortran is unable to express that, hence. 
+      So then what is the real problem?
+
+      The problem was found to be in the way I was updating the frequencies.
+        Ironically the masks I was using were accurate and everything else was what was
+        bugged
+
+        I finally have it working and accurate, once. It is exactly precice once. 
+        Then the phase diverges wildly where the mask does not cover
+
+
+5/24
+    I'll come back to the last thing, just messing with the file frinting now
