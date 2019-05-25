@@ -48,6 +48,9 @@ class Receiver:
 
         temp1 = abs(self.magnitude) * np.exp(XJ*self.direction)
         temp2 = abs(amplitude[:])   * np.exp(XJ*phase[:])
+        #print(temp2.shape)
+        #print(list(temp2[-20:]))
+        #print(list(phase))
         temp3 = temp1 + temp2 
 
         self.magnitude =  abs(temp3)                                 
@@ -154,10 +157,11 @@ def initialize_receivers():
 
 if __name__ == "__main__" :
     #Only exists for checking bugs with specific parameters now
-    initialize_receivers()
-    ears = Receiver.rList
-    for R in ears:
-        print(R)
+    #initialize_receivers()
+    #ears = Receiver.rList
+    #for R in ears:
+    #    print(R)
+    import RayTrace
     #Receiver.initialize("PointReceivers.txt")
     #print(Receiver.rList)
     #print(Receiver.arraysize)

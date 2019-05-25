@@ -53,6 +53,8 @@ def updateFreq(dx,alpha,diffusion):
       zwei = ein % twopi
       masque = zwei> PI
       drei = masque * zwei - twopi
+
+      print(amplitude[-5:])
  
       phase =np.where(masque,drei,ein)
       amplitude *= ((1.0-alpha) * (1.0-diffusion) * np.exp(airabsorb*dx))
@@ -300,6 +302,7 @@ if ray:                 #for debugging
                               outputarray1[:,0] = frecuencias[:,0]
                               outputarray1[:,1:4] = receiverpoint[:]
                               outputarray1[:,5] = phase[:]
+                              #print(list(ears[1].magnitude))
                               if doublehit == 1 :
                                     #R2 = R      #Supposed to be other R, but just a placeholder for now
                                     R.on_Hit(amplitude/2,phase)
@@ -384,7 +387,7 @@ for R in ears:
       R.timeReconstruct(sizefft)
 
 #print(list(ears[1].magnitude))
-print(list(ears[1].direction))
+#print(list(ears[1].direction))
 #print(ears[1].signal)
       #TIMERECONSTRUCT(sizefft, timearray, arraysize, temparray, timetemparray)
 #print(timearray[:5])   #magnitude, initial pressure,direction, timearray, timesignal

@@ -975,3 +975,6 @@ Note: In my new version I tear all the rays into pieces and then make changes ea
       Direction is perfect all through
 
       Timesignal is based on the others, so I can't check it yet
+
+
+      Amplitude is in fact not correct at the end
