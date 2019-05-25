@@ -54,10 +54,13 @@ def updateFreq(dx,alpha,diffusion):
       masque = zwei> PI
       drei = masque * zwei - twopi
 
-      print(amplitude[-5:])
+      #for w in range(sizeffttwo-5,sizeffttwo):
+      #      print('(1.0-',alpha[w],')*(1.0-',diffusion,')*np.exp(',-airabsorb[w],
+      #            '*',dx,')')
+      #print(list(amplitude[-5:]))
  
       phase =np.where(masque,drei,ein)
-      amplitude *= ((1.0-alpha) * (1.0-diffusion) * np.exp(airabsorb*dx))
+      amplitude *= ((1.0-alpha) * (1.0-diffusion) * np.exp(-airabsorb*dx))
 
 # port and import receiver file
 receiverhit=0
@@ -199,6 +202,7 @@ if ray:                 #for debugging
       hitcount=0
       doublehit=0
       amplitude = frecuencias[:,1]/normalization
+      #print('ini: ', list(amplitude[-5:]))
       phase=frecuencias[:,2]
       if (PF.h < (2*PF.radius)): 
             print('h is less than 2r')
@@ -388,7 +392,7 @@ for R in ears:
 
 #print(list(ears[1].magnitude))
 #print(list(ears[1].direction))
-#print(ears[1].signal)
+#print(list(ears[1].signal))
       #TIMERECONSTRUCT(sizefft, timearray, arraysize, temparray, timetemparray)
 #print(timearray[:5])   #magnitude, initial pressure,direction, timearray, timesignal
 
@@ -400,5 +404,5 @@ with open (fileid,'w') as f:
 with open (fileid,'a') as f:
       for w in range(sizefft):
             RPS.Receiver.timeHeader(f,timearray[w],w)
-print(time.time()-t)
+print('time: ',time.time()-t)
 #

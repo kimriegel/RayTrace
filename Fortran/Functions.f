@@ -79,10 +79,12 @@ C Create the complex array to feed into the inverse fft function
      *           temparray(D,W-1,6)))
             endif
  38      CONTINUE
+C            print*, tempfft
          print*, 'created temparray'
 C use fftw to compute the inverse fft.
          call dfftw_plan_dft_c2r_1d(invplan,sizefft,tempfft,
      *        timesignal, FFTW_ESTIMATE)
+            print*, timesignal
          call dfftw_execute(invplan, tempfft, timesignal)
          call dfftw_destroy_plan(invplan)
          print*, 'created time signature'
@@ -130,9 +132,13 @@ C values with new values.
             DO 41 W=1, sizefft/2
                temp1=cmplx(abs(temparray(D,W,5))*exp(XJ*
      *              temparray(D,W,6)))
+C               print*,temp1
 C               if (W.eq.1)print*, 'temp1 fine'
                temp2=cmplx(abs(outputarray(W,5))*exp(XJ*
      *              outputarray(W,6)))
+C               if (W.ge.(sizefft/2)-20) then
+C                  print*, temp2
+C               endif
 C               if (W.eq.1)print*, 'temp2 fine'
                temp3=temp1+temp2
 C               if (W.eq.1)print*, 'temp3 fine'
@@ -142,7 +148,7 @@ C               if (W.eq.1)print*, 'temparray 5 fine'
 C               if (W.eq.1)print*, 'temparray 6 fine'
 C                  print*, temparray(1,W,5)
  41         CONTINUE
-            
+C            print*, outputarray(:,6)
          endif
  40   CONTINUE
       print*, 'got through end'

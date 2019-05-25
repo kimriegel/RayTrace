@@ -50,6 +50,7 @@ class Receiver:
         temp2 = abs(amplitude[:])   * np.exp(XJ*phase[:])
         #print(temp2.shape)
         #print(list(temp2[-20:]))
+        #print(list(temp2[:]))
         #print(list(phase))
         temp3 = temp1 + temp2 
 
@@ -102,8 +103,10 @@ class Receiver:
         else:                                   # If not then calculate the timesignal 
             tempfft = abs(self.magnitude[:]) * np.exp(XJ*self.direction)
             tempfft = np.append(0,tempfft)
+            #print(list(np.real(tempfft)))
             # Compute ifft using numpy
             self.signal=np.fft.irfft(tempfft,sizefft)
+            #print('time signal @receiver 2: \n',list(self.signal[:100]))
 
     #def timeheader(cls,f,time,sizex,sizey,sizez,planename):
     @classmethod

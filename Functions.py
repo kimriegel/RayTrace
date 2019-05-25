@@ -521,6 +521,7 @@ def PLANE(Vecip1, B1, B2, planehit):
             Point2=[B1[0],B1[1],B2[2]]  
             Point3=[B1[0],B2[1],B1[2]] 
             nbox=CROSS(np.subtract(Point2,B1),np.subtract(Point3,B1))
+            #nbox=np.cross(np.subtract(Point2,B1),np.subtract(Point3,B1))
 
         elif (Vecip1[0] == B2[0]) :
             Point1=(B2[0],B1[1],B1[2])
@@ -529,6 +530,7 @@ def PLANE(Vecip1, B1, B2, planehit):
             #print('points: ',Point1,Point2,Point3)
             #nbox=CROSS((Point3-Point1),(Point2-Point1))
             nbox=CROSS(np.subtract(Point3,Point1),np.subtract(Point2,Point1))
+            #nbox=np.cross(np.subtract(Point3,Point1),np.subtract(Point2,Point1))
             #print('nbox works. It is', nbox)
     if planehit == 2:
         #print('this happens 2')

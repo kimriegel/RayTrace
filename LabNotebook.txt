@@ -978,3 +978,9 @@ Note: In my new version I tear all the rays into pieces and then make changes ea
 
 
       Amplitude is in fact not correct at the end
+
+5/25
+    Amplitude has corrected. was supposed to use - airabsorb
+    Amplitude is now accurate
+
+    Equivalences were checked. The code now does not diverge until the inverse real fft taken during the time reconstruct

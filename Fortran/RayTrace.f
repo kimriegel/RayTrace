@@ -511,7 +511,7 @@ C      DO 40 ray=1,RAYMAX,1
             ampinitial(W)=inputarray(W,2)/normalization
             phaseinitial(W)=inputarray(W,3)
  24      CONTINUE
-            print*, 'initial: ',phaseinitial(:5)
+C            print*,ampinitial(sizeffttwo-4:sizeffttwo)
          Vinitial=(/BOOMARRAY(ray,1),BOOMARRAY(ray,2),
      *        BOOMARRAY(ray,3)/)
          if (h.lt.2*radius)then 
@@ -523,8 +523,7 @@ C            print*, 'h is less than 2r'
          veci=Vinitial
 C     Making small steps along the ray path.  For each step we should return, 
 C     location, phase and amplitude
-C         DO 10 I=1,IMAX,1
-         DO 10 I=1,6,1
+         DO 10 I=1,IMAX,1
             dxreceiver=HUGE
 C     Find the closest sphere and store that as the distance
 C            print*, veci
@@ -722,8 +721,12 @@ C                        print*, 'this happens outputarray'
                         lastreceiver(3)=receiverpoint(3)
                      endif                 
  20               CONTINUE
+C                   print*,ampinitial(sizeffttwo-4:sizeffttwo)
+
 C                  print*, 'assigned to outputarray1'
 C                  print*, outputarray1(1,2), outputarray1(1,3), 
+C                  print*,'magnitude', temparray(2,:,5)
+
 C     *                 outputarray1(1,4)
                   Call receiverHITFUNC(sizefft,outputarray1,
      *                 arraysize,temparray)
@@ -739,8 +742,8 @@ C                  print*, 'receiverHITFUNC completed'
                      deallocate(dhoutputarray1)
                   endif
 C                  print*, 'got to the end of receiver hit'
-                  print*, 'receiver: ', phaseinitial(:5)
                endif
+C               print*,'direction', temparray(2,:,5)
 C     If the ray hits the ground then bounce off the ground and continue
                if (abs(dx-dxground).lt.10.0**(-13.0)) then
                   Vecip1=veci+dxground*F
@@ -808,7 +811,8 @@ C     Loop through all the frequencies
                         endif   
                      ampinitial(W)=ampfinal                           
  21               CONTINUE
-                     print*,'ground',phaseinitial(:5)
+C                print*,ampinitial(sizeffttwo-4:sizeffttwo)
+
                endif
 C               print*,phaseinitial
 C               print*, 'dxground: ', dxground
@@ -862,6 +866,11 @@ C                  print*, 'hit building at step ', I
                         ampfinal=ampinitial(W)*(1.0-alpha)*
      *                       (1.0-diffusion)*exp(-m*dx)
                         phaseinitial(W)=mod(phasefinal,twopi)
+C                        if (W.le.5) then
+C                        print*,'amps: ','(1.0-', alpha,
+C     *                   ')*(1.0-', diffusion,')*exp(-', m,'*',
+C     *                    dx
+C                        endif
                         if (phaseinitial(W).GT.PI) then
                            phaseinitial(W)=phaseinitial(W)-twopi
                         endif
@@ -904,7 +913,8 @@ C     Loop through all patches if radiosity is turned on.
                      endif 
                   ampinitial(W)=ampfinal
  22            CONTINUE
-                     print*,'building: ',phaseinitial(:5)
+C             print*,ampinitial(sizeffttwo-4:sizeffttwo)
+
             endif
 C     If there was no interaction with buildings then proceed with one step. 
          else
@@ -921,13 +931,19 @@ C     Loop through all frequencies.
                phasefinal=phaseinitial(W)-(twopih)/lambda
                ampfinal=ampinitial(W)*(1-alphanothing(W))*
      *              exp(-m*h)
-               ampinitial(W)=ampfinal                  
+               ampinitial(W)=ampfinal  
                phaseinitial(W)=mod(phasefinal,twopi)
+C               if (W.ge.(sizeffttwo-5)) then
+C                  print*,'(1.0-',alphanothing(w),')*(1.0-',
+CC     *             diffusion,
+C     *             ')*exp(',-m,'*',h,')'
+C               endif
                if (phaseinitial(W).GT.PI) then
                   phaseinitial(W)=phaseinitial(W)-twopi
                endif
  23         CONTINUE
-               print*, 'non: ', phaseinitial(:5)
+C             print*,ampinitial(sizeffttwo-4:sizeffttwo)
+
          endif
  10   CONTINUE
       print*, 'finished ray', ray
@@ -1124,6 +1140,10 @@ C               print*, 'finished receiver', D, 'of', arraysize
 C     Reconstruct the time signal
       CALL TIMERECONSTRUCT(sizefft, timearray, arraysize, temparray, 
      *     timetemparray)
+
+C      print*,'magnitude: ',temparray(2,:,5)
+C      print*,'direction: ',temparray(2,:,6)
+
 C     Write out time signatures for each receiver. 
       OPEN(UNIT=20,file=OUTPUTFILE,status='new')
       true=Header(20)
