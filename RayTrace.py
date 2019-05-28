@@ -53,11 +53,6 @@ def updateFreq(dx,alpha,diffusion):
       zwei = ein % twopi
       masque = zwei> PI
       drei = masque * zwei - twopi
-
-      #for w in range(sizeffttwo-5,sizeffttwo):
-      #      print('(1.0-',alpha[w],')*(1.0-',diffusion,')*np.exp(',-airabsorb[w],
-      #            '*',dx,')')
-      #print(list(amplitude[-5:]))
  
       phase =np.where(masque,drei,ein)
       amplitude *= ((1.0-alpha) * (1.0-diffusion) * np.exp(-airabsorb*dx))
@@ -195,10 +190,10 @@ else:
 # Begin the tracing
 #     Loop through the intial ray locations
 print('began rays')
-ray = 606                     # @ PF.boomspacing = 1
+#ray = 606                     # @ PF.boomspacing = 1
 #ray = 455174                 # @ PF.boomspacing = 0.06
-if ray:                 #for debugging
-#for ray in range(RAYMAX):
+#if ray:                 #for debugging
+for ray in range(RAYMAX):
       hitcount=0
       doublehit=0
       amplitude = frecuencias[:,1]/normalization
@@ -206,8 +201,8 @@ if ray:                 #for debugging
       phase=frecuencias[:,2]
       if (PF.h < (2*PF.radius)): 
             print('h is less than 2r')
-            #break
-      F = Finitial[:]
+            break
+      F = np.array(Finitial)
       veci = boomarray[ray,:]
       for I in range(PF.IMAX):      # Making small steps along the ray path.  For each step we should return, location, phase and amplitude
             dxreceiver=HUGE
@@ -295,6 +290,7 @@ if ray:                 #for debugging
                   for R in ears:
                         if dx == R.dxreceiver:
                               #print('Ray ',ray +1,' hit receiver ',R.recNumber,' at step ',I)
+                              print('Ray ',ray +1,' hit receiver ',R.recNumber)
                               veci += (dx*F)
                               receiverhit=1
                               checkdirection=F
@@ -334,7 +330,7 @@ if ray:                 #for debugging
                         tmp = np.dot(GROUNDABC,veci)
                         if(tmp != GROUNDD): 
                               veci[2] = 0
-                        #print('hit ground at ',I)
+                        print('hit ground at ',I)
                         dot1 = np.dot(F,nground)
                         n2 = np.dot(nground,nground)
                         F -= (2.0*(dot1/n2 *nground))
@@ -356,7 +352,7 @@ if ray:                 #for debugging
                                                             patcharray[Q,W,7]=np.arctan(temp4.imag,temp4.real)
                   if (dx==dxbuilding):                  #     if the ray hits the building then change the direction and continue
                         veci += (dx*F)
-                        #print('hit building at step ',I)
+                        print('hit building at step ',I)
                         n2 = np.dot(nbox,nbox)
                         nbuilding=nbox/np.sqrt(n2)
                         dot1= np.dot(F,nbuilding)

@@ -984,3 +984,9 @@ Note: In my new version I tear all the rays into pieces and then make changes ea
     Amplitude is now accurate
 
     Equivalences were checked. The code now does not diverge until the inverse real fft taken during the time reconstruct
+
+
+5/28
+    Experimenting with caches
+      It stores updates from no hit, but crashes when it hits a surface.
+      This is not a pun
