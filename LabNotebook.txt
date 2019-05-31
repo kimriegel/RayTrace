@@ -990,3 +990,24 @@ Note: In my new version I tear all the rays into pieces and then make changes ea
     Experimenting with caches
       It stores updates from no hit, but crashes when it hits a surface.
       This is not a pun
+
+      Remember to ask Dr Riegel about making our own LRU, since I don't think python's native one is useful here
+      and all the relevant info seems to be abstracted away.
+
+5/31
+    It's midnight so I'm not sure how to date this. It is 2:02 AM Friday May 31,2019, if I need to be super specific.
+    Made a parser/sorter.
+      I sorted the receivers by position as a test, since they're the most easily accessible geometry for me. 
+
+      Arrays were difficult to sort, and we use lists in the geometry file anyway, so I tested on lists.
+
+      I used lambda functions to read the receiver file because they're just shorter to write. 
+
+      The sort functionality has no output, it sorts the list in memory, as opposed to outputing a copy. So be careful with this.
+
+      I also learned how to output slices of a list that meet specific conditions
+      >>>[(x,y,z) for (x,y,z) in grid if (x<100)]
+
+      I can successfully sort a list and take the relevant values 
+
+      Wrote up some pseudocode, since it sounds like what Will's doing
