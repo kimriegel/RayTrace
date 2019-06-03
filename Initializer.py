@@ -40,9 +40,9 @@ zspace=PF.boomspacing*abs(np.sin(PF.theta))
 if (PF.xmin == PF.xmax):
    raymax=int((PF.ymax-PF.ymin)/yspace)*int((PF.zmax-PF.zmin)/zspace)
 print(raymax , ' is the raymax')
-boomarray = initial_carpet(PF.boomspacing,Finitial,D,x,y,z,raymax)
-
 # old tracing
+
+boomarray = initial_carpet(PF.boomspacing,Finitial,D,x,y,z,raymax)
 print('began rays')
 for ray in range(raymax):
       veci = boomarray[ray,:]
@@ -54,27 +54,39 @@ print('time: ',time.time()-t)
 def carpet(raymax,radius,F,D,x,y,z):
     """This function creates the direction of the rays in the initial boom carpet"""
     for r in raymax:
-        xdir = (D-F[1]*(y[0]+(j+1)*yspace)-F[2]*(z[0]+(i+1)*zspace))/F[0]
-        ydir = y[0]+(j+1)*yspace
-        zdir = z[0]+(i+1)*zspace
+        xdir = (D-F[1]*(y[0]+(j)*yspace)-F[2]*(z[0]+(i)*zspace))/F[0]
+        ydir = y[0]+(j)*yspace
+        zdir = z[0]+(i)*zspace
         #print(r)
+        #yield np.array((xdir,ydir,zdir))
         yield np.array((xdir,ydir,zdir))
 
 t = time.time()
-i = 0
-j = 0 
+i = 1
+j = 1 
 direction = carpet(range(raymax),PF.boomspacing,Finitial,D,x,y,z)
 
 if x[0] == x[1]:
     imax = int((z[1]-z[0])//zspace)
     jmax = int((y[1]-y[0])//yspace)
 
-#print(jmax)
-for ray in range(raymax):
-    veci = next(direction)
+##print(jmax)
+##for ray in range(raymax):
+#for ray in range(10):
+#    #veci = next(direction)
+#    #ray = direction
+#    print(direction)
+#    j += 1
+#    if j > jmax:
+#        j = 1
+#        i += 1
+
+for veci in direction:
+    #print(veci)
     j += 1
-    if j == jmax:
-        j = 0
+    if j > jmax:
+        j = 1
         i += 1
+
 
 print('time: ',time.time()-t)
