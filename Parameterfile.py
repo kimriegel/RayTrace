@@ -17,6 +17,7 @@ theta = 1.6863372
 phi = 3.44458181
 #boomspacing = 0.06   #.6
 #boomspacing= 0.035
+#boomspacing= 0.01
 boomspacing= 1
 xmin = -1
 ymin = 30.0
@@ -58,6 +59,6 @@ percentdiffuse = 0.0
 #     [0.01,0.01,0.01,0.02,0.02,0.02,0.03,0.03],[0.01,0.01,0.01,0.02,0.02,0.02,0.03,0.03]])
 # print(tempalphaground)
 
-if __name__ == "__main__":      #being lazy. You can run from here now
-    import RayTrace
-    #pass
+#if __name__ == "__main__":      #being lazy. You can run from here now
+#    import RayTrace
+#    #pass

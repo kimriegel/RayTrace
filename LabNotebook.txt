@@ -1011,3 +1011,18 @@ Note: In my new version I tear all the rays into pieces and then make changes ea
       I can successfully sort a list and take the relevant values 
 
       Wrote up some pseudocode, since it sounds like what Will's doing
+
+6/2/19
+    Can we replace boomarray with a generator?
+
+    Generators let us use less memory and time. One bottleneck I can think of now is the boomarray size. 
+    I'll work on making that more readable and then convert it to a generator
+
+    I tested the timing on generators and it's anywhere from seven, to hundreds of times faster.
+
+    The generator is running slower in this prototype
+
+    I renamed the raymax range to whoosh and the fuction runs competatively now
+      (for some reason)
+      It's still not as good as it could, the average for generators has been observed
+       to be 10x faster

@@ -127,7 +127,6 @@ for R in ears:          #hotfix
 
 #       Initialize normalization factor 
 normalization=(PI*radius2)/(PF.boomspacing**2) 
-#temparray=np.empty((    RPS.Receiver.arraysize,sizeffttwo,6))
 
 outputarray1=np.zeros((sizeffttwo,6))
 dhoutputarray1=np.zeros((sizeffttwo,6))  
@@ -190,10 +189,10 @@ else:
 # Begin the tracing
 #     Loop through the intial ray locations
 print('began rays')
-#ray = 606                     # @ PF.boomspacing = 1
+ray = 606                     # @ PF.boomspacing = 1
 #ray = 455174                 # @ PF.boomspacing = 0.06
-#if ray:                 #for debugging
-for ray in range(RAYMAX):
+if ray:                 #for debugging
+#for ray in range(RAYMAX):
       hitcount=0
       doublehit=0
       amplitude = frecuencias[:,1]/normalization
@@ -201,7 +200,7 @@ for ray in range(RAYMAX):
       phase=frecuencias[:,2]
       if (PF.h < (2*PF.radius)): 
             print('h is less than 2r')
-            break
+      #      break
       F = np.array(Finitial)
       veci = boomarray[ray,:]
       for I in range(PF.IMAX):      # Making small steps along the ray path.  For each step we should return, location, phase and amplitude
