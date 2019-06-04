@@ -2,7 +2,9 @@
 # Initialize variables and functions
 import numpy as np
 import Parameterfile as PF
+
 import time
+import memory_profiler as mem 
 t = time.time()
 
 def initial_carpet(radius,F,tmp,x,y,z,arraysize):
@@ -46,7 +48,7 @@ boomarray = initial_carpet(PF.boomspacing,Finitial,D,x,y,z,raymax)
 print('began rays')
 for ray in range(raymax):
       veci = boomarray[ray,:]
-print('time: ',time.time()-t)
+print('Memory (grid): ' + str(mem.memory_usage()) + 'MB' )
 
 
 # New technique
@@ -64,7 +66,7 @@ def carpet(raymax,radius,F,D,x,y,z):
 t = time.time()
 i = 1
 j = 1 
-direction = carpet(range(raymax),PF.boomspacing,Finitial,D,x,y,z)
+rayposition = carpet(range(raymax),PF.boomspacing,Finitial,D,x,y,z)
 
 if x[0] == x[1]:
     imax = int((z[1]-z[0])//zspace)
@@ -81,12 +83,15 @@ if x[0] == x[1]:
 #        j = 1
 #        i += 1
 
-for veci in direction:
+#for veci in direction:
+for veci in rayposition:
+#for rayp in direction:
     #print(veci)
     j += 1
     if j > jmax:
         j = 1
         i += 1
 
-
+#print('New Technique: ', mem.memory_usage()-start_mem, 'MB' )
+print('Memory (generator) : ' + str(mem.memory_usage()) + 'MB')
 print('time: ',time.time()-t)
