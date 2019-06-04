@@ -42,17 +42,12 @@ zspace=PF.boomspacing*abs(np.sin(PF.theta))
 if (PF.xmin == PF.xmax):
    raymax=int((PF.ymax-PF.ymin)/yspace)*int((PF.zmax-PF.zmin)/zspace)
 print(raymax , ' is the raymax')
-# old tracing
 
-boomarray = initial_carpet(PF.boomspacing,Finitial,D,x,y,z,raymax)
-print('began rays')
-for ray in range(raymax):
-      veci = boomarray[ray,:]
-print('Memory (grid): ' + str(mem.memory_usage()) + 'MB' )
-
+print('Memory (befores) : ' + str(mem.memory_usage()) + 'MB')
 
 # New technique
     # See generators file 
+t = time.time()
 def carpet(raymax,radius,F,D,x,y,z):
     """This function creates the direction of the rays in the initial boom carpet"""
     for r in raymax:
@@ -63,7 +58,6 @@ def carpet(raymax,radius,F,D,x,y,z):
         #yield np.array((xdir,ydir,zdir))
         yield np.array((xdir,ydir,zdir))
 
-t = time.time()
 i = 1
 j = 1 
 rayposition = carpet(range(raymax),PF.boomspacing,Finitial,D,x,y,z)
@@ -72,26 +66,21 @@ if x[0] == x[1]:
     imax = int((z[1]-z[0])//zspace)
     jmax = int((y[1]-y[0])//yspace)
 
-##print(jmax)
-##for ray in range(raymax):
-#for ray in range(10):
-#    #veci = next(direction)
-#    #ray = direction
-#    print(direction)
-#    j += 1
-#    if j > jmax:
-#        j = 1
-#        i += 1
-
-#for veci in direction:
 for veci in rayposition:
-#for rayp in direction:
-    #print(veci)
+    # Positioning for initial rays along initial grid
     j += 1
     if j > jmax:
         j = 1
         i += 1
 
-#print('New Technique: ', mem.memory_usage()-start_mem, 'MB' )
 print('Memory (generator) : ' + str(mem.memory_usage()) + 'MB')
+print('time: ',time.time()-t)
+
+# Old Tracing
+t = time.time()
+boomarray = initial_carpet(PF.boomspacing,Finitial,D,x,y,z,raymax)
+print('began rays')
+for ray in range(raymax):
+      veci = boomarray[ray,:]
+print('Memory (grid): ' + str(mem.memory_usage()) + 'MB' )
 print('time: ',time.time()-t)
