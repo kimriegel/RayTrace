@@ -25,7 +25,7 @@ xmax=-1
 ymax=100.0
 zmax=25.0
 IMAX=75
-h=10.0
+h=.1 # Test run, changing h from 10.0 to .1 
 absorbplanes=1
 #allocate(tempalphabuilding(absorbplanes,8))
 #Find way to rephrase
