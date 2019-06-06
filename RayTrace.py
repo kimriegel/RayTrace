@@ -63,7 +63,7 @@ def updateFreq(dx,alpha,diffusion):
 def vex(y,z):
     """The x coordinate of the ray 
     Used for veci"""
-    return (D-Finitial[1]*y-Finitial[2]*z)/Finitial[0]
+    return np.array((D-Finitial[1]*y-Finitial[2]*z)/Finitial[0])
 
 # port and import receiver file
 receiverhit=0
@@ -87,7 +87,7 @@ receiverpoint2 = np.zeros(3)
 with open(PF.INPUTFILE) as IPFile:
       inputsignal=np.loadtxt(IPFile)
 K=len(inputsignal)
-masque = inputsignal>0
+#masque = inputsignal>0
 HUGE=1000000.0
 
 # Allocate the correct size to the signal and fft arrays
@@ -108,39 +108,10 @@ ninitial   =np.sin(PF.phi)*np.sin(PF.theta)
 zetainitial=np.cos(PF.theta)
 length =    np.sqrt(xiinitial*xiinitial+ninitial*ninitial+zetainitial*zetainitial)
 Finitial=np.array([xiinitial,ninitial,zetainitial])
-#tmp=(Finitial[0]*Vinitial[0]+Finitial[1]*Vinitial[1]+Finitial[2]*Vinitial[2])
 D = np.dot(Finitial,Vinitial)   #equivalent to tmp
 
-#PLANEABC=np.array([Finitial[0],Finitial[1],Finitial[2],tmp])
-
 #       Create initial boom array
-#yspace=PF.boomspacing*abs(np.cos(PF.phi))
-#zspace=PF.boomspacing*abs(np.sin(PF.theta))
-#if (PF.xmin == PF.xmax):
-#   RAYMAX=int((PF.ymax-PF.ymin)/yspace)*int((PF.zmax-PF.zmin)/zspace)
-#elif(PF.ymin == PF.ymax):
-#   RAYMAX=int((PF.xmax-PF.xmin)/xspace)*int((PF.zmax-PF.zmin)/zspace)
-#elif(PF.zmin == PF.zmax):
-#   RAYMAX=int((PF.ymax-PF.ymin)/yspace)*int((PF.xmax-PF.xmin)/xspace)
-#print(RAYMAX , ' is the RAYMAX')
-#boomarray,sizex,sizey,sizez=fun.InitialGrid(PF.boomspacing,PLANEABC[0],PLANEABC[1],PLANEABC[2],PLANEABC[3],PF.theta,PF.phi,PF.xmin,PF.ymin,PF.zmin,PF.xmax,PF.ymax,PF.zmax,RAYMAX)
-
-#x = (PF.xmin,PF.xmax) 
-#y = (PF.ymin,PF.ymax) 
-#z = (PF.zmin,PF.zmax) 
-#
-#yspace=PF.boomspacing*abs(np.cos(PF.phi))
-#zspace=PF.boomspacing*abs(np.sin(PF.theta))
-#if (PF.xmin == PF.xmax):
-#   raymax=int((PF.ymax-PF.ymin)/yspace)*int((PF.zmax-PF.zmin)/zspace)
-#print(raymax , ' is the raymax')
-#
-#j = np.arange(1,1+int((y[1]-y[0])//yspace))
-#k = np.arange(1,1+int((z[1]-z[0])//zspace))
-#
-#rayy = y[0] + j*yspace
-#rayz = z[0] + k*zspace
-
+            #     Roll this all into a function later
 yspace=PF.boomspacing*abs(np.cos(PF.phi))
 zspace=PF.boomspacing*abs(np.sin(PF.theta))
 if (PF.xmin == PF.xmax):
@@ -149,16 +120,10 @@ print(raymax , ' is the raymax')
 
 j = np.arange(1,1+int((PF.ymax-PF.ymin)//yspace))
 k = np.arange(1,1+int((PF.zmax-PF.zmin)//zspace))
-
 rayy = PF.ymin + j*yspace
 rayz = PF.zmin + k*zspace
 
 boomcarpet = ((vex(y,z),y,z) for z in rayz for y in rayy )
-
-#for ray in boomcarpet:
-#    # Positioning for rays along initial grid
-#    veci = ray
-    #pass
 
 #     Create a receiver array, include a receiver file. 
 alphanothing = np.zeros(sizeffttwo)
@@ -223,6 +188,8 @@ for W in range(PF.absorbplanes):        #These also look minimal
         elif frecuencias[D,0] >= 5680.0 or frecuencias[D,0] < frecuencias[sizeffttwo,0] :
             alphabuilding[W,D]    =    PF.tempalphabuilding[W,7]
 
+D = np.dot(Finitial,Vinitial)   # Hotfix  We used this name right above
+
 #        Mesh the patches for the environment.  Include patching file. 
 diffusionground = 0.0
 if PF.radiosity:  # If it exists as a non-zero number
@@ -231,26 +198,26 @@ if PF.radiosity:  # If it exists as a non-zero number
 else:
       diffusion = 0.0
 
-# Begin tracing
-#     Loop through the intial ray locations
+raycounter = 1
 
+####### These are for debugging, Uncomment this block and comment out the for loop below
 #ray = 606                     # @ PF.boomspacing = 1
-#ray = 455174                 # @ PF.boomspacing = 0.06
-#if ray:                 #for debugging
-#for ray in range(RAYMAX):
-      #veci = boomarray[ray,:]                                     # Position
+#for i in range(606):
+#      ray =      next(boomcarpet)
+#      raycounter += 1
+#
+#if ray:
+# Begin tracing
 print('began rays')
-raycounter = 0
-for ray in boomcarpet:
+for ray in boomcarpet:              #Written like this for readability
       veci = ray      # initial ray position
       hitcount=0
       doublehit=0
       amplitude = frecuencias[:,1]/normalization
-      #print('ini: ', list(amplitude[-5:]))
       phase=frecuencias[:,2]
       if (PF.h < (2*PF.radius)): 
             print('h is less than 2r')
-      #      break
+            break
       F = np.array(Finitial)                                      # Direction
       for I in range(PF.IMAX):      # Making small steps along the ray path.  For each step we should return, location, phase and amplitude
             dxreceiver=HUGE
@@ -338,7 +305,7 @@ for ray in boomcarpet:
                   for R in ears:
                         if dx == R.dxreceiver:
                               #print('Ray ',ray +1,' hit receiver ',R.recNumber,' at step ',I)
-                              print('Ray ',ray +1,' hit receiver ',R.recNumber)
+                              print('Ray ',raycounter,' hit receiver ',R.recNumber)
                               veci += (dx*F)
                               receiverhit=1
                               checkdirection=F
@@ -429,7 +396,6 @@ for ray in boomcarpet:
       print('finished ray', raycounter)
 
 # Radiosity removed for readability
-
 
 #Reconstruct the time signal and print to output file
 for R in ears:
