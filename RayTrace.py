@@ -10,14 +10,17 @@
 # Dr. Riegel, William Costa, and George Seaton porting program from Fortran to python
 
 # Initialize variables and functions
+import numpy as np
+
 import Parameterfile as PF
 import BuildingGeometry as BG
-import numpy as np
 import Functions as fun
 import ReceiverPointSource as RPS
 #import GeometryParser as BG
 
 import time
+import memory_profiler as mem 
+
 t = time.time()
       
 # What it does not do
@@ -57,13 +60,10 @@ def updateFreq(dx,alpha,diffusion):
       phase =np.where(masque,drei,ein)
       amplitude *= ((1.0-alpha) * (1.0-diffusion) * np.exp(-airabsorb*dx))
 
-def carpet(raymax,radius,F,D,x,y,z):
-    """This function creates the direction of the rays in the initial boom carpet"""
-    for r in raymax:
-        xdir = (D-F[1]*(y[0]+(j)*yspace)-F[2]*(z[0]+(i)*zspace))/F[0]
-        ydir = y[0]+(j)*yspace
-        zdir = z[0]+(i)*zspace
-        yield np.array((xdir,ydir,zdir))
+def vex(y,z):
+    """The x coordinate of the ray 
+    Used for veci"""
+    return (D-Finitial[1]*y-Finitial[2]*z)/Finitial[0]
 
 # port and import receiver file
 receiverhit=0
@@ -108,20 +108,57 @@ ninitial   =np.sin(PF.phi)*np.sin(PF.theta)
 zetainitial=np.cos(PF.theta)
 length =    np.sqrt(xiinitial*xiinitial+ninitial*ninitial+zetainitial*zetainitial)
 Finitial=np.array([xiinitial,ninitial,zetainitial])
-tmp=(Finitial[0]*Vinitial[0]+Finitial[1]*Vinitial[1]+Finitial[2]*Vinitial[2])
-PLANEABC=np.array([Finitial[0],Finitial[1],Finitial[2],tmp])
+#tmp=(Finitial[0]*Vinitial[0]+Finitial[1]*Vinitial[1]+Finitial[2]*Vinitial[2])
+D = np.dot(Finitial,Vinitial)   #equivalent to tmp
+
+#PLANEABC=np.array([Finitial[0],Finitial[1],Finitial[2],tmp])
 
 #       Create initial boom array
+#yspace=PF.boomspacing*abs(np.cos(PF.phi))
+#zspace=PF.boomspacing*abs(np.sin(PF.theta))
+#if (PF.xmin == PF.xmax):
+#   RAYMAX=int((PF.ymax-PF.ymin)/yspace)*int((PF.zmax-PF.zmin)/zspace)
+#elif(PF.ymin == PF.ymax):
+#   RAYMAX=int((PF.xmax-PF.xmin)/xspace)*int((PF.zmax-PF.zmin)/zspace)
+#elif(PF.zmin == PF.zmax):
+#   RAYMAX=int((PF.ymax-PF.ymin)/yspace)*int((PF.xmax-PF.xmin)/xspace)
+#print(RAYMAX , ' is the RAYMAX')
+#boomarray,sizex,sizey,sizez=fun.InitialGrid(PF.boomspacing,PLANEABC[0],PLANEABC[1],PLANEABC[2],PLANEABC[3],PF.theta,PF.phi,PF.xmin,PF.ymin,PF.zmin,PF.xmax,PF.ymax,PF.zmax,RAYMAX)
+
+#x = (PF.xmin,PF.xmax) 
+#y = (PF.ymin,PF.ymax) 
+#z = (PF.zmin,PF.zmax) 
+#
+#yspace=PF.boomspacing*abs(np.cos(PF.phi))
+#zspace=PF.boomspacing*abs(np.sin(PF.theta))
+#if (PF.xmin == PF.xmax):
+#   raymax=int((PF.ymax-PF.ymin)/yspace)*int((PF.zmax-PF.zmin)/zspace)
+#print(raymax , ' is the raymax')
+#
+#j = np.arange(1,1+int((y[1]-y[0])//yspace))
+#k = np.arange(1,1+int((z[1]-z[0])//zspace))
+#
+#rayy = y[0] + j*yspace
+#rayz = z[0] + k*zspace
+
 yspace=PF.boomspacing*abs(np.cos(PF.phi))
 zspace=PF.boomspacing*abs(np.sin(PF.theta))
 if (PF.xmin == PF.xmax):
-   RAYMAX=int((PF.ymax-PF.ymin)/yspace)*int((PF.zmax-PF.zmin)/zspace)
-elif(PF.ymin == PF.ymax):
-   RAYMAX=int((PF.xmax-PF.xmin)/xspace)*int((PF.zmax-PF.zmin)/zspace)
-elif(PF.zmin == PF.zmax):
-   RAYMAX=int((PF.ymax-PF.ymin)/yspace)*int((PF.xmax-PF.xmin)/xspace)
-print(RAYMAX , ' is the RAYMAX')
-boomarray,sizex,sizey,sizez=fun.InitialGrid(PF.boomspacing,PLANEABC[0],PLANEABC[1],PLANEABC[2],PLANEABC[3],PF.theta,PF.phi,PF.xmin,PF.ymin,PF.zmin,PF.xmax,PF.ymax,PF.zmax,RAYMAX)
+   raymax=int((PF.ymax-PF.ymin)/yspace)*int((PF.zmax-PF.zmin)/zspace)
+print(raymax , ' is the raymax')
+
+j = np.arange(1,1+int((PF.ymax-PF.ymin)//yspace))
+k = np.arange(1,1+int((PF.zmax-PF.zmin)//zspace))
+
+rayy = PF.ymin + j*yspace
+rayz = PF.zmin + k*zspace
+
+boomcarpet = ((vex(y,z),y,z) for z in rayz for y in rayy )
+
+#for ray in boomcarpet:
+#    # Positioning for rays along initial grid
+#    veci = ray
+    #pass
 
 #     Create a receiver array, include a receiver file. 
 alphanothing = np.zeros(sizeffttwo)
@@ -194,13 +231,18 @@ if PF.radiosity:  # If it exists as a non-zero number
 else:
       diffusion = 0.0
 
-# Begin the tracing
+# Begin tracing
 #     Loop through the intial ray locations
-print('began rays')
-ray = 606                     # @ PF.boomspacing = 1
+
+#ray = 606                     # @ PF.boomspacing = 1
 #ray = 455174                 # @ PF.boomspacing = 0.06
 #if ray:                 #for debugging
-for ray in range(RAYMAX):
+#for ray in range(RAYMAX):
+      #veci = boomarray[ray,:]                                     # Position
+print('began rays')
+raycounter = 0
+for ray in boomcarpet:
+      veci = ray      # initial ray position
       hitcount=0
       doublehit=0
       amplitude = frecuencias[:,1]/normalization
@@ -210,7 +252,6 @@ for ray in range(RAYMAX):
             print('h is less than 2r')
       #      break
       F = np.array(Finitial)                                      # Direction
-      veci = boomarray[ray,:]                                     # Position
       for I in range(PF.IMAX):      # Making small steps along the ray path.  For each step we should return, location, phase and amplitude
             dxreceiver=HUGE
             # Find the closest sphere and store that as the distance
@@ -384,7 +425,8 @@ for ray in range(RAYMAX):
             else:     #     If there was no interaction with buildings then proceed with one step. 
                   veci += (PF.h*F)
                   updateFreq(PF.h,alphanothing,0)
-      print('finished ray', ray + 1)
+      raycounter +=1
+      print('finished ray', raycounter)
 
 # Radiosity removed for readability
 
