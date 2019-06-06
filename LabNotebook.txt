@@ -1107,3 +1107,10 @@ Note: In my new version I tear all the rays into pieces and then make changes ea
         Got a veci generator working with the time and memory benefits
           The timing runs the way the way initially guessed
           Now to work on the readability 
+
+        "For ray in boom carpet" is worded pretty well
+        At first it broke the program because we use D to iterate thru the alphas, but I just recalculated D 
+
+          I don't see the 100x increase in comp time, that may be because there's other processes running and it's negligible
+            compared to them, but the memory is down a lot. 
+            Uses less than 32 MB when tested using mem_profile module
