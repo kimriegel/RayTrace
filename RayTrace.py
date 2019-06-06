@@ -57,6 +57,14 @@ def updateFreq(dx,alpha,diffusion):
       phase =np.where(masque,drei,ein)
       amplitude *= ((1.0-alpha) * (1.0-diffusion) * np.exp(-airabsorb*dx))
 
+def carpet(raymax,radius,F,D,x,y,z):
+    """This function creates the direction of the rays in the initial boom carpet"""
+    for r in raymax:
+        xdir = (D-F[1]*(y[0]+(j)*yspace)-F[2]*(z[0]+(i)*zspace))/F[0]
+        ydir = y[0]+(j)*yspace
+        zdir = z[0]+(i)*zspace
+        yield np.array((xdir,ydir,zdir))
+
 # port and import receiver file
 receiverhit=0
 groundhit=0
@@ -73,7 +81,7 @@ lastreceiver = np.zeros(3)
 lastreceiver2 = np.zeros(3)
 receiverpoint  = np.zeros(3)
 receiverpoint2 = np.zeros(3)
-OC = np.empty(3)
+#OC = np.empty(3)
 
 # Read in input file
 with open(PF.INPUTFILE) as IPFile:
@@ -191,8 +199,8 @@ else:
 print('began rays')
 ray = 606                     # @ PF.boomspacing = 1
 #ray = 455174                 # @ PF.boomspacing = 0.06
-if ray:                 #for debugging
-#for ray in range(RAYMAX):
+#if ray:                 #for debugging
+for ray in range(RAYMAX):
       hitcount=0
       doublehit=0
       amplitude = frecuencias[:,1]/normalization
@@ -201,14 +209,14 @@ if ray:                 #for debugging
       if (PF.h < (2*PF.radius)): 
             print('h is less than 2r')
       #      break
-      F = np.array(Finitial)
-      veci = boomarray[ray,:]
+      F = np.array(Finitial)                                      # Direction
+      veci = boomarray[ray,:]                                     # Position
       for I in range(PF.IMAX):      # Making small steps along the ray path.  For each step we should return, location, phase and amplitude
             dxreceiver=HUGE
             # Find the closest sphere and store that as the distance
             for R in ears:
                   # The way that tempreceiver works now, it's only used here and only should be used here. It's not defined inside the receiver because it's ray dependant.
-                  tempreceiver = R.SphereCheck(radius2,F,veci)    #distrance to receiver
+                  tempreceiver = R.SphereCheck(radius2,F,veci)    # Distrance to receiver
                   if (receiverhit >= 1):  #if you hit a receiver last time, don't hit it again
                         if np.all(R.position ==lastreceiver):
                               tempreceiver=HUGE

@@ -68,6 +68,7 @@ if x[0] == x[1]:
 
 for veci in rayposition:
     # Positioning for initial rays along initial grid
+    ray = veci
     j += 1
     if j > jmax:
         j = 1
@@ -76,11 +77,11 @@ for veci in rayposition:
 print('Memory (generator) : ' + str(mem.memory_usage()) + 'MB')
 print('time: ',time.time()-t)
 
-# Old Tracing
-t = time.time()
-boomarray = initial_carpet(PF.boomspacing,Finitial,D,x,y,z,raymax)
-print('began rays')
-for ray in range(raymax):
-      veci = boomarray[ray,:]
-print('Memory (grid): ' + str(mem.memory_usage()) + 'MB' )
-print('time: ',time.time()-t)
+## Old Tracing
+#t = time.time()
+#boomarray = initial_carpet(PF.boomspacing,Finitial,D,x,y,z,raymax)
+#print('began rays')
+#for ray in range(raymax):
+#      veci = boomarray[ray,:]
+#print('Memory (grid): ' + str(mem.memory_usage()) + 'MB' )
+#print('time: ',time.time()-t)

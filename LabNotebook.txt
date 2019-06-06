@@ -1026,3 +1026,65 @@ Note: In my new version I tear all the rays into pieces and then make changes ea
       (for some reason)
       It's still not as good as it could, the average for generators has been observed
        to be 10x faster
+
+    for ray in range(raymax):
+        veci = next(direction)
+    for ray in range(raymax):
+        ray = direction
+    
+    The bug was found. Using a third party variable makes the code more readable, but slows
+    it down on the order of hundreds of times. The initializer can now 
+    begin 1845747780 rays in just 389.3 seconds, the old method would run into memory problems
+    The 1825 ray size was too fast to measure.
+
+    or veci in direction:
+    #print(veci)
+
+    Is the correct version. The last thing was gibberish
+      
+    Things to look over on Tuesday:
+      My parser
+      Caching ray data
+      Ray generator
+
+6/2/19
+      Met and introduced new interns to code.
+
+      Plan of action (Short Term)
+        
+        Branch 1
+          i) Generators
+            Use generators to shorten the time needed to run calculations and reduce memory needed.
+            Currently uses less memory but takes more time to do calculations, this is a bug that can be fixed.
+              Also of note: when prototyping this I found that generators are able to have more points used than our current methods
+
+          ii) Cache 
+            Cache ray data so that when the dx,alpha, and diffusion are going to be used in frequency calculations
+              they can instead be accessed to avoid needing to calculate again.
+            This will take a significant amount of memory, to avoid bloat, this step must come after memory is saved using generators
+
+          iii) Parallelization
+            The final point in this chain. Combined both of these methods will allow for ease of parallelization, our goal from the 
+              beginning
+
+        Branch 2
+          Validation
+            Validate the code as it exists now.
+            We have a year's worth of work. We will take what we have working now and synthesize them into one working program before 
+              branching off more.
+            I will compare our current results to Fortran before creating new features
+
+
+      Plan of action (Long Term)
+        Concepts: 
+          Ray Bending / Temperature
+
+          Inputs
+
+          Third thing
+
+          Radiosity
+
+          Complex Geometry Parser (Will)
+
+          Turbulence
