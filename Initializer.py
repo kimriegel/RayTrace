@@ -85,8 +85,9 @@ print('Memory (befores) : ' + str(mem.memory_usage()) + 'MB')
 #      veci = boomarray[ray,:]
 #print('Memory (grid): ' + str(mem.memory_usage()) + 'MB' )
 #print('time: ',time.time()-t)
-#
-#t = time.time()
+##
+
+t = time.time()
 # Experiment
 def vein(y,z):
     "The x coordinate of the ray"
@@ -105,22 +106,24 @@ rayz = z[0] + k*zspace
 
 #veci2 = [(y,z) for y in rayy for z in rayz ]
 #veci2 = [(y,z) for z in rayz for y in rayy ]
-print(veci2[:5])
+#print(veci2[:5])
 #vecix = ((vein(y,z),y,z) for y in rayy for z in rayz )
-#vecix = ((vein(y,z),y,z) for y in rayy for z in rayz )
+vecix = ((vein(y,z),y,z) for z in rayz for y in rayy )
+
 #
 ##for i in range(5):
 ##    print(rayz[i])
 #
-#_ = 0
 ##print(vecix)
+#_ = 0
 #for n in vecix:
 #    if _ <5:
 #        print(n)
 #    _ +=1
-#
-##for ray in vecix:
-##    pass
-##print('New: ',time.time()-t)
+
+for ray in vecix:
+    pass
+print('New: ',time.time()-t)
+print('Memory (new): ' + str(mem.memory_usage()) + 'MB' )
 
 #
