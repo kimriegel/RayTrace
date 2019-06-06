@@ -44,39 +44,39 @@ if (PF.xmin == PF.xmax):
 print(raymax , ' is the raymax')
 
 print('Memory (befores) : ' + str(mem.memory_usage()) + 'MB')
-
-# New technique
-    # See generators file 
-t = time.time()
-def carpet(raymax,radius,F,D,x,y,z):
-    """This function creates the direction of the rays in the initial boom carpet"""
-    for r in raymax:
-        xdir = (D-F[1]*(y[0]+(j)*yspace)-F[2]*(z[0]+(i)*zspace))/F[0]
-        ydir = y[0]+(j)*yspace
-        zdir = z[0]+(i)*zspace
-        #print(r)
-        #yield np.array((xdir,ydir,zdir))
-        yield np.array((xdir,ydir,zdir))
-
-i = 1
-j = 1 
-rayposition = carpet(range(raymax),PF.boomspacing,Finitial,D,x,y,z)
-
-if x[0] == x[1]:
-    imax = int((z[1]-z[0])//zspace)
-    jmax = int((y[1]-y[0])//yspace)
-
-for veci in rayposition:
-    # Positioning for initial rays along initial grid
-    ray = veci
-    j += 1
-    if j > jmax:
-        j = 1
-        i += 1
-
-print('Memory (generator) : ' + str(mem.memory_usage()) + 'MB')
-print('time: ',time.time()-t)
-
+#
+## New technique
+#    # See generators file 
+#t = time.time()
+#def carpet(raymax,radius,F,D,x,y,z):
+#    """This function creates the direction of the rays in the initial boom carpet"""
+#    for r in raymax:
+#        xdir = (D-F[1]*(y[0]+(j)*yspace)-F[2]*(z[0]+(i)*zspace))/F[0]
+#        ydir = y[0]+(j)*yspace
+#        zdir = z[0]+(i)*zspace
+#        #print(r)
+#        #yield np.array((xdir,ydir,zdir))
+#        yield np.array((xdir,ydir,zdir))
+#
+#i = 1
+#j = 1 
+#rayposition = carpet(range(raymax),PF.boomspacing,Finitial,D,x,y,z)
+#
+#if x[0] == x[1]:
+#    imax = int((z[1]-z[0])//zspace)
+#    jmax = int((y[1]-y[0])//yspace)
+#
+#for veci in rayposition:
+#    # Positioning for initial rays along initial grid
+#    ray = veci
+#    j += 1
+#    if j > jmax:
+#        j = 1
+#        i += 1
+#
+#print('Memory (generator) : ' + str(mem.memory_usage()) + 'MB')
+#print('time: ',time.time()-t)
+#
 ## Old Tracing
 #t = time.time()
 #boomarray = initial_carpet(PF.boomspacing,Finitial,D,x,y,z,raymax)
@@ -85,3 +85,42 @@ print('time: ',time.time()-t)
 #      veci = boomarray[ray,:]
 #print('Memory (grid): ' + str(mem.memory_usage()) + 'MB' )
 #print('time: ',time.time()-t)
+#
+#t = time.time()
+# Experiment
+def vein(y,z):
+    "The x coordinate of the ray"
+    return (D-F[1]*y-F[2]*z)/F[0]
+
+F = Finitial
+
+j = np.arange(1,1+int((y[1]-y[0])//yspace))
+k = np.arange(1,1+int((z[1]-z[0])//zspace))
+
+#rayy = y[0] + (np.arange(1,jmax)*yspace)
+#rayz = z[0] + (np.arange(1,kmax)*yspace)
+rayy = y[0] + j*yspace
+rayz = z[0] + k*zspace
+#rayx=(D-F[1]*   (y[0]+(j*yspace)-  F[2]* (z[0]+(k*zspace))/F[0]))
+
+#veci2 = [(y,z) for y in rayy for z in rayz ]
+#veci2 = [(y,z) for z in rayz for y in rayy ]
+print(veci2[:5])
+#vecix = ((vein(y,z),y,z) for y in rayy for z in rayz )
+#vecix = ((vein(y,z),y,z) for y in rayy for z in rayz )
+#
+##for i in range(5):
+##    print(rayz[i])
+#
+#_ = 0
+##print(vecix)
+#for n in vecix:
+#    if _ <5:
+#        print(n)
+#    _ +=1
+#
+##for ray in vecix:
+##    pass
+##print('New: ',time.time()-t)
+
+#

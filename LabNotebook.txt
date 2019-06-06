@@ -1088,3 +1088,22 @@ Note: In my new version I tear all the rays into pieces and then make changes ea
           Complex Geometry Parser (Will)
 
           Turbulence
+
+6/6/19
+        Looking at parallelization
+
+        Parallelization can be done using either multiprocessing or threading.
+
+        One method of multiprocessing is the Pool module. 
+          Found that Pool does not work well for fast near instant processes. It has a startup time of around .13 seconds
+          Did not find any performance gains until over 10000 processes run at minimum
+
+          Program will freeze if code body is not nested in an main conditional
+
+          Tested Pools with generator, it doesn't seem to be able to interact with
+            generators, and also seems to run slower than what I've already been doing.
+
+        
+        Got a veci generator working with the time and memory benefits
+          The timing runs the way the way initially guessed
+          Now to work on the readability 
