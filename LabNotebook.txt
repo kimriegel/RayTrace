@@ -1047,8 +1047,12 @@ Note: In my new version I tear all the rays into pieces and then make changes ea
       Caching ray data
       Ray generator
 
-6/2/19
+6/4/19
       Met and introduced new interns to code.
+
+      Examined memory usage in current code
+      The new method keeps the memory usage down. There is almost no change in memory no matter how many rays are used. 
+      Using boomarray does increase memory with rays and at spacing of 0.035 the program is using 60mb
 
       Plan of action (Short Term)
         
@@ -1114,3 +1118,10 @@ Note: In my new version I tear all the rays into pieces and then make changes ea
           I don't see the 100x increase in comp time, that may be because there's other processes running and it's negligible
             compared to them, but the memory is down a lot. 
             Uses less than 32 MB when tested using mem_profile module
+
+        Added a note about what I'm planning to use the Receiver geometry module for
+
+        Learned how to import with namespace
+          I'll see what doors this opens later
+
+          from [module] import *

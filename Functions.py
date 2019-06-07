@@ -232,47 +232,47 @@ def Header(outputfile):
 #    return receiverarray,sizex,sizey,sizez
 #********************************************
     
-def InitialGrid(radius,A,B,C,D,theta,phi,xmin,ymin,zmin,xmax,ymax,zmax,arraysize):
-    """This function creates an equally spaced grid of size "step" apart"""
-    receiverarray=np.zeros((arraysize,3))
-    yspace=radius*abs(m.cos(phi))
-    zspace=radius*abs(m.sin(theta))
-    count = 0
-    i=0
-    j=0
-    #this works for bug fixes. But it's not that great.
-    if xmin == xmax:
-        for i in range(0,int((zmax-zmin)//zspace)):
-            for j in range(0,int((ymax-ymin)//yspace)):
-                receiverarray[count,0]=(D-B*(ymin+(j+1)*yspace)-C*(zmin+(i+1)*zspace))/A
-                receiverarray[count,1]=ymin+(j+1)*yspace
-                receiverarray[count,2]=zmin+(i+1)*zspace
-                count=count+1
-        # // by itself does not convert to an int
-        sizex=int((ymax-ymin)//(yspace))
-        sizey=int((zmax-zmin)//zspace)
-        sizez=1
-    if ymin == ymax:
-        for i in range(0,int(xmax-xmin)//(xspace)):
-            for j in range(0,int((zmax-zmin)//(zspace))):
-                receiverarray[count,0]=xmin+(i+1)*xspace
-                receiverarray[count,1]=(D-A*(xmin+(i+1)*xspace)-C*(zmin+(j+1)*zspace))/B
-                receiverarray[count,2]=zmin+j*zspace
-                count=count+1
-        sizex=int((zmax-zmin)/zspace)
-        sizey=int((xmax-xmin)/(xspace))
-        sizez=1
-    if zmin == zmax:
-        for i in range(int((xmax-xmin)/(xspace))):
-            for j in range(int((ymax-ymin)/(yspace))):
-                receiverarray[count,0]=xmin+(i+1)*xspace  
-                receiverarray[count,1]=ymin+(j+1)*yspace
-                receiverarray[count,2]=(D-A*(xmin+(i+1)*xspace)-B*(ymin+(j+1)*yspace))/C
-                count=count+1
-        sizex=int((xmax-xmin)/(xspace))
-        sizey=int((ymax-ymin)/yspace)
-        sizez=1
-    return receiverarray, sizex, sizey, sizez
+#def InitialGrid(radius,A,B,C,D,theta,phi,xmin,ymin,zmin,xmax,ymax,zmax,arraysize):
+#    """This function creates an equally spaced grid of size "step" apart"""
+#    receiverarray=np.zeros((arraysize,3))
+#    yspace=radius*abs(m.cos(phi))
+#    zspace=radius*abs(m.sin(theta))
+#    count = 0
+#    i=0
+#    j=0
+#    #this works for bug fixes. But it's not that great.
+#    if xmin == xmax:
+#        for i in range(0,int((zmax-zmin)//zspace)):
+#            for j in range(0,int((ymax-ymin)//yspace)):
+#                receiverarray[count,0]=(D-B*(ymin+(j+1)*yspace)-C*(zmin+(i+1)*zspace))/A
+#                receiverarray[count,1]=ymin+(j+1)*yspace
+#                receiverarray[count,2]=zmin+(i+1)*zspace
+#                count=count+1
+#        # // by itself does not convert to an int
+#        sizex=int((ymax-ymin)//(yspace))
+#        sizey=int((zmax-zmin)//zspace)
+#        sizez=1
+#    if ymin == ymax:
+#        for i in range(0,int(xmax-xmin)//(xspace)):
+#            for j in range(0,int((zmax-zmin)//(zspace))):
+#                receiverarray[count,0]=xmin+(i+1)*xspace
+#                receiverarray[count,1]=(D-A*(xmin+(i+1)*xspace)-C*(zmin+(j+1)*zspace))/B
+#                receiverarray[count,2]=zmin+j*zspace
+#                count=count+1
+#        sizex=int((zmax-zmin)/zspace)
+#        sizey=int((xmax-xmin)/(xspace))
+#        sizez=1
+#    if zmin == zmax:
+#        for i in range(int((xmax-xmin)/(xspace))):
+#            for j in range(int((ymax-ymin)/(yspace))):
+#                receiverarray[count,0]=xmin+(i+1)*xspace  
+#                receiverarray[count,1]=ymin+(j+1)*yspace
+#                receiverarray[count,2]=(D-A*(xmin+(i+1)*xspace)-B*(ymin+(j+1)*yspace))/C
+#                count=count+1
+#        sizex=int((xmax-xmin)/(xspace))
+#        sizey=int((ymax-ymin)/yspace)
+#        sizez=1
+#    return receiverarray, sizex, sizey, sizez
 
 def SPHERECHECK(Sc,Sr2,F,veci):
     '''
