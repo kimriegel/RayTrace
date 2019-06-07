@@ -261,6 +261,7 @@ C  Take the fft of the input signal with fftw
 
 C     Create initial signal
       allocate(airabsorb(sizeffttwo))
+C      print*, outputsignal
       DO 13 K=1, sizeffttwo
          inputarray(K,1)=(K)*Fs/2*1/(sizeffttwo)
          inputarray(K,2)=abs(outputsignal(K+1)/sizefft)
@@ -268,6 +269,7 @@ C     Create initial signal
      *        realpart(outputsignal(K+1)/sizefft))
          airabsorb(K)=ABSORPTION(ps,inputarray(K,1),hr,Temp)
  13   CONTINUE
+C      print*, airabsorb
       DO 14 K=1, sizefft
          timearray(K)=(K-1)*1/Fs
  14   CONTINUE
@@ -380,6 +382,9 @@ C     initialize normalization factor
             temparray(D,W,6)=0.0 
  15      CONTINUE
  18   CONTINUE
+C            print*,temparray(1,sizeffttwo,4)
+C            print*,temparray(1,sizeffttwo+1,4)
+
 
 C     Define ground plane
 
@@ -497,7 +502,8 @@ C         INCLUDE 'UrbanCanyonG2H24L14Geo.f'
       count=0
 C      print*, 'normalization',normalization
 C     Loop through the intial ray locations
-      DO 40 ray=1,RAYMAX,1
+C      DO 40 ray=1,RAYMAX,1
+         ray = 607
          hitcount=0
          tmpsum=0.0
          doublehit=0
@@ -505,6 +511,7 @@ C     Loop through the intial ray locations
             ampinitial(W)=inputarray(W,2)/normalization
             phaseinitial(W)=inputarray(W,3)
  24      CONTINUE
+C            print*,ampinitial(sizeffttwo-4:sizeffttwo)
          Vinitial=(/BOOMARRAY(ray,1),BOOMARRAY(ray,2),
      *        BOOMARRAY(ray,3)/)
          if (h.lt.2*radius)then 
@@ -520,6 +527,8 @@ C     location, phase and amplitude
             dxreceiver=HUGE
 C     Find the closest sphere and store that as the distance
 C            print*, veci
+C            print*, 'F: ',F 
+C            print*, 'dx: ', dx
             DO 16 Q=1,arraysize,1 
                CALL SPHERECHECK(receiverarray(Q,1:3),
      *              radius2,F,veci,tempreceiver)
@@ -655,7 +664,7 @@ C     Create two arrays to store in.
                   sum=sum+1
                   Vecip1=veci+dx*F
                   veci=Vecip1
-                  print*, 'hit receiver at step ',I
+C                  print*, 'hit receiver at step ',I
                   receiverhit=1
                   checkdirection=F
                   
@@ -712,8 +721,12 @@ C                        print*, 'this happens outputarray'
                         lastreceiver(3)=receiverpoint(3)
                      endif                 
  20               CONTINUE
+C                   print*,ampinitial(sizeffttwo-4:sizeffttwo)
+
 C                  print*, 'assigned to outputarray1'
 C                  print*, outputarray1(1,2), outputarray1(1,3), 
+C                  print*,'magnitude', temparray(2,:,5)
+
 C     *                 outputarray1(1,4)
                   Call receiverHITFUNC(sizefft,outputarray1,
      *                 arraysize,temparray)
@@ -730,14 +743,14 @@ C                  print*, 'receiverHITFUNC completed'
                   endif
 C                  print*, 'got to the end of receiver hit'
                endif
+C               print*,'direction', temparray(2,:,5)
 C     If the ray hits the ground then bounce off the ground and continue
                if (abs(dx-dxground).lt.10.0**(-13.0)) then
                   Vecip1=veci+dxground*F
                   tmp=(GROUNDabc(1)*Vecip1(1)+GROUNDabc(2)*Vecip1(2)+
      *                 GROUNDabc(3)*Vecip1(3)+GROUNDD)
                   if(tmp.ne.GROUNDD) Vecip1(3)=0.0
-                  print*,'hit ground at step ', I
-C                  print*,'hit ground'
+C                  print*,'hit ground at step ', I
                   veci=Vecip1
                   dot1=(F(1)*nground(1)+F(2)*nground(2)+F(3)*nground(3))
                   n2=(nground(1)*nground(1)+nground(2)*nground(2)+
@@ -798,16 +811,22 @@ C     Loop through all the frequencies
                         endif   
                      ampinitial(W)=ampfinal                           
  21               CONTINUE
+C                print*,ampinitial(sizeffttwo-4:sizeffttwo)
+
                endif
+C               print*,phaseinitial
+C               print*, 'dxground: ', dxground
+C               print*, 'alphaground: ', alphaground
+C               print*, 'diffusionground: ', diffusionground
+
                
 C     if the ray hits the building then change the direction and continue
-               print*, 'dx: ',dx 
-               print*, 'dxbuilding: ', dxbuilding
+C               print*, 'dx: ',dx 
+C               print*, 'dxbuilding: ', dxbuilding
                if (dx.eq.dxbuilding) then
                   Vecip1=veci+dx*F
                   veci=Vecip1
-                  print*, 'hit building at step ', I
-
+C                  print*, 'hit building at step ', I
                   n2=(nbox(1)*nbox(1)+nbox(2)*nbox(2)+nbox(3)*nbox(3))
                   nbuilding=nbox/sqrt(n2)
                   dot1=(F(1)*nbuilding(1)+F(2)*nbuilding(2)+F(3)*
@@ -847,6 +866,11 @@ C     if the ray hits the building then change the direction and continue
                         ampfinal=ampinitial(W)*(1.0-alpha)*
      *                       (1.0-diffusion)*exp(-m*dx)
                         phaseinitial(W)=mod(phasefinal,twopi)
+C                        if (W.le.5) then
+C                        print*,'amps: ','(1.0-', alpha,
+C     *                   ')*(1.0-', diffusion,')*exp(-', m,'*',
+C     *                    dx
+C                        endif
                         if (phaseinitial(W).GT.PI) then
                            phaseinitial(W)=phaseinitial(W)-twopi
                         endif
@@ -889,11 +913,15 @@ C     Loop through all patches if radiosity is turned on.
                      endif 
                   ampinitial(W)=ampfinal
  22            CONTINUE
+C             print*,ampinitial(sizeffttwo-4:sizeffttwo)
+
             endif
-         else
 C     If there was no interaction with buildings then proceed with one step. 
+         else
             tmpsum=tmpsum+h
             Vecip1=veci+(h)*F
+C            print*, 'no hit'
+C            print*, phaseinitial(:5)
             veci=Vecip1
             twopih=twopi*h
             DO 23 W=1, sizeffttwo
@@ -903,12 +931,19 @@ C     Loop through all frequencies.
                phasefinal=phaseinitial(W)-(twopih)/lambda
                ampfinal=ampinitial(W)*(1-alphanothing(W))*
      *              exp(-m*h)
-               ampinitial(W)=ampfinal                  
+               ampinitial(W)=ampfinal  
                phaseinitial(W)=mod(phasefinal,twopi)
+C               if (W.ge.(sizeffttwo-5)) then
+C                  print*,'(1.0-',alphanothing(w),')*(1.0-',
+CC     *             diffusion,
+C     *             ')*exp(',-m,'*',h,')'
+C               endif
                if (phaseinitial(W).GT.PI) then
                   phaseinitial(W)=phaseinitial(W)-twopi
                endif
  23         CONTINUE
+C             print*,ampinitial(sizeffttwo-4:sizeffttwo)
+
          endif
  10   CONTINUE
       print*, 'finished ray', ray
@@ -1105,6 +1140,10 @@ C               print*, 'finished receiver', D, 'of', arraysize
 C     Reconstruct the time signal
       CALL TIMERECONSTRUCT(sizefft, timearray, arraysize, temparray, 
      *     timetemparray)
+
+C      print*,'magnitude: ',temparray(2,:,5)
+C      print*,'direction: ',temparray(2,:,6)
+
 C     Write out time signatures for each receiver. 
       OPEN(UNIT=20,file=OUTPUTFILE,status='new')
       true=Header(20)
