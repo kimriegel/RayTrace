@@ -21,15 +21,12 @@ import ReceiverPointSource as RPS
 
 import time
 #Using to check how long functions take
+HUGE=1000000.0
+XJ=complex(0,1)
 
 def ABSORPTION(ps,freq,hr,Temp):
     ''' This function computes the air absorption for a given frequency, 
     ambient pressure, relative humidity and temperature.
-    
-    Args:
-
-    Returns: 
-
     '''
     #t=time.time()   #Start time counter
 # Define all variables and reference values
@@ -47,111 +44,66 @@ def ABSORPTION(ps,freq,hr,Temp):
     term1=0.01275*(m.exp((-2239.1/Temp))/(FrO+F**2/FrO))
     term2=0.1068*(m.exp(-3352/Temp)/(FrN+F**2/FrN))
     ABSORPTION=ps0*F**2*((1.84*10**(-11.0)*(Temp/T0)**(0.5)*ps0)+(Temp/T0)**(-5.0/2.0)*(term1+term2))
-
-    #print('Absorption time: %.7f ' % (time.time()-t))  #Really low no worries
-
     return ABSORPTION
 
-
-def TIMERECONSTRUCT(sizefft,timearray,arraysize,temparray):
-    '''
-    This Function computes the timesignal from a given fft.  It writes the
-    time signal to an array
-
-    Args:
-
-    Returns:
-    '''
-    #import numpy as np
-    XJ=complex(0,1)
-
-    print('timeconstruct has been called')
-
-    #temparray and timetemparray are three dimensional arrays
-    #will create 3d arrays using numpy zeros function
-
-#    temparray = np.zeros((arraysize,sizefft//2,6))
-    timetemparray= np.zeros((arraysize,sizefft,5))
-    # defining tempfft as a 1 dimensional array of size sizefft/2+1
-
-    tempfft = np.zeros((sizefft//2+1))
-    #print('defining dimensions: ',arraysize,sizefft//2)
-
-    # Author: Will
-    # For loop iterating through three dimensional arrays
-#    for D in range(1,arraysize):
-#        for W in range(1,sizefft):
-    for D in range(0,arraysize):
-        for W in range(0,sizefft):
-            timetemparray[D,W,0]=temparray[D,0,0]
-            timetemparray[D,W,1]=temparray[D,0,1]
-            timetemparray[D,W,2]=temparray[D,0,2]
-            timetemparray[D,W,3]=timearray[W]
-            timetemparray[D,W,4]=0.0
-
-    #print(temparray[1,1,0:4])
-    print('timetemparray has been initialized')
-
-    # Create the complex array to feed into the inverse fft function
-
-    # Author: Will, Create complex array and compute inverse fft first attempt Python
-    for D in range(0,arraysize) :
-        if temparray[D,0,4] == 0.0:
-            for W in range(0,sizefft):
-                timetemparray[D,W,4]= 0.0
-        else:
-            for W in range(int(sizefft/2)+1) :
-                if W == 1:
-                    tempfft[W]=complex([0])
-                else:
-                    tempfft[W]=abs(temparray[D,W-1,4])*m.exp(XJ*temparray[D,W-1,5])
-        #print('Created temparray')
-    # use nummpy to compute inverse fft
-    # use ifft numpy function with tempfft and sizefft as input
-    # use timesignal as output
-
-    # Original fftw function
-    #             call dfftw_plan_dft_c2r_1d(invplan,sizefft,tempfft,
-    #     *        timesignal, FFTW_ESTIMATE)
-
-        timesignal=np.fft.ifft(tempfft,sizefft)
-        #print('Created time signature')       
-        for W in range(0,sizefft) :
-            timetemparray[D,W,4]=timesignal[W]
-#    print('Absorption time: %.7f ' % (time.time()-t))  #Really low no worries
-    return timetemparray
+# This doesn't get used. But it keeps getting changed when I forget >:{
+#def TIMERECONSTRUCT(sizefft,timearray,arraysize,temparray):
+#    '''
+#    This Function computes the timesignal from a given fft.  It writes the
+#    time signal to an array
+#    '''
+#    print('timeconstruct has been called')
+#    #temparray and timetemparray are three dimensional arrays
+#    #will create 3d arrays using numpy zeros function
+#    timetemparray= np.zeros((arraysize,sizefft,5))
+#    # defining tempfft as a 1 dimensional array of size sizefft/2+1
+#    tempfft = np.zeros((sizefft//2+1))
+#    for D in range(0,arraysize):
+#        for W in range(0,sizefft):
+#            timetemparray[D,W,0]=temparray[D,0,0]
+#            timetemparray[D,W,1]=temparray[D,0,1]
+#            timetemparray[D,W,2]=temparray[D,0,2]
+#            timetemparray[D,W,3]=timearray[W]
+#            timetemparray[D,W,4]=0.0
+#    print('timetemparray has been initialized')
+#    # Create the complex array to feed into the inverse fft function
+#    for D in range(0,arraysize) :
+#        if temparray[D,0,4] == 0.0:
+#            for W in range(0,sizefft):
+#                timetemparray[D,W,4]= 0.0
+#        else:
+#            for W in range(int(sizefft/2)+1) :
+#                if W == 1:
+#                    tempfft[W]=complex([0])
+#                else:
+#                    tempfft[W]=abs(temparray[D,W-1,4])*m.exp(XJ*temparray[D,W-1,5])
+#    # use nummpy to compute inverse fft
+#    # Original fftw function
+#    #             call dfftw_plan_dft_c2r_1d(invplan,sizefft,tempfft,
+#    #     *        timesignal, FFTW_ESTIMATE)
+#        timesignal=np.fft.irfft(tempfft,sizefft)
+#        for W in range(0,sizefft) :
+#            timetemparray[D,W,4]=timesignal[W]
+#    return timetemparray
 
 
 
 def receiverHITFUNC(sizefft,outputarray,arraysize,temparray):
     '''
     This Function adds the pressures from a ray when it hits the receiver.
-
-    Args:
-
-    Returns:
-
     '''
-    ##All print commands commented out were from original code but stayed for consistency
-    #import math as m
-    #import numpy as np
-
-    # Define all variables
-
     # Define arrays with numpy zeros function
-
     XJ=complex(0,1)
-    print('everything seems to initiate')
+    #print('everything seems to initiate')
     
     # Add new pressures to existing pressures in temparray 
     # First Look for the correct location.
-    #temparray[0,0,5] = 11998.0  #placeholder
     for D in range(0,arraysize):
         #print('output: ', outputarray[0,1:3],'\ntemp: ',temparray[D,0,0:2]) #bugfixes
-        if (outputarray[0,1] == temparray[D,0,0] and 
-        outputarray[0,2] == temparray[D,0,1] and 
-        outputarray[0,3] == temparray[D,0,2]):
-            print('first If statement passed')
+        #if (outputarray[0,1] == temparray[D,0,0] and 
+        #outputarray[0,2] == temparray[D,0,1] and 
+        #outputarray[0,3] == temparray[D,0,2]):
+            #print('first If statement passed')
 #        else:
 #            print('statement did not pass') #more bug fixes
     # If the location is the same, loop through the frequency and add current values with new values.
@@ -179,9 +131,10 @@ def receiverHITFUNC(sizefft,outputarray,arraysize,temparray):
     #        if (W == 1):
     #            print('temparray 6 fine')
     #            print(temparray[1,W,5])
-#            print(temparray[D,W,4:5])
+            #print(temparray[D,W,4:5])
+    #print(temp2,temp1)
     #print('final temparray: ',temparray[1,0,4], ' and ', temparray[1,0,5])
-    print('Got Through the end')
+    #print('Got Through the end')
     #print(temparray[1,1,4])
     return temparray
 
@@ -213,22 +166,18 @@ def Header(outputfile):
     return Header
 
 
-def TimeHeader(f,time,sizex,sizey,sizez,planename):
-    '''
-    This function prints the header between each time set
-
-    '''
-    #print('tiempo: ',time)
-    #print('sizes: ',  sizex, sizey, sizez)
-    #This function prints the header between each time set
-    #print(planename)
-    f.write('ZONE T=" %s "\n' %(planename, ) )  #this worked in the command line
-    f.write('STRANDID=1, SOLUTIONTIME= %d \n'%(time,) )
-    f.write('I= %d\t J= %d\t K=%d\t ZONETYPE=Ordered\n' %(sizex, sizey, sizez))
-    f.write('DATAPACKING=POINT\n')
-    f.write('DT=(SINGLE SINGLE SINGLE SINGLE )\n')
-    header=0
-    return TimeHeader
+#def TimeHeader(f,time,sizex,sizey,sizez,planename):
+#    """
+#    This function prints the header between each time set
+#    """
+#    #This function prints the header between each time set
+#    f.write('ZONE T=" %s "\n' %(planename, ) )  #this worked in the command line
+#    f.write('STRANDID=1, SOLUTIONTIME= %d \n'%(time,) )
+#    f.write('I= %d\t J= %d\t K=%d\t ZONETYPE=Ordered\n' %(sizex, sizey, sizez))
+#    f.write('DATAPACKING=POINT\n')
+#    f.write('DT=(SINGLE SINGLE SINGLE SINGLE )\n')
+#    header=0
+#    return TimeHeader
 
 
 #*****Grid is Unused*****************    
@@ -283,111 +232,52 @@ def TimeHeader(f,time,sizex,sizey,sizez,planename):
 #    return receiverarray,sizex,sizey,sizez
 #********************************************
     
-def InitialGrid(radius,A,B,C,D,theta,phi,xmin,ymin,zmin,xmax,ymax,zmax,arraysize):
-    '''
-    This function creates an equally spaced grid of size step apart
-
-    Args:
-
-    Returns:
-    '''
-#    print('all the inputs for initialgrid: ',radius,A,B,C,D,theta,phi)
-#    print('mins and maxes ',xmin,ymin,zmin,xmax,ymax,zmax,)
-#    print('Arraysize: ', arraysize)
-    #import math as m
-    #import numpy as np
-    receiverarray=np.zeros((arraysize,3))
-    yspace=radius*abs(m.cos(phi))
-    zspace=radius*abs(m.sin(theta))
-    count = 0
-    i=0
-    j=0
-    #this works for bug fixes. But it's not that great.
-#    print(ymin,yspace,ymax)
-#    print('zvals ',zmin,zspace,zmax)
-    if xmin == xmax:
-        for i in range(0,int((zmax-zmin)//zspace)):        #while i < int((zmax-zmin)/zspace):
-            for j in range(0,int((ymax-ymin)//yspace)):            #while j < int(((ymax-ymin)/yspace)):
-                receiverarray[count,0]=(D-B*(ymin+(j+1)*yspace)-C*(zmin+(i+1)*zspace))/A
-                receiverarray[count,1]=ymin+(j+1)*yspace
-                receiverarray[count,2]=zmin+(i+1)*zspace
-                #print('third ')
-                #print('vsye: ',zmin,' + ', i + 1,' * ',zspace ,' = ',
-                #print(receiverarray[count,2])
-                count=count+1
-            #print(i, int(((zmax-zmin)/zspace)))
-        #I think // is faster than using int after dividing. I can change it back to int if needed
-        #It doesn't change them to the correct datatype, I'll come back to in once I'm done
-        sizex=int((ymax-ymin)//(yspace))
-        sizey=int((zmax-zmin)//zspace)
-        sizez=1
-        #print('xmin is xmax: ', receiverarray)
-        #Bugs are here 
-        #Hopefully
-    if ymin == ymax:
-        for i in range(0,int(xmax-xmin)//(xspace)):
-            for j in range(0,int((zmax-zmin)//(zspace))):
-                receiverarray[count,0]=xmin+(i+1)*xspace
-                receiverarray[count,1]=(D-A*(xmin+(i+1)*xspace)-C*(zmin+(j+1)*zspace))/B
-                receiverarray[count,2]=zmin+j*zspace
-                count=count+1
-        sizex=int((zmax-zmin)/zspace)
-        sizey=int((xmax-xmin)/(xspace))
-        sizez=1
-#        print('ymin is ymax: ', receiverarray)
-    if zmin == zmax:
-        for i in range(int((xmax-xmin)/(xspace))):
-            for j in range(int((ymax-ymin)/(yspace))):
-
-                receiverarray[count,0]=xmin+(i+1)*xspace  
-                receiverarray[count,1]=ymin+(j+1)*yspace
-                receiverarray[count,2]=(D-A*(xmin+(i+1)*xspace)-B*(ymin+(j+1)*yspace))/C
-                count=count+1
-        sizex=int((xmax-xmin)/(xspace))
-        sizey=int((ymax-ymin)/yspace)
-        sizez=1
-#        print('zmin is zmax: ', receiverarray)
-#    print('outputs (hopefully): ', receiverarray, sizex, sizey, sizez)
-    return receiverarray, sizex, sizey, sizez
-
-def SPHERECHECKNEW(Sc,Sr2,F,veci):
-    '''
-    This function performs a check whether a ray hits a sphere.  If
-    it does hit the function returns the distance to the sphere
-
-    Args:
-
-    Returns:
-    '''
-    HUGE=1000000.0
-    OC=np.zeros([RPS.arraysize,3])      #put a pin in this
-    dxarr=np.zeros([RPS.arraysize])
-    OC[:,0]=Sc[:,0]-veci[0]
-    OC[:,1]=Sc[:,1]-veci[1]
-    OC[:,2]=Sc[:,2]-veci[2]
-    L2OC=np.sum(OC*OC, axis=1)
-    tca=np.dot(OC,F)
-    #print('OC: ',OC)
-    #print('tca: ',tca)
-    #I /think/ these are working
-    #Takes dot product of OC and OC (Dot square?)
-    t2hc=Sr2-L2OC+tca**2
-    dxarr=(np.where((L2OC==Sr2),HUGE,dxarr))
-    dxarr=(np.where(tca<0.0,HUGE,dxarr))
-    dxarr=(np.where(t2hc<0.0,HUGE,dxarr))
-    dxarr=(np.where(dxarr!=HUGE,tca-(abs(t2hc)**(1/2)),dxarr))
-#    dxarr=np.array([1,2,3,4,5])
-    #print(dxarr)
-    return dxarr
+#def InitialGrid(radius,A,B,C,D,theta,phi,xmin,ymin,zmin,xmax,ymax,zmax,arraysize):
+#    """This function creates an equally spaced grid of size "step" apart"""
+#    receiverarray=np.zeros((arraysize,3))
+#    yspace=radius*abs(m.cos(phi))
+#    zspace=radius*abs(m.sin(theta))
+#    count = 0
+#    i=0
+#    j=0
+#    #this works for bug fixes. But it's not that great.
+#    if xmin == xmax:
+#        for i in range(0,int((zmax-zmin)//zspace)):
+#            for j in range(0,int((ymax-ymin)//yspace)):
+#                receiverarray[count,0]=(D-B*(ymin+(j+1)*yspace)-C*(zmin+(i+1)*zspace))/A
+#                receiverarray[count,1]=ymin+(j+1)*yspace
+#                receiverarray[count,2]=zmin+(i+1)*zspace
+#                count=count+1
+#        # // by itself does not convert to an int
+#        sizex=int((ymax-ymin)//(yspace))
+#        sizey=int((zmax-zmin)//zspace)
+#        sizez=1
+#    if ymin == ymax:
+#        for i in range(0,int(xmax-xmin)//(xspace)):
+#            for j in range(0,int((zmax-zmin)//(zspace))):
+#                receiverarray[count,0]=xmin+(i+1)*xspace
+#                receiverarray[count,1]=(D-A*(xmin+(i+1)*xspace)-C*(zmin+(j+1)*zspace))/B
+#                receiverarray[count,2]=zmin+j*zspace
+#                count=count+1
+#        sizex=int((zmax-zmin)/zspace)
+#        sizey=int((xmax-xmin)/(xspace))
+#        sizez=1
+#    if zmin == zmax:
+#        for i in range(int((xmax-xmin)/(xspace))):
+#            for j in range(int((ymax-ymin)/(yspace))):
+#                receiverarray[count,0]=xmin+(i+1)*xspace  
+#                receiverarray[count,1]=ymin+(j+1)*yspace
+#                receiverarray[count,2]=(D-A*(xmin+(i+1)*xspace)-B*(ymin+(j+1)*yspace))/C
+#                count=count+1
+#        sizex=int((xmax-xmin)/(xspace))
+#        sizey=int((ymax-ymin)/yspace)
+#        sizez=1
+#    return receiverarray, sizex, sizey, sizez
 
 def SPHERECHECK(Sc,Sr2,F,veci):
     '''
     This function performs a check whether a ray hits a sphere.  If
     it does hit the function returns the distance to the sphere
-
-    Args:
-
-    Returns:
     '''
     HUGE=1000000.0
     OC=np.zeros(3)      #put a pin in this
@@ -397,9 +287,6 @@ def SPHERECHECK(Sc,Sr2,F,veci):
     OC[2]=Sc[2]-veci[2]
     L2OC=np.dot(OC,OC)
     tca=np.dot(OC,F)
-    #print('OC: ',OC)
-    #print('tca: ',tca)
-    #I /think/ these are working
     #Takes dot product of OC and OC (Dot square?)
     t2hc=Sr2-L2OC+tca**2
     if L2OC == Sr2:
@@ -415,10 +302,6 @@ def SPHERECHECK(Sc,Sr2,F,veci):
 def CROSS(A, B):
     '''
     This function calculates a cross product of A and B and returns normal
-
-    Args: Two arrays of size three (A, B)
-
-    Returns: One array of size three. The cross product
     '''
     normal=np.zeros(3)
     normal[0]=A[1]*B[2]-A[2]*B[1]
@@ -430,26 +313,115 @@ def CROSS(A, B):
     #print('normal is ',normal)
     return normal
 
-def POLYGON(Vecip1,F,Q,size,Number,PointNumbers,PolyArray,BuildingPoints,normal,FaceNormalNo,FaceNormals,dxbuilding,behind):
-    '''
-    ********************************Unfinished***********************************
+#def tri(veci,F,Q,Number,PointNumbers,PolyArray,BuildingPoints,normal,FaceNormalNo,vn,dxbuilding,behind):
+#def tri(veci,F,Q,Number,PointNumbers,PolyArray,vertices,normal,FaceNormalNo,vn,dxbuilding,behind):
+def tri(veci,F,Q,Number,PointNumbers,PolyArray,v,normal,FaceNormalNo,vn,dxbuilding,behind):
+    """
+    Lab notebook 5/16
+    This is an attempt to merge box and polygon into one function since
+    we are working entirely in triangular meshes now
 
-    Is it still? I'm only leaving this note here because it said unfinished.
-    Otherwise:
-
+    ********************************Untested***********************************
+    A 1:1 translation was made from Fortran. This is the closest match to
+    what we are trying to do with triangle geometry. However there is no 
+    readily available geometry file to test this. 
     [No Description given in Fortran]
+    """
+    size = 3
+    G = np.zeros((size,2))  # (3,2)
+    # inits
+    NC=0
+    behind=0
+    normal = vn[PolyArray[Q,1],:]
+    #normal[0]=FaceNormals[int(PolyArray[Q,1]),0]
+    #normal[1]=FaceNormals[int(PolyArray[Q,1]),1]
+    #normal[2]=FaceNormals[int(PolyArray[Q,1]),2]
 
+    d=-np.dot(normal,ValueError(PolyArray[Q,2]))
+    Vd=np.dot(normal,F)
 
+    if Vd >= 0.0:
+        dxbuilding = HUGE
+    V0= -(np.dot(normal,veci)+d)
+    t=V0/Vd
+    if(t < 0.0):
+        dxbuilding=HUGE
+        behind = 1
+        #Stage 1
+    intersection = veci + F*t
+    maximum = max(abs(normal))
+        # G: What if two normal values are the same? Anyway:
+    if(maximum == abs(normal[0])):
+        for P in range(size):
+            G[P,:] = (intersection[1]-v[int(PolyArray[Q,1+P]),1]
+                      ,intersection[2]-v[int(PolyArray[Q,1+P]),2])
+    elif (maximum == normal[1]):
+        for P in range(size):
+            G[P,:] = (intersection[0]-v[int(PolyArray[Q,1+P]),0]
+                      ,intersection[2]-v[int(PolyArray[Q,1+P]),2])
+    elif (maximum == normal[2]):
+        for P in range(size):
+            G[P,:] = (intersection[0]-v[int(PolyArray[Q,1+P]),0]
+                      ,intersection[1]-v[int(PolyArray[Q,1+P]),1])
+    #Stage 2
+    for P in range(size):
+        if P == size:
+            if G[P,1] < 0.0:
+                SH = -1
+            else:
+                SH = 1
+            if G[0,1] < 0.0:
+                NSH = -1
+            else:
+                NSH = 1 
+        else:
+            if G[P,1] < 0.0:
+                SH = -1
+            else:
+                SH = 1
+            if G[P+1,2] < 0.0:
+                NSH = -1
+            else:
+                NSH = 1
+        if SH != NSH:
+            if (P == size):
+                if (G[P,0] > 0.0) and (G[0,0]>0.0):
+                    NC += 1
+                elif (G[P,0]> 0.0) or (G[0,0] > 0.0):
+                    if (G[P,0]-(G[P,1]*(G[P+1,0]-G[P,0])/(G[P+1,1]-G[P,1]))) > 0.0:
+                        NC += 1
+            else:
+                if (G[P,0] > 0.0) and (G[P+1,0] > 0.0):
+                    NC += 1
+                elif (G[P,0] > 0.0) or (G[P+1,1] > 0.0):
+                    if (G[P,0]-(G[P,1]*(G[P+1,0]-G[P,0])/(G[P+1,1]-G[P,1]))) > 0.0:
+                        NC += 1
+        odd = NC % 2    #get remainder to find if odd or not
+        # This was this way in original fortran
+        if odd:
+            dxbuilding = t
+        else:
+            dxbuilding = HUGE
 
+        return dxbuilding,behind
+
+def POLYGON(Vecip1,F,Q,size,Number,PointNumbers,PolyArray,BuildingPoints,normal,FaceNormalNo,FaceNormals,dxbuilding):
+    '''
+    ********************************Untested***********************************
+    A 1:1 translation was made from Fortran. This is the closest match to
+    what we are trying to do with triangle geometry. However there is no 
+    readily available geometry file to test this.
+    
+    [No Description given in Fortran]
     '''
 
-    #import numpy as np
+    G = np.zeros((size,2))
     HUGE=1000000.0
     NC=0
     behind=0
-    normal[1]=FaceNormals[int(PolyArray[Q,1]),1]
-    normal[2]=FaceNormals[int(PolyArray[Q,1]),2]
-    normal[3]=FaceNormals[int(PolyArray[Q,1]),3]
+    normal[1]=FaceNormals[int(PolyArray[Q,1]),0]
+    normal[2]=FaceNormals[int(PolyArray[Q,1]),1]
+    normal[3]=FaceNormals[int(PolyArray[Q,1]),2]
     #An array defined as an array from a function of an array and a point.
     #I will recheck syntax, just getting through everything now
 
@@ -464,28 +436,77 @@ def POLYGON(Vecip1,F,Q,size,Number,PointNumbers,PolyArray,BuildingPoints,normal,
 
     if Vd >= 0.0:
         dxbuilding = HUGE
-    V0=-[np.dot(normal,Vecip1)+d]
+    V0= -(np.dot(normal,Vecip1)+d)
     t=V0/Vd
     if(t < 0.0):
         dxbuilding=HUGE
-        behind=1
-
-    intersection[1]=Vecip1[1]+F[1]*t
-    intersection[2]=Vecip1[2]+F[2]*t
-    intersection[3]=Vecip1[3]+F[3]*t
-    maximum=max(abs(normal[1]),abs(normal[2]),abs(normal[3]))
-    if(maximum == abs(normal[1])):
-        for P in range(1,size):
-            G[P,1:2]= (intersection[2]-BuildingPoints[int(PolyArray[Q,1+P]),2],intersection[3]-BuildingPoints[int(PolyArray(Q,1+P)),3])
-            #syntax check
-    #*****************************************************************************
-
-
+        behind = 1
+    
+    intersection = Vecip1 + F*t
+    #intersection[1]=Vecip1[1]+F[1]*t
+    #intersection[2]=Vecip1[2]+F[2]*t
+    #intersection[3]=Vecip1[3]+F[3]*t
+    maximum = max(abs(normal))
+    if(maximum == abs(normal[0])):
+        for P in range(size):
+            G[P,:2] = (intersection[1]-BuildingPoints[int(PolyArray[Q,1+P]),1]
+                      ,intersection[2]-BuildingPoints[int(PolyArray[Q,1+P]),2])
+    elif (maximum == normal[1]):
+        for P in range(size):
+            G[P,:2] = (intersection[0]-BuildingPoints[int(PolyArray[Q,1+P]),0]
+                      ,intersection[2]-BuildingPoints[int(PolyArray[Q,1+P]),2])
+    elif (maximum == normal[2]):
+        for P in range(size):
+            G[P,:2] = (intersection[0]-BuildingPoints[int(PolyArray[Q,1+P]),0]
+                      ,intersection[1]-BuildingPoints[int(PolyArray[Q,1+P]),1])
+    for P in range(size):
+        if P == size:
+            if G[P,1] < 0.0:
+                SH = -1
+            else:
+                SH = 1
+            if G[0,1] < 0.0:
+                NSH = -1
+            else:
+                NSH = 1 
+        else:
+            if G[P,1] < 0.0:
+                SH = -1
+            else:
+                SH = 1
+            if G[P+1,2] < 0.0:
+                NSH = -1
+            else:
+                NSH = 1
+        if SH != NSH:
+            if (P == size):
+                if (G[P,0] > 0.0) and (G[0,0]>0.0):
+                    NC += 1
+                elif (G[P,0]> 0.0) or (G[0,0] > 0.0):
+                    if (G[P,0]-(G[P,1]*(G[P+1,0]-G[P,0])/(G[P+1,1]-G[P,1]))) > 0.0:
+                        NC += 1
+            else:
+                if (G[P,0] > 0.0) and (G[P+1,0] > 0.0):
+                    NC += 1
+                elif (G[P,0] > 0.0) or (G[P+1,1] > 0.0):
+                    if (G[P,0]-(G[P,1]*(G[P+1,0]-G[P,0])/(G[P+1,1]-G[P,1]))) > 0.0:
+                        NC += 1
+        odd = NC % 2    #get remainder to find if odd or not
+        # This was this way in original fortran
+        #if odd== 0:     
+        #    dxbuilding = HUGE
+        #else:
+        #    dxbuilding = t
+        # Setting it this way myself:
+        if odd:
+            dxbuilding = t
+        else:
+            dxbuilding = HUGE
+        return dxbuilding,behind
 
 def PLANE(Vecip1, B1, B2, planehit):
     '''
     This function calculates the normal at the hitpoint of a box.
-
     '''
 #George:It sure would be a mess if there was a typo anywhere in here
     #This function calculates the normal at the hitpoint of a box.
@@ -500,6 +521,7 @@ def PLANE(Vecip1, B1, B2, planehit):
             Point2=[B1[0],B1[1],B2[2]]  
             Point3=[B1[0],B2[1],B1[2]] 
             nbox=CROSS(np.subtract(Point2,B1),np.subtract(Point3,B1))
+            #nbox=np.cross(np.subtract(Point2,B1),np.subtract(Point3,B1))
 
         elif (Vecip1[0] == B2[0]) :
             Point1=(B2[0],B1[1],B1[2])
@@ -508,6 +530,7 @@ def PLANE(Vecip1, B1, B2, planehit):
             #print('points: ',Point1,Point2,Point3)
             #nbox=CROSS((Point3-Point1),(Point2-Point1))
             nbox=CROSS(np.subtract(Point3,Point1),np.subtract(Point2,Point1))
+            #nbox=np.cross(np.subtract(Point3,Point1),np.subtract(Point2,Point1))
             #print('nbox works. It is', nbox)
     if planehit == 2:
         #print('this happens 2')
@@ -540,19 +563,15 @@ def PLANE(Vecip1, B1, B2, planehit):
     return nbox
     #return
 
+# Call: for Q in range(0,BG.Boxnumber):
+#           dxnear, dxfar, hit, planehit=fun.BOX(BG.Boxarraynear[Q], BG.Boxarrayfar[Q],veci,F)
 
 def BOX(B1,B2,Vecip1,F):
     '''
     This function checks to see if the ray hits a box.  It determines which
     plane the ray hits
-                    
         T1x is the distance to the close side
         T2x is th distance to the far side
-
-
-    Args:
-
-    Returns:
     '''
     hit=5
     HUGE=1000000.0
@@ -560,7 +579,6 @@ def BOX(B1,B2,Vecip1,F):
     dxfar=HUGE
     tempF=F
     planehit=0
-    #print(tempF)
     if ((F[0] == 0.0) or (F[1] == 0.0) or (F[2] == 0.0)):
         if (F[0] == 0.0):
             if((vecip1[0] < B1[0]) or (vecip1[0] > B2[0])):
@@ -685,9 +703,6 @@ def BOX(B1,B2,Vecip1,F):
 def ROTATION(axis, angle, rotationmatrix):
     '''
     [No Description given in Fortran]
-
-
-
     '''
     #axis = np.zeros(3)
     #rotationmatrix= np.zeros(3,3)
@@ -702,5 +717,6 @@ def ROTATION(axis, angle, rotationmatrix):
     rotationmatrix[3,3]=axis[3]**2+(1-axis[3]**2)*m.cos(angle)
     return rotationmatrix
 
+#print(__name__ ,"__main__")
 #We finished!?
 #ARE YOU NOT ENTERTAINED?! -G

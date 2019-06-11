@@ -79,10 +79,12 @@ C Create the complex array to feed into the inverse fft function
      *           temparray(D,W-1,6)))
             endif
  38      CONTINUE
+C            print*, tempfft
          print*, 'created temparray'
 C use fftw to compute the inverse fft.
          call dfftw_plan_dft_c2r_1d(invplan,sizefft,tempfft,
      *        timesignal, FFTW_ESTIMATE)
+            print*, timesignal
          call dfftw_execute(invplan, tempfft, timesignal)
          call dfftw_destroy_plan(invplan)
          print*, 'created time signature'
@@ -115,12 +117,12 @@ C Define all variables
 C Add new pressures to existing pressures in temparray 
 C First Look for the correct location.
       DO 40 D=1, arraysize
-         print*,'outputarray2', outputarray(1,2)
-         print*,'outputarray3', outputarray(1,3)
-         print*,'outputarray4', outputarray(1,4)
-         print*,'temparray1',temparray(D,1,1)
-         print*,'temparray2',temparray(D,1,2)
-         print*,'temparray3',temparray(D,1,3)
+C         print*,'outputarray2', outputarray(1,2)
+C         print*,'outputarray3', outputarray(1,3)
+C         print*,'outputarray4', outputarray(1,4)
+C         print*,'temparray1',temparray(D,1,1)
+C         print*,'temparray2',temparray(D,1,2)
+C         print*,'temparray3',temparray(D,1,3)
          if (outputarray(1,2).eq.temparray(D,1,1).and.
      *        outputarray(1,3).eq.temparray(D,1,2).and.
      *        outputarray(1,4).eq.temparray(D,1,3))then
@@ -130,19 +132,23 @@ C values with new values.
             DO 41 W=1, sizefft/2
                temp1=cmplx(abs(temparray(D,W,5))*exp(XJ*
      *              temparray(D,W,6)))
-               if (W.eq.1)print*, 'temp1 fine'
+C               print*,temp1
+C               if (W.eq.1)print*, 'temp1 fine'
                temp2=cmplx(abs(outputarray(W,5))*exp(XJ*
      *              outputarray(W,6)))
-               if (W.eq.1)print*, 'temp2 fine'
+C               if (W.ge.(sizefft/2)-20) then
+C                  print*, temp2
+C               endif
+C               if (W.eq.1)print*, 'temp2 fine'
                temp3=temp1+temp2
-               if (W.eq.1)print*, 'temp3 fine'
+C               if (W.eq.1)print*, 'temp3 fine'
                temparray(D,W,5)=abs(temp3)
-               if (W.eq.1)print*, 'temparray 5 fine'
+C               if (W.eq.1)print*, 'temparray 5 fine'
                temparray(D,W,6)=ATAN2(imagpart(temp3),realpart(temp3))
-               if (W.eq.1)print*, 'temparray 6 fine'
+C               if (W.eq.1)print*, 'temparray 6 fine'
 C                  print*, temparray(1,W,5)
  41         CONTINUE
-            
+C            print*, outputarray(:,6)
          endif
  40   CONTINUE
       print*, 'got through end'
