@@ -56,21 +56,23 @@ class environment():
         self.axisheight=self.axismax-self.axismin
         self.bandwidth=2*pfm.h
         
-    def rayinteraction(self,ray,axis,divisions):
+    def rayinteraction(self,veci,F,axis):
         '''
-        creates 
+        test function for ray-environment interaction.
+        veci is the position vector as defined in RayTrace.py
+        F is the direction vector as defined in RayTrace.py
+        axis is an integer value 0,1,2. 0 refers to the x-axis, 1 the y-axis, and 2 the z-axis.
+        the given axis is the axis along which the first sort occurs.
         '''
         subvert=[]
         subfaces=[]
-        if ray[axis]>self.axismax or ray[axis]<self.axismin: # if the ray is above or below the max/min, no interaction
+        if veci[axis]>self.axismax or veci[axis]<self.axismin: # if the ray is above or below the max/min, no interaction
             pass
         else:
             subvert=self.sortvert # creates a sorted subset of the vertices
-            bandwidth=self.axisheight 
-            for divide in range(0,divisions):
-                if bandwidth <= self.bandwidth:
-                    pass
-                elif ray[axis]<subvert[len(subvert)//2][0][axis]:
+            bandwidth=self.axisheight #establishes a bandwidth to be compared to self.bandwidth
+            while bandwidth > self.bandwidth:
+                if veci[axis]<subvert[len(subvert)//2][0][axis]:
                     subvert=subvert[0:len(subvert)//2]
                     #print(len(subvert))
                 else:
@@ -81,35 +83,39 @@ class environment():
                 axismax=subvert[len(subvert)-1][0][axis]
                 axisheight=axismax-axismin
                 bandwidth=axisheight
-        for vertex in range(0,len(subvert)):
-            vertindex=subvert[vertex][1]
-            count=0
-            for x in range(0,len(self.faces)):
-                if self.faces[x] in subfaces: # This sanitation check is slow, alternative methods?
+        for vertex in range(0,len(subvert)): # iterating through vertices in subvert
+            vertindex=subvert[vertex][1] # sets the index of the vertex
+            for x in range(0,len(self.faces)): #iterates through the list of faces
+                if self.faces[x] in subfaces: # if the indexed face is already in subfaces, do not append# This sanitation check is slow, alternative methods?
                     pass
-                elif vertindex in self.faces[x]:
-                    subfaces.append(self.faces[x])
-        for face in range(0,len(subfaces)):
-            A=subfaces[face][0]
-            B=subfaces[face][1]
-            C=subfaces[face][2]
-            #print(self.sortvert)
-        #print(bandwidth)
-        #print(self.bandwidth)
-        #print(axisheight)
-        #print(self.axisheight)
-        #print(subvert)
-        #print(len(subvert))
-        #print(subfaces)
-        print(len(subfaces))
+                elif vertindex in self.faces[x]: # if the indexed vertex is in the face,
+                    subfaces.append(self.faces[x]) 
+        for face in range(0,len(subfaces)): # iterate through faces
+            faceA=subfaces[face][0] 
+            faceB=subfaces[face][1]
+            faceC=subfaces[face][2]
+            VertexA=self.vertices[faceA]
+            VertexB=self.vertices[faceB]
+            VertexC=self.vertices[faceC]
+            LineAC=[VertexC[0]-VertexA[0],VertexC[1]-VertexA[1],VertexC[2]-VertexA[2]]
+            LineAB=[VertexB[0]-VertexA[0],VertexB[1]-VertexA[1],VertexB[2]-VertexA[2]]
+            Normal=np.cross(LineAC,LineAB)
+            print(Normal)
+            DotProduct=np.dot(Normal,F)
+            print(DotProduct)
+            
+            if DotProduct==0:
+                pass
+            else:
+
+        # Next step, generating the planes using vertices of the faces, and hitting it with a ray.
+        
         return
 
 environment=environment('/Users/lovelace/RayTrace/monkey.obj')
 environment.sortvert(environment.vertices,2)
-#print(len(environment.vertices))
 #print(environment.vertices)
-#print(environment.sortvert)
-print(len(environment.faces))
-environment.rayinteraction([10,20,0],2,100)
-#print(environment.bandwidth)
-#print(environment.sortvert)
+#print(environment.faces)
+#print(environment.normals)
+environment.rayinteraction([10,20,0],[-1,0,1],2)
+
