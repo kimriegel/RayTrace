@@ -1,0 +1,55 @@
+June 6 2019
+  I am going to basically comment on RadiosityFunction.py file because I don't
+  know if its mixed with Fortran or not. I am not sure where all the variables
+  and functions are stored.
+
+  Another thing. Why is it that in RadiosityFunction that we are using index 3?
+  For test? Where can I find this variable and why is that so valued.
+
+  #Raws are basically variables defined in Fortran.
+
+  So I am going to have to redefine them in python
+
+  Now I am starting to think that only the first function is in python the rest
+  are edited but not fully python. For example, some array index calling resembles
+  Fortran instead of Python.
+
+  Someone else Lab Notebook doesn't have anything about RadiosityFunction. Or I
+  didn't see the part when he or she worked on it.
+
+  There are many syntax python errors. Also python is case-sensitive language.
+  SUM and sum are not the same function.
+
+June 10 2019
+  I am just going to retype rest of the program in python. I think I got the
+  syntax down.
+
+  I was just assigned two major hurdles. Downloading fftw and trying to run Fortran
+  Both of them are dead end for now so I am just gonna go back to translating
+  fortran to python. This seem easier for now.
+
+  Translating is done, but translating #raw will take sometimes since I still
+  don't know what double precision is in python.
+
+  Downloading fftw requires complier and the one I see are C++. I am not sure if
+  I can use Visual C++ to compile it.
+
+  Professor Riegel told me to install MinGW and i think I got it down.
+  To run it, I think you put this in command prompt C:\MinGW\msys\1.0\msys.bat
+
+June 11 2019
+  I think the previous day calling is wrong. Using youtube link, I was able to call
+  gcc. https://www.youtube.com/watch?v=xuQL_BZydS0&t=862s
+
+  The only problem now is that I have to call gcc using a file. But idk how to use it.
+
+  In Professor Riegel Dissertation A.10 Compiling, she said to make sure fftw.h
+  file is in same directory. I found the file but I am not sure how to use it.
+
+  So I am going to try using Fortran for now to try running it. gfortran command
+  works now after downloading mingw.
+
+  Right now, I cant use -lfftw3 and I can't use ./RayTrace and honestly, I am
+  very lost on what to do.
+
+  What is -mn?
