@@ -416,4 +416,5 @@ with open (fileid,'a') as f:
       for w in range(sizefft):
             RPS.Receiver.timeHeader(f,timearray[w],w)
 print('time: ',time.time()-t)
+
 #
