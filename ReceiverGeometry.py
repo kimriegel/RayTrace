@@ -5,6 +5,9 @@
 This is a module that converts all points of a given geometry file to 
 receivers while maintaining their functionality as a building. For 
 using singular points please refer to Receiver Point Source.
+
+Will function as plane receiver and be a subclass of Geometry, but 
+as that has not been integrated yet, this is here
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 
@@ -114,7 +117,8 @@ class Receiver:
                 create_materials=True, collect_faces=True, parse=True, cache=False)
         vertices = env.wavefront.vertices   # Sample the vertices
         for v in vertices:
-            Receiver(v)        print('initialized receivers')
+            Receiver(v)        
+            print('initialized receivers')
 
 if __name__ == "__main__" :
     ears = Receiver.rList

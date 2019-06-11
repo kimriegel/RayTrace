@@ -105,7 +105,7 @@ class Receiver:
             tempfft = np.append(0,tempfft)
             #print(list(np.real(tempfft)))
             # Compute ifft using numpy
-            self.signal=np.fft.irfft(tempfft,sizefft)
+            self.signal=np.fft.irfft(tempfft,int(sizefft)) * sizefft
             #print('time signal @receiver 2: \n',list(self.signal[:100]))
 
     #def timeheader(cls,f,time,sizex,sizey,sizez,planename):
