@@ -1,7 +1,7 @@
 # RayTrace
-# version 1.0.10
+# version 1.1.0
 
-# Kimberly Lefkowitz created this program to propagate sonic booms around
+# Kimberly A. Riegel, PHD created this program to propagate sonic booms around
 # large structures, and to graduate. It is a ray tracing model that 
 # will include specular and diffuse reflections. It will print out the
 # sound field at ear height, at relevant microphone locations, and at 
@@ -63,7 +63,8 @@ def updateFreq(dx,alpha,diffusion):
 def vex(y,z):
     """The x coordinate of the ray 
     Used for veci"""
-    return np.array((D-Finitial[1]*y-Finitial[2]*z)/Finitial[0])
+    #return np.array((D-Finitial[1]*y-Finitial[2]*z)/Finitial[0])
+    return (D-Finitial[1]*y-Finitial[2]*z)/Finitial[0]
 
 # port and import receiver file
 receiverhit=0
@@ -400,12 +401,6 @@ for ray in boomcarpet:              #Written like this for readability
 #Reconstruct the time signal and print to output file
 for R in ears:
       R.timeReconstruct(sizefft)
-
-#print(list(ears[1].magnitude))
-#print(list(ears[1].direction))
-#print(list(ears[1].signal))
-      #TIMERECONSTRUCT(sizefft, timearray, arraysize, temparray, timetemparray)
-#print(timearray[:5])   #magnitude, initial pressure,direction, timearray, timesignal
 
 print('Writing to output file')
 fileid = PF.outputfile 
