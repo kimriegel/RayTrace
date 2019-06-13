@@ -749,3 +749,379 @@ Note: In my new version I tear all the rays into pieces and then make changes ea
     It seems to not be itterating over steps correctly, I'm going to check older editions 
 
     I have gotten them both to "work" individually. I'm saving my progress now. I'll sew them together later
+
+5/2
+    Ray was being held by receiver on hit. 
+      Suspect this to be caused by veci never chnaging.
+      I noticed that veci is usually altered by adding the product of dx and F 
+      Found that neither changes after hit (@607)
+        Surprised to find that it's supposed to do that exactly
+
+        Fortran keeps the values the same, but has veci speeding away after a hit 
+        Python keeps the values the same and thus makes veci slow to a crawl in leaving, registering more hits 
+
+      Hotfix: I made it change in relation to H instead of dx so it would be far enough to keep going
+        The new veci values are not exactly the same, but they're close enough that I can move on
+
+    I seem to have also solved a glitch where the outputfile was messing up one receiver
+      Old:
+      	93.442821	28.839718	0.151000	0.000000
+      	93.442821	28.839718	0.151000	0.000000
+	      64.583200	28.599800	7.942300	0.000000
+	      -2.407930	31.500340	0.151000	0.000000
+	      75.110050	28.494579	0.151000	0.000000
+      New:
+      	93.442821	28.839718	0.151000	0.000000
+	      64.583200	28.599800	0.151000	0.000000
+	      64.583200	28.599800	7.942300	0.000000
+	      -2.407930	31.500340	0.151000	0.000000
+	      75.110050	28.494579	0.151000	0.000000
+      Expected: 
+      93.4428213 28.8397178 0.151
+      64.5832    28.5998    0.151
+      64.5832    28.5998    7.9423
+      -2.40793   31.5003401 0.151
+      75.11005   28.4945787 0.151
+
+    I either just broke my receiver hit function or copied it from the wrong version, because all the values are zero
+      Copied it wrong, I don't even call the new version 
+
+    In Fortran temparray has space for 18k numbers but only uses half of it
+      Scratch that. it says sizefft/2 and I missed the two 
+
+    It now registers hits, but the magnitudes don't seem to be adding in right
+      Seemingly the last big bug
+
+    It seems we were checking the receiver hit twice. When I removed only one of these checks the ray bounced normally from the receiver again
+
+5/7
+    Ray is registering as hitting receiver 5 but has the coordinates of hitting receiver 3
+        This is because it calculates R as each object in the list, then after that loop it targets R, which will logically be the last receiver in the list not matter what.
+
+    Looking at geometry parser
+    I'm not sleeping so it's hard to understand. I'm just reverse engineering it
+
+      Does the vertex list double the number of points but not use the latter half?
+
+      I checked how it's using the faces. It makes six faces, we need five.
+        I deleted one face. It printed six.
+        I deleted all faces. It printed six.
+        Is it creating its own faces independently of the obj file?
+
+
+5/12
+    Finals week, taking things slow. 
+      Examining exactly /what/ things /are/
+        veci is not the boom array, but a copy of the boomarray that we are working with for the specified ray (good)
+
+
+    Looking at two things today: global variables and memory locations
+        Global variables would let me cut down on inputs for functions. The increased readability will make this even easier to maintain if done right
+        Memory locations will let me target what I want where ever I want.
+          specifically being used to get rid of receiver bug. It's a nasty bug that I haven't gotten rid of yet
+
+    
+    Looking at this code after I've had a good night's sleep:
+      I think the bug is just that a chunk of code is tabbed wrong. I'll see how that goes 
+        It recognizes which ray hits which receiver (again), but it only recognizes if I'm testing at ray 606. It seems to skip otherwise
+
+    Imported a small part of Will's env function. Since it reliably hits the building now I want to verify his module by seeing 
+    if the rays would interact with his box in the same way. 
+      The positions work, I will check the interaction later
+
+5/14
+    F was the same object as Finitial. Causing it to only ever point up
+      Changed that and now it runs separately
+
+    Using spacing 0.35 for a good spacing size and speed  (For context on how fast it's running now)
+
+    Updated some functions that could of ran better with constants.
+      It seems to be running faster but I haven't checked that.
+
+    Removed old comments that refered to things we no longer use/care about
+
+    Removed timereconstruct in main file, as it exists in another file and we don't even use it in main
+
+    Tempreceiver is only used when checking the nearest array, but I'm keeping it there as a placeholder for now
+
+    Temparray seems to be completely dummied out, it also looks as if it's running alongside on_Hit, which does the same goal.
+      The only reason I can think to keep temparray is for double hits, and I think using objects may have eliminated the need for that
+
+5/15
+    Double functionality seems to have been neglected. We shouldn't be getting those errors with these parameters, but that's a different problem entirely 
+
+    The error from this morning has disappeared, but doubehit functionality seems to
+      just be a placeholder for now. I stacked two receivers to see what their reading
+      would be and only one was actually even registered
+
+    I'll come back to it. I'll start radiosity now
+
+    Looking at the filesizes on disk: Python's filesize (217kb), including the scraps, 
+      is smaller than Fortran's executable at (252kb)
+      Even accounting for space on disk, python still only takes up (236kb)
+
+    New file runtime with same parameters (1825 rays):
+      Python:   44.030 seconds
+      Fortran:  54.359 seconds
+
+
+    Python runs faster than Fortran now. Accuracy is off. Python only registers a hit on receiver 2 with pressure -5.450707
+    Fortran registers a hit only on receiver 2 with pressure -2.23565674     
+
+    outputsignal seems to be shifted slightly phase and amplitude are affected because
+      they are based on them
+
+      python signal starts with 0
+      fortran signal ends with 0
+
+5/16
+    Made a file to create a receiver cluster from a geometry file 
+
+    Examining geometry interaction:
+      It seems like Box is too contextual to use here so I looked at the Polygon function.
+      (Which says it is unfinished)
+      In the original we used one for box, triangle and squares respectively.
+      Here everything is triangles. so Polygon makes the most sense for that.
+        I don't know what some of these inputs are becuase they're undefined in the main file.
+        I'll just see what happens.
+
+5/20
+    Finished the 1:1 translation of Polygon.
+      I know better than to say that it's done. It's just a translation. 
+    
+    Since that's ready, I can start my actual triangle function
+      size here seems to be amount of vertices
+      Since that's automatically 3 I can take out that input
+      Now I know the concrete dimensions of G 
+
+      Question about maximum, what if two values are the same?
+      Building points seems to be equivalent to vertices, which are just called v in obj format
+        If not I'll change it, but for now I'll call it v to make the line short enough to read
+
+5/21
+    Tried separating the main ray trace file into smaller modules.
+      Ran into the problem of using all the variables initialized at different places in the code.
+      Also ran into the problem of breaking variables and function. 
+        Some needed to be obtained through other modules afterwords
+        It's just a matryoshka doll of glitches. I just put it in a wip folder (work in progress)
+
+      Did a slightly thorough look at Radiosity. It seems to be intertwined with Trace, so that'll be
+        a problem to separate
+    
+    I noticed that the old fft file we used for Fortran was written in C. Is there a way to use that here instead
+      of examining the small differences of how numpy does it? 
+
+    Tempalpha definitely needs to be redone. It works fine with these parameters, but it looks like it'll be a problem when we upscale it
+
+    Blender has a new update, 2.80
+      The key bindings and the layout have changed. It's still written in python from what I can tell, so if we wanted we may be able to use some of its functionality
+      (we probably won't but it's an option)
+
+    Examining why fft is off. It seems in the original we used a real to complex absorption. In our newer version we were only doing discrete.
+    This seems to work.
+
+    Outputsignal now has the same values in both versions. The final pressure is still low.
+
+    frequencias were still staggered. I staggered them the other way. This is the final stretch. All annoying bugs will be brute forced
+
+    For reference: 
+        #outputarray[:,0] = frecuencias  [:,0]
+        #outputarray[:,1] = receiverpoint[0]
+        #outputarray[:,2] = receiverpoint[1]
+        #outputarray[:,3] = receiverpoint[2]
+        #outputarray[:,4] = ampinitial   [:] / 2.0
+        #outputarray[:,5] = phaseinitial [:]
+        #temparray[D,:,3]=inputarray[W,0]    #initial pressures
+        #temparray[D,:,4]=0.0                #magnitude
+        #temparray[D,:,5]=0.0                #direction
+        #timetemparray[D,:,0]=temparray[D,0,0]
+        #timetemparray[D,:,1]=temparray[D,0,1]
+        #timetemparray[D,:,2]=temparray[D,0,2]
+        #        timetemparray[D,W,3]=timearray[W]   #Not actually used until outside function
+        #        timetemparray[D,W,4]=0.0    #timesignal
+
+      After more pruning of comments and code, we have 397 lines in the file
+
+    Ray frequencies are consistent in air, but change after a ground hit.
+      alphaground was offset. Even after changing bounds the values are still innacurate
+
+5/22
+    Alphaground is 0.009999978 in fortran, 0.01 in python. That sounds like a rounding error, but python should have more accuracy.
+      I found it is more accurate. The value is 0.01 in both, but Fortran is unable to express that, hence. 
+      So then what is the real problem?
+
+      The problem was found to be in the way I was updating the frequencies.
+        Ironically the masks I was using were accurate and everything else was what was
+        bugged
+
+        I finally have it working and accurate, once. It is exactly precice once. 
+        Then the phase diverges wildly where the mask does not cover
+
+
+5/24
+    I'll come back to the last thing, just messing with the file frinting now
+
+    fixed phase. I was saving the wrong one in the hit function.
+
+    Amplitude has the wrong reading for alphabuilding
+    The alphabuilding values are incorrect
+
+    found old bug from when we were first writing this.
+    phase and amp seem to match now
+
+
+    Checking right at the end:
+      Magnitude starts good, then ends bigger than it should
+      Direction is perfect all through
+
+      Timesignal is based on the others, so I can't check it yet
+
+
+      Amplitude is in fact not correct at the end
+
+5/25
+    Amplitude has corrected. was supposed to use - airabsorb
+    Amplitude is now accurate
+
+    Equivalences were checked. The code now does not diverge until the inverse real fft taken during the time reconstruct
+
+
+5/28
+    Experimenting with caches
+      It stores updates from no hit, but crashes when it hits a surface.
+      This is not a pun
+
+      Remember to ask Dr Riegel about making our own LRU, since I don't think python's native one is useful here
+      and all the relevant info seems to be abstracted away.
+
+5/31
+    It's midnight so I'm not sure how to date this. It is 2:02 AM Friday May 31,2019, if I need to be super specific.
+    Made a parser/sorter.
+      I sorted the receivers by position as a test, since they're the most easily accessible geometry for me. 
+
+      Arrays were difficult to sort, and we use lists in the geometry file anyway, so I tested on lists.
+
+      I used lambda functions to read the receiver file because they're just shorter to write. 
+
+      The sort functionality has no output, it sorts the list in memory, as opposed to outputing a copy. So be careful with this.
+
+      I also learned how to output slices of a list that meet specific conditions
+      >>>[(x,y,z) for (x,y,z) in grid if (x<100)]
+
+      I can successfully sort a list and take the relevant values 
+
+      Wrote up some pseudocode, since it sounds like what Will's doing
+
+6/2/19
+    Can we replace boomarray with a generator?
+
+    Generators let us use less memory and time. One bottleneck I can think of now is the boomarray size. 
+    I'll work on making that more readable and then convert it to a generator
+
+    I tested the timing on generators and it's anywhere from seven, to hundreds of times faster.
+
+    The generator is running slower in this prototype
+
+    I renamed the raymax range to whoosh and the fuction runs competatively now
+      (for some reason)
+      It's still not as good as it could, the average for generators has been observed
+       to be 10x faster
+
+    for ray in range(raymax):
+        veci = next(direction)
+    for ray in range(raymax):
+        ray = direction
+    
+    The bug was found. Using a third party variable makes the code more readable, but slows
+    it down on the order of hundreds of times. The initializer can now 
+    begin 1845747780 rays in just 389.3 seconds, the old method would run into memory problems
+    The 1825 ray size was too fast to measure.
+
+    or veci in direction:
+    #print(veci)
+
+    Is the correct version. The last thing was gibberish
+      
+    Things to look over on Tuesday:
+      My parser
+      Caching ray data
+      Ray generator
+
+6/4/19
+      Met and introduced new interns to code.
+
+      Examined memory usage in current code
+      The new method keeps the memory usage down. There is almost no change in memory no matter how many rays are used. 
+      Using boomarray does increase memory with rays and at spacing of 0.035 the program is using 60mb
+
+      Plan of action (Short Term)
+        
+        Branch 1
+          i) Generators
+            Use generators to shorten the time needed to run calculations and reduce memory needed.
+            Currently uses less memory but takes more time to do calculations, this is a bug that can be fixed.
+              Also of note: when prototyping this I found that generators are able to have more points used than our current methods
+
+          ii) Cache 
+            Cache ray data so that when the dx,alpha, and diffusion are going to be used in frequency calculations
+              they can instead be accessed to avoid needing to calculate again.
+            This will take a significant amount of memory, to avoid bloat, this step must come after memory is saved using generators
+
+          iii) Parallelization
+            The final point in this chain. Combined both of these methods will allow for ease of parallelization, our goal from the 
+              beginning
+
+        Branch 2
+          Validation
+            Validate the code as it exists now.
+            We have a year's worth of work. We will take what we have working now and synthesize them into one working program before 
+              branching off more.
+            I will compare our current results to Fortran before creating new features
+
+
+      Plan of action (Long Term)
+        Concepts: 
+          Ray Bending / Temperature
+
+          Inputs
+
+          Third thing
+
+          Radiosity
+
+          Complex Geometry Parser (Will)
+
+          Turbulence
+
+6/6/19
+        Looking at parallelization
+
+        Parallelization can be done using either multiprocessing or threading.
+
+        One method of multiprocessing is the Pool module. 
+          Found that Pool does not work well for fast near instant processes. It has a startup time of around .13 seconds
+          Did not find any performance gains until over 10000 processes run at minimum
+
+          Program will freeze if code body is not nested in an main conditional
+
+          Tested Pools with generator, it doesn't seem to be able to interact with
+            generators, and also seems to run slower than what I've already been doing.
+
+        
+        Got a veci generator working with the time and memory benefits
+          The timing runs the way the way initially guessed
+          Now to work on the readability 
+
+        "For ray in boom carpet" is worded pretty well
+        At first it broke the program because we use D to iterate thru the alphas, but I just recalculated D 
+
+          I don't see the 100x increase in comp time, that may be because there's other processes running and it's negligible
+            compared to them, but the memory is down a lot. 
+            Uses less than 32 MB when tested using mem_profile module
+
+        Added a note about what I'm planning to use the Receiver geometry module for
+
+        Learned how to import with namespace
+          I'll see what doors this opens later
+
+          from [module] import *

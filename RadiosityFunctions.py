@@ -24,40 +24,31 @@ def PATCHESSHORT(min,max,N,q,dd):
 
 
 #Unfinished
-def CREATEPATCHARRAY(ddm,ddl,Nm,Nl,x1,x2,y1,y2,z1,z2,patcharray,slope,b,slope1,b1,count,normal):
-#This function creates an array of patches for each plane
-#Raws
-    double precision x1,y1,x2,y2,z1,z2,normal(3)
-    #what is normal? a function or array? If array, why specificially index 3
-    real temp1(3),temp2(3),temp3(3),vec1(3),vec2(3)
-    #From Fortran, this is an array. Why is it referring to index 3.
-    real vec3(3),slope,b,ddz,ddy,ddx,zcenter,xcenter,ycenter
-    real slope1,b1
-    double precision patcharray(Nm*ddL,6),x,y,z,ddm(Nm),ddL(ddL),d
-    d = -x1*normal(1)-y1*normal(2)-z1*normal(3)
-    #normal looks like a string with 3 inputs
-
-#find how to do that
-    if z1 == z2:
+#def CREATEPATCHARRAY(ddm,ddL,Nm,ddL,x1,x2,y1,y2,z1,z2,patcharray,slope,b,slope1,b1,count,normal):
+def CREATEPATCHARRAY(ddm,ddL,Nm,ddL,origin,termius,patcharray,slope,b,slope1,b1,count,normal):
+    """
+    origin is x1,y1,z1
+    termius is x2,y2,z2
+    """
+    #This function creates an array of patches for each plane
+    d = -np.dot(origin,normal)
+    if (z1 == z2):
         count = 1
-        print('ZPLANE',ddl, Nm, x1, y1, z1)
-        for L in range (1,ddl):
-            for m in range(1,Nm):
-                x=x1-0.5*ddm[m]+sum(ddm[1:m])
-                y=y1-0.5*ddl[L]+sum(ddl[1:L])
-                #Translate SUM
-                z = (-d-normal[0]*x-normal[1]*y)/normal[2]
-                if m == 1:
-                    zcenter = z
-                if L == 1:
-                    ddz = z-z1
-                    #If loop may kill function early
-                    #if problems come try While loop?
+        print('ZPLANE',ddL, Nm, x1, y1, z1)
+        for L in range(ddL):
+            for m in range(Nm):
+                x = origin[0] - (ddm[m]/2) + sum(ddm[:m])
+                y = origin[1] - (ddL[L]/2) + sum(ddL[:L])
+                z = (-d -normal[0]*x -normal[1]*y)/normal[2]
+                if m == 0:
+                    zcenter=z
+                if L == 0:
+                    ddz=z-z1
                 else:
                     ddz = 0.5*(z-zcenter)
                 if (y > slope*x+b) or (y < slope1*x+b1):
 #                    GOTO 3
-#Meep
+
 #                patcharray(count,1)=x
 #                patcharray(count,2)=y
 #                patcharray(count,3)=z
