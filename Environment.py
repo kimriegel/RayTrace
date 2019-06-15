@@ -8,7 +8,7 @@
 import numpy as np
 import pywavefront as pwf
 from pywavefront import ObjParser
-import Parameterfile_methods
+import Parameterfile_methods as pfm
 
 class environment():
     """
@@ -33,34 +33,28 @@ class environment():
             return elem[0][axis]
         for index in range(0,len(vertices)):
             self.sortvert.append([vertices[index],index])
-            self.sortvert.sort(axissort)
+            self.sortvert.sort(key=axissort)
         self.axismin=self.sortvert[0][0][axis]
         self.axismax=self.sortvert[len(self.sortvert)-1][0][axis]
         self.axisheight=self.axismax-self.axismin
-        self.bandwidth=self.axisheight/256
-    def rayinteraction(self,ray,axis,divisions):
+        self.bandwidth=pfm.h*2 #sets bandwidth to 2x the step length
+    def rayinteraction(self,veci,F,axis):
         '''
         creates 
         '''
         subvert=[]
         subfaces=[]
         count=0
-        if ray[axis]>self.axismax or ray[axis]<self.axismin:
+        if veci[axis]>self.axismax or veci[axis]<self.axismin:
             pass
         else:
             subvert=self.sortvert
-            #print(len(subvert))
             bandwidth=self.axisheight
-            for divide in range(0,divisions):
-                if bandwidth <= 2*self.bandwidth:
-                    pass
-                elif ray[axis]<subvert[len(subvert)//2][0][axis]:
+            while bandwidth >self.bandwidth:
+                if veci[axis]<subvert[len(subvert)//2][0][axis]:
                     subvert=subvert[0:len(subvert)//2]
-                    #print(len(subvert))
                 else:
-                    # Rain drop     subvert chop chop
                     subvert=subvert[len(subvert)//2:len(subvert)]
-                    #print(len(subvert))
                 axismin=subvert[0][0][axis]
                 axismax=subvert[len(subvert)-1][0][axis]
                 axisheight=axismax-axismin
@@ -70,24 +64,38 @@ class environment():
             for x in range(0,len(self.faces)):
                 if vertindex in self.faces[x]:
                     subfaces.append(self.faces[x])
-        for face in range(0,len(subfaces)):
+        for face in range(0,len(subfaces)): # Using ray-plane algorithm from Haines chapter 3
             A=subfaces[face][0]
             B=subfaces[face][1]
             C=subfaces[face][2]
-            #print(self.sortvert)
+            V1=np.array(self.vertices[A]) #These create arrays of the vertices for the face
+            V2=np.array(self.vertices[B])
+            V3=np.array(self.vertices[C])
+            L1=V2-V1 # calculates the two vectors using V1 as the reference vertex
+            L2=V3-V1
+            normal=np.cross(L1,L2) # calculates the normal vector to the plane
+            D=np.dot(normal,V1) # calculates plane equation D: Ax+By+Cz+D=0
+            vd=np.dot(normal,F) # dot product between normal and ray direction
+            if vd==0: # ray is parallel to plane and no intersection occurs. ## special case??
+                pass
+            else:
+                v0=-(np.dot(normal,veci)+D) 
+                t=v0/vd # distance from ray origin to plane intersection
+                if t<0: # ray intersection behind ray origin
+                    pass
+                else:
+                    ri=veci+(F*t) # calculates ray intersection
+                    print('ray-plane intersection =' , ri)
+                    if vd<0: # Adjusts normal such that it points back towards ray-origin.
+                        rn=normal
+                        print('surface normal =' ,rn)
+                    else:
+                        rn=-normal
+                        print('surface normal =' ,rn)
 
-        print(subvert)
-        #print(len(subvert))
-        print(subfaces)
-        #print(len(subfaces))
         return
 
-environment=environment('/Users/lovelace/Will Costa Version/monkey.obj')
-environment.sortvert(environment.vertices,2)
-#print(len(environment.vertices))
-#print(environment.vertices)
-#print(environment.sortvert)
-#print(len(environment.faces))
-environment.rayinteraction([10,20,0],2,100)
-#print(environment.bandwidth)
-#print(environment.sortvert)
+#environment=environment('monkey.obj')
+#environment.sortvert(environment.vertices,2)
+#F=np.array([1,0,1])
+#environment.rayinteraction([10,20,0],F,2)
