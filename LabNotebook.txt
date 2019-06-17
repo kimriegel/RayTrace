@@ -989,4 +989,143 @@ Note: In my new version I tear all the rays into pieces and then make changes ea
 5/28
     Experimenting with caches
       It stores updates from no hit, but crashes when it hits a surface.
+<<<<<<< HEAD
       This is not a pun
+=======
+      This is not a pun
+
+      Remember to ask Dr Riegel about making our own LRU, since I don't think python's native one is useful here
+      and all the relevant info seems to be abstracted away.
+
+5/31
+    It's midnight so I'm not sure how to date this. It is 2:02 AM Friday May 31,2019, if I need to be super specific.
+    Made a parser/sorter.
+      I sorted the receivers by position as a test, since they're the most easily accessible geometry for me. 
+
+      Arrays were difficult to sort, and we use lists in the geometry file anyway, so I tested on lists.
+
+      I used lambda functions to read the receiver file because they're just shorter to write. 
+
+      The sort functionality has no output, it sorts the list in memory, as opposed to outputing a copy. So be careful with this.
+
+      I also learned how to output slices of a list that meet specific conditions
+      >>>[(x,y,z) for (x,y,z) in grid if (x<100)]
+
+      I can successfully sort a list and take the relevant values 
+
+      Wrote up some pseudocode, since it sounds like what Will's doing
+
+6/2/19
+    Can we replace boomarray with a generator?
+
+    Generators let us use less memory and time. One bottleneck I can think of now is the boomarray size. 
+    I'll work on making that more readable and then convert it to a generator
+
+    I tested the timing on generators and it's anywhere from seven, to hundreds of times faster.
+
+    The generator is running slower in this prototype
+
+    I renamed the raymax range to whoosh and the fuction runs competatively now
+      (for some reason)
+      It's still not as good as it could, the average for generators has been observed
+       to be 10x faster
+
+    for ray in range(raymax):
+        veci = next(direction)
+    for ray in range(raymax):
+        ray = direction
+    
+    The bug was found. Using a third party variable makes the code more readable, but slows
+    it down on the order of hundreds of times. The initializer can now 
+    begin 1845747780 rays in just 389.3 seconds, the old method would run into memory problems
+    The 1825 ray size was too fast to measure.
+
+    or veci in direction:
+    #print(veci)
+
+    Is the correct version. The last thing was gibberish
+      
+    Things to look over on Tuesday:
+      My parser
+      Caching ray data
+      Ray generator
+
+6/4/19
+      Met and introduced new interns to code.
+
+      Examined memory usage in current code
+      The new method keeps the memory usage down. There is almost no change in memory no matter how many rays are used. 
+      Using boomarray does increase memory with rays and at spacing of 0.035 the program is using 60mb
+
+      Plan of action (Short Term)
+        
+        Branch 1
+          i) Generators
+            Use generators to shorten the time needed to run calculations and reduce memory needed.
+            Currently uses less memory but takes more time to do calculations, this is a bug that can be fixed.
+              Also of note: when prototyping this I found that generators are able to have more points used than our current methods
+
+          ii) Cache 
+            Cache ray data so that when the dx,alpha, and diffusion are going to be used in frequency calculations
+              they can instead be accessed to avoid needing to calculate again.
+            This will take a significant amount of memory, to avoid bloat, this step must come after memory is saved using generators
+
+          iii) Parallelization
+            The final point in this chain. Combined both of these methods will allow for ease of parallelization, our goal from the 
+              beginning
+
+        Branch 2
+          Validation
+            Validate the code as it exists now.
+            We have a year's worth of work. We will take what we have working now and synthesize them into one working program before 
+              branching off more.
+            I will compare our current results to Fortran before creating new features
+
+
+      Plan of action (Long Term)
+        Concepts: 
+          Ray Bending / Temperature
+
+          Inputs
+
+          Third thing
+
+          Radiosity
+
+          Complex Geometry Parser (Will)
+
+          Turbulence
+
+6/6/19
+        Looking at parallelization
+
+        Parallelization can be done using either multiprocessing or threading.
+
+        One method of multiprocessing is the Pool module. 
+          Found that Pool does not work well for fast near instant processes. It has a startup time of around .13 seconds
+          Did not find any performance gains until over 10000 processes run at minimum
+
+          Program will freeze if code body is not nested in an main conditional
+
+          Tested Pools with generator, it doesn't seem to be able to interact with
+            generators, and also seems to run slower than what I've already been doing.
+
+        
+        Got a veci generator working with the time and memory benefits
+          The timing runs the way the way initially guessed
+          Now to work on the readability 
+
+        "For ray in boom carpet" is worded pretty well
+        At first it broke the program because we use D to iterate thru the alphas, but I just recalculated D 
+
+          I don't see the 100x increase in comp time, that may be because there's other processes running and it's negligible
+            compared to them, but the memory is down a lot. 
+            Uses less than 32 MB when tested using mem_profile module
+
+        Added a note about what I'm planning to use the Receiver geometry module for
+
+        Learned how to import with namespace
+          I'll see what doors this opens later
+
+          from [module] import *
+>>>>>>> b39ef6649cecc2a366c921281aac9962907b53e9

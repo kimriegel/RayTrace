@@ -16,8 +16,14 @@ hr = 20.0
 theta = 1.6863372
 phi = 3.44458181
 #boomspacing = 0.06   #.6
+<<<<<<< HEAD
 #boomspacing= 0.035
 boomspacing= 1
+=======
+boomspacing= 0.035
+#boomspacing= 0.01
+#boomspacing= 1
+>>>>>>> b39ef6649cecc2a366c921281aac9962907b53e9
 xmin = -1
 ymin = 30.0
 zmin = 0.0
@@ -29,7 +35,11 @@ h = 10.0
 absorbplanes = 1
 #allocate(tempalphabuilding(absorbplanes,8))
 #Find way to rephrase
+<<<<<<< HEAD
 outputfile = 'PythonTest.txt'
+=======
+outputfile = 'PythonTest035.txt'
+>>>>>>> b39ef6649cecc2a366c921281aac9962907b53e9
 #Turn Radiosity on or off.  This will include diffuse reflections
 radiosity = 0
 #Turn on complex absorption
@@ -58,6 +68,12 @@ percentdiffuse = 0.0
 #     [0.01,0.01,0.01,0.02,0.02,0.02,0.03,0.03],[0.01,0.01,0.01,0.02,0.02,0.02,0.03,0.03]])
 # print(tempalphaground)
 
+<<<<<<< HEAD
 if __name__ == "__main__":      #being lazy. You can run from here now
     import RayTrace
     #pass
+=======
+#if __name__ == "__main__":      #being lazy. You can run from here now
+#    import RayTrace
+#    #pass
+>>>>>>> b39ef6649cecc2a366c921281aac9962907b53e9

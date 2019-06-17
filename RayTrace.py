@@ -1,7 +1,11 @@
 # RayTrace
+<<<<<<< HEAD
 # version 1.0.10
+=======
+# version 1.1.0
+>>>>>>> b39ef6649cecc2a366c921281aac9962907b53e9
 
-# Kimberly Lefkowitz created this program to propagate sonic booms around
+# Kimberly A. Riegel, PHD created this program to propagate sonic booms around
 # large structures, and to graduate. It is a ray tracing model that 
 # will include specular and diffuse reflections. It will print out the
 # sound field at ear height, at relevant microphone locations, and at 
@@ -10,14 +14,27 @@
 # Dr. Riegel, William Costa, and George Seaton porting program from Fortran to python
 
 # Initialize variables and functions
+<<<<<<< HEAD
+=======
+import numpy as np
+
+>>>>>>> b39ef6649cecc2a366c921281aac9962907b53e9
 import Parameterfile as PF
 import BuildingGeometry as BG
-import numpy as np
 import Functions as fun
 import ReceiverPointSource as RPS
+<<<<<<< HEAD
 #import GeometryParser as BG
 
 import time
+=======
+import Environment as ENV
+#import GeometryParser as BG
+
+import time
+#import memory_profiler as mem 
+
+>>>>>>> b39ef6649cecc2a366c921281aac9962907b53e9
 t = time.time()
       
 # What it does not do
@@ -56,6 +73,15 @@ def updateFreq(dx,alpha,diffusion):
  
       phase =np.where(masque,drei,ein)
       amplitude *= ((1.0-alpha) * (1.0-diffusion) * np.exp(-airabsorb*dx))
+<<<<<<< HEAD
+=======
+
+def vex(y,z):
+    """The x coordinate of the ray 
+    Used for veci"""
+    #return np.array((D-Finitial[1]*y-Finitial[2]*z)/Finitial[0])
+    return (D-Finitial[1]*y-Finitial[2]*z)/Finitial[0]
+>>>>>>> b39ef6649cecc2a366c921281aac9962907b53e9
 
 # port and import receiver file
 receiverhit=0
@@ -73,13 +99,21 @@ lastreceiver = np.zeros(3)
 lastreceiver2 = np.zeros(3)
 receiverpoint  = np.zeros(3)
 receiverpoint2 = np.zeros(3)
+<<<<<<< HEAD
 OC = np.empty(3)
+=======
+#OC = np.empty(3)
+>>>>>>> b39ef6649cecc2a366c921281aac9962907b53e9
 
 # Read in input file
 with open(PF.INPUTFILE) as IPFile:
       inputsignal=np.loadtxt(IPFile)
 K=len(inputsignal)
+<<<<<<< HEAD
 masque = inputsignal>0
+=======
+#masque = inputsignal>0
+>>>>>>> b39ef6649cecc2a366c921281aac9962907b53e9
 HUGE=1000000.0
 
 # Allocate the correct size to the signal and fft arrays
@@ -100,6 +134,7 @@ ninitial   =np.sin(PF.phi)*np.sin(PF.theta)
 zetainitial=np.cos(PF.theta)
 length =    np.sqrt(xiinitial*xiinitial+ninitial*ninitial+zetainitial*zetainitial)
 Finitial=np.array([xiinitial,ninitial,zetainitial])
+<<<<<<< HEAD
 tmp=(Finitial[0]*Vinitial[0]+Finitial[1]*Vinitial[1]+Finitial[2]*Vinitial[2])
 PLANEABC=np.array([Finitial[0],Finitial[1],Finitial[2],tmp])
 
@@ -114,6 +149,24 @@ elif(PF.zmin == PF.zmax):
    RAYMAX=int((PF.ymax-PF.ymin)/yspace)*int((PF.xmax-PF.xmin)/xspace)
 print(RAYMAX , ' is the RAYMAX')
 boomarray,sizex,sizey,sizez=fun.InitialGrid(PF.boomspacing,PLANEABC[0],PLANEABC[1],PLANEABC[2],PLANEABC[3],PF.theta,PF.phi,PF.xmin,PF.ymin,PF.zmin,PF.xmax,PF.ymax,PF.zmax,RAYMAX)
+=======
+D = np.dot(Finitial,Vinitial)   #equivalent to tmp
+
+#       Create initial boom array
+            #     Roll this all into a function later
+yspace=PF.boomspacing*abs(np.cos(PF.phi))
+zspace=PF.boomspacing*abs(np.sin(PF.theta))
+if (PF.xmin == PF.xmax):
+   raymax=int((PF.ymax-PF.ymin)/yspace)*int((PF.zmax-PF.zmin)/zspace)
+print(raymax , ' is the raymax')
+
+j = np.arange(1,1+int((PF.ymax-PF.ymin)//yspace))
+k = np.arange(1,1+int((PF.zmax-PF.zmin)//zspace))
+rayy = PF.ymin + j*yspace
+rayz = PF.zmin + k*zspace
+
+boomcarpet = ((vex(y,z),y,z) for z in rayz for y in rayy )
+>>>>>>> b39ef6649cecc2a366c921281aac9962907b53e9
 
 #     Create a receiver array, include a receiver file. 
 alphanothing = np.zeros(sizeffttwo)
@@ -127,7 +180,10 @@ for R in ears:          #hotfix
 
 #       Initialize normalization factor 
 normalization=(PI*radius2)/(PF.boomspacing**2) 
+<<<<<<< HEAD
 #temparray=np.empty((    RPS.Receiver.arraysize,sizeffttwo,6))
+=======
+>>>>>>> b39ef6649cecc2a366c921281aac9962907b53e9
 
 outputarray1=np.zeros((sizeffttwo,6))
 dhoutputarray1=np.zeros((sizeffttwo,6))  
@@ -178,6 +234,11 @@ for W in range(PF.absorbplanes):        #These also look minimal
             alphabuilding[W,D]    =    PF.tempalphabuilding[W,6]
         elif frecuencias[D,0] >= 5680.0 or frecuencias[D,0] < frecuencias[sizeffttwo,0] :
             alphabuilding[W,D]    =    PF.tempalphabuilding[W,7]
+<<<<<<< HEAD
+=======
+
+D = np.dot(Finitial,Vinitial)   # Hotfix  We used this name right above
+>>>>>>> b39ef6649cecc2a366c921281aac9962907b53e9
 
 #        Mesh the patches for the environment.  Include patching file. 
 diffusionground = 0.0
@@ -187,6 +248,7 @@ if PF.radiosity:  # If it exists as a non-zero number
 else:
       diffusion = 0.0
 
+<<<<<<< HEAD
 # Begin the tracing
 #     Loop through the intial ray locations
 print('began rays')
@@ -204,12 +266,39 @@ if ray:                 #for debugging
             #break
       F = np.array(Finitial)
       veci = boomarray[ray,:]
+=======
+raycounter = 1
+
+####### These are for debugging, Uncomment this block and comment out the for loop below
+#ray = 606                     # @ PF.boomspacing = 1
+#for i in range(606):
+#      ray =      next(boomcarpet)
+#      raycounter += 1
+#
+#if ray:
+# Begin tracing
+print('began rays')
+for ray in boomcarpet:              #Written like this for readability
+      veci = ray      # initial ray position
+      hitcount=0
+      doublehit=0
+      amplitude = frecuencias[:,1]/normalization
+      phase=frecuencias[:,2]
+      if (PF.h < (2*PF.radius)): 
+            print('h is less than 2r')
+            break
+      F = np.array(Finitial)                                      # Direction
+>>>>>>> b39ef6649cecc2a366c921281aac9962907b53e9
       for I in range(PF.IMAX):      # Making small steps along the ray path.  For each step we should return, location, phase and amplitude
             dxreceiver=HUGE
             # Find the closest sphere and store that as the distance
             for R in ears:
                   # The way that tempreceiver works now, it's only used here and only should be used here. It's not defined inside the receiver because it's ray dependant.
+<<<<<<< HEAD
                   tempreceiver = R.SphereCheck(radius2,F,veci)    #distrance to receiver
+=======
+                  tempreceiver = R.SphereCheck(radius2,F,veci)    # Distrance to receiver
+>>>>>>> b39ef6649cecc2a366c921281aac9962907b53e9
                   if (receiverhit >= 1):  #if you hit a receiver last time, don't hit it again
                         if np.all(R.position ==lastreceiver):
                               tempreceiver=HUGE
@@ -290,7 +379,7 @@ if ray:                 #for debugging
                   for R in ears:
                         if dx == R.dxreceiver:
                               #print('Ray ',ray +1,' hit receiver ',R.recNumber,' at step ',I)
-                              print('Ray ',ray +1,' hit receiver ',R.recNumber)
+                              print('Ray ',raycounter,' hit receiver ',R.recNumber)
                               veci += (dx*F)
                               receiverhit=1
                               checkdirection=F
@@ -377,20 +466,14 @@ if ray:                 #for debugging
             else:     #     If there was no interaction with buildings then proceed with one step. 
                   veci += (PF.h*F)
                   updateFreq(PF.h,alphanothing,0)
-      print('finished ray', ray + 1)
+      raycounter +=1
+      print('finished ray', raycounter)
 
 # Radiosity removed for readability
-
 
 #Reconstruct the time signal and print to output file
 for R in ears:
       R.timeReconstruct(sizefft)
-
-#print(list(ears[1].magnitude))
-#print(list(ears[1].direction))
-#print(list(ears[1].signal))
-      #TIMERECONSTRUCT(sizefft, timearray, arraysize, temparray, timetemparray)
-#print(timearray[:5])   #magnitude, initial pressure,direction, timearray, timesignal
 
 print('Writing to output file')
 fileid = PF.outputfile 

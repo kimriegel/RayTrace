@@ -50,12 +50,11 @@ class environment():
             return elem[0][axis]
         for index in range(0,len(vertices)):
             self.sortvert.append([vertices[index],index])
-            self.sortvert.sort(axissort)
+            self.sortvert.sort(key=axissort)
         self.axismin=self.sortvert[0][0][axis]
         self.axismax=self.sortvert[len(self.sortvert)-1][0][axis]
         self.axisheight=self.axismax-self.axismin
-        self.bandwidth=2*pfm.h
-        
+        self.bandwidth=pfm.h*2 #sets bandwidth to 2x the step length
     def rayinteraction(self,veci,F,axis):
         '''
         test function for ray-environment interaction.
@@ -74,48 +73,113 @@ class environment():
             while bandwidth > self.bandwidth:
                 if veci[axis]<subvert[len(subvert)//2][0][axis]:
                     subvert=subvert[0:len(subvert)//2]
-                    #print(len(subvert))
                 else:
-                    # Rain drop     subvert chop chop
                     subvert=subvert[len(subvert)//2:len(subvert)]
-                    #print(len(subvert))
                 axismin=subvert[0][0][axis]
                 axismax=subvert[len(subvert)-1][0][axis]
                 axisheight=axismax-axismin
                 bandwidth=axisheight
-        for vertex in range(0,len(subvert)): # iterating through vertices in subvert
-            vertindex=subvert[vertex][1] # sets the index of the vertex
-            for x in range(0,len(self.faces)): #iterates through the list of faces
-                if self.faces[x] in subfaces: # if the indexed face is already in subfaces, do not append# This sanitation check is slow, alternative methods?
-                    pass
-                elif vertindex in self.faces[x]: # if the indexed vertex is in the face,
-                    subfaces.append(self.faces[x]) 
-        for face in range(0,len(subfaces)): # iterate through faces
-            faceA=subfaces[face][0] 
-            faceB=subfaces[face][1]
-            faceC=subfaces[face][2]
-            VertexA=self.vertices[faceA]
-            VertexB=self.vertices[faceB]
-            VertexC=self.vertices[faceC]
-            LineAC=[VertexC[0]-VertexA[0],VertexC[1]-VertexA[1],VertexC[2]-VertexA[2]]
-            LineAB=[VertexB[0]-VertexA[0],VertexB[1]-VertexA[1],VertexB[2]-VertexA[2]]
-            Normal=np.cross(LineAC,LineAB)
-            print(Normal)
-            DotProduct=np.dot(Normal,F)
-            print(DotProduct)
-            
-            if DotProduct==0:
+        for vertex in range(0,len(subvert)):
+            vertindex=subvert[vertex][1]
+            for x in range(0,len(self.faces)):
+                if vertindex in self.faces[x]:
+                    subfaces.append(self.faces[x])
+        for face in range(0,len(subfaces)): # Using ray-plane algorithm from Haines chapter 3
+            A=subfaces[face][0]
+            B=subfaces[face][1]
+            C=subfaces[face][2]
+            V1=np.array(self.vertices[A]) #These create arrays of the vertices for the face
+            V2=np.array(self.vertices[B])
+            V3=np.array(self.vertices[C])
+            L1=V2-V1 # calculates the two vectors using V1 as the reference vertex
+            L2=V3-V1
+            normal=np.cross(L1,L2) # calculates the normal vector to the plane
+            D=np.dot(normal,V1) # calculates plane equation D: Ax+By+Cz+D=0
+            vd=np.dot(normal,F) # dot product between normal and ray direction
+            if vd==0: # ray is parallel to plane and no intersection occurs. ## special case??
                 pass
             else:
+                v0=-(np.dot(normal,veci)+D) 
+                t=v0/vd # distance from ray origin to plane intersection
+                if t<0: # ray intersection behind ray origin
+                    pass
+                else:
+                    ri=veci+(F*t) # calculates ray intersection
+                    print('ray-plane intersection =' , ri)
+                    if vd<0: # Adjusts normal such that it points back towards ray-origin.
+                        rn=normal
+                        print('surface normal =' ,rn)
+                    else:
+                        rn=-normal
+                        print('surface normal =' ,rn)
+                    dominant=np.argmax(normal) # Haines 3.2, coordinate w/ greatest magnitude
+                    uv1=np.delete(V1,dominant) # translation to UV coordinates
+                    uv2=np.delete(V2,dominant)
+                    uv3=np.delete(V3,dominant)
+                    riuv=np.delete(ri,dominant) # ray intersection UV coordinates
+                    uv1p=uv1-riuv #uv1prime, etc. adjusted ray intersection to coordinate system origin
+                    uv2p=uv2-riuv
+                    uv3p=uv3-riuv
+                    nc=0 #number of crossings
+                    sh=0 # sign holder
+                    nsh=0 # next sign holder
+                    # first edge test
+                    if uv1p[1]<0:
+                        sh=-1
+                    else:
+                        sh=1
+                    if uv2p[1]<0:
+                        nsh=-1
+                    else:
+                        nsh=1
+                    if sh!=nsh:
+                        if uv1p[0]>0 and uv2p[0]:
+                            nc=nc+1
+                        elif uv1p[0]>0 or  uv2p[0]>0:
+                            if uv1p[0]-uv1p[1]*(uv2p[0]-uv1p[0])/(uv2p[1]-uv1p[1])>0:
+                                nc=nc+1
+                        sh=nsh
+                    #second edge test
+                    if uv2p[1]<0:
+                        sh=-1
+                    else:
+                        sh=1
+                    if uv3p[1]<0:
+                        nsh=-1
+                    else:
+                        nsh=1
+                    if sh!=nsh:
+                        if uv2p[0]>0 and uv3p[0]:
+                            nc=nc+1
+                        elif uv2p[0]>0 or  uv3p[0]>0:
+                            if uv2p[0]-uv2p[1]*(uv3p[0]-uv2p[0])/(uv3p[1]-uv2p[1])>0:
+                                nc=nc+1
+                        sh=nsh
+                    #third edge test
+                    if uv3p[1]<0:
+                        sh=-1
+                    else:
+                        sh=1
+                    if uv1p[1]<0:
+                        nsh=-1
+                    else:
+                        nsh=1
+                    if sh!=nsh:
+                        if uv3p[0]>0 and uv1p[0]:
+                            nc=nc+1
+                        elif uv3p[0]>0 or  uv1p[0]>0:
+                            if uv1p[0]-uv3p[1]*(uv1p[0]-uv3p[0])/(uv1p[1]-uv3p[1])>0:
+                                nc=nc+1
+                        sh=nsh
+                    if nc%2==0:
+                        pass
+                    if nc%2!=0:
+                        print('test')
 
-        # Next step, generating the planes using vertices of the faces, and hitting it with a ray.
-        
+
         return
 
-environment=environment('/Users/lovelace/RayTrace/monkey.obj')
+environment=environment('monkey.obj')
 environment.sortvert(environment.vertices,2)
-#print(environment.vertices)
-#print(environment.faces)
-#print(environment.normals)
-environment.rayinteraction([10,20,0],[-1,0,1],2)
-
+F=np.array([1,0,1])
+environment.rayinteraction([10,20,0],F,2)

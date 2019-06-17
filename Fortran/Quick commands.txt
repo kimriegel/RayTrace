@@ -16,7 +16,16 @@ old: cd /cygdrive/c/users/kory\ george/documents/raytracecode/'Fortran Test'
 ls
 
 
+#ray = 606                     # @ PF.boomspacing = 1
+#ray = 455174                 # @ PF.boomspacing = 0.06
+#if ray:                 #for debugging
+      #veci = boomarray[ray,:]                                     # Position
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> b39ef6649cecc2a366c921281aac9962907b53e9
 cd /cygdrive/c/users/kory\ george/documents/RayTrace/Fortran
 gfortran -c raytrace.f
 gfortran -c functions.f 
