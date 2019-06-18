@@ -19,7 +19,7 @@ import ReceiverPointSource as RPS
 #import GeometryParser as BG
 
 import time
-import memory_profiler as mem 
+#import memory_profiler as mem 
 
 t = time.time()
       
