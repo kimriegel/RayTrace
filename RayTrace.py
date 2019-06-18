@@ -16,7 +16,7 @@ import BuildingGeometry as BG
 import Functions as fun
 import ReceiverPointSource as RPS
 import time
-import Environment as ENV
+import Environment
 #import GeometryParser as BG
 #import memory_profiler as mem 
 
@@ -204,13 +204,16 @@ raycounter = 1
 
 ####### These are for debugging, Uncomment this block and comment out the for loop below
 #ray = 606                     # @ PF.boomspacing = 1
-#for i in range(606):
-#      ray =      next(boomcarpet)
-#      raycounter += 1
-#
+for i in range(606):
+      ray =      next(boomcarpet)
+      raycounter += 1
+
 #if ray:
 # Begin tracing
-print('Memory (before) : ' + str(mem.memory_usage()) + 'MB')
+
+#print('Memory (before) : ' + str(mem.memory_usage()) + 'MB')
+building=Environment.environment('SingleBuilding.obj')
+building.sortvert(building.vertices,2)
 print('began rays')
 for ray in boomcarpet:              #Written like this for readability
       veci = ray      # initial ray position
@@ -218,7 +221,11 @@ for ray in boomcarpet:              #Written like this for readability
       doublehit=0
       amplitude = frecuencias[:,1]/normalization
       phase=frecuencias[:,2]
-      F = np.array(Finitial)                                      # Direction
+      F = np.array(Finitial)
+      building.rayinteraction(veci,F,2)
+      print(building.t)
+      F = np.array(Finitial)  
+                                   # Direction
 
       for I in range(PF.IMAX):      # Making small steps along the ray path.  For each step we should return, location, phase and amplitude
             dxreceiver=HUGE
@@ -268,44 +275,16 @@ for ray in boomcarpet:              #Written like this for readability
                   dxground=HUGE
 
             #     Check intersection with building
-            dxbuilding=HUGE
             hit=0
             planehit=0
-            #     Check intersection with Boxes
-            for Q in range(0,BG.Boxnumber):
-                  dxnear, dxfar, hit, planehit=fun.BOX(BG.Boxarraynear[Q], BG.Boxarrayfar[Q],veci,F)
-                  if (dxnear < dxbuilding):
-                        dxbuilding=dxnear
-                        Vecip1=veci+np.multiply(dxbuilding,F)
-                        whichbox=Q
-                        nbox=fun.PLANE(Vecip1, BG.Boxarraynear[whichbox],BG.Boxarrayfar[whichbox], planehit)
-            #     Check intersection with Triangles
-            if(BG.TriangleNumber > 0):
-                  for Q in range(0, BG.TriangleNumber):
-                        dxnear, behind = fun.Polygon(veci,F,Q,3,TriangleNumber,PointNumbers,Trianglearray,BuildingPoints,normal,FaceNormalNo,FaceNormals)
-                        if (dxnear < dxbuilding):
-                              dxbuilding=dxnear
-                              nbox=normal
-                              whichbox=Q
-            #     Check intersection with Squares
-            if(BG.SquareNumber>0):
-                  for Q in range(0,BG.SquareNumber):
-                        dxnear, behind=Polygon(veci,F,Q,4,SquareNumber,PointNumbers,SquareArray,BuildingPoints,normal,FaceNormalNo,FaceNormals)
-                        if (dxnear < dxbuilding):
-                              dxbuilding=dxnear
-                              nbox=normal
-                              whichbox=Q
-            buildinghit=0
-            receiverhit=0
-            groundhit=0
-
+            dxbuilding=building.t
             #     Check to see if ray hits within step size
             if (dxreceiver < PF.h or dxground < PF.h or dxbuilding < PF.h):
                   dx=min(dxreceiver,dxground,dxbuilding)
                   #     if the ray hits a receiver, store in an array.  If the ray hits two, create two arrays to store in.
                   for R in ears:
                         if dx == R.dxreceiver:
-                              #print('Ray ',raycounter,' hit receiver ',R.recNumber)
+                              print('Ray ',raycounter,' hit receiver ',R.recNumber)
                               veci += (dx*F)
                               receiverhit=1
                               checkdirection=F
@@ -344,7 +323,7 @@ for ray in boomcarpet:              #Written like this for readability
                         tmp = np.dot(GROUNDABC,veci)
                         if(tmp != GROUNDD): 
                               veci[2] = 0
-                        #print('hit ground at ',I)
+                        print('hit ground at ',I)
                         dot1 = np.dot(F,nground)
                         n2 = np.dot(nground,nground)
                         F -= (2.0*(dot1/n2 *nground))
@@ -365,14 +344,15 @@ for ray in boomcarpet:              #Written like this for readability
                                                             patcharray[Q,W,6]=abs(temp4)
                                                             patcharray[Q,W,7]=np.arctan(temp4.imag,temp4.real)
                   if (dx==dxbuilding):                  #     if the ray hits the building then change the direction and continue
+                        environment.rayinteraction(veci,F,2)
                         veci += (dx*F)
-                        #print('hit building at step ',I)
-                        n2 = np.dot(nbox,nbox)
-                        nbuilding=nbox/np.sqrt(n2)
-                        dot1= np.dot(F,nbuilding)
-                        F -= (2.0*(dot1/n2 *nbuilding))
-                        length = np.sqrt(np.dot(F,F))
-                        buildinghit=1
+                        print('hit building at step ',I)
+                        #n2 = np.dot(nbox,nbox)
+                        #nbuilding=nbox/np.sqrt(n2)
+                        #dot1= np.dot(F,nbuilding)
+                        #F -= (2.0*(dot1/n2 *nbuilding))
+                        #length = np.sqrt(np.dot(F,F))
+                        #buildinghit=1
                         if PF.complexabsorption:
                               if PF.absorbplanes==2:
                                     if (veci[2]>0.0) and (veci[2]<height1):
@@ -392,8 +372,9 @@ for ray in boomcarpet:              #Written like this for readability
                   veci += (PF.h*F)
                   updateFreq(PF.h,alphanothing,0)
       #print('finished ray', raycounter)
-      if (raycounter%100) == 0:
-            print('finished ray', raycounter,str(mem.memory_usage()) + 'MB')
+      #if (raycounter%100) == 0:
+      #      print('finished ray', raycounter) #,str(mem.memory_usage()) + 'MB')
+      print('finished ray', raycounter) #,str(mem.memory_usage()) + 'MB')
 
       raycounter +=1
 

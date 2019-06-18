@@ -35,9 +35,9 @@ class environment():
         self.wavefront=pwf.Wavefront(file_name)
         environment=ObjParser(self.wavefront,file_name, strict=False, encoding="utf-8", create_materials=False, collect_faces=True, parse=True, cache=False)
         environment.parse_f
-        self.normals=environment.normals
         self.vertices=environment.wavefront.vertices[0:len(environment.wavefront.vertices)//2]
         self.faces=environment.mesh.faces
+        self.t=100
         #self.vertlength=[0,len(self.vertices)]
         #self.sortvert=dict([len(self.vertices),self.vertices])
     #def intersection(self,ray,faces):
@@ -93,26 +93,31 @@ class environment():
             V3=np.array(self.vertices[C])
             L1=V2-V1 # calculates the two vectors using V1 as the reference vertex
             L2=V3-V1
-            normal=np.cross(L1,L2) # calculates the normal vector to the plane
-            D=np.dot(normal,V1) # calculates plane equation D: Ax+By+Cz+D=0
-            vd=np.dot(normal,F) # dot product between normal and ray direction
+            normal=np.cross(L1,L2)
+            unitnormal=normal/np.sqrt(np.dot(normal,normal)) # calculates the normal vector to the plane
+            D=np.dot(unitnormal,V1) # calculates plane equation D: Ax+By+Cz+D=0
+            print(D)
+            vd=np.dot(unitnormal,F) # dot product between normal and ray direction
+            print(vd)
             if vd==0: # ray is parallel to plane and no intersection occurs. ## special case??
+                self.t=1000000 #HOTFIX
                 pass
             else:
-                v0=-(np.dot(normal,veci)+D) 
-                t=v0/vd # distance from ray origin to plane intersection
-                if t<0: # ray intersection behind ray origin
+                v0=-(np.dot(unitnormal,veci)+D)
+                print(v0)
+                self.t=v0/vd # distance from ray origin to plane intersection
+                if self.t<0: # ray intersection behind ray origin
                     pass
                 else:
-                    ri=veci+(F*t) # calculates ray intersection
-                    print('ray-plane intersection =' , ri)
+                    ri=veci+(F*self.t) # calculates ray intersection
+                    #print('ray-plane intersection =' , ri)
                     if vd<0: # Adjusts normal such that it points back towards ray-origin.
-                        rn=normal
-                        print('surface normal =' ,rn)
+                        rn=unitnormal
+                        #print('surface normal =' ,rn)
                     else:
-                        rn=-normal
-                        print('surface normal =' ,rn)
-                    dominant=np.argmax(normal) # Haines 3.2, coordinate w/ greatest magnitude
+                        rn=-unitnormal
+                        #print('surface normal =' ,rn)
+                    dominant=np.argmax(unitnormal) # Haines 3.2, coordinate w/ greatest magnitude
                     uv1=np.delete(V1,dominant) # translation to UV coordinates
                     uv2=np.delete(V2,dominant)
                     uv3=np.delete(V3,dominant)
@@ -174,16 +179,17 @@ class environment():
                     if nc%2==0:
                         pass
                     if nc%2!=0:
-                        print('test')
-            rn2=np.dot(rn,rn)
-            nbuilding=rn/np.sqrt(rn2)
-            dot1=np.dot(F,nbuilding)
-            F-=(2.0*(dot1/rn2*nbuilding)))
-            length=np.sqrt(np.dot(F,F))      
+                        #print('test')
+                        rn2=np.dot(rn,rn)
+                        nbuilding=rn/np.sqrt(rn2)
+                        dot1=np.dot(F,nbuilding)
+                        F=F-(2.0*(dot1/rn2*nbuilding))
+                        length=np.sqrt(np.dot(F,F))      
 
         return F
 
-#environment=environment('monkey.obj')
-#nvironment.sortvert(environment.vertices,2)
+#environment=environment('SingleBuilding.obj')
+#environment.sortvert(environment.vertices,2)
 #F=np.array([1,0,1])
 #environment.rayinteraction([10,20,0],F,2)
+#print(environment.t)
