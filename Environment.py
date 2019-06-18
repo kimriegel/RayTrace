@@ -35,8 +35,9 @@ class environment():
         self.wavefront=pwf.Wavefront(file_name)
         environment=ObjParser(self.wavefront,file_name, strict=False, encoding="utf-8", create_materials=False, collect_faces=True, parse=True, cache=False)
         environment.parse_f
+        L = len(environment.wavefront.vertices)//2 # Half number of vertices; Hotfix
         self.normals=environment.normals
-        self.vertices=environment.wavefront.vertices[0:len(environment.wavefront.vertices)//2]
+        self.vertices=environment.wavefront.vertices[0:L]   #hotfix
         self.faces=environment.mesh.faces
         #self.vertlength=[0,len(self.vertices)]
         #self.sortvert=dict([len(self.vertices),self.vertices])
@@ -46,11 +47,11 @@ class environment():
         Sorts the list self.vertices into the list self.sortvert. List sorted by axis X-0, Y-1, Z-2
         '''
         self.sortvert=[]
-        def axissort(elem):
+        def axissort(elem): #key for axis for sort function
             return elem[0][axis]
-        for index in range(0,len(vertices)):
-            self.sortvert.append([vertices[index],index])
-            self.sortvert.sort(key=axissort)
+        for index in range(0,len(vertices)):    #goes through vertices 
+            self.sortvert.append([vertices[index],index])   #creating index
+            self.sortvert.sort(key=axissort)    #assigns so we don't lose info
         self.axismin=self.sortvert[0][0][axis]
         self.axismax=self.sortvert[len(self.sortvert)-1][0][axis]
         self.axisheight=self.axismax-self.axismin
