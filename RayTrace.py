@@ -100,7 +100,7 @@ outputSignal = np.fft.rfft(inputSignal, sizeFFT)
 
 # Create initial signal
 frecuencias = initial_signal(sizeFFT, outputSignal)      # Equivalent to inputArray in original
-airAbsorb = Fun.ABSORPTION(Pf.ps, frecuencias[:, 0], Pf.hr, Pf.Temp)   # sizeFFTTwo
+airAbsorb = Fun.absorption(Pf.ps, frecuencias[:, 0], Pf.hr, Pf.Temp)   # sizeFFTTwo
 lamb = Pf.soundspeed/frecuencias[:, 0]     # Used for updating frequencies in update function
 timeArray = np.arange(K) / Pf.Fs
 
@@ -279,13 +279,13 @@ for ray in boomCarpet:              # Written like this for readability
         hit = 0
         planeHit = 0
         #     Check intersection with Boxes
-        for Q in range(0, Bg.Boxnumber):
-            dxNear, dxFar, hit, planeHit = Fun.BOX(Bg.Boxarraynear[Q], Bg.Boxarrayfar[Q], veci, F)
+        for Q in range(0, Bg.BoxNumber):
+            dxNear, dxFar, hit, planeHit = Fun.box(Bg.BoxArrayNear[Q], Bg.BoxArrayFar[Q], veci, F)
             if dxNear < dxBuilding:
                 dxBuilding = dxNear
                 Vecip1 = veci + np.multiply(dxBuilding, F)
                 whichBox = Q
-                nBox = Fun.PLANE(Vecip1, Bg.Boxarraynear[whichBox], Bg.Boxarrayfar[whichBox], planeHit)
+                nBox = Fun.plane(Vecip1, Bg.BoxArrayNear[whichBox], Bg.BoxArrayFar[whichBox], planeHit)
         # This part doesn't really work well.  We have not incorporated it.
         # Eventually all interactions will be triangles anyway so I'm leaving it here to be updated.
 
@@ -427,7 +427,7 @@ for R in ears:
 print('Writing to output file')
 fileid = Pf.outputfile
 with open(fileid, 'w') as f:
-    Fun.Header(fileid)
+    Fun.header(fileid)
 
 with open (fileid, 'a') as f:
     for w in range(sizeFFT):
