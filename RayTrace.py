@@ -211,6 +211,7 @@ raycounter = 1
 #
 #if ray:
 # Begin tracing
+print('Memory (before) : ' + str(mem.memory_usage()) + 'MB')
 print('began rays')
 for ray in boomcarpet:              #Written like this for readability
       veci = ray      # initial ray position
@@ -304,7 +305,7 @@ for ray in boomcarpet:              #Written like this for readability
                   #     if the ray hits a receiver, store in an array.  If the ray hits two, create two arrays to store in.
                   for R in ears:
                         if dx == R.dxreceiver:
-                              print('Ray ',raycounter,' hit receiver ',R.recNumber)
+                              #print('Ray ',raycounter,' hit receiver ',R.recNumber)
                               veci += (dx*F)
                               receiverhit=1
                               checkdirection=F
@@ -343,7 +344,7 @@ for ray in boomcarpet:              #Written like this for readability
                         tmp = np.dot(GROUNDABC,veci)
                         if(tmp != GROUNDD): 
                               veci[2] = 0
-                        print('hit ground at ',I)
+                        #print('hit ground at ',I)
                         dot1 = np.dot(F,nground)
                         n2 = np.dot(nground,nground)
                         F -= (2.0*(dot1/n2 *nground))
@@ -365,7 +366,7 @@ for ray in boomcarpet:              #Written like this for readability
                                                             patcharray[Q,W,7]=np.arctan(temp4.imag,temp4.real)
                   if (dx==dxbuilding):                  #     if the ray hits the building then change the direction and continue
                         veci += (dx*F)
-                        print('hit building at step ',I)
+                        #print('hit building at step ',I)
                         n2 = np.dot(nbox,nbox)
                         nbuilding=nbox/np.sqrt(n2)
                         dot1= np.dot(F,nbuilding)
@@ -390,7 +391,10 @@ for ray in boomcarpet:              #Written like this for readability
             else:     #     If there was no interaction with buildings then proceed with one step. 
                   veci += (PF.h*F)
                   updateFreq(PF.h,alphanothing,0)
-      print('finished ray', raycounter)
+      #print('finished ray', raycounter)
+      if (raycounter%100) == 0:
+            print('finished ray', raycounter,str(mem.memory_usage()) + 'MB')
+
       raycounter +=1
 
 # Radiosity removed for readability
