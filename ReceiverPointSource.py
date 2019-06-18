@@ -9,69 +9,69 @@ class Receiver:
     Functionality for pressure not yet added.
     """
     planenum=1
-    planename1='Single Point'
-    arraysize=0     #Number of receivers. Supposed to be 5 for this test    # I use it differently now, and only in one function
-    sizex=2
-    sizey=2
-    sizez=1
+    planename1 = 'Single Point'
+    arraysize = 0     # Number of receivers. Supposed to be 5 for this test    # I use it differently now, and only in one function
+    sizex = 2
+    sizey = 2
+    sizez = 1
     initial_frequency = None    # Gives this value to all receivers
 
-    rList = [] #See append_list
+    rList = []  # See append_list
 
     # I personally prefer writing Receiver.Array to Receiver.receiverarray
-    #Array = np.array([None])    
+    # Array = np.array([None])
     # This is now completely overlapped by rlist
 
-    def __init__(self,position):
+    def __init__(self, position):
         """
         Create and defines position of receiver
         
         Works automatically when class is called
         """
-        self.position=np.array(position)
-        self.recNumber = Receiver.arraysize         #planned for debugging but we don't seem to use it
-        Receiver.rList.append(self) #See append_list
-            # Initial values 
+        self.position = np.array(position)
+        self.recNumber = Receiver.arraysize         # planned for debugging but we don't seem to use it
+        Receiver.rList.append(self)  # See append_list
+        # Initial values
         self.pressure = 0
         self.magnitude = 0
         self.direction = 0
 
         Receiver.arraysize += 1
 
-    def on_Hit(self,amplitude,phase):
+    def on_Hit(self, amplitude, phase):
         """ 
         My version of old receiver hit function. 
         Modifies direction and magnitude of rays with respect to each receiver
         """
         XJ = complex(0,1)
-        #print('initiating hit function')
+        # print('initiating hit function')
 
         temp1 = abs(self.magnitude) * np.exp(XJ*self.direction)
         temp2 = abs(amplitude[:])   * np.exp(XJ*phase[:])
-        #print(temp2.shape)
-        #print(list(temp2[-20:]))
-        #print(list(temp2[:]))
-        #print(list(phase))
+        # print(temp2.shape)
+        # print(list(temp2[-20:]))
+        # print(list(temp2[:]))
+        # print(list(phase))
         temp3 = temp1 + temp2 
 
         self.magnitude =  abs(temp3)                                 
         self.direction =  np.arctan2(np.imag(temp3) , np.real(temp3))
         # See bug log 3/13 for what happened with positions checks
 
-    def SphereCheck(self,Sr2,F,veci):
+    def SphereCheck(self, Sr2, F, veci):
         '''
         This function performs a check whether a ray hits a sphere.  If
         it does hit then the function returns the distance to the sphere
         '''
         # Sc is receiver position
         # sr2 is radius2
-        HUGE=1000000.0
+        HUGE = 1000000.0
 
         Sc = self.position
         OC = Sc - veci 
-        #L2OC = np.sum( (OC*OC),axis=1)    
-        L2OC = np.dot(OC,OC)    #Equivalent?
-        tca = np.dot(OC,F)
+        # L2OC = np.sum( (OC*OC),axis=1)
+        L2OC = np.dot(OC, OC)    # Equivalent?
+        tca = np.dot(OC, F)
         t2hc = Sr2 - L2OC + (tca**2)
         if L2OC == Sr2:    
             dx = HUGE
@@ -81,13 +81,12 @@ class Receiver:
             dx = HUGE
         else:
             dx = tca - (t2hc**(1/2))
-        #Hey future me, remember to delete one of these later
+        # Hey future me, remember to delete one of these later
 
         self.dx = dx
-        self.dxreceiver = 0
-        return  dx 
+        return dx
 
-    def timeReconstruct(self,sizefft):
+    def timeReconstruct(self, sizefft):
         '''
         This Function computes the timesignal from a given fft.  It writes the
         time signal to an array
@@ -103,12 +102,12 @@ class Receiver:
         else:                                   # If not then calculate the timesignal 
             tempfft = abs(self.magnitude[:]) * np.exp(XJ*self.direction)
             tempfft = np.append(0,tempfft)
-            #print(list(np.real(tempfft)))
+            # print(list(np.real(tempfft)))
             # Compute ifft using numpy
             self.signal=np.fft.irfft(tempfft,int(sizefft)) * sizefft
-            #print('time signal @receiver 2: \n',list(self.signal[:100]))
+            # print('time signal @receiver 2: \n',list(self.signal[:100]))
 
-    #def timeheader(cls,f,time,sizex,sizey,sizez,planename):
+    # def timeheader(cls,f,time,sizex,sizey,sizez,planename):
     @classmethod
     def timeHeader(cls,f,time,w):
         """
@@ -120,7 +119,7 @@ class Receiver:
         #time = pass
         #This function prints the header between each time set
         f.write('ZONE T=" %s "\n' %(planename, ) )  #this worked in the command line
-        f.write('STRANDID=1, SOLUTIONTIME= %d \n'%(time,) )                                     #timearray tiempo/PF.Fs 
+        f.write('STRANDID=1, SOLUTIONTIME= %f \n' %(time) )                                     #timearray tiempo/PF.Fs
         f.write('I= %d\t J= %d\t K=%d\t ZONETYPE=Ordered\n' %(sizex, sizey, sizez))
         f.write('DATAPACKING=POINT\n')
         f.write('DT=(SINGLE SINGLE SINGLE SINGLE )\n')
