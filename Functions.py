@@ -231,8 +231,7 @@ def Header(outputfile):
 #        sizez=1
 #    return receiverarray,sizex,sizey,sizez
 #********************************************
-    
-<<<<<<< HEAD
+
 def InitialGrid(radius,A,B,C,D,theta,phi,xmin,ymin,zmin,xmax,ymax,zmax,arraysize):
     """This function creates an equally spaced grid of size "step" apart"""
     receiverarray=np.zeros((arraysize,3))
@@ -274,7 +273,7 @@ def InitialGrid(radius,A,B,C,D,theta,phi,xmin,ymin,zmin,xmax,ymax,zmax,arraysize
         sizey=int((ymax-ymin)/yspace)
         sizez=1
     return receiverarray, sizex, sizey, sizez
-=======
+
 #def InitialGrid(radius,A,B,C,D,theta,phi,xmin,ymin,zmin,xmax,ymax,zmax,arraysize):
 #    """This function creates an equally spaced grid of size "step" apart"""
 #    receiverarray=np.zeros((arraysize,3))
@@ -316,7 +315,7 @@ def InitialGrid(radius,A,B,C,D,theta,phi,xmin,ymin,zmin,xmax,ymax,zmax,arraysize
 #        sizey=int((ymax-ymin)/yspace)
 #        sizez=1
 #    return receiverarray, sizex, sizey, sizez
->>>>>>> b39ef6649cecc2a366c921281aac9962907b53e9
+
 
 def SPHERECHECK(Sc,Sr2,F,veci):
     '''
@@ -383,7 +382,6 @@ def tri(veci,F,Q,Number,PointNumbers,PolyArray,v,normal,FaceNormalNo,vn,dxbuildi
 
     d=-np.dot(normal,ValueError(PolyArray[Q,2]))
     Vd=np.dot(normal,F)
-<<<<<<< HEAD
 
     if Vd >= 0.0:
         dxbuilding = HUGE
@@ -448,72 +446,6 @@ def tri(veci,F,Q,Number,PointNumbers,PolyArray,v,normal,FaceNormalNo,vn,dxbuildi
         else:
             dxbuilding = HUGE
 
-=======
-
-    if Vd >= 0.0:
-        dxbuilding = HUGE
-    V0= -(np.dot(normal,veci)+d)
-    t=V0/Vd
-    if(t < 0.0):
-        dxbuilding=HUGE
-        behind = 1
-        #Stage 1
-    intersection = veci + F*t
-    maximum = max(abs(normal))
-        # G: What if two normal values are the same? Anyway:
-    if(maximum == abs(normal[0])):
-        for P in range(size):
-            G[P,:] = (intersection[1]-v[int(PolyArray[Q,1+P]),1]
-                      ,intersection[2]-v[int(PolyArray[Q,1+P]),2])
-    elif (maximum == normal[1]):
-        for P in range(size):
-            G[P,:] = (intersection[0]-v[int(PolyArray[Q,1+P]),0]
-                      ,intersection[2]-v[int(PolyArray[Q,1+P]),2])
-    elif (maximum == normal[2]):
-        for P in range(size):
-            G[P,:] = (intersection[0]-v[int(PolyArray[Q,1+P]),0]
-                      ,intersection[1]-v[int(PolyArray[Q,1+P]),1])
-    #Stage 2
-    for P in range(size):
-        if P == size:
-            if G[P,1] < 0.0:
-                SH = -1
-            else:
-                SH = 1
-            if G[0,1] < 0.0:
-                NSH = -1
-            else:
-                NSH = 1 
-        else:
-            if G[P,1] < 0.0:
-                SH = -1
-            else:
-                SH = 1
-            if G[P+1,2] < 0.0:
-                NSH = -1
-            else:
-                NSH = 1
-        if SH != NSH:
-            if (P == size):
-                if (G[P,0] > 0.0) and (G[0,0]>0.0):
-                    NC += 1
-                elif (G[P,0]> 0.0) or (G[0,0] > 0.0):
-                    if (G[P,0]-(G[P,1]*(G[P+1,0]-G[P,0])/(G[P+1,1]-G[P,1]))) > 0.0:
-                        NC += 1
-            else:
-                if (G[P,0] > 0.0) and (G[P+1,0] > 0.0):
-                    NC += 1
-                elif (G[P,0] > 0.0) or (G[P+1,1] > 0.0):
-                    if (G[P,0]-(G[P,1]*(G[P+1,0]-G[P,0])/(G[P+1,1]-G[P,1]))) > 0.0:
-                        NC += 1
-        odd = NC % 2    #get remainder to find if odd or not
-        # This was this way in original fortran
-        if odd:
-            dxbuilding = t
-        else:
-            dxbuilding = HUGE
-
->>>>>>> b39ef6649cecc2a366c921281aac9962907b53e9
         return dxbuilding,behind
 
 def POLYGON(Vecip1,F,Q,size,Number,PointNumbers,PolyArray,BuildingPoints,normal,FaceNormalNo,FaceNormals,dxbuilding):

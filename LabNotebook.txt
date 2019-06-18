@@ -990,8 +990,11 @@ Note: In my new version I tear all the rays into pieces and then make changes ea
     Experimenting with caches
       It stores updates from no hit, but crashes when it hits a surface.
 <<<<<<< HEAD
+<<<<<<< HEAD
       This is not a pun
 =======
+=======
+>>>>>>> 81ad9b82f280b6c640127080063eef9a475996b2
       This is not a pun
 
       Remember to ask Dr Riegel about making our own LRU, since I don't think python's native one is useful here
@@ -1127,5 +1130,9 @@ Note: In my new version I tear all the rays into pieces and then make changes ea
         Learned how to import with namespace
           I'll see what doors this opens later
 
+<<<<<<< HEAD
           from [module] import *
 >>>>>>> b39ef6649cecc2a366c921281aac9962907b53e9
+=======
+          from [module] import *
+>>>>>>> 81ad9b82f280b6c640127080063eef9a475996b2

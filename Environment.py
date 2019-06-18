@@ -175,11 +175,15 @@ class environment():
                         pass
                     if nc%2!=0:
                         print('test')
+            rn2=np.dot(rn,rn)
+            nbuilding=rn/np.sqrt(rn2)
+            dot1=np.dot(F,nbuilding)
+            F-=(2.0*(dot1/rn2*nbuilding)))
+            length=np.sqrt(np.dot(F,F))      
 
+        return F
 
-        return
-
-environment=environment('monkey.obj')
-environment.sortvert(environment.vertices,2)
-F=np.array([1,0,1])
-environment.rayinteraction([10,20,0],F,2)
+#environment=environment('monkey.obj')
+#nvironment.sortvert(environment.vertices,2)
+#F=np.array([1,0,1])
+#environment.rayinteraction([10,20,0],F,2)
