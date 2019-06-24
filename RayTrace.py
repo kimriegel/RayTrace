@@ -19,7 +19,7 @@ import ReceiverPointSource as RPS
 #import GeometryParser as BG
 
 import time
-import memory_profiler as mem 
+#import memory_profiler as mem 
 
 t = time.time()
       
@@ -63,7 +63,6 @@ def updateFreq(dx,alpha,diffusion):
 def vex(y,z):
     """The x coordinate of the ray 
     Used for veci"""
-    #return np.array((D-Finitial[1]*y-Finitial[2]*z)/Finitial[0])
     return (D-Finitial[1]*y-Finitial[2]*z)/Finitial[0]
 
 # port and import receiver file
@@ -82,7 +81,6 @@ lastreceiver = np.zeros(3)
 lastreceiver2 = np.zeros(3)
 receiverpoint  = np.zeros(3)
 receiverpoint2 = np.zeros(3)
-#OC = np.empty(3)
 
 # Read in input file
 with open(PF.INPUTFILE) as IPFile:
@@ -199,6 +197,10 @@ if PF.radiosity:  # If it exists as a non-zero number
 else:
       diffusion = 0.0
 
+if (PF.h < (2*PF.radius)): 
+      print('h is less than 2r')
+      raise SystemExit
+
 raycounter = 1
 
 ####### These are for debugging, Uncomment this block and comment out the for loop below
@@ -209,6 +211,7 @@ raycounter = 1
 #
 #if ray:
 # Begin tracing
+print('Memory (before) : ' + str(mem.memory_usage()) + 'MB')
 print('began rays')
 for ray in boomcarpet:              #Written like this for readability
       veci = ray      # initial ray position
@@ -216,9 +219,6 @@ for ray in boomcarpet:              #Written like this for readability
       doublehit=0
       amplitude = frecuencias[:,1]/normalization
       phase=frecuencias[:,2]
-      if (PF.h < (2*PF.radius)): 
-            print('h is less than 2r')
-            break
       F = np.array(Finitial)                                      # Direction
       for I in range(PF.IMAX):      # Making small steps along the ray path.  For each step we should return, location, phase and amplitude
             dxreceiver=HUGE
@@ -305,8 +305,7 @@ for ray in boomcarpet:              #Written like this for readability
                   #     if the ray hits a receiver, store in an array.  If the ray hits two, create two arrays to store in.
                   for R in ears:
                         if dx == R.dxreceiver:
-                              #print('Ray ',ray +1,' hit receiver ',R.recNumber,' at step ',I)
-                              print('Ray ',raycounter,' hit receiver ',R.recNumber)
+                              #print('Ray ',raycounter,' hit receiver ',R.recNumber)
                               veci += (dx*F)
                               receiverhit=1
                               checkdirection=F
@@ -318,7 +317,6 @@ for ray in boomcarpet:              #Written like this for readability
                               outputarray1[:,0] = frecuencias[:,0]
                               outputarray1[:,1:4] = receiverpoint[:]
                               outputarray1[:,5] = phase[:]
-                              #print(list(ears[1].magnitude))
                               if doublehit == 1 :
                                     #R2 = R      #Supposed to be other R, but just a placeholder for now
                                     R.on_Hit(amplitude/2,phase)
@@ -346,7 +344,7 @@ for ray in boomcarpet:              #Written like this for readability
                         tmp = np.dot(GROUNDABC,veci)
                         if(tmp != GROUNDD): 
                               veci[2] = 0
-                        print('hit ground at ',I)
+                        #print('hit ground at ',I)
                         dot1 = np.dot(F,nground)
                         n2 = np.dot(nground,nground)
                         F -= (2.0*(dot1/n2 *nground))
@@ -368,7 +366,7 @@ for ray in boomcarpet:              #Written like this for readability
                                                             patcharray[Q,W,7]=np.arctan(temp4.imag,temp4.real)
                   if (dx==dxbuilding):                  #     if the ray hits the building then change the direction and continue
                         veci += (dx*F)
-                        print('hit building at step ',I)
+                        #print('hit building at step ',I)
                         n2 = np.dot(nbox,nbox)
                         nbuilding=nbox/np.sqrt(n2)
                         dot1= np.dot(F,nbuilding)
@@ -393,8 +391,11 @@ for ray in boomcarpet:              #Written like this for readability
             else:     #     If there was no interaction with buildings then proceed with one step. 
                   veci += (PF.h*F)
                   updateFreq(PF.h,alphanothing,0)
+      #print('finished ray', raycounter)
+      if (raycounter%100) == 0:
+            print('finished ray', raycounter,str(mem.memory_usage()) + 'MB')
+
       raycounter +=1
-      print('finished ray', raycounter)
 
 # Radiosity removed for readability
 
