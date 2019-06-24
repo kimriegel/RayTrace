@@ -32,7 +32,7 @@ absorbplanes = 1
 #Find way to rephrase
 outputfile = 'PythonTest.txt'
 #Turn Radiosity on or off.  This will include diffuse reflections
-radiosity = 0
+radiosity = 1
 #Turn on complex absorption
 complexabsorption = 0
 

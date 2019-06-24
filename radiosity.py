@@ -1,3 +1,4 @@
+
 #Gk=np.zeros(PatchNo,sizeffttwo)
 #Gkminus1=np.zeros(PatchNo,sizeffttwo)
 #       if (radiosity.eq.1)then

@@ -2,6 +2,7 @@
 #unfinished
 import numpy as np
 import RadiosityFunctions as F 
+import RayTrace
 PatchNox = 4
 xlimit = np.zeros(PatchNox)
 Nx = np.zeros(PatchNox-1)
@@ -42,7 +43,7 @@ Nz[0]=10
 qz=3.0
 
 PatchNo = Nx[0]*Ny[0]+Nx[1]*Ny[0]+Nx[2]*Ny[0]+Nx[0]*Ny[1]+Nx[1]*Ny[1]+Nx[2]*Ny[1]+Nx[0]*Ny[2]+Nx[1]*Ny[2]+Nx[2]*Ny[2]+2*Nx[1]*Nz[0]+2*Ny[1]*Nz[0]
-patcharray = np.zeros((PatchNo,sizeffttwo,10))
+patcharray = np.zeros((PatchNo,sizefftwo,10))
 formfactors = ((PatchNo,PatchNo,3))
 patcharray = 0.0
 

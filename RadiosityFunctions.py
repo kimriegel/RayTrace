@@ -25,16 +25,17 @@ def PATCHESSHORT(min,max,N,q,dd):
 
 #Unfinished
 #def CREATEPATCHARRAY(ddm,ddL,Nm,ddL,x1,x2,y1,y2,z1,z2,patcharray,slope,b,slope1,b1,count,normal):
-def CREATEPATCHARRAY(ddm,ddL,Nm,ddL,origin,termius,patcharray,slope,b,slope1,b1,count,normal):
+def CREATEPATCHARRAY(ddm,ddL,Nm,origin,termius,patcharray,slope,b,slope1,b1,count,normal):
+
     """
     origin is x1,y1,z1
     termius is x2,y2,z2
     """
     #This function creates an array of patches for each plane
     d = -np.dot(origin,normal)
-    if (z1 == z2):
+    if z1 == z2:
         count = 1
-        print('ZPLANE',ddL, Nm, x1, y1, z1)
+        print('ZPLANE', ddL, Nm, origin[0], origin[1], origin[2])
         for L in range(ddL):
             for m in range(Nm):
                 x = origin[0] - (ddm[m]/2) + sum(ddm[:m])
@@ -43,34 +44,34 @@ def CREATEPATCHARRAY(ddm,ddL,Nm,ddL,origin,termius,patcharray,slope,b,slope1,b1,
                 if m == 0:
                     zcenter=z
                 if L == 0:
-                    ddz=z-z1
+                    ddz=z-origin[2]
                 else:
                     ddz = 0.5*(z-zcenter)
                 if (y > slope*x+b) or (y < slope1*x+b1):
 #                    GOTO 3
-
 #                patcharray(count,1)=x
 #                patcharray(count,2)=y
 #                patcharray(count,3)=z
 #                patcharray(count,4)=ddm(m)
 #                patcharray(count,5)=ddL(L)
 #                patcharray(count,6)=ddz
-                patcharray = [x,y,z,ddm[m],ddl[L],ddz]
-                count=count+1
+
+                    patcharray = [x,y,z,ddm[m],ddL[L],ddz]
+                    count=count+1
 
     elif y1 == y2:
         count=1
-        print('YPLANE',Nl, Nm, x1, y1, z1)
-        for L in range(1,Nl):
-            for m in range(1,Nm):
-                x = x1-0.5*ddm[m] + sum(ddm[1:m])
-                z = z1-.5*ddl[L]+sum(ddl[1:L])
+        print('YPLANE',Nl, Nm, origin[0], origin[1], origin[2])
+        for L in range(Nl):
+            for m in range(Nm):
+                x = origin[0] -(ddm[m]/2) + sum(ddm[m])
+                z = origin[2] -(ddL[L]/2) + sum(ddL[L])
                #sum here
-                y = (-d-normal[0]*x-normal[2]*z)/normal[1]
-                if(m == 1):
+                y = (-d -normal[0]*x-normal[2]*z)/normal[1]
+                if m == 0:
                     ycenter = y
-                if(L == 1):
-                    ddy = y-y1
+                if L == 0:
+                    ddy = y-origin[1]
                 else:
                     ddy = 0.5*(y-ycenter)
                 if(z > slope*x+b) or (z < slope1*x+b1):
@@ -80,28 +81,29 @@ def CREATEPATCHARRAY(ddm,ddL,Nm,ddL,origin,termius,patcharray,slope,b,slope1,b1,
 #               patcharray(count,3)=z
 #               patcharray(count,4)=ddm(m)
 #               patcharray(count,5)=ddy
-#                patcharray(count,6)=ddl(l)
-                patcharray = [x,y,z,ddm[m],ddy,ddL[L]]
-                count=count+1
+#               patcharray(count,6)=ddl(l)
+                    patcharray = [x,y,z,ddm[m],ddy,ddL[L]]
+                    count=count+1
                 #count is used to move thru patcharray string
                 #I think
     elif x1 == x2:
         count = 1
-        print('XPLANE', Nl, Nm, x1, y1, z1)
-        for L in range (1, Nl):
-            for m in range(1, Nm):
-                y = y1- .5*ddm[m] + sum(ddm[1:m])
-                z = z1- .5*ddl[l] + sum(dd1[1:l])
-                x = (-d-normal[2]*z-normal[1]*y)/normal[0]
+        print('XPLANE', Nl, Nm, origin[0], origin[1], origin[2])
+        #why is this the same as y1 == y2?
+        for L in range (Nl):
+            for m in range(Nm):
+                y = origin[1] - (ddm[m]/2) + sum(ddm[m])
+                z = origin[2] - (ddL[L]/2) + sum(dd1[L])
+                x = (-d -normal[2]*z-normal[1]*y)/normal[0]
 
                 if m == 1:
                     xcenter=x
-                if(L == 1):
-                    ddx= x-x1
+                if L == 1:
+                    ddx= x-origin[0]
                 else:
                     ddx= 0.5*(x-xcenter)
                 if(z > slope*y+b) or (z < slope1*y+b1):
-                    patcharray = [x,y,z,ddx,ddm[m],ddl[l]]
+                    patcharray = [x,y,z,ddx,ddm[m],ddL[L]]
                     count= count+1
 
 # 5          CONTINUE
