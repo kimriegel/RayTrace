@@ -120,7 +120,7 @@ class Receiver:
         #time = pass
         #This function prints the header between each time set
         f.write('ZONE T=" %s "\n' %(planename, ) )  #this worked in the command line
-        f.write('STRANDID=1, SOLUTIONTIME= %d \n'%(time,) )                                     #timearray tiempo/PF.Fs 
+        f.write('STRANDID=1, SOLUTIONTIME= %f \n' %(time) )                                     #timearray tiempo/PF.Fs 
         f.write('I= %d\t J= %d\t K=%d\t ZONETYPE=Ordered\n' %(sizex, sizey, sizez))
         f.write('DATAPACKING=POINT\n')
         f.write('DT=(SINGLE SINGLE SINGLE SINGLE )\n')

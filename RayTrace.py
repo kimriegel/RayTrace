@@ -199,7 +199,7 @@ if PF.radiosity:  # If it exists as a non-zero number
 else:
       diffusion = 0.0
 
-raycounter = 1
+raycounter = 0
 
 ####### These are for debugging, Uncomment this block and comment out the for loop below
 #ray = 606                     # @ PF.boomspacing = 1
@@ -219,13 +219,15 @@ for ray in boomcarpet:              #Written like this for readability
       if (PF.h < (2*PF.radius)): 
             print('h is less than 2r')
             break
-      F = np.array(Finitial)                                      # Direction
+      F = np.array(Finitial)                                 # Direction
       for I in range(PF.IMAX):      # Making small steps along the ray path.  For each step we should return, location, phase and amplitude
+            if raycounter == 606:
+                  print(veci)
             dxreceiver=HUGE
             # Find the closest sphere and store that as the distance
             for R in ears:
                   # The way that tempreceiver works now, it's only used here and only should be used here. It's not defined inside the receiver because it's ray dependant.
-                  tempreceiver = R.SphereCheck(radius2,F,veci)    # Distrance to receiver
+                  tempreceiver = R.SphereCheck(radius2, F,veci)    # Distrance to receiver
                   if (receiverhit >= 1):  #if you hit a receiver last time, don't hit it again
                         if np.all(R.position ==lastreceiver):
                               tempreceiver=HUGE
@@ -239,6 +241,7 @@ for ray in boomcarpet:              #Written like this for readability
                               tempreceiver=HUGE
                   if (tempreceiver < dxreceiver):   
                         R.dxreceiver=tempreceiver
+                        
                         dxreceiver=tempreceiver
                         receiverpoint= R.position
                   elif (tempreceiver == dxreceiver and tempreceiver != HUGE):
@@ -302,8 +305,10 @@ for ray in boomcarpet:              #Written like this for readability
             #     Check to see if ray hits within step size
             if (dxreceiver < PF.h or dxground < PF.h or dxbuilding < PF.h):
                   dx=min(dxreceiver,dxground,dxbuilding)
+                  print(dx)
                   #     if the ray hits a receiver, store in an array.  If the ray hits two, create two arrays to store in.
                   for R in ears:
+                        print(R.dxreceiver)
                         if dx == R.dxreceiver:
                               #print('Ray ',ray +1,' hit receiver ',R.recNumber,' at step ',I)
                               print('Ray ',raycounter,' hit receiver ',R.recNumber)
