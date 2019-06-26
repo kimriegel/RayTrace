@@ -101,11 +101,11 @@ lamb = PF.soundspeed/frecuencias[:,0]     # Used for updating frequencies in upd
 timearray = np.arange(K) /PF.Fs
 
 #       Set initial values
-Vinitial =  np.array([PF.xinitial,PF.yinitial,PF.zinitial])
-xiinitial  =np.cos(PF.phi)*np.sin(PF.theta)
-ninitial   =np.sin(PF.phi)*np.sin(PF.theta)
-zetainitial=np.cos(PF.theta)
-length =    np.sqrt(xiinitial*xiinitial+ninitial*ninitial+zetainitial*zetainitial)
+Vinitial    =    np.array([PF.xinitial,PF.yinitial,PF.zinitial])
+xiinitial   =    np.cos(PF.phi)*np.sin(PF.theta)
+ninitial    =    np.sin(PF.phi)*np.sin(PF.theta)
+zetainitial =    np.cos(PF.theta)
+length      =    np.sqrt(xiinitial*xiinitial+ninitial*ninitial+zetainitial*zetainitial)
 Finitial=np.array([xiinitial,ninitial,zetainitial])
 D = np.dot(Finitial,Vinitial)   #equivalent to tmp
 
@@ -211,7 +211,7 @@ raycounter = 1
 #
 #if ray:
 # Begin tracing
-print('Memory (before) : ' + str(mem.memory_usage()) + 'MB')
+#print('Memory (before) : ' + str(mem.memory_usage()) + 'MB')
 print('began rays')
 for ray in boomcarpet:              #Written like this for readability
       veci = ray      # initial ray position
@@ -391,26 +391,32 @@ for ray in boomcarpet:              #Written like this for readability
             else:     #     If there was no interaction with buildings then proceed with one step. 
                   veci += (PF.h*F)
                   updateFreq(PF.h,alphanothing,0)
-      #print('finished ray', raycounter)
-      if (raycounter%100) == 0:
-            print('finished ray', raycounter,str(mem.memory_usage()) + 'MB')
+      print('finished ray', raycounter)
+      #if (raycounter%100) == 0:
+            #print('finished ray', raycounter,str(mem.memory_usage()) + 'MB')
 
       raycounter +=1
 
 # Radiosity removed for readability
 
-#Reconstruct the time signal and print to output file
-for R in ears:
-      R.timeReconstruct(sizefft)
-
-print('Writing to output file')
-fileid = PF.outputfile 
-with open (fileid,'w') as f:
-      fun.Header(fileid)
-
-with open (fileid,'a') as f:
-      for w in range(sizefft):
-            RPS.Receiver.timeHeader(f,timearray[w],w)
-print('time: ',time.time()-t)
+##Reconstruct the time signal and print to output file
+#for R in ears:
+#      R.timeReconstruct(sizefft)
+#
+#print('Writing to output file')
+#fileid = PF.outputfile 
+#with open (fileid,'w') as f:
+#      fun.Header(fileid)
+#
+#with open (fileid,'a') as f:
+#      for w in range(sizefft):
+#            RPS.Receiver.timeHeader(f,timearray[w],w)
+#print('time: ',time.time()-t)
 
 #
+testfile = 'OutputTest.txt'
+with open (testfile,'w') as test:
+      rec = RPS.Receiver.rList[1]
+      print(rec.recNumber,file=test)
+      for w in range(sizeffttwo):
+            print(rec.position[0],',',rec.position[1],',',rec.position[2],',',rec.magnitude[w],file=test)
