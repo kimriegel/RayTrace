@@ -20,6 +20,7 @@ class environment():
     bandwidth will be defined by two times the step length 'h' as defined in the parameter file,
     along whichever axis is sorted.
 
+
     fail conditions:
         -if the bandwidth is much greater than the maximum distance between the highest and lowest points, all
         lists generated will be of maximum size and speed will be compromised
