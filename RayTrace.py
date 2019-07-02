@@ -204,16 +204,17 @@ raycounter = 1
 
 ####### These are for debugging, Uncomment this block and comment out the for loop below
 #ray = 606                     # @ PF.boomspacing = 1
-for i in range(606):
-      ray =      next(boomcarpet)
-      raycounter += 1
+#for i in range(606):
+#      ray =      next(boomcarpet)
+#      raycounter += 1
 
 #if ray:
 # Begin tracing
 
 #print('Memory (before) : ' + str(mem.memory_usage()) + 'MB')
 building=Environment.environment('SingleBuilding.obj')
-building.sortvert(building.vertices,2)
+building.sortvert(building.vertices,1)
+print(building.vertices)
 print('began rays')
 for ray in boomcarpet:              #Written like this for readability
       veci = ray      # initial ray position
@@ -222,8 +223,8 @@ for ray in boomcarpet:              #Written like this for readability
       amplitude = frecuencias[:,1]/normalization
       phase=frecuencias[:,2]
       F = np.array(Finitial)
-      building.rayinteraction(veci,F,2)
-      print(building.t)
+      building.rayinteraction(veci,F,1)
+      #print(building.t)
       F = np.array(Finitial)  
                                    # Direction
 
@@ -344,7 +345,7 @@ for ray in boomcarpet:              #Written like this for readability
                                                             patcharray[Q,W,6]=abs(temp4)
                                                             patcharray[Q,W,7]=np.arctan(temp4.imag,temp4.real)
                   if (dx==dxbuilding):                  #     if the ray hits the building then change the direction and continue
-                        environment.rayinteraction(veci,F,2)
+                        environment.rayinteraction(veci,F,1)
                         veci += (dx*F)
                         print('hit building at step ',I)
                         #n2 = np.dot(nbox,nbox)

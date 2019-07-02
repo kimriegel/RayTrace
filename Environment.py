@@ -44,7 +44,7 @@ class environment():
     #def intersection(self,ray,faces):
     def sortvert(self,vertices,axis):
         '''
-        Sorts the list self.vertices into the list self.sortvert. List sorted by axis X-0, Y-1, Z-2
+        Sorts the list self.vertices into the list self.sortvert. List sorted by axis X-0, Z-1, Y-2
         '''
         self.sortvert=[]
         def axissort(elem):
@@ -66,13 +66,25 @@ class environment():
         '''
         subvert=[]
         subfaces=[]
-        if veci[axis]>self.axismax or veci[axis]<self.axismin: # if the ray is above or below the max/min, no interaction
+        rayaxis=0 # index used for (x,y,z) ordered ray coordinate
+        print(axis)
+        if axis == 1:
+            rayaxis=2
+        elif axis == 2:
+            rayaxis=1
+        else:
+            pass
+        if veci[rayaxis]>self.axismax or veci[rayaxis]<self.axismin: # if the ray is above or below the max/min, no interaction
+            print('Axis Min =', self.axismin)
+            print('Axis Max =', self.axismax)
+            print(veci)
+            print(veci[rayaxis])
             pass
         else:
             subvert=self.sortvert # creates a sorted subset of the vertices
             bandwidth=self.axisheight #establishes a bandwidth to be compared to self.bandwidth
             while bandwidth > self.bandwidth:
-                if veci[axis]<subvert[len(subvert)//2][0][axis]:
+                if veci[rayaxis]<subvert[len(subvert)//2][0][axis]:
                     subvert=subvert[0:len(subvert)//2]
                 else:
                     subvert=subvert[len(subvert)//2:len(subvert)]
@@ -97,15 +109,13 @@ class environment():
             normal=np.cross(L1,L2)
             unitnormal=normal/np.sqrt(np.dot(normal,normal)) # calculates the normal vector to the plane
             D=np.dot(unitnormal,V1) # calculates plane equation D: Ax+By+Cz+D=0
-            print(D)
             vd=np.dot(unitnormal,F) # dot product between normal and ray direction
-            print(vd)
             if vd==0: # ray is parallel to plane and no intersection occurs. ## special case??
                 self.t=1000000 #HOTFIX
+                print('dot product 0, ray doesnt hit')
                 pass
             else:
                 v0=-(np.dot(unitnormal,veci)+D)
-                print(v0)
                 self.t=v0/vd # distance from ray origin to plane intersection
                 if self.t<0: # ray intersection behind ray origin
                     pass
