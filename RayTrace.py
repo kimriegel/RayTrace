@@ -213,8 +213,7 @@ raycounter = 1
 
 #print('Memory (before) : ' + str(mem.memory_usage()) + 'MB')
 building=Environment.environment('SingleBuilding.obj')
-building.sortvert(building.vertices,1)
-print(building.vertices)
+building.sortvert(building.vertices,1) #Sorted vertices along Z axis. Checked for proper sort.
 print('began rays')
 for ray in boomcarpet:              #Written like this for readability
       veci = ray      # initial ray position
@@ -223,9 +222,9 @@ for ray in boomcarpet:              #Written like this for readability
       amplitude = frecuencias[:,1]/normalization
       phase=frecuencias[:,2]
       F = np.array(Finitial)
-      building.rayinteraction(veci,F,1)
-      #print(building.t)
+      building.rayinteraction(veci,F,1) #ray interaction called to generate t, distance to the plane
       F = np.array(Finitial)  
+      print(veci)
                                    # Direction
 
       for I in range(PF.IMAX):      # Making small steps along the ray path.  For each step we should return, location, phase and amplitude

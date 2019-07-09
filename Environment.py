@@ -39,9 +39,6 @@ class environment():
         self.vertices=environment.wavefront.vertices[0:len(environment.wavefront.vertices)//2]
         self.faces=environment.mesh.faces
         self.t=100
-        #self.vertlength=[0,len(self.vertices)]
-        #self.sortvert=dict([len(self.vertices),self.vertices])
-    #def intersection(self,ray,faces):
     def sortvert(self,vertices,axis):
         '''
         Sorts the list self.vertices into the list self.sortvert. List sorted by axis X-0, Z-1, Y-2
@@ -61,13 +58,15 @@ class environment():
         test function for ray-environment interaction.
         veci is the position vector as defined in RayTrace.py
         F is the direction vector as defined in RayTrace.py
-        axis is an integer value 0,1,2. 0 refers to the x-axis, 1 the y-axis, and 2 the z-axis.
+        axis is an integer value 0,1,2. 0 refers to the x-axis, 1 the z-axis, and 2 the y-axis.
         the given axis is the axis along which the first sort occurs.
         '''
+        print(veci)
         subvert=[]
         subfaces=[]
-        rayaxis=0 # index used for (x,y,z) ordered ray coordinate
-        print(axis)
+        # Axis is used to index the (x,z,y) ordered vertices
+        # rayaxis is used to index the (x,y,z) ordered rays
+        rayaxis=0 
         if axis == 1:
             rayaxis=2
         elif axis == 2:
@@ -190,7 +189,7 @@ class environment():
                     if nc%2==0:
                         pass
                     if nc%2!=0:
-                        #print('test')
+                        print('Something SHould have hit')
                         rn2=np.dot(rn,rn)
                         nbuilding=rn/np.sqrt(rn2)
                         dot1=np.dot(F,nbuilding)
@@ -198,9 +197,3 @@ class environment():
                         length=np.sqrt(np.dot(F,F))      
 
         return F
-
-#environment=environment('SingleBuilding.obj')
-#environment.sortvert(environment.vertices,2)
-#F=np.array([1,0,1])
-#environment.rayinteraction([10,20,0],F,2)
-#print(environment.t)
