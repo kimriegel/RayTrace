@@ -434,16 +434,12 @@ with open (fileid, 'a') as f:
     for w in range(sizeFFT):
         Rps.Receiver.timeHeader(f, timeArray[w], w)
 print('time: ', time.time()-t)
-#
 
-
-#####################################
-#Outputting graphs
-#####################################
+    # Outputting graphs
 t = time.time()
 
-testfile = 'OutputTest'     #.txt'
-#with open (testfile,'w') as test:
+# Will eventually be moved to a receiver function, 
+# here now for ease of access of others reading this
 for R in ears:
     pressure = R.signal
     i = R.recNumber
@@ -456,25 +452,4 @@ for R in ears:
         # Saving
     plt.savefig(Pf.graphName + str(i) + '.png')
     print('Saved receiver', i)
-        #rec = Rps.Receiver.rList[1]
-        ##print(rec.recNumber,file=test)
-        #for w in range(sizeFFT):
-        #      print(rec.signal[w],file=test)
 print('Graph time: ', time.time()-t)
-
-#with open(testfile + ".txt") as ipFile:
-#    pressure = np.loadtxt(ipFile)       # y axis
-
-#K = len(pressure)
-#time = np.arange(K) /Fs                 # x axis
-
-#plt.plot(timeArray,pressure,'r--')
-#    # Labeling axes
-#plt.xlabel('Time')
-#plt.ylabel('Pressure')
-#plt.title('Pressure vs Time of Receiver 2')
-#    # Setting boundaries
-##plt.axis([0,(6 / (1000)**3),0,30])
-#plt.savefig('TestGraph.png')
-#plt.show()
-#
