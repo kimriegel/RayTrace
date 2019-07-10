@@ -17,7 +17,7 @@ plt.ylabel('Pressure')
 plt.title('Pressure vs Time of Receiver 2')
     # Setting boundaries
 #plt.axis([0,(6 / (1000)**3),0,30])
+plt.savefig('TestGraph.png')
 plt.show()
-plt.savefig()
 
 print('Done with this file')

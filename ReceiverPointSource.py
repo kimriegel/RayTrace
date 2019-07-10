@@ -10,12 +10,11 @@ class Receiver:
     """
     planenum=1
     planename1 = 'Single Point'
-    arraysize = 0     # Number of receivers. Supposed to be 5 for this test    # I use it differently now, and only in one function
+    arraysize = 1     # Number of receivers. Supposed to be 5 for this test    # I use it only for printing receiver label on graphs
     sizex = 2
     sizey = 2
     sizez = 1
     initial_frequency = None    # Gives this value to all receivers
-
     rList = []  # See append_list
 
     # I personally prefer writing Receiver.Array to Receiver.receiverarray
@@ -29,7 +28,7 @@ class Receiver:
         Works automatically when class is called
         """
         self.position = np.array(position)
-        self.recNumber = Receiver.arraysize         # planned for debugging but we don't seem to use it
+        self.recNumber = int(Receiver.arraysize)         # planned for debugging but we don't seem to use it
         Receiver.rList.append(self)  # See append_list
         # Initial values
         self.pressure = 0

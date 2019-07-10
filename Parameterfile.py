@@ -32,6 +32,7 @@ absorbplanes = 1
 #Find way to rephrase
 #outputfile = 'PythonTest1.txt'
 outputfile = "PythonTest" + str(boomspacing) + ".txt"       #debugging
+graphName = "TestGraph"                                     # No not use full file extension here
 #Turn Radiosity on or off.  This will include diffuse reflections
 radiosity = 0
 #Turn on complex absorption

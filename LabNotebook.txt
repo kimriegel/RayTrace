@@ -1144,3 +1144,9 @@ Trying really hard to graduate in this span of time, not much progress
     Q: How can we /efficiently/ implement a Least Recently Used Cache that incorporates thousands of datapoints per ray per step?
 
       
+7/9/19
+    Finally added graphing
+
+7/10/19
+    Finally made graphing fast and generalized it to work outside of these tests
+    Added option to name graphs in parameterfile

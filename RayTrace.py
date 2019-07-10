@@ -11,15 +11,16 @@
 # Dr. Riegel, William Costa, and George Seaton porting program from Fortran to python
 
 # Initialize variables and functions
-import numpy as np
+import numpy as np          # matricies and arrays
+import matplotlib.pyplot as plt     # for graphing
 
 import Parameterfile as Pf
 import BuildingGeometry as Bg
 import Functions as Fun
-import ReceiverPointSource as Rps
+import ReceiverPointSource as Rps   # For receivers
 # import GeometryParser as Bg
 
-import time
+import time                         # Time checks
 
 t = time.time()
       
@@ -363,7 +364,7 @@ for ray in boomCarpet:              # Written like this for readability
                 tmp = np.dot(GroundABC, veci)
                 if tmp != GroundD:
                     veci[2] = 0
-                print('hit ground at ', I,veci)
+                print('hit ground at ', I)
                 dot1 = np.dot(F, nGround)
                 n2 = np.dot(nGround, nGround)
                 F -= (2.0 * (dot1 / n2 * nGround))
@@ -389,7 +390,7 @@ for ray in boomCarpet:              # Written like this for readability
 #                                        patchArray[Q, W, 7] = np.arctan(temp4.imag,temp4.real)
             if dx == dxBuilding:   # if the ray hits the building then change the direction and continue
                 veci += (dx * F)
-                print('hit building at step ', I,veci)
+                print('hit building at step ', I)
                 n2 = np.dot(nBox, nBox)
                 nBuilding = nBox / np.sqrt(n2)
                 dot1 = np.dot(F, nBuilding)
@@ -436,9 +437,44 @@ print('time: ', time.time()-t)
 #
 
 
-testfile = 'OutputTest.txt'
-with open (testfile,'w') as test:
-      rec = Rps.Receiver.rList[1]
-      #print(rec.recNumber,file=test)
-      for w in range(sizeFFT):
-            print(rec.signal[w],file=test)
+#####################################
+#Outputting graphs
+#####################################
+t = time.time()
+
+testfile = 'OutputTest'     #.txt'
+#with open (testfile,'w') as test:
+for R in ears:
+    pressure = R.signal
+    i = R.recNumber
+    plt.figure(i)
+    plt.plot(timeArray,pressure,'r--')
+        # Labeling axes
+    plt.xlabel('Time')
+    plt.ylabel('Pressure')
+    plt.title('Pressure vs Time of Receiver '+ str(i))
+        # Saving
+    plt.savefig(Pf.graphName + str(i) + '.png')
+    print('Saved receiver', i)
+        #rec = Rps.Receiver.rList[1]
+        ##print(rec.recNumber,file=test)
+        #for w in range(sizeFFT):
+        #      print(rec.signal[w],file=test)
+print('Graph time: ', time.time()-t)
+
+#with open(testfile + ".txt") as ipFile:
+#    pressure = np.loadtxt(ipFile)       # y axis
+
+#K = len(pressure)
+#time = np.arange(K) /Fs                 # x axis
+
+#plt.plot(timeArray,pressure,'r--')
+#    # Labeling axes
+#plt.xlabel('Time')
+#plt.ylabel('Pressure')
+#plt.title('Pressure vs Time of Receiver 2')
+#    # Setting boundaries
+##plt.axis([0,(6 / (1000)**3),0,30])
+#plt.savefig('TestGraph.png')
+#plt.show()
+#
