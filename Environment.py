@@ -10,8 +10,6 @@ import pywavefront as pwf
 from pywavefront import ObjParser
 import Parameterfile_methods as pfm
 
-# I think my environment class should be more malleable. There should be a set number of methods that all 
-# environment objects should have, buildings and receivers alike, and then specific methods for special cases
 
 class environment():
     """
@@ -39,9 +37,7 @@ class environment():
         self.vertices=environment.wavefront.vertices[0:len(environment.wavefront.vertices)//2]
         self.faces=environment.mesh.faces
         self.t=100
-        #self.vertlength=[0,len(self.vertices)]
-        #self.sortvert=dict([len(self.vertices),self.vertices])
-    #def intersection(self,ray,faces):
+
     def sortvert(self,vertices,axis):
         '''
         Sorts the list self.vertices into the list self.sortvert. List sorted by axis X-0, Z-1, Y-2
@@ -75,10 +71,11 @@ class environment():
         else:
             pass
         if veci[rayaxis]>self.axismax or veci[rayaxis]<self.axismin: # if the ray is above or below the max/min, no interaction
-            print('Axis Min =', self.axismin)
-            print('Axis Max =', self.axismax)
-            print(veci)
-            print(veci[rayaxis])
+            #print('Axis Min =', self.axismin)
+            #print('Axis Max =', self.axismax)
+            #print(veci)
+            #print(veci[rayaxis])
+            print(F)
             pass
         else:
             subvert=self.sortvert # creates a sorted subset of the vertices
@@ -113,11 +110,13 @@ class environment():
             if vd==0: # ray is parallel to plane and no intersection occurs. ## special case??
                 self.t=1000000 #HOTFIX
                 print('dot product 0, ray doesnt hit')
+                print(F)
                 pass
             else:
                 v0=-(np.dot(unitnormal,veci)+D)
                 self.t=v0/vd # distance from ray origin to plane intersection
                 if self.t<0: # ray intersection behind ray origin
+                    print("miss, direction:" ,F)
                     pass
                 else:
                     ri=veci+(F*self.t) # calculates ray intersection
@@ -196,11 +195,6 @@ class environment():
                         dot1=np.dot(F,nbuilding)
                         F=F-(2.0*(dot1/rn2*nbuilding))
                         length=np.sqrt(np.dot(F,F))      
-
+                        
+        print(F)
         return F
-
-#environment=environment('SingleBuilding.obj')
-#environment.sortvert(environment.vertices,2)
-#F=np.array([1,0,1])
-#environment.rayinteraction([10,20,0],F,2)
-#print(environment.t)

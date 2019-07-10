@@ -47,7 +47,7 @@ class Receiver:
         Modifies direction and magnitude of rays with respect to each receiver
         """
         XJ = complex(0,1)
-        #print('initiating hit function')
+        # print('initiating hit function')
 
         temp1 = abs(self.magnitude) * np.exp(XJ*self.direction)
         temp2 = abs(amplitude[:])   * np.exp(XJ*phase[:])
@@ -68,8 +68,8 @@ class Receiver:
 
         Sc = self.position
         OC = Sc - veci 
-        #L2OC = np.sum( (OC*OC),axis=1)    
-        L2OC = np.dot(OC,OC)    #Equivalent?
+        # L2OC = np.sum( (OC*OC),axis=1)
+        L2OC = np.dot(OC,OC)    # Equivalent?
         tca = np.dot(OC,F)
         t2hc = Sr2 - L2OC + (tca**2)
         if L2OC == Sr2:    
@@ -80,11 +80,12 @@ class Receiver:
             dx = HUGE
         else:
             dx = tca - (t2hc**(1/2))
-        #Hey future me, remember to delete one of these later
+        # Hey future me, remember to delete one of these later
 
         self.dx = dx
         self.dxreceiver = 0
-        return  dx 
+
+        return dx
 
     def timeReconstruct(self,sizefft):
         '''

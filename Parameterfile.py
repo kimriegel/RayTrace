@@ -16,9 +16,9 @@ hr = 20.0
 theta = 1.6863372
 phi = 3.44458181
 #boomspacing = 0.06   #.6
-#boomspacing= 0.035
+#boomspacing= 0.35
+#boomspacing= 0.1
 boomspacing= 1
-#boomspacing= 0.01
 xmin = -1
 ymin = 30.0
 zmin = 0.0
@@ -30,7 +30,8 @@ h = 10.0
 absorbplanes = 1
 #allocate(tempalphabuilding(absorbplanes,8))
 #Find way to rephrase
-outputfile = 'PythonTest035.txt'
+#outputfile = 'PythonTest1.txt'
+outputfile = "PythonTest" + str(boomspacing) + ".txt"       #debugging
 #Turn Radiosity on or off.  This will include diffuse reflections
 radiosity = 0
 #Turn on complex absorption
