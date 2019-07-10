@@ -42,6 +42,7 @@ class environment():
         '''
         Sorts the list self.vertices into the list self.sortvert. List sorted by axis X-0, Z-1, Y-2
         '''
+        self.axis=axis
         self.sortvert=[]
         def axissort(elem):
             return elem[0][axis]
@@ -52,41 +53,37 @@ class environment():
         self.axismax=self.sortvert[len(self.sortvert)-1][0][axis]
         self.axisheight=self.axismax-self.axismin
         self.bandwidth=pfm.h*2 #sets bandwidth to 2x the step length
-    def rayinteraction(self,veci,F,axis):
+    # 07/10/19: Considering dividing "rayinteraction" into two functions:
+    # 1: RayIntersection: calculates the new Veci to set as dxbuilding
+    # 2: RayHit: when the ray hits the plane, change the direction.
+    # For the moment, this may simplify incorporating Environment into RayTrace.
+    
+    def RayIntersection(self, veci,F):
         '''
-        test function for ray-environment interaction.
-        veci is the position vector as defined in RayTrace.py
-        F is the direction vector as defined in RayTrace.py
-        axis is an integer value 0,1,2. 0 refers to the x-axis, 1 the y-axis, and 2 the z-axis.
-        the given axis is the axis along which the first sort occurs.
+        veci is the ray position as defined in RayTrace.py
+        F is the ray direction as defined in RayTrace.py
         '''
         subvert=[]
         subfaces=[]
         rayaxis=0 # index used for (x,y,z) ordered ray coordinate
-        print(axis)
-        if axis == 1:
+        if self.axis == 1:
             rayaxis=2
-        elif axis == 2:
+        elif self.axis == 2:
             rayaxis=1
         else:
             pass
         if veci[rayaxis]>self.axismax or veci[rayaxis]<self.axismin: # if the ray is above or below the max/min, no interaction
-            #print('Axis Min =', self.axismin)
-            #print('Axis Max =', self.axismax)
-            #print(veci)
-            #print(veci[rayaxis])
-            print(F)
             pass
         else:
             subvert=self.sortvert # creates a sorted subset of the vertices
             bandwidth=self.axisheight #establishes a bandwidth to be compared to self.bandwidth
             while bandwidth > self.bandwidth:
-                if veci[rayaxis]<subvert[len(subvert)//2][0][axis]:
+                if veci[rayaxis]<subvert[len(subvert)//2][0][self.axis]:
                     subvert=subvert[0:len(subvert)//2]
                 else:
                     subvert=subvert[len(subvert)//2:len(subvert)]
-                axismin=subvert[0][0][axis]
-                axismax=subvert[len(subvert)-1][0][axis]
+                axismin=subvert[0][0][self.axis]
+                axismax=subvert[len(subvert)-1][0][self.axis]
                 axisheight=axismax-axismin
                 bandwidth=axisheight
         for vertex in range(0,len(subvert)):
@@ -115,86 +112,227 @@ class environment():
             else:
                 v0=-(np.dot(unitnormal,veci)+D)
                 self.t=v0/vd # distance from ray origin to plane intersection
-                if self.t<0: # ray intersection behind ray origin
-                    print("miss, direction:" ,F)
-                    pass
-                else:
-                    ri=veci+(F*self.t) # calculates ray intersection
-                    #print('ray-plane intersection =' , ri)
-                    if vd<0: # Adjusts normal such that it points back towards ray-origin.
-                        rn=unitnormal
-                        #print('surface normal =' ,rn)
-                    else:
-                        rn=-unitnormal
-                        #print('surface normal =' ,rn)
-                    dominant=np.argmax(unitnormal) # Haines 3.2, coordinate w/ greatest magnitude
-                    uv1=np.delete(V1,dominant) # translation to UV coordinates
-                    uv2=np.delete(V2,dominant)
-                    uv3=np.delete(V3,dominant)
-                    riuv=np.delete(ri,dominant) # ray intersection UV coordinates
-                    uv1p=uv1-riuv #uv1prime, etc. adjusted ray intersection to coordinate system origin
-                    uv2p=uv2-riuv
-                    uv3p=uv3-riuv
-                    nc=0 #number of crossings
-                    sh=0 # sign holder
-                    nsh=0 # next sign holder
-                    # first edge test
-                    if uv1p[1]<0:
-                        sh=-1
-                    else:
-                        sh=1
-                    if uv2p[1]<0:
-                        nsh=-1
-                    else:
-                        nsh=1
-                    if sh!=nsh:
-                        if uv1p[0]>0 and uv2p[0]:
-                            nc=nc+1
-                        elif uv1p[0]>0 or  uv2p[0]>0:
-                            if uv1p[0]-uv1p[1]*(uv2p[0]-uv1p[0])/(uv2p[1]-uv1p[1])>0:
-                                nc=nc+1
-                        sh=nsh
-                    #second edge test
-                    if uv2p[1]<0:
-                        sh=-1
-                    else:
-                        sh=1
-                    if uv3p[1]<0:
-                        nsh=-1
-                    else:
-                        nsh=1
-                    if sh!=nsh:
-                        if uv2p[0]>0 and uv3p[0]:
-                            nc=nc+1
-                        elif uv2p[0]>0 or  uv3p[0]>0:
-                            if uv2p[0]-uv2p[1]*(uv3p[0]-uv2p[0])/(uv3p[1]-uv2p[1])>0:
-                                nc=nc+1
-                        sh=nsh
-                    #third edge test
-                    if uv3p[1]<0:
-                        sh=-1
-                    else:
-                        sh=1
-                    if uv1p[1]<0:
-                        nsh=-1
-                    else:
-                        nsh=1
-                    if sh!=nsh:
-                        if uv3p[0]>0 and uv1p[0]:
-                            nc=nc+1
-                        elif uv3p[0]>0 or  uv1p[0]>0:
-                            if uv1p[0]-uv3p[1]*(uv1p[0]-uv3p[0])/(uv1p[1]-uv3p[1])>0:
-                                nc=nc+1
-                        sh=nsh
-                    if nc%2==0:
-                        pass
-                    if nc%2!=0:
-                        #print('test')
-                        rn2=np.dot(rn,rn)
-                        nbuilding=rn/np.sqrt(rn2)
-                        dot1=np.dot(F,nbuilding)
-                        F=F-(2.0*(dot1/rn2*nbuilding))
-                        length=np.sqrt(np.dot(F,F))      
-                        
-        print(F)
-        return F
+        return self.t
+    
+    def RayHit(self,veci,F):
+        if self.t<0: # ray intersection behind ray origin
+            print("miss, direction:" ,F)
+            pass
+        else:
+            ri=veci+(F*self.t) # calculates ray intersection
+            #print('ray-plane intersection =' , ri)
+            if vd<0: # Adjusts normal such that it points back towards ray-origin.
+                rn=unitnormal
+                #print('surface normal =' ,rn)
+            else:
+                rn=-unitnormal
+                #print('surface normal =' ,rn)
+            dominant=np.argmax(unitnormal) # Haines 3.2, coordinate w/ greatest magnitude
+            uv1=np.delete(V1,dominant) # translation to UV coordinates
+            uv2=np.delete(V2,dominant)
+            uv3=np.delete(V3,dominant)
+            riuv=np.delete(ri,dominant) # ray intersection UV coordinates
+            uv1p=uv1-riuv #uv1prime, etc. adjusted ray intersection to coordinate system origin
+            uv2p=uv2-riuv
+            uv3p=uv3-riuv
+            nc=0 #number of crossings
+            sh=0 # sign holder
+            nsh=0 # next sign holder
+            # first edge test
+            if uv1p[1]<0:
+                sh=-1
+            else:
+                sh=1
+            if uv2p[1]<0:
+                nsh=-1
+            else:
+                nsh=1
+            if sh!=nsh:
+                if uv1p[0]>0 and uv2p[0]:
+                    nc=nc+1
+                elif uv1p[0]>0 or  uv2p[0]>0:
+                    if uv1p[0]-uv1p[1]*(uv2p[0]-uv1p[0])/(uv2p[1]-uv1p[1])>0:
+                        nc=nc+1
+                sh=nsh
+            #second edge test
+            if uv2p[1]<0:
+                sh=-1
+            else:
+                sh=1
+            if uv3p[1]<0:
+                nsh=-1
+            else:
+                nsh=1
+            if sh!=nsh:
+                if uv2p[0]>0 and uv3p[0]:
+                    nc=nc+1
+                elif uv2p[0]>0 or  uv3p[0]>0:
+                    if uv2p[0]-uv2p[1]*(uv3p[0]-uv2p[0])/(uv3p[1]-uv2p[1])>0:
+                        nc=nc+1
+                sh=nsh
+            #third edge test
+            if uv3p[1]<0:
+                sh=-1
+            else:
+                sh=1
+            if uv1p[1]<0:
+                nsh=-1
+            else:
+                nsh=1
+            if sh!=nsh:
+                if uv3p[0]>0 and uv1p[0]:
+                    nc=nc+1
+                elif uv3p[0]>0 or  uv1p[0]>0:
+                    if uv1p[0]-uv3p[1]*(uv1p[0]-uv3p[0])/(uv1p[1]-uv3p[1])>0:
+                        nc=nc+1
+                sh=nsh
+            if nc%2==0:
+                pass
+            if nc%2!=0:
+                #print('test')
+                rn2=np.dot(rn,rn)
+                nbuilding=rn/np.sqrt(rn2)
+                dot1=np.dot(F,nbuilding)
+                F=F-(2.0*(dot1/rn2*nbuilding))
+                length=np.sqrt(np.dot(F,F))      
+        return veci, F
+    #def rayinteraction(self,veci,F,axis):
+    #    '''
+    #    test function for ray-environment interaction.
+    #    veci is the position vector as defined in RayTrace.py
+    #    F is the direction vector as defined in RayTrace.py
+    #    axis is an integer value 0,1,2. 0 refers to the x-axis, 1 the y-axis, and 2 the z-axis.
+    #    the given axis is the axis along which the first sort occurs.
+    #    '''
+    #    subvert=[]
+    #    subfaces=[]
+    #    rayaxis=0 # index used for (x,y,z) ordered ray coordinate
+    #    if axis == 1:
+    #        rayaxis=2
+    #    elif axis == 2:
+    #        rayaxis=1
+    #    else:
+    #        pass
+    #    if veci[rayaxis]>self.axismax or veci[rayaxis]<self.axismin: # if the ray is above or below the max/min, no interaction
+    #        pass
+    #    else:
+    #        subvert=self.sortvert # creates a sorted subset of the vertices
+    #        bandwidth=self.axisheight #establishes a bandwidth to be compared to self.bandwidth
+    #        while bandwidth > self.bandwidth:
+    #            if veci[rayaxis]<subvert[len(subvert)//2][0][axis]:
+    #                subvert=subvert[0:len(subvert)//2]
+    #            else:
+    #                subvert=subvert[len(subvert)//2:len(subvert)]
+    #            axismin=subvert[0][0][axis]
+    #            axismax=subvert[len(subvert)-1][0][axis]
+    #            axisheight=axismax-axismin
+    #            bandwidth=axisheight
+    #    for vertex in range(0,len(subvert)):
+    #        vertindex=subvert[vertex][1]
+    #        for x in range(0,len(self.faces)):
+    #            if vertindex in self.faces[x]:
+    #                subfaces.append(self.faces[x])
+    #    for face in range(0,len(subfaces)): # Using ray-plane algorithm from Haines chapter 3
+    #        A=subfaces[face][0]
+    #        B=subfaces[face][1]
+    #        C=subfaces[face][2]
+    #        V1=np.array(self.vertices[A]) #These create arrays of the vertices for the face
+    #        V2=np.array(self.vertices[B])
+    #        V3=np.array(self.vertices[C])
+    #        L1=V2-V1 # calculates the two vectors using V1 as the reference vertex
+    #        L2=V3-V1
+    #        normal=np.cross(L1,L2)
+    #        unitnormal=normal/np.sqrt(np.dot(normal,normal)) # calculates the normal vector to the plane
+    #        D=np.dot(unitnormal,V1) # calculates plane equation D: Ax+By+Cz+D=0
+    #        vd=np.dot(unitnormal,F) # dot product between normal and ray direction
+    #        if vd==0: # ray is parallel to plane and no intersection occurs. ## special case??
+    #            self.t=1000000 #HOTFIX
+    #            print('dot product 0, ray doesnt hit')
+    #            print(F)
+    #            pass
+    #        else:
+    #            v0=-(np.dot(unitnormal,veci)+D)
+    #            self.t=v0/vd # distance from ray origin to plane intersection
+    #            if self.t<0: # ray intersection behind ray origin
+    #                print("miss, direction:" ,F)
+    #                pass
+    #            else:
+    #                ri=veci+(F*self.t) # calculates ray intersection
+    #                #print('ray-plane intersection =' , ri)
+    #                if vd<0: # Adjusts normal such that it points back towards ray-origin.
+    #                    rn=unitnormal
+    #                    #print('surface normal =' ,rn)
+    #                else:
+    #                    rn=-unitnormal
+    #                    #print('surface normal =' ,rn)
+    #                dominant=np.argmax(unitnormal) # Haines 3.2, coordinate w/ greatest magnitude
+    #                uv1=np.delete(V1,dominant) # translation to UV coordinates
+    #                uv2=np.delete(V2,dominant)
+    #                uv3=np.delete(V3,dominant)
+    #                riuv=np.delete(ri,dominant) # ray intersection UV coordinates
+    #                uv1p=uv1-riuv #uv1prime, etc. adjusted ray intersection to coordinate system origin
+    #                uv2p=uv2-riuv
+    #                uv3p=uv3-riuv
+    #                nc=0 #number of crossings
+    #                sh=0 # sign holder
+    #                nsh=0 # next sign holder
+    #                # first edge test
+    #                if uv1p[1]<0:
+    #                    sh=-1
+    #                else:
+    #                    sh=1
+    #                if uv2p[1]<0:
+    #                    nsh=-1
+    #                else:
+    #                    nsh=1
+    #                if sh!=nsh:
+    #                    if uv1p[0]>0 and uv2p[0]:
+    #                        nc=nc+1
+    #                    elif uv1p[0]>0 or  uv2p[0]>0:
+    #                        if uv1p[0]-uv1p[1]*(uv2p[0]-uv1p[0])/(uv2p[1]-uv1p[1])>0:
+    #                            nc=nc+1
+    #                    sh=nsh
+    #                #second edge test
+    #                if uv2p[1]<0:
+    #                    sh=-1
+    #                else:
+    #                    sh=1
+    #                if uv3p[1]<0:
+    #                    nsh=-1
+    #                else:
+    #                    nsh=1
+    #                if sh!=nsh:
+    #                    if uv2p[0]>0 and uv3p[0]:
+    #                        nc=nc+1
+    #                    elif uv2p[0]>0 or  uv3p[0]>0:
+    #                        if uv2p[0]-uv2p[1]*(uv3p[0]-uv2p[0])/(uv3p[1]-uv2p[1])>0:
+    #                            nc=nc+1
+    #                    sh=nsh
+    #                #third edge test
+    #                if uv3p[1]<0:
+    #                    sh=-1
+    #                else:
+    #                    sh=1
+    #                if uv1p[1]<0:
+    #                    nsh=-1
+    #                else:
+    #                    nsh=1
+    #                if sh!=nsh:
+    #                    if uv3p[0]>0 and uv1p[0]:
+    #                        nc=nc+1
+    #                    elif uv3p[0]>0 or  uv1p[0]>0:
+    #                        if uv1p[0]-uv3p[1]*(uv1p[0]-uv3p[0])/(uv1p[1]-uv3p[1])>0:
+    #                            nc=nc+1
+    #                    sh=nsh
+    #                if nc%2==0:
+    #                    pass
+    #                if nc%2!=0:
+    #                    #print('test')
+    #                    rn2=np.dot(rn,rn)
+    #                    nbuilding=rn/np.sqrt(rn2)
+    #                    dot1=np.dot(F,nbuilding)
+    #                    F=F-(2.0*(dot1/rn2*nbuilding))
+    #                    length=np.sqrt(np.dot(F,F))      
+    #                    
+    #    print(F)
+    #    return F

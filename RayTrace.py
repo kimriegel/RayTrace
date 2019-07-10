@@ -14,9 +14,10 @@
 import numpy as np
 
 import Parameterfile as Pf
-import BuildingGeometry as Bg
+#import BuildingGeometry as Bg
 import Functions as Fun
 import ReceiverPointSource as Rps
+import Environment as Env
 # import GeometryParser as Bg
 
 import time
@@ -212,6 +213,8 @@ rayCounter = 0
 checkDirection = [0, 0, 0]
 nBox = [0, 0, 0]
 veci = np.array([0, 0, 0])
+SingleBuilding=Env.environment('SingleBuilding.obj')
+SingleBuilding.sortvert(SingleBuilding.vertices,1)
 print('began rays')
 for ray in boomCarpet:              # Written like this for readability
     veci = ray      # initial ray position
@@ -279,13 +282,14 @@ for ray in boomCarpet:              # Written like this for readability
         hit = 0
         planeHit = 0
         #     Check intersection with Boxes
-        for Q in range(0, Bg.BoxNumber):
-            dxNear, dxFar, hit, planeHit = Fun.box(Bg.BoxArrayNear[Q], Bg.BoxArrayFar[Q], veci, F)
-            if dxNear < dxBuilding:
-                dxBuilding = dxNear
-                Vecip1 = veci + np.multiply(dxBuilding, F)
-                whichBox = Q
-                nBox = Fun.plane(Vecip1, Bg.BoxArrayNear[whichBox], Bg.BoxArrayFar[whichBox], planeHit)
+        dxBuilding=SingleBuilding.RayIntersection(veci,F)
+        #for Q in range(0, Bg.BoxNumber):
+        #   dxNear, dxFar, hit, planeHit = Fun.box(Bg.BoxArrayNear[Q], Bg.BoxArrayFar[Q], veci, F)
+        #    if dxNear < dxBuilding:
+        #        dxBuilding = dxNear
+        ##        Vecip1 = veci + np.multiply(dxBuilding, F)
+        #       whichBox = Q
+        #        nBox = Fun.plane(Vecip1, Bg.BoxArrayNear[whichBox], Bg.BoxArrayFar[whichBox], planeHit)
         # This part doesn't really work well.  We have not incorporated it.
         # Eventually all interactions will be triangles anyway so I'm leaving it here to be updated.
 
@@ -388,13 +392,14 @@ for ray in boomCarpet:              # Written like this for readability
 #                                        patchArray[Q, W, 6] = abs(temp4)
 #                                        patchArray[Q, W, 7] = np.arctan(temp4.imag,temp4.real)
             if dx == dxBuilding:   # if the ray hits the building then change the direction and continue
-                veci += (dx * F)
+                SingleBuilding.RayHit(veci,F)
+                #veci += (dx * F)
                 print('hit building at step ', I,veci)
-                n2 = np.dot(nBox, nBox)
-                nBuilding = nBox / np.sqrt(n2)
-                dot1 = np.dot(F, nBuilding)
-                F -= (2.0 * (dot1 / n2 * nBuilding))
-                length = np.sqrt(np.dot(F, F))
+                #n2 = np.dot(nBox, nBox)
+                ##nBuilding = nBox / np.sqrt(n2)
+                #dot1 = np.dot(F, nBuilding)
+                #F -= (2.0 * (dot1 / n2 * nBuilding))
+                #length = np.sqrt(np.dot(F, F))
                 buildingHit = 1
                 # We need to look into complex absorption and see if this is really the best way.
 #                if Pf.complexAbsorption:
