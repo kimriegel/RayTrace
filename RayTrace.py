@@ -438,16 +438,20 @@ print('time: ', time.time()-t)
     # Outputting graphs
 t = time.time()
 
-# Will eventually be moved to a receiver function, 
-# here now for ease of access of others reading this
+# Will eventually be moved to a receiver function,
+# here now for ease of access of others reading this 
 for R in ears:
+     # For N wave
     pressure = R.signal
     i = R.recNumber
-    plt.figure(i)
-    plt.plot(timeArray,pressure,'r--')
+    #plt.figure(i)
+    plt.figure(num = i, figsize=(19.20, 10.80), dpi=120, facecolor='#eeeeee', edgecolor='r')
+    #plt.plot(timeArray,pressure,'r--')
+    plt.grid(True)
+    plt.plot(timeArray,pressure,'#780303')
         # Labeling axes
-    plt.xlabel('Time')
-    plt.ylabel('Pressure')
+    plt.xlabel('Time [s]')
+    plt.ylabel('Pressure [Pa]')
     plt.title('Pressure vs Time of Receiver '+ str(i))
         # Saving
     plt.savefig(Pf.graphName + str(i) + '.png')
