@@ -1,11 +1,12 @@
 # RayTrace
 # version 1.1.0
 
-# Kimberly A. Riegel, PHD created this program to propagate sonic booms around
-# large structures, and to graduate. It is a ray tracing model that 
-# will include specular and diffuse reflections. It will print out the
-# sound field at ear height, at relevant microphone locations, and at 
-# the building walls. It will read in the fft of a sonic boom signature.
+# Kimberly A. Riegel, PHD created this program to propagate sonic booms 
+# around Large structures, and to graduate. It is a ray tracing model 
+# that  will include specular and diffuse reflections. It will print
+# out the sound field at ear height, at relevant microphone locations,
+# and at the building walls. It will read in the fft of a sonic boom 
+# signature.
 
 # Dr. Riegel, William Costa, and George Seaton porting program from Fortran to python
 
@@ -28,7 +29,6 @@ t = time.time()
       Anything resembling radiosity
 """
 
-
 def initial_signal(signal_length, fft_output):
     """
     Making the array for the initial signals.
@@ -44,7 +44,6 @@ def initial_signal(signal_length, fft_output):
                                         np.real(fft_output[1:1 + signal_length2] / signal_length))
 
     return output_frequency
-
 
 def update_freq(dx_update, alpha_update, diffusion_update):
     """
@@ -210,6 +209,7 @@ for i in range(610):
       print(ray)
 # if ray:
 # Begin tracing
+#print('Memory (before) : ' + str(mem.memory_usage()) + 'MB')
 checkDirection = [0, 0, 0]
 nBox = [0, 0, 0]
 veci = np.array([0, 0, 0])
@@ -364,7 +364,7 @@ for ray in boomCarpet:              # Written like this for readability
                 tmp = np.dot(GroundABC, veci)
                 if tmp != GroundD:
                     veci[2] = 0
-#                print('hit ground at ', I)
+                print('hit ground at ', I,veci)
                 dot1 = np.dot(F, nGround)
                 n2 = np.dot(nGround, nGround)
                 F -= (2.0 * (dot1 / n2 * nGround))
@@ -390,7 +390,7 @@ for ray in boomCarpet:              # Written like this for readability
 #                                        patchArray[Q, W, 7] = np.arctan(temp4.imag,temp4.real)
             if dx == dxBuilding:   # if the ray hits the building then change the direction and continue
                 veci += (dx * F)
-                print('hit building at step ', I)
+                print('hit building at step ', I,veci)
                 n2 = np.dot(nBox, nBox)
                 nBuilding = nBox / np.sqrt(n2)
                 dot1 = np.dot(F, nBuilding)
@@ -434,3 +434,12 @@ with open (fileid, 'a') as f:
     for w in range(sizeFFT):
         Rps.Receiver.timeHeader(f, timeArray[w], w)
 print('time: ', time.time()-t)
+#
+
+
+testfile = 'OutputTest.txt'
+with open (testfile,'w') as test:
+      rec = Rps.Receiver.rList[1]
+      #print(rec.recNumber,file=test)
+      for w in range(sizeFFT):
+            print(rec.signal[w],file=test)
