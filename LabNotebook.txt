@@ -1150,3 +1150,9 @@ Trying really hard to graduate in this span of time, not much progress
 7/10/19
     Finally made graphing fast and generalized it to work outside of these tests
     Added option to name graphs in parameterfile
+
+7/14/19
+    Ran python and Fortran side by side and python finished in 9 minutes and 50 seconds, python got up to 10 minutes 15 seconds and then crashed. 
+    Spacing used was 0.35 
+
+    Made a redux of the old matlab code. It works on my computer again. I'll port these graphs to python
