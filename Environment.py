@@ -58,10 +58,10 @@ class environment():
     # For the moment, this may simplify incorporating Environment into RayTrace.
     
     def RayIntersection(self, veci,F):
-        '''
+        """
         veci is the ray position as defined in RayTrace.py
         F is the ray direction as defined in RayTrace.py
-        '''
+        """
         subvert=[]
         subfaces=[]
         distances=np.array([100000])
@@ -115,7 +115,9 @@ class environment():
         return min(distances)
     
     def RayHit(self,veci,F,distance):
-        ''' "RayHit is the one with intersection, you should put a 3-quote note" -G.K. Seaton '''
+        """
+        "RayHit is the one with intersection, you should put a 3-quote note" -G.K. Seaton 
+        """
 
         if distance<0: # ray intersection behind ray origin
             print('Ray Intersection behind Ray Origin')

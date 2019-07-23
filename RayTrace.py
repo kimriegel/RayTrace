@@ -202,11 +202,11 @@ rayCounter = 0
 
 # These are for debugging, Uncomment this block and comment out the for loop below
 # ray = 606                     # @ Pf.boomSpacing = 1
-# for i in range(606):
-#      ray =      next(boomCarpet)
-#      rayCounter += 1
-for i in range(610):
-      ray = next(boomCarpet)
+for i in range(606):
+     ray =      next(boomCarpet)
+     rayCounter += 1
+#for i in range(610):
+#      ray = next(boomCarpet)
 # if ray:
 # Begin tracing
 #print('Memory (before) : ' + str(mem.memory_usage()) + 'MB')
@@ -393,7 +393,7 @@ for ray in boomCarpet:              # Written like this for readability
 #                                        patchArray[Q, W, 7] = np.arctan(temp4.imag,temp4.real)
             if dx == dxBuilding:   # if the ray hits the building then change the direction and continue
                 #print('veci',veci,'F',F)
-                veci,F=SingleBuilding.RayHit(veci,F,dxBuilding)
+################                veci,F=SingleBuilding.RayHit(veci,F,dxBuilding)
                 #print('veci2', veci, 'F2', F)
                 #veci += (dx * F)
                 print('hit building at step ', I,veci)
