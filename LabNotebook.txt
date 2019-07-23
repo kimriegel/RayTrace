@@ -1156,3 +1156,6 @@ Trying really hard to graduate in this span of time, not much progress
     Spacing used was 0.35 
 
     Made a redux of the old matlab code. It works on my computer again. I'll port these graphs to python
+
+7/23/2019
+    the.r0ml@gmail.com
