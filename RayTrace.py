@@ -315,7 +315,7 @@ for ray in boomCarpet:              # Written like this for readability
         buildingHit = 0
         receiverHit = 0
         groundHit = 0
-
+        #print('dxR', dxReceiver, 'dxG', dxGround, 'dxB', dxBuilding)
         #     Check to see if ray hits within step size
         if dxReceiver < Pf.h or dxGround < Pf.h or dxBuilding < Pf.h:
             dx = min(dxReceiver, dxGround, dxBuilding)
@@ -392,7 +392,9 @@ for ray in boomCarpet:              # Written like this for readability
 #                                        patchArray[Q, W, 6] = abs(temp4)
 #                                        patchArray[Q, W, 7] = np.arctan(temp4.imag,temp4.real)
             if dx == dxBuilding:   # if the ray hits the building then change the direction and continue
+                #print('veci',veci,'F',F)
                 veci,F=SingleBuilding.RayHit(veci,F,dxBuilding)
+                #print('veci2', veci, 'F2', F)
                 #veci += (dx * F)
                 print('hit building at step ', I,veci)
                 #n2 = np.dot(nBox, nBox)
@@ -418,7 +420,9 @@ for ray in boomCarpet:              # Written like this for readability
                 alpha = alphaBuilding[0, :]
                 update_freq(dx, alpha, diffusion)
         else:  # If there was no interaction with buildings then proceed with one step.
+            print('no interaction, before step',I, veci)
             veci += (Pf.h * F)
+            print('after step', I, veci)
             update_freq(Pf.h, alphaNothing, 0)
     rayCounter += 1
     print('finished ray', rayCounter)
