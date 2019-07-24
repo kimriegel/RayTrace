@@ -10,6 +10,7 @@ import pywavefront as pwf
 from pywavefront import ObjParser
 import Parameterfile as pf
 
+Huge = 100000
 
 class environment():
     """
@@ -34,7 +35,9 @@ class environment():
         self.wavefront=pwf.Wavefront(file_name)
         environment=ObjParser(self.wavefront,file_name, strict=False, encoding="utf-8", create_materials=False, collect_faces=True, parse=True, cache=False)
         environment.parse_f
-        self.vertices=environment.wavefront.vertices[0:len(environment.wavefront.vertices)//2]
+        #self.vertices=environment.wavefront.vertices[0:len(environment.wavefront.vertices)//2]
+        self.vertices=environment.wavefront.vertices[0:len(environment.wavefront.vertices)]
+        #seeing if twice the faces prevents it from ignoring surfaces -G 7/24
         self.faces=environment.mesh.faces
         self.t=100
     def sortvert(self,vertices,axis):
@@ -62,9 +65,10 @@ class environment():
         veci is the ray position as defined in RayTrace.py
         F is the ray direction as defined in RayTrace.py
         """
+        print('also called')
         subvert=[]
         subfaces=[]
-        distances=np.array([100000])
+        distances=np.array([Huge])
         rayaxis=0 # index used for (x,y,z) ordered ray coordinate
         if self.axis == 1:
             rayaxis=2
@@ -105,7 +109,7 @@ class environment():
             D=np.dot(self.unitnormal,self.V1) # calculates plane equation D: Ax+By+Cz+D=0
             self.vd=np.dot(self.unitnormal,F) # dot product between normal and ray direction
             if self.vd==0: # ray is parallel to plane and no intersection occurs. ## special case??
-                self.t=1000000 #HOTFIX
+                self.t=Huge #HOTFIX
                 pass
             else:
                 v0=-(np.dot(self.unitnormal,veci)+D)
@@ -118,7 +122,7 @@ class environment():
         """
         "RayHit is the one with intersection, you should put a 3-quote note" -G.K. Seaton 
         """
-
+        print('called')
         if distance<0: # ray intersection behind ray origin
             print('Ray Intersection behind Ray Origin')
             pass
@@ -198,3 +202,7 @@ class environment():
                 length=np.sqrt(np.dot(F,F))  
                 print('veci', veci, 'ri', ri)    
         return veci, F
+
+if __name__ == "__main__":
+    # You can run main trace from here now
+    import RayTrace_costa       #I'm kinda lazy -G

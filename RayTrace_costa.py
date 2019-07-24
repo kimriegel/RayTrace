@@ -220,7 +220,6 @@ for ray in boomCarpet:              # Written like this for readability
     veci = ray      # initial ray position
     hitCount = 0
     doubleHit = 0
-
     amplitude = frecuencias[:, 1]/normalization
     phase = frecuencias[:, 2]
     if Pf.h < (2*Pf.radius):
@@ -420,7 +419,7 @@ for ray in boomCarpet:              # Written like this for readability
                 alpha = alphaBuilding[0, :]
                 update_freq(dx, alpha, diffusion)
         else:  # If there was no interaction with buildings then proceed with one step.
-            print('no interaction, before step',I, veci)
+            #print('no interaction, before step',I, veci)
             veci += (Pf.h * F)
             print('after step', I, veci)
             update_freq(Pf.h, alphaNothing, 0)
