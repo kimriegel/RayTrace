@@ -64,6 +64,7 @@ class environment():
         '''
         subvert=[]
         subfaces=[]
+        self.planes=[]
         distances=np.array([100000])
         rayaxis=0 # index used for (x,y,z) ordered ray coordinate
         if self.axis == 1:
@@ -76,7 +77,7 @@ class environment():
             pass
         else:
             subvert=self.sortvert # creates a sorted subset of the vertices
-            bandwidth=self.axisheight #establishes a bandwidth to be compared to self.bandwidth
+            bandwidth=self.axisheight#establishes a bandwidth to be compared to self.bandwidth
             while bandwidth > self.bandwidth:
                 if veci[rayaxis]<subvert[len(subvert)//2][0][self.axis]:
                     subvert=subvert[0:len(subvert)//2]
@@ -87,14 +88,18 @@ class environment():
                 axisheight=axismax-axismin
                 bandwidth=axisheight
         for vertex in range(0,len(subvert)):
-            vertindex=subvert[vertex][1]
+            vertindex=subvert[vertex][1] 
+            #print(subvert)
+            #print(vertindex)
             for x in range(0,len(self.faces)):
-                if vertindex in self.faces[x]:
-                    subfaces.append(self.faces[x])
-        for face in range(0,len(subfaces)): # Using ray-plane algorithm from Haines chapter 3
-            A=subfaces[face][0]
-            B=subfaces[face][1]
-            C=subfaces[face][2]
+                #print('vertindex',vertindex, vertex)
+                if vertindex in self.faces[x] and self.faces[x] not in subfaces: 
+                    subfaces.append(self.faces[x]) #Creates the list of faces that the ray may interact with. ensures no duplicates
+        count=0
+        for face in subfaces: # Using ray-plane algorithm from Haines chapter 3
+            A=face[0]
+            B=face[1]
+            C=face[2]
             self.V1=np.array(self.vertices[A]) #These create arrays of the vertices for the face
             self.V2=np.array(self.vertices[B])
             self.V3=np.array(self.vertices[C])
@@ -111,88 +116,101 @@ class environment():
                 v0=-(np.dot(self.unitnormal,veci)+D)
                 self.t=v0/self.vd # distance from ray origin to plane intersection
                 if self.t<=pf.h and self.t>0:
+                    self.planes.append([face, self.V1, self.V2, self.V3, self.vd,self.unitnormal])
                     distances=np.append(distances,self.t)
         return min(distances)
     
+        ###Because of the building shape and triangulation, there are 2 planes that are possibly hit
+        # they share the same plane. RayHit should properly determine which of the two was hit. 
+        
+    
     def RayHit(self,veci,F,distance):
         ''' "RayHit is the one with intersection, you should put a 3-quote note" -G.K. Seaton '''
-
-        if distance<0: # ray intersection behind ray origin
-            print('Ray Intersection behind Ray Origin')
-            pass
-        else:
-            adjustment=F*distance
-            ri=veci+(F*distance) # calculates ray intersection
-            if self.vd<0: # Adjusts normal such that it points back towards ray-origin.
-                rn=self.unitnormal
-            else:
-                rn=-self.unitnormal
-            dominant=np.argmax(self.unitnormal) # Haines 3.2, coordinate w/ greatest magnitude
-            uv1=np.delete(self.V1,dominant) # translation to UV coordinates
-            uv2=np.delete(self.V2,dominant)
-            uv3=np.delete(self.V3,dominant)
-            riuv=np.delete(ri,dominant) # ray intersection UV coordinates
-            uv1p=uv1-riuv #uv1prime, etc. adjusted ray intersection to coordinate system origin
-            uv2p=uv2-riuv
-            uv3p=uv3-riuv
-            nc=0 #number of crossings
-            sh=0 # sign holder
-            nsh=0 # next sign holder
-            # first edge test
-            if uv1p[1]<0:
-                sh=-1
-            else:
-                sh=1
-            if uv2p[1]<0:
-                nsh=-1
-            else:
-                nsh=1
-            if sh!=nsh:
-                if uv1p[0]>0 and uv2p[0]:
-                    nc=nc+1
-                elif uv1p[0]>0 or  uv2p[0]>0:
-                    if uv1p[0]-uv1p[1]*(uv2p[0]-uv1p[0])/(uv2p[1]-uv1p[1])>0:
-                        nc=nc+1
-                sh=nsh
-            #second edge test
-            if uv2p[1]<0:
-                sh=-1
-            else:
-                sh=1
-            if uv3p[1]<0:
-                nsh=-1
-            else:
-                nsh=1
-            if sh!=nsh:
-                if uv2p[0]>0 and uv3p[0]:
-                    nc=nc+1
-                elif uv2p[0]>0 or  uv3p[0]>0:
-                    if uv2p[0]-uv2p[1]*(uv3p[0]-uv2p[0])/(uv3p[1]-uv2p[1])>0:
-                        nc=nc+1
-                sh=nsh
-            #third edge test
-            if uv3p[1]<0:
-                sh=-1
-            else:
-                sh=1
-            if uv1p[1]<0:
-                nsh=-1
-            else:
-                nsh=1
-            if sh!=nsh:
-                if uv3p[0]>0 and uv1p[0]:
-                    nc=nc+1
-                elif uv3p[0]>0 or  uv1p[0]>0:
-                    if uv1p[0]-uv3p[1]*(uv1p[0]-uv3p[0])/(uv1p[1]-uv3p[1])>0:
-                        nc=nc+1
-                sh=nsh
-            if nc%2==0:
+        for plane in self.planes:
+            print(plane)
+            vd=plane[4]
+            v1=plane[1]
+            v2=plane[2]
+            v3=plane[3]
+            unitnormal=plane[5]
+            # Error case: veci = [-3.36290738 14.90255512 8.06987805], [-0.94808515 -0.296385`4 0.11528397]
+            # distance = 7.00052375190366
+            if distance<0: # ray intersection behind ray origin
+                print('Ray Intersection behind Ray Origin')
                 pass
-            if nc%2!=0:
-                rn2=np.dot(rn,rn)
-                nbuilding=rn/np.sqrt(rn2)
-                dot1=np.dot(F,nbuilding)
-                F=F-(2.0*(dot1/rn2*nbuilding))
-                length=np.sqrt(np.dot(F,F))  
-                print('veci', veci, 'ri', ri)    
+            else:
+                adjustment=F*distance
+                ri=veci+(F*distance) # calculates ray intersection
+                if vd<0: # Adjusts normal such that it points back towards ray-origin.
+                    rn=unitnormal
+                else:
+                    rn=-unitnormal
+                dominant=np.argmax(unitnormal) # Haines 3.2, coordinate w/ greatest magnitude
+                uv1=np.delete(v1,dominant) # translation to UV coordinates
+                uv2=np.delete(v2,dominant)
+                uv3=np.delete(v3,dominant)
+                riuv=np.delete(ri,dominant) # ray intersection UV coordinates
+                uv1p=uv1-riuv #uv1prime, etc. adjusted ray intersection to coordinate system origin
+                uv2p=uv2-riuv
+                uv3p=uv3-riuv
+                nc=0 #number of crossings
+                sh=0 # sign holder
+                nsh=0 # next sign holder
+                # first edge test
+                if uv1p[1]<0:
+                    sh=-1
+                else:
+                    sh=1
+                if uv2p[1]<0:
+                    nsh=-1
+                else:
+                    nsh=1
+                if sh!=nsh:
+                    if uv1p[0]>0 and uv2p[0]:
+                        nc=nc+1
+                    elif uv1p[0]>0 or  uv2p[0]>0:
+                        if uv1p[0]-uv1p[1]*(uv2p[0]-uv1p[0])/(uv2p[1]-uv1p[1])>0:
+                            nc=nc+1
+                    sh=nsh
+                #second edge test
+                if uv2p[1]<0:
+                    sh=-1
+                else:
+                    sh=1
+                if uv3p[1]<0:
+                    nsh=-1
+                else:
+                    nsh=1
+                if sh!=nsh:
+                    if uv2p[0]>0 and uv3p[0]:
+                        nc=nc+1
+                    elif uv2p[0]>0 or  uv3p[0]>0:
+                        if uv2p[0]-uv2p[1]*(uv3p[0]-uv2p[0])/(uv3p[1]-uv2p[1])>0:
+                            nc=nc+1
+                    sh=nsh
+                #third edge test
+                if uv3p[1]<0:
+                    sh=-1
+                else:
+                    sh=1
+                if uv1p[1]<0:
+                    nsh=-1
+                else:
+                    nsh=1
+                if sh!=nsh:
+                    if uv3p[0]>0 and uv1p[0]:
+                        nc=nc+1
+                    elif uv3p[0]>0 or  uv1p[0]>0:
+                        if uv1p[0]-uv3p[1]*(uv1p[0]-uv3p[0])/(uv1p[1]-uv3p[1])>0:
+                            nc=nc+1
+                    sh=nsh
+                if nc%2==0:
+                    pass
+                if nc%2!=0:
+                    rn2=np.dot(rn,rn)
+                    nbuilding=rn/np.sqrt(rn2)
+                    dot1=np.dot(F,nbuilding)
+                    F=F-(2.0*(dot1/rn2*nbuilding))
+                    length=np.sqrt(np.dot(F,F))  
+                    print('veci', veci, 'ri', ri)    
         return veci, F

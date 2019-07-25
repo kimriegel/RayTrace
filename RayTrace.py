@@ -213,8 +213,8 @@ for i in range(610):
 checkDirection = [0, 0, 0]
 nBox = [0, 0, 0]
 veci = np.array([0, 0, 0])
-SingleBuilding=Env.environment('SingleBuilding.obj')
-SingleBuilding.sortvert(SingleBuilding.vertices,1)
+SingleBuilding=Env.environment('SingleBuilding.obj') #Parses obj file
+SingleBuilding.sortvert(SingleBuilding.vertices,1) #sorts vertices along z axis
 print('began rays')
 for ray in boomCarpet:              # Written like this for readability
     veci = ray      # initial ray position
@@ -282,7 +282,9 @@ for ray in boomCarpet:              # Written like this for readability
         hit = 0
         planeHit = 0
         #     Check intersection with Boxes
+        print("Checking for ray intersection")
         dxBuilding=SingleBuilding.RayIntersection(veci,F)
+        print('dxB',dxBuilding)
         #for Q in range(0, Bg.BoxNumber):
         #   dxNear, dxFar, hit, planeHit = Fun.box(Bg.BoxArrayNear[Q], Bg.BoxArrayFar[Q], veci, F)
         #    if dxNear < dxBuilding:
@@ -420,9 +422,9 @@ for ray in boomCarpet:              # Written like this for readability
                 alpha = alphaBuilding[0, :]
                 update_freq(dx, alpha, diffusion)
         else:  # If there was no interaction with buildings then proceed with one step.
-            print('no interaction, before step',I, veci)
+            print('no interaction, before step',I, veci, 'F', F)
             veci += (Pf.h * F)
-            print('after step', I, veci)
+            print('after step', I, veci, 'F', F)
             update_freq(Pf.h, alphaNothing, 0)
     rayCounter += 1
     print('finished ray', rayCounter)
