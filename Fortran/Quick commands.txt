@@ -23,6 +23,8 @@ ls
 
 
 
+
+
 cd /cygdrive/c/users/kory\ george/documents/RayTrace/Fortran
 gfortran -c raytrace.f
 gfortran -c functions.f 

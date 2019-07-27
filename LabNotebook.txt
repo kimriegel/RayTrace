@@ -1161,6 +1161,7 @@ Trying really hard to graduate in this span of time, not much progress
     the.r0ml@gmail.com
 
 7/23/2019 - But a different branch
+<<<<<<< HEAD
     asked about making cache from sql
 
     examining Will's code
@@ -1177,3 +1178,15 @@ Trying really hard to graduate in this span of time, not much progress
       Found bug in Will's Environemnt file.
         third edge test used a different vertice and that may not have been correct
           ( I don't know. I don't have the book he read from )
+=======
+asked about making cache from sql
+
+examining Will's code
+
+7/24/19
+	Two main bugs found:
+		1.It doesn't register all faces
+		2.If it does register a face it won't move
+
+	Undid part of code where Will chops list in half
+>>>>>>> debugging-Seaton-Env

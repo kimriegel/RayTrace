@@ -151,7 +151,6 @@ class environment():
                 rn=self.unitnormal
             else:
                 rn=-self.unitnormal
-
             dominant=np.argmax(self.unitnormal) # Haines 3.2, coordinate w/ greatest magnitude
             uv1=np.delete(self.V1,dominant) # translation to UV coordinates
             uv2=np.delete(self.V2,dominant)
