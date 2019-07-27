@@ -23,6 +23,8 @@ import ReceiverPointSource as Rps   # For receivers
 import time                         # Time checks
 
 t = time.time()
+phase = 0 
+amplitude = 0
       
 # What it does not do
 """
@@ -67,6 +69,9 @@ def vex(y, z):
     """
     The x coordinate of the ray 
     Used for veci
+    Based on initialgrid. This is part of a generator which returns 
+    one ray at a time. This is both more memory efficient and faster
+    than making a large array as we did last time.
     """
     return (D - FInitial[1] * y - FInitial[2] * z) / FInitial[0]
 
