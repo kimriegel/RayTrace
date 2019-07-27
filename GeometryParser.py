@@ -3,6 +3,18 @@ import numpy as np
 import pywavefront as pwf
 #FaceNormals = [(-1,0,0),(0,1,0),(1,0,0),(0,-1,0),(0,0,1)]  Desired
 
+def isHit(near,far,veci,F):
+    """
+    Returns a bool if the surface is hit or not
+    Standin for the old box function for now
+    Goal is to look for dxnear 
+        aka dxbuilding
+    
+    This is very important to register that something is hit during a 
+    step
+    """
+
+
 if __name__ == "__main__":
 
     ipname = 'SingleBuilding.obj'

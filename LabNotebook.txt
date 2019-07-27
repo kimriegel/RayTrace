@@ -1159,3 +1159,21 @@ Trying really hard to graduate in this span of time, not much progress
 
 7/23/2019
     the.r0ml@gmail.com
+
+7/23/2019 - But a different branch
+    asked about making cache from sql
+
+    examining Will's code
+
+7/24/19
+	      Two main bugs found:
+	      	1.It doesn't register all faces
+	      	2.If it does register a face it won't move
+
+	      Undid part of code where Will chops list in half
+
+7/26/19
+
+      Found bug in Will's Environemnt file.
+        third edge test used a different vertice and that may not have been correct
+          ( I don't know. I don't have the book he read from )
