@@ -8,7 +8,6 @@ using singular points please refer to Receiver Point Source.
 
 Will function as plane receiver and be a subclass of Geometry, but 
 as that has not been integrated yet, this is here
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 
 import numpy as np

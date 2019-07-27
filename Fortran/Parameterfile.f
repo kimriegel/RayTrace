@@ -12,7 +12,7 @@ C     BigBertha
       hr=20.0
       theta=1.6863372
       phi=3.44458181
-      boomspacing=1
+      boomspacing=.35
       xmin=-1
       ymin=30.0
       zmin=0.0

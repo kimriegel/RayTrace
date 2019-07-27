@@ -133,96 +133,92 @@ def cross(a, b):
         normal = normal/length
     return normal
 
-# I am commenting this out until we have more info about how the geometry is going to work.
-# def tri(veci, F, Q, Number, PointNumbers, PolyArray, v, normal,FaceNormalNo,vn,dxbuilding,behind):
-#    """
-#    Lab notebook 5/16
-#    This is an attempt to merge box and polygon into one function since
-#    we are working entirely in triangular meshes now
-#
-#    ********************************Untested***********************************
-#    A 1:1 translation was made from Fortran. This is the closest match to
-#    what we are trying to do with triangle geometry. However there is no
-#    readily available geometry file to test this.
-#    [No Description given in Fortran]
-#    """
-#    size = 3
-#    G = np.zeros((size,2))  # (3,2)
-#    # inits
-#    NC=0
-#    behind=0
-#    normal = vn[PolyArray[Q,1],:]
-#    #normal[0]=FaceNormals[int(PolyArray[Q,1]),0]
-#    #normal[1]=FaceNormals[int(PolyArray[Q,1]),1]
-#    #normal[2]=FaceNormals[int(PolyArray[Q,1]),2]
-#
-#    d=-np.dot(normal,ValueError(PolyArray[Q,2]))
-#    Vd=np.dot(normal,F)
-
-#    if Vd >= 0.0:
-#        dxbuilding = HUGE
-#    V0= -(np.dot(normal,veci)+d)
-#    t=V0/Vd
-#    if(t < 0.0):
-#        dxbuilding=HUGE
-#        behind = 1
-#        #Stage 1
-#    intersection = veci + F*t
-#    maximum = max(abs(normal))
-#        # G: What if two normal values are the same? Anyway:
-#    if(maximum == abs(normal[0])):
-#        for P in range(size):
-#            G[P,:] = (intersection[1]-v[int(PolyArray[Q,1+P]),1]
-#                      ,intersection[2]-v[int(PolyArray[Q,1+P]),2])
-#    elif (maximum == normal[1]):
-#        for P in range(size):
-#            G[P,:] = (intersection[0]-v[int(PolyArray[Q,1+P]),0]
-#                      ,intersection[2]-v[int(PolyArray[Q,1+P]),2])
-#    elif (maximum == normal[2]):
-#        for P in range(size):
-#            G[P,:] = (intersection[0]-v[int(PolyArray[Q,1+P]),0]
-#                      ,intersection[1]-v[int(PolyArray[Q,1+P]),1])
-#    #Stage 2
-#    for P in range(size):
-#        if P == size:
-#            if G[P,1] < 0.0:
-#                SH = -1
-#            else:
-#                SH = 1
-#            if G[0,1] < 0.0:
-#                NSH = -1
-#            else:
-#                NSH = 1
-#        else:
-#            if G[P,1] < 0.0:
-#                SH = -1
-#            else:
-#                SH = 1
-#            if G[P+1,2] < 0.0:
-#                NSH = -1
-#            else:
-#                NSH = 1
-#        if SH != NSH:
-#            if (P == size):
-#                if (G[P,0] > 0.0) and (G[0,0]>0.0):
-#                    NC += 1
-#                elif (G[P,0]> 0.0) or (G[0,0] > 0.0):
-#                    if (G[P,0]-(G[P,1]*(G[P+1,0]-G[P,0])/(G[P+1,1]-G[P,1]))) > 0.0:
-#                        NC += 1
-#            else:
-#                if (G[P,0] > 0.0) and (G[P+1,0] > 0.0):
-#                    NC += 1
-#                elif (G[P,0] > 0.0) or (G[P+1,1] > 0.0):
-#                    if (G[P,0]-(G[P,1]*(G[P+1,0]-G[P,0])/(G[P+1,1]-G[P,1]))) > 0.0:
-#                        NC += 1
-#        odd = NC % 2    #get remainder to find if odd or not
-#        # This was this way in original fortran
-#        if odd:
-#            dxbuilding = t
-#        else:
-#            dxbuilding = HUGE
-#
-#        return dxbuilding,behind
+#I am commenting this out until we have more info about how the geometry is going to work.
+def tri(veci, F, Q, Number, PointNumbers, PolyArray, v, normal,FaceNormalNo,vn,dxbuilding,behind):
+   """
+   Lab notebook 5/16
+   This is an attempt to merge box and polygon into one function since
+   we are working entirely in triangular meshes now
+   ********************************Untested***********************************
+   A 1:1 translation was made from Fortran. This is the closest match to
+   what we are trying to do with triangle geometry. However there is no
+   readily available geometry file to test this.
+   [No Description given in Fortran]
+   """
+   size = 3
+   G = np.zeros((size,2))  # (3,2)
+   # inits
+   NC=0
+   behind=0
+   normal = vn[PolyArray[Q,1],:]
+   #normal[0]=FaceNormals[int(PolyArray[Q,1]),0]
+   #normal[1]=FaceNormals[int(PolyArray[Q,1]),1]
+   #normal[2]=FaceNormals[int(PolyArray[Q,1]),2]
+   d=-np.dot(normal,ValueError(PolyArray[Q,2]))
+   Vd=np.dot(normal,F)
+   if Vd >= 0.0:
+       dxbuilding = HUGE
+   V0= -(np.dot(normal,veci)+d)
+   t=V0/Vd
+   if(t < 0.0):
+       dxbuilding=HUGE
+       behind = 1
+       #Stage 1
+   intersection = veci + F*t
+   maximum = max(abs(normal))
+       # G: What if two normal values are the same? Anyway:
+   if(maximum == abs(normal[0])):
+       for P in range(size):
+           G[P,:] = (intersection[1]-v[int(PolyArray[Q,1+P]),1]
+                     ,intersection[2]-v[int(PolyArray[Q,1+P]),2])
+   elif (maximum == normal[1]):
+       for P in range(size):
+           G[P,:] = (intersection[0]-v[int(PolyArray[Q,1+P]),0]
+                     ,intersection[2]-v[int(PolyArray[Q,1+P]),2])
+   elif (maximum == normal[2]):
+       for P in range(size):
+           G[P,:] = (intersection[0]-v[int(PolyArray[Q,1+P]),0]
+                     ,intersection[1]-v[int(PolyArray[Q,1+P]),1])
+   #Stage 2
+   for P in range(size):
+       if P == size:
+           if G[P,1] < 0.0:
+               SH = -1
+           else:
+               SH = 1
+           if G[0,1] < 0.0:
+               NSH = -1
+           else:
+               NSH = 1
+       else:
+           if G[P,1] < 0.0:
+               SH = -1
+           else:
+               SH = 1
+           if G[P+1,2] < 0.0:
+               NSH = -1
+           else:
+               NSH = 1
+       if SH != NSH:
+           if (P == size):
+               if (G[P,0] > 0.0) and (G[0,0]>0.0):
+                   NC += 1
+               elif (G[P,0]> 0.0) or (G[0,0] > 0.0):
+                   if (G[P,0]-(G[P,1]*(G[P+1,0]-G[P,0])/(G[P+1,1]-G[P,1]))) > 0.0:
+                       NC += 1
+           else:
+               if (G[P,0] > 0.0) and (G[P+1,0] > 0.0):
+                   NC += 1
+               elif (G[P,0] > 0.0) or (G[P+1,1] > 0.0):
+                   if (G[P,0]-(G[P,1]*(G[P+1,0]-G[P,0])/(G[P+1,1]-G[P,1]))) > 0.0:
+                       NC += 1
+       odd = NC % 2    #get remainder to find if odd or not
+       # This was this way in original fortran
+       if odd:
+           dxbuilding = t
+       else:
+           dxbuilding = HUGE
+       return dxbuilding,behind
 
 # Commenting this out until we have some progress on the environment variables.
 # def polygon(vecip1, f, q, size, number, PointNumbers, PolyArray, BuildingPoints, normal,

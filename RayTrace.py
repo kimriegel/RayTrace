@@ -1,24 +1,26 @@
 # RayTrace
 # version 1.1.0
 
-# Kimberly A. Riegel, PHD created this program to propagate sonic booms around
-# large structures, and to graduate. It is a ray tracing model that 
-# will include specular and diffuse reflections. It will print out the
-# sound field at ear height, at relevant microphone locations, and at 
-# the building walls. It will read in the fft of a sonic boom signature.
+# Kimberly A. Riegel, PHD created this program to propagate sonic booms 
+# around Large structures, and to graduate. It is a ray tracing model 
+# that  will include specular and diffuse reflections. It will print
+# out the sound field at ear height, at relevant microphone locations,
+# and at the building walls. It will read in the fft of a sonic boom 
+# signature.
 
 # Dr. Riegel, William Costa, and George Seaton porting program from Fortran to python
 
 # Initialize variables and functions
-import numpy as np
+import numpy as np          # matricies and arrays
+import matplotlib.pyplot as plt     # for graphing
 
 import Parameterfile as Pf
 import BuildingGeometry as Bg
 import Functions as Fun
-import ReceiverPointSource as Rps
+import ReceiverPointSource as Rps   # For receivers
 # import GeometryParser as Bg
 
-import time
+import time                         # Time checks
 
 t = time.time()
       
@@ -28,7 +30,6 @@ t = time.time()
       Have a way of reading in complex geometries - Yes, but not yet integrated
       Anything resembling radiosity
 """
-
 
 def initial_signal(signal_length, fft_output):
     """
@@ -45,7 +46,6 @@ def initial_signal(signal_length, fft_output):
                                         np.real(fft_output[1:1 + signal_length2] / signal_length))
 
     return output_frequency
-
 
 def update_freq(dx_update, alpha_update, diffusion_update):
     """
@@ -64,8 +64,10 @@ def update_freq(dx_update, alpha_update, diffusion_update):
 
 
 def vex(y, z):
-    """The x coordinate of the ray 
-    Used for veci"""
+    """
+    The x coordinate of the ray 
+    Used for veci
+    """
     return (D - FInitial[1] * y - FInitial[2] * z) / FInitial[0]
 
 
@@ -203,12 +205,12 @@ rayCounter = 0
 
 # These are for debugging, Uncomment this block and comment out the for loop below
 # ray = 606                     # @ Pf.boomSpacing = 1
-# for i in range(606):
-#      ray =      next(boomCarpet)
-#      rayCounter += 1
-#
+for i in range(606):
+     ray =      next(boomCarpet)
+     rayCounter += 1
 # if ray:
 # Begin tracing
+#print('Memory (before) : ' + str(mem.memory_usage()) + 'MB')
 checkDirection = [0, 0, 0]
 nBox = [0, 0, 0]
 veci = np.array([0, 0, 0])
@@ -363,7 +365,7 @@ for ray in boomCarpet:              # Written like this for readability
                 tmp = np.dot(GroundABC, veci)
                 if tmp != GroundD:
                     veci[2] = 0
-#                print('hit ground at ', I)
+                print('hit ground at ', I)
                 dot1 = np.dot(F, nGround)
                 n2 = np.dot(nGround, nGround)
                 F -= (2.0 * (dot1 / n2 * nGround))
@@ -389,7 +391,7 @@ for ray in boomCarpet:              # Written like this for readability
 #                                        patchArray[Q, W, 7] = np.arctan(temp4.imag,temp4.real)
             if dx == dxBuilding:   # if the ray hits the building then change the direction and continue
                 veci += (dx * F)
-                print('hit building at step ', I)
+                print('hit building at step ', I, veci)
                 n2 = np.dot(nBox, nBox)
                 nBuilding = nBox / np.sqrt(n2)
                 dot1 = np.dot(F, nBuilding)
@@ -433,3 +435,44 @@ with open (fileid, 'a') as f:
     for w in range(sizeFFT):
         Rps.Receiver.timeHeader(f, timeArray[w], w)
 print('time: ', time.time()-t)
+
+    # Outputting graphs
+t = time.time()
+
+#######################################################################
+# Will eventually be moved to a receiver function,
+# here now for ease of access of others reading this 
+#######################################################################
+import matplotlib.font_manager as fm
+
+# Font
+stdfont = fm.FontProperties()
+stdfont.set_family('serif')
+stdfont.set_name('Times New Roman')
+stdfont.set_size(20)
+
+for R in ears:
+     # For N wave
+    pressure = R.signal
+    i = R.recNumber
+    #plt.figure(i)
+    #plt.figure(num = i, figsize=(19.20, 10.80), dpi=120, facecolor='#eeeeee', edgecolor='r')   # grey
+    #plt.figure(num = i, figsize=(19.20, 10.80), dpi=120, facecolor='#e0dae6', edgecolor='r')   # muted lilac
+    plt.figure(num = i, figsize=(19.20, 10.80), dpi=120, facecolor='#e6e6fa', edgecolor='r')    # lavender
+    #plt.plot(timeArray,pressure,'r--')
+    plt.grid(True)
+    plt.plot(timeArray,pressure,'#780303')
+        # Labeling axes
+    plt.xlabel('Time [s]', fontproperties=stdfont)
+    plt.ylabel('Pressure [Pa]', fontproperties=stdfont)
+    plt.title('Pressure vs Time of Receiver '+ str(i),
+                fontproperties=stdfont,
+                fontsize=26,
+                fontweight='bold')
+
+        # Saving
+    #plt.savefig(Pf.graphName + str(i) + '.png', facecolor='#eeeeee')    # grey
+    #plt.savefig(Pf.graphName + str(i) + '.png', facecolor='#e0dae6')    # muted lilac
+    plt.savefig(Pf.graphName + str(i) + '.png', facecolor='#e6e6fa')    # lavender
+    print('Saved receiver', i)
+print('Graph time: ', time.time()-t)

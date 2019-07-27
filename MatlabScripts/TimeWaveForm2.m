@@ -6,7 +6,7 @@ clear all
 format short
 % Read in the data from the Ray Trace Code
 fid='C:\Users\Kory George\Documents\RayTrace\MatlabScripts\PythonTest.txt';
-A=ReadTecPlotWorks(fid,'Single Point');
+A=ReadTecPlot(fid,'Single Point');
 
 %A(3,4,:)
 %fprintf(fid,'%d\n', A(3,4,:))
