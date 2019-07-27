@@ -17,7 +17,7 @@ def isHit(near,far,veci,F):
 
 if __name__ == "__main__":
 
-    ipname = 'SingleBuilding.obj'
+    ipname = 'Env/SingleBuilding.obj'
     #ipname = 'TwoWalls.obj'
     ipfile = pwf.Wavefront(ipname)    # Read in geometry file
     env = pwf.ObjParser(ipfile,ipname, strict=False, encoding="utf-8", 
