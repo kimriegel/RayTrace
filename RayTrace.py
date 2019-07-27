@@ -64,8 +64,10 @@ def update_freq(dx_update, alpha_update, diffusion_update):
 
 
 def vex(y, z):
-    """The x coordinate of the ray 
-    Used for veci"""
+    """
+    The x coordinate of the ray 
+    Used for veci
+    """
     return (D - FInitial[1] * y - FInitial[2] * z) / FInitial[0]
 
 
