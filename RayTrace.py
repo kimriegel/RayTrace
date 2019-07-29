@@ -11,15 +11,16 @@
 # Dr. Riegel, William Costa, and George Seaton porting program from Fortran to python
 
 # Initialize variables and functions
-import numpy as np
+import numpy as np          # matricies and arrays
+import matplotlib.pyplot as plt     # for graphing
+
 import Parameterfile as Pf
-#import BuildingGeometry as Bg
+import BuildingGeometry as Bg
 import Functions as Fun
-import ReceiverPointSource as Rps
-import Environment as Env
+import ReceiverPointSource as Rps   # For receivers
 # import GeometryParser as Bg
 
-import time
+import time                         # Time checks
 
 t = time.time()
       
@@ -63,8 +64,10 @@ def update_freq(dx_update, alpha_update, diffusion_update):
 
 
 def vex(y, z):
-    """The x coordinate of the ray 
-    Used for veci"""
+    """
+    The x coordinate of the ray 
+    Used for veci
+    """
     return (D - FInitial[1] * y - FInitial[2] * z) / FInitial[0]
 
 
@@ -202,11 +205,9 @@ rayCounter = 0
 
 # These are for debugging, Uncomment this block and comment out the for loop below
 # ray = 606                     # @ Pf.boomSpacing = 1
-# for i in range(606):
-#      ray =      next(boomCarpet)
-#      rayCounter += 1
-for i in range(610):
-      ray = next(boomCarpet)
+for i in range(606):
+     ray =      next(boomCarpet)
+     rayCounter += 1
 # if ray:
 # Begin tracing
 #print('Memory (before) : ' + str(mem.memory_usage()) + 'MB')
@@ -317,7 +318,7 @@ for ray in boomCarpet:              # Written like this for readability
         buildingHit = 0
         receiverHit = 0
         groundHit = 0
-        #print('dxR', dxReceiver, 'dxG', dxGround, 'dxB', dxBuilding)
+
         #     Check to see if ray hits within step size
         if dxReceiver < Pf.h or dxGround < Pf.h or dxBuilding < Pf.h:
             dx = min(dxReceiver, dxGround, dxBuilding)
@@ -369,7 +370,7 @@ for ray in boomCarpet:              # Written like this for readability
                 tmp = np.dot(GroundABC, veci)
                 if tmp != GroundD:
                     veci[2] = 0
-                print('hit ground at ', I,veci)
+                print('hit ground at ', I)
                 dot1 = np.dot(F, nGround)
                 n2 = np.dot(nGround, nGround)
                 F -= (2.0 * (dot1 / n2 * nGround))
@@ -394,16 +395,13 @@ for ray in boomCarpet:              # Written like this for readability
 #                                        patchArray[Q, W, 6] = abs(temp4)
 #                                        patchArray[Q, W, 7] = np.arctan(temp4.imag,temp4.real)
             if dx == dxBuilding:   # if the ray hits the building then change the direction and continue
-                #print('veci',veci,'F',F)
-                veci,F=SingleBuilding.RayHit(veci,F,dxBuilding)
-                #print('veci2', veci, 'F2', F)
-                #veci += (dx * F)
-                print('hit building at step ', I,veci)
-                #n2 = np.dot(nBox, nBox)
-                ##nBuilding = nBox / np.sqrt(n2)
-                #dot1 = np.dot(F, nBuilding)
-                #F -= (2.0 * (dot1 / n2 * nBuilding))
-                #length = np.sqrt(np.dot(F, F))
+                veci += (dx * F)
+                print('hit building at step ', I, veci)
+                n2 = np.dot(nBox, nBox)
+                nBuilding = nBox / np.sqrt(n2)
+                dot1 = np.dot(F, nBuilding)
+                F -= (2.0 * (dot1 / n2 * nBuilding))
+                length = np.sqrt(np.dot(F, F))
                 buildingHit = 1
                 # We need to look into complex absorption and see if this is really the best way.
 #                if Pf.complexAbsorption:
@@ -444,12 +442,44 @@ with open (fileid, 'a') as f:
     for w in range(sizeFFT):
         Rps.Receiver.timeHeader(f, timeArray[w], w)
 print('time: ', time.time()-t)
-#
 
+    # Outputting graphs
+t = time.time()
 
-testfile = 'OutputTest.txt'
-with open (testfile,'w') as test:
-      rec = Rps.Receiver.rList[1]
-      #print(rec.recNumber,file=test)
-      for w in range(sizeFFT):
-            print(rec.signal[w],file=test)
+#######################################################################
+# Will eventually be moved to a receiver function,
+# here now for ease of access of others reading this 
+#######################################################################
+import matplotlib.font_manager as fm
+
+# Font
+stdfont = fm.FontProperties()
+stdfont.set_family('serif')
+stdfont.set_name('Times New Roman')
+stdfont.set_size(20)
+
+for R in ears:
+     # For N wave
+    pressure = R.signal
+    i = R.recNumber
+    #plt.figure(i)
+    #plt.figure(num = i, figsize=(19.20, 10.80), dpi=120, facecolor='#eeeeee', edgecolor='r')   # grey
+    #plt.figure(num = i, figsize=(19.20, 10.80), dpi=120, facecolor='#e0dae6', edgecolor='r')   # muted lilac
+    plt.figure(num = i, figsize=(19.20, 10.80), dpi=120, facecolor='#e6e6fa', edgecolor='r')    # lavender
+    #plt.plot(timeArray,pressure,'r--')
+    plt.grid(True)
+    plt.plot(timeArray,pressure,'#780303')
+        # Labeling axes
+    plt.xlabel('Time [s]', fontproperties=stdfont)
+    plt.ylabel('Pressure [Pa]', fontproperties=stdfont)
+    plt.title('Pressure vs Time of Receiver '+ str(i),
+                fontproperties=stdfont,
+                fontsize=26,
+                fontweight='bold')
+
+        # Saving
+    #plt.savefig(Pf.graphName + str(i) + '.png', facecolor='#eeeeee')    # grey
+    #plt.savefig(Pf.graphName + str(i) + '.png', facecolor='#e0dae6')    # muted lilac
+    plt.savefig(Pf.graphName + str(i) + '.png', facecolor='#e6e6fa')    # lavender
+    print('Saved receiver', i)
+print('Graph time: ', time.time()-t)

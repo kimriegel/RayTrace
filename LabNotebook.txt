@@ -989,12 +989,6 @@ Note: In my new version I tear all the rays into pieces and then make changes ea
 5/28
     Experimenting with caches
       It stores updates from no hit, but crashes when it hits a surface.
-<<<<<<< HEAD
-<<<<<<< HEAD
-      This is not a pun
-=======
-=======
->>>>>>> 81ad9b82f280b6c640127080063eef9a475996b2
       This is not a pun
 
       Remember to ask Dr Riegel about making our own LRU, since I don't think python's native one is useful here
@@ -1130,14 +1124,6 @@ Note: In my new version I tear all the rays into pieces and then make changes ea
         Learned how to import with namespace
           I'll see what doors this opens later
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-          from [module] import *
->>>>>>> b39ef6649cecc2a366c921281aac9962907b53e9
-=======
-          from [module] import *
->>>>>>> 81ad9b82f280b6c640127080063eef9a475996b2
-=======
           from [module] import *
 
 
@@ -1158,4 +1144,36 @@ Trying really hard to graduate in this span of time, not much progress
     Q: How can we /efficiently/ implement a Least Recently Used Cache that incorporates thousands of datapoints per ray per step?
 
       
->>>>>>> 1b556a7f1a4be19ab36b686d23eccbf453318a9c
+7/9/19
+    Finally added graphing
+
+7/10/19
+    Finally made graphing fast and generalized it to work outside of these tests
+    Added option to name graphs in parameterfile
+
+7/14/19
+    Ran python and Fortran side by side and python finished in 9 minutes and 50 seconds, python got up to 10 minutes 15 seconds and then crashed. 
+    Spacing used was 0.35 
+
+    Made a redux of the old matlab code. It works on my computer again. I'll port these graphs to python
+
+7/23/2019
+    the.r0ml@gmail.com
+
+7/23/2019 - But a different branch
+    asked about making cache from sql
+
+    examining Will's code
+
+7/24/19
+	      Two main bugs found:
+	      	1.It doesn't register all faces
+	      	2.If it does register a face it won't move
+
+	      Undid part of code where Will chops list in half
+
+7/26/19
+
+      Found bug in Will's Environemnt file.
+        third edge test used a different vertice and that may not have been correct
+          ( I don't know. I don't have the book he read from )
