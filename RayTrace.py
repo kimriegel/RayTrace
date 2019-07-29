@@ -213,8 +213,8 @@ for i in range(610):
 checkDirection = [0, 0, 0]
 nBox = [0, 0, 0]
 veci = np.array([0, 0, 0])
-SingleBuilding=Env.environment('SingleBuilding.obj') #Parses obj file
-SingleBuilding.sortvert(SingleBuilding.vertices,1) #sorts vertices along z axis
+SingleBuilding=Env.environment('SingleBuilding.obj')
+SingleBuilding.SortVertices(SingleBuilding.vertices,1)
 print('began rays')
 for ray in boomCarpet:              # Written like this for readability
     veci = ray      # initial ray position
