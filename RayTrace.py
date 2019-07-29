@@ -12,12 +12,13 @@
 
 # Initialize variables and functions
 import numpy as np          # matricies and arrays
-import matplotlib.pyplot as plt     # for graphing
+#import matplotlib.pyplot as plt     # for graphing
 
 import Parameterfile as Pf
 import BuildingGeometry as Bg
 import Functions as Fun
 import ReceiverPointSource as Rps   # For receivers
+import Environment as Env
 # import GeometryParser as Bg
 
 import time                         # Time checks
@@ -216,6 +217,7 @@ nBox = [0, 0, 0]
 veci = np.array([0, 0, 0])
 SingleBuilding=Env.environment('SingleBuilding.obj')
 SingleBuilding.SortVertices(SingleBuilding.vertices,1)
+bounds=SingleBuilding.Boundaries()
 print('began rays')
 for ray in boomCarpet:              # Written like this for readability
     veci = ray      # initial ray position
@@ -395,14 +397,8 @@ for ray in boomCarpet:              # Written like this for readability
 #                                        patchArray[Q, W, 6] = abs(temp4)
 #                                        patchArray[Q, W, 7] = np.arctan(temp4.imag,temp4.real)
             if dx == dxBuilding:   # if the ray hits the building then change the direction and continue
-                veci += (dx * F)
+                veci,F=SingleBuilding.RayHit(veci,F,dxBuilding)
                 print('hit building at step ', I, veci)
-                n2 = np.dot(nBox, nBox)
-                nBuilding = nBox / np.sqrt(n2)
-                dot1 = np.dot(F, nBuilding)
-                F -= (2.0 * (dot1 / n2 * nBuilding))
-                length = np.sqrt(np.dot(F, F))
-                buildingHit = 1
                 # We need to look into complex absorption and see if this is really the best way.
 #                if Pf.complexAbsorption:
 #                    if Pf.absorbPlanes == 2:

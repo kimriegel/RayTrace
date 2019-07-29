@@ -73,13 +73,46 @@ class environment():
         self.axismax=self.sortvert[len(self.sortvert)-1][0][axis]
         self.axisheight=self.axismax-self.axismin
         self.bandwidth=pf.h*2 #sets bandwidth to 2x the step length
+    def Boundaries(self):
+        '''creates an array that defines the minimum and maximum axis values of the imported environment(building).
+            in the format boundary=([xmin,xmax],[ymin,ymax],[zmin,zmax]) '''
+        bounds=np.zeros((3,2))
+        for vertex in self.sortvert:
+            print('Vertex',vertex[0])
+            print(bounds)
+            # x-minimum
+            if vertex[0][0]<bounds[0][0]:
+                bounds[0][0]=vertex[0][0]
+            # x-maximum
+            elif vertex[0][0]>bounds[0][1]:
+                bounds[0][1]=vertex[0][0]
+            else:
+                pass
+            #y-minimum
+            if vertex[0][1]<bounds[1][0]:
+                bounds[1][0]=vertex[0][1]
+            #y-maximum
+            elif vertex[0][1]>bounds[1][1]:
+                bounds[1][1]=vertex[0][1]
+            else:
+                pass
+            #z-minimum
+            if vertex[0][2]<bounds[2][0]:
+                bounds[2][0]=vertex[0][2]
+            #z-maximum
+            elif vertex[0][2]>bounds[2][1]:
+                bounds[2][1]=vertex[0][2]
+            else:
+                pass
+        return bounds
 
     def RayIntersection(self, veci,F):
         """
         veci is the ray position as defined in RayTrace.py
         F is the ray direction as defined in RayTrace.py
         """
-        print('also called')
+        print('Calculating Ray Intersection')
+        print('Sorted Vertices', self.sortvert)
         subvert=[]
         subfaces=[]
         self.planes=[]
@@ -161,9 +194,7 @@ class environment():
                     rn=unitnormal
                 else:
                     rn=-unitnormal
-                print('unitnormal', unitnormal, 'absolute unit normal', abs(unitnormal))
                 dominant=np.argmax(abs(unitnormal))# Haines 3.2, coordinate w/ greatest magnitude
-                print('dominant', dominant)
                 uv1=np.delete(v1,dominant) # translation to UV coordinate
                 uv2=np.delete(v2,dominant)
                 uv3=np.delete(v3,dominant)
@@ -175,101 +206,104 @@ class environment():
                 sh=0 # sign holder
                 nsh=0 # next sign holder
                 # first edge test
-                print('first edge test')
-                print('LIST OF FACES', self.faces)
-                print('ri', ri, 'riuv', riuv)
-                print('face', face, 'triangle vertices', v1, v2, v3)
-                print('uv coordinates', uv1p, uv2p, uv3p)
-                print('uv1p', uv1p, 'uv2p', uv2p)
+                #print('Plane', count)
+                #print('veci', veci)
+                #print('first edge test')
+                #print('unitnormal', unitnormal, 'absolute unit normal', abs(unitnormal))
+                #print('dominant', dominant)
+                #print('ri', ri, 'riuv', riuv)
+                #print('face', face, 'triangle vertices', v1, v2, v3)
+                #print('uv coordinates', uv1p, uv2p, uv3p)
+                #print('uv1p', uv1p, 'uv2p', uv2p)
                 if uv1p[1]<0:
                     sh=-1
-                    print('sh=-1')
+                    #print('sh=-1')
                 else:
                     sh=1
-                    print('sh=1')
+                    #print('sh=1')
                 if uv2p[1]<0:
                     nsh=-1
-                    print('nsh=-1')
+                    #print('nsh=-1')
                 else:
                     nsh=1
-                    print('nsh=1')
+                    #print('nsh=1')
                 if sh!=nsh:
                     if uv1p[0]>0 and uv2p[0]>0:
                         nc=nc+1
-                        print('nc=',nc)
+                        #print('nc=',nc)
                     elif uv1p[0]>0 or  uv2p[0]>0:
                         if uv1p[0]-uv1p[1]*(uv2p[0]-uv1p[0])/(uv2p[1]-uv1p[1])>0:
                             nc=nc+1
-                            print('nc=', nc)
+                            #print('nc=', nc)
                     sh=nsh
-                    print('sh=nsh=',sh, nsh, 'end first edge test')
+                    #print('sh=nsh=',sh, nsh, 'end first edge test')
                 #second edge test
-                print('second edge test')
-                print('riuv', riuv)
-                print('uv2p', uv2p, 'uv3p', uv3p)
+                #print('second edge test')
+                #print('riuv', riuv)
+                #print('uv2p', uv2p, 'uv3p', uv3p)
                 if uv2p[1]<0:
                     sh=-1
-                    print('sh=-1')
+                    #print('sh=-1')
                 else:
                     sh=1
-                    print('sh=1')
+                    #print('sh=1')
                 if uv3p[1]<0:
                     nsh=-1
-                    print('nsh=-1')
+                    #print('nsh=-1')
                 else:
                     nsh=1
-                    print('nsh=1')
+                    #print('nsh=1')
                 if sh!=nsh:
                     if uv2p[0]>0 and uv3p[0]>0:
                         nc=nc+1
-                        print('nc=',nc)
+                        #print('nc=',nc)
                     elif uv2p[0]>0 or  uv3p[0]>0:
                         if uv2p[0]-uv2p[1]*(uv3p[0]-uv2p[0])/(uv3p[1]-uv2p[1])>0:
                             nc=nc+1
-                            print('nc=',nc)
+                            #print('nc=',nc)
                     sh=nsh
-                    print('sh=nsh=',sh,nsh,'end second edge test')
+                    #print('sh=nsh=',sh,nsh,'end second edge test')
                 #third edge test
-                print('third edge test')
-                print('riuv', riuv)
-                print('uv3p', uv3p, 'uv1p', uv1p)
+                #print('third edge test')
+                #print('riuv', riuv)
+                #print('uv3p', uv3p, 'uv1p', uv1p)
                 if uv3p[1]<0:
                     sh=-1
-                    print('sh=-1')
+                    #print('sh=-1')
                 else:
                     sh=1
-                    print('sh=1')
+                    #print('sh=1')
                 if uv1p[1]<0:
                     nsh=-1
-                    print('nsh=-1')
+                    #print('nsh=-1')
                 else:
                     nsh=1
-                    print('nsh=1')
+                    #print('nsh=1')
                 if sh!=nsh:
-                    print('BIGTEST')
-                    print('uv3p', uv3p, 'uv1p', uv1p)
+                    #print('BIGTEST')
+                    #print('uv3p', uv3p, 'uv1p', uv1p)
                     if uv3p[0]>0 and uv1p[0]>0:
                         nc=nc+1
-                        print('nc=',nc)
+                        #print('nc=',nc)
                     elif uv3p[0]>0 or  uv1p[0]>0:
                         if uv1p[0]-uv3p[1]*(uv1p[0]-uv3p[0])/(uv1p[1]-uv3p[1])>0:
                             nc=nc+1
-                            print('nc=',nc)
+                           #print('nc=',nc)
                     sh=nsh
-                    print('sh=nsh=',sh,nsh,'end third edge test')
+                    #print('sh=nsh=',sh,nsh,'end third edge test')
                 if nc%2==0:
-                    print('number of crossings =', nc,'even, not in face', face)
-                    print('finished plane', count)
+                    #print('number of crossings =', nc,'even, not in face', face)
+                    #print('finished plane', count)
                     pass
                 if nc%2!=0:
-                    print('ODD!!!!!!!!!!!!!!! number of crossings=', nc, 'odd, in face', face)
+                    #print('ODD!!!!!!!!!!!!!!! number of crossings=', nc, 'odd, in face', face)
 
                     rn2=np.dot(rn,rn)
                     nbuilding=rn/np.sqrt(rn2)
                     dot1=np.dot(F,nbuilding)
                     F=F-(2.0*(dot1/rn2*nbuilding))
                     length=np.sqrt(np.dot(F,F))  
-                    print('veci', veci, 'ri', ri)    
+                    #print('veci', veci, 'ri', ri)    
                     print('finished plane', count)
         return veci, F
 #######################################################################333        
