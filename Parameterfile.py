@@ -15,9 +15,15 @@ time = .01
 hr = 20.0
 theta = 1.6863372
 phi = 3.44458181
+<<<<<<< HEAD
 #boomspaing = 0.06   #.6
 #boomspacing= 0.035
 #boomspacing= 0.01
+=======
+#boomspacing = 0.06   #.6
+#boomspacing= 0.35
+#boomspacing= 0.1
+>>>>>>> 0c6f642968fbaff98345a64da4f453c73b1a6ef1
 boomspacing= 1
 xmin = -1
 ymin = 30.0
@@ -30,7 +36,11 @@ h = 10.0
 absorbplanes = 1
 #allocate(tempalphabuilding(absorbplanes,8))
 #Find way to rephrase
-outputfile = 'PythonTest1.txt'
+#outputfile = 'PythonTest1.txt'
+outputfile = "PythonTest" + str(boomspacing) + ".txt"       #debugging
+graphName = "TestGraph"                                     # No not use full file extension here
+#Will's
+#outputfile = "PythonTestEnv" + str(boomspacing) + ".txt"       #debugging
 #Turn Radiosity on or off.  This will include diffuse reflections
 radiosity = 0
 #Turn on complex absorption
@@ -59,6 +69,6 @@ percentdiffuse = 0.0
 #     [0.01,0.01,0.01,0.02,0.02,0.02,0.03,0.03],[0.01,0.01,0.01,0.02,0.02,0.02,0.03,0.03]])
 # print(tempalphaground)
 
-#if __name__ == "__main__":      #being lazy. You can run from here now
-#    import RayTrace
-#    #pass
+if __name__ == "__main__":      #being lazy. You can run from here now
+    import RayTrace
+    #pass
