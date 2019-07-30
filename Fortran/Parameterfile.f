@@ -25,7 +25,7 @@ C     BigBertha
       allocate(tempalphabuilding(absorbplanes,8))
       OUTPUTFILE='FortranTest1.dat'
 C     Turn Radiosity on or off.  This will include diffuse reflections
-      radiosity=0
+      radiosity=1
 C     Turn on complex absorption
       complexabsorption=0
       if(complexabsorption.eq.1)then

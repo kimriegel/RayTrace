@@ -502,8 +502,8 @@ C         INCLUDE 'UrbanCanyonG2H24L14Geo.f'
       count=0
 C      print*, 'normalization',normalization
 C     Loop through the intial ray locations
-C      DO 40 ray=1,RAYMAX,1
-         ray = 607
+      DO 40 ray=1,RAYMAX,1
+C         ray = 607
          hitcount=0
          tmpsum=0.0
          doublehit=0

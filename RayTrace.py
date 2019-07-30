@@ -10,8 +10,10 @@
 # Dr. Riegel, William Costa, and George Seaton porting program from Fortran to python
 
 # Initialize variables and functions
+#Numpy is just python math file. 
 import numpy as np
 
+#Parameters File contains variables. 
 import Parameterfile as Pf
 import BuildingGeometry as Bg
 import Functions as Fun
@@ -37,6 +39,7 @@ def initial_signal(signal_length, fft_output):
     """
     signal_length2 = int(signal_length // 2)  # Making sizeFFTTwo and setting it as an int again just to be sure
     output_frequency = np.zeros((signal_length2, 3))    # Making output array equivalent to input_array in old code
+    #Basically Creates array with evenly spaced from 1 to that.
     throw_array = np.arange(1, signal_length2 + 1)     # Helps get rid of for-loops in old version
 
     output_frequency[:, 0] = throw_array * Pf.Fs / signal_length  # Tried simplifying the math a bit from original
@@ -46,18 +49,20 @@ def initial_signal(signal_length, fft_output):
 
     return output_frequency
 
+    # A function that outputs array output_frequency that for the first three index has unique variables.
+
 
 def update_freq(dx_update, alpha_update, diffusion_update):
     """
     Update ray phase and amplitude
     """
     global phase, amplitude        # works directly
-
+    #twopi is pi*2
     two_pi_dx_update = twopi * dx_update
     ein = phase - (two_pi_dx_update / lamb)
     zwei = ein % twopi
     masque = zwei > PI
-    drei = masque * zwei - twopi
+    twopidrei = masque * zwei - twopi
  
     phase = np.where(masque, drei, ein)
     amplitude *= ((1.0 - alpha_update) * (1.0 - diffusion_update) * np.exp(-airAbsorb * dx_update))
@@ -93,6 +98,7 @@ K = len(inputSignal)
 # masque = inputSignal > 0
 HUGE = 1000000.0
 
+global sizeFFT, sizeFFTTwo
 # Allocate the correct size to the signal and fft arrays
 sizeFFT = K
 sizeFFTTwo = sizeFFT // 2
@@ -151,7 +157,7 @@ nGround = np.array([0.0, 0.0, 1.0])
 
 #     Allocate absorption coefficients for each surface for each frequency
 alphaGround = np.zeros(sizeFFTTwo)
-for D in range(0, sizeFFTTwo):       # This loop has a minimal impact on performance
+for D in range(0, sizeFFTTwo):       # This loop has a minimal impact on performance #Is there a more effective if function? 
     if frecuencias[D, 0] >= 0.0 or frecuencias[D, 0] < 88.0:
         alphaGround[D] = Pf.tempalphaground[0]
     elif frecuencias[D, 0] >= 88.0 or frecuencias[D, 0] < 177.0:
@@ -194,8 +200,8 @@ D = np.dot(FInitial, vInitial)   # Hotfix  We used this name right above
 #        Mesh the patches for the environment.  Include patching file. 
 diffusionGround = 0.0
 if Pf.radiosity:  # If it exists as a non-zero number
-    #    import SingleBuildingGeometry
-    diffusion = Pf.radiosity
+        import SingleBuildingGeometry
+        diffusion = Pf.radiosity
 else:
     diffusion = 0.0
 
@@ -372,21 +378,27 @@ for ray in boomCarpet:              # Written like this for readability
                 twoPiDx = twopi * dxGround
                 #     Loop through all the frequencies
                 update_freq(dxGround, alphaGround, diffusionGround)
-#                if Pf.radiosity == 1 and (diffusionGround != 0.0):
-#                    for Q in range(0, PatchNo):
-#                        if formFactors[0, Q, 1] == 1:
-#                            if (veci[0] <= (patchArray[Q, W, 0] + 0.5 * patchArray[Q, W, 3]) and
-            #                            veci[0]>=(patchArray[Q, W, 0] - 0.5 * patchArray[Q, W, 3])):
-#                                if veci[1] <= (patchArray[Q, W, 1] + 0.5 * patchArray[Q, W, 4]) and
-            #                                veci[1]>=(patchArray[Q, W, 1] - 0.5 * patchArray[Q, W, 4]):
-#                                    if veci[2] <= (patchArray[Q, W, 2] + 0.5 * patchArray[Q, W, 5]) and
-            #                                    veci[2]>=(patchArray[Q, W, 2] - 0.5 * patchArray[Q, W, 5]):
-#                                        temp2 = complex(abs(patchArray[Q, W, 6])*np.exp(XJ*patchArray[Q, W, 7]))
-#                                        temp3 = complex(abs(amplitude[W] * (1.0 - alphaGround[W]) * diffusionGround *
-            #                                        exp(-m * dxGround)) * exp(1j * phaseFinal))
-#                                        temp4 = temp2 + temp3
-#                                        patchArray[Q, W, 6] = abs(temp4)
-#                                        patchArray[Q, W, 7] = np.arctan(temp4.imag,temp4.real)
+
+                
+                if Pf.radiosity == 1 and (diffusionGround != 0.0):
+                    for Q in range(0, PatchNo): #Try removing 0.
+                        if formFactors[0, Q, 1] == 1:  #What does it mean?
+                            if (veci[0] <= (patchArray[Q, W, 0] + 0.5 * patchArray[Q, W, 3]) and
+                                        veci[0]>=(patchArray[Q, W, 0] - 0.5 * patchArray[Q, W, 3])):
+                                if (veci[1] <= (patchArray[Q, W, 1] + 0.5 * patchArray[Q, W, 4]) and
+                                            veci[1]>=(patchArray[Q, W, 1] - 0.5 * patchArray[Q, W, 4])):
+                                    if (veci[2] <= (patchArray[Q, W, 2] + 0.5 * patchArray[Q, W, 5]) and
+                                                veci[2]>=(patchArray[Q, W, 2] - 0.5 * patchArray[Q, W, 5])):
+                                        temp2 = complex(abs(patchArray[Q, W, 6])*np.exp(XJ*patchArray[Q, W, 7]))
+                                        temp3 = complex(abs(amplitude[W] * (1.0 - alphaGround[W]) * diffusionGround *
+                                                    exp(-m * dxGround)) * exp(1j * phaseFinal))
+                                        temp4 = temp2 + temp3
+                                        patchArray[Q, W, 6] = abs(temp4)
+                                        patchArray[Q, W, 7] = np.arctan(temp4.imag,temp4.real)
+
+
+
+                                        
             if dx == dxBuilding:   # if the ray hits the building then change the direction and continue
                 veci += (dx * F)
                 print('hit building at step ', I)

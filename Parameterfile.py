@@ -1,8 +1,8 @@
 #     BigBertha
 #   Same as NASABOOM1EMParameterFile
 import numpy as np
-INPUTFILE = "inputNASABOOM1.txt"
-RecInput = "PointReceivers.txt"
+INPUTFILE = "C:/users/phyop/documents/github/raytrace/inputNASABOOM1.txt"
+RecInput = "C:/users/phyop/documents/github/raytrace/PointReceivers.txt"
 Fs = 24000.0
 xinitial = 145.0
 yinitial = 35.0
@@ -15,7 +15,7 @@ time = .01
 hr = 20.0
 theta = 1.6863372
 phi = 3.44458181
-#boomspacing = 0.06   #.6
+#boomspaing = 0.06   #.6
 #boomspacing= 0.035
 #boomspacing= 0.01
 boomspacing= 1
@@ -32,7 +32,7 @@ absorbplanes = 1
 #Find way to rephrase
 outputfile = 'PythonTest1.txt'
 #Turn Radiosity on or off.  This will include diffuse reflections
-radiosity = 1
+radiosity = 0
 #Turn on complex absorption
 complexabsorption = 0
 
