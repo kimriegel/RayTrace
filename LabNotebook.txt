@@ -1177,3 +1177,18 @@ Trying really hard to graduate in this span of time, not much progress
       Found bug in Will's Environemnt file.
         third edge test used a different vertice and that may not have been correct
           ( I don't know. I don't have the book he read from )
+
+@r0ml 
+    Creating SQL database vs python arrays and lists in regards to memory and speed
+      Limitations of SQL databases 
+
+    How to find the method Blender uses to calculate turbulence
+
+
+@glyph
+    Creating SQL database vs python arrays and lists in regards to memory and speed
+      Speed of reading and translating SQL databases into python and back
+
+    How to encorporate multiprocessing 
+
+    Taking pieces of pypy to use is python3
