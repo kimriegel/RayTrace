@@ -74,6 +74,7 @@ faces = env.mesh.faces                                                      # li
 faceNormals = env.normals                                                   # ???
 print(len(vertices))
 print(len(faces))
+print(faces)
 print(len(faceNormals))
 print(vertices[0])
 print(faces[0])
@@ -105,6 +106,7 @@ for f in env.mesh.faces:
     #pass
 
 print(myFaces[0])
+print(myFaces)
 face = myFaces
     
 """
