@@ -206,9 +206,9 @@ rayCounter = 0
 
 # These are for debugging, Uncomment this block and comment out the for loop below
 # ray = 606                     # @ Pf.boomSpacing = 1
-for i in range(606):
-     ray =      next(boomCarpet)
-     rayCounter += 1
+#for i in range(606):
+#     ray =      next(boomCarpet)
+#     rayCounter += 1
 # if ray:
 # Begin tracing
 #print('Memory (before) : ' + str(mem.memory_usage()) + 'MB')
@@ -285,9 +285,10 @@ for ray in boomCarpet:              # Written like this for readability
         hit = 0
         planeHit = 0
         #     Check intersection with Boxes
-        print("Checking for ray intersection")
-        dxBuilding=SingleBuilding.RayIntersection(veci,F)
-        print('dxB',dxBuilding)
+        #print("Checking for ray intersection")
+        dxBuilding=SingleBuilding.RayIntersection(veci,F,bounds)
+        #print(SingleBuilding.t)
+        #print('dxB',dxBuilding)
         #for Q in range(0, Bg.BoxNumber):
         #   dxNear, dxFar, hit, planeHit = Fun.box(Bg.BoxArrayNear[Q], Bg.BoxArrayFar[Q], veci, F)
         #    if dxNear < dxBuilding:
@@ -416,9 +417,9 @@ for ray in boomCarpet:              # Written like this for readability
                 alpha = alphaBuilding[0, :]
                 update_freq(dx, alpha, diffusion)
         else:  # If there was no interaction with buildings then proceed with one step.
-            print('no interaction, before step',I, veci, 'F', F)
+            #print('no interaction, before step',I, veci, 'F', F)
             veci += (Pf.h * F)
-            print('after step', I, veci, 'F', F)
+            #print('after step', I, veci, 'F', F)
             update_freq(Pf.h, alphaNothing, 0)
     rayCounter += 1
     print('finished ray', rayCounter)
