@@ -10,10 +10,6 @@ import pywavefront as pwf
 from pywavefront import ObjParser
 import Parameterfile as pf
 
-<<<<<<< HEAD
-Huge = 1000000.0
-=======
-#Huge = 100000
 HUGE = 1000000.0
 
 
@@ -23,8 +19,6 @@ def ground(height, point, normal):
     gABC = point
     gNormal = normal
     return 
-    # pass
->>>>>>> fd22ade64c8c886879bc99fe76baf4d8bb34c8a7
 
 #def edgetest(aleph,bet):
 #    nc = 0
@@ -121,22 +115,20 @@ class environment():
         veci is the ray position as defined in RayTrace.py
         F is the ray direction as defined in RayTrace.py
         """
-        #print('Calculating Ray Intersection')
-        print('veci', veci, 'F', F)
-        adjustment=[[-2*pf.h,+2*pf.h]]
-        shell = bounds+adjustment
-        if veci[0]<shell[0][0] or veci[0]>shell[0][1] or veci[1]<shell[1][0] or veci[1]>shell[1][1] or veci[2]<shell[2][0] or veci[2]>shell[2][1]:
-            self.t=Huge
-            return self.t
-        else:
-            print('Within the shell', 'Veci', veci)
-        stepped = veci+(F*pf.h)
-        print('stepped', stepped)
+        print('Calculating Ray Intersection')
+        #print('veci', veci, 'F', F)
+       # adjustment=[[-2*pf.h,+2*pf.h]]
+       # shell = bounds+adjustment
+       # if veci[0]<shell[0][0] or veci[0]>shell[0][1] or veci[1]<shell[1][0] or veci[1]>shell[1][1] or veci[2]<shell[2][0] or veci[2]>shell[2][1]:
+       #     self.t=HUGE
+       #     return self.t
+        #stepped = veci+(F*pf.h)
+        #print('stepped', stepped)
         zeros=np.zeros(3)
         subvert=[]
         subfaces=[]
         self.planes=[]
-        distances=np.array([Huge])
+        distances=np.array([HUGE])
         rayaxis=0 # index used for (x,y,z) ordered ray coordinate
         if self.axis == 1:
             rayaxis=2
@@ -145,8 +137,9 @@ class environment():
         else:
             pass
         if veci[rayaxis]>self.axismax or veci[rayaxis]<self.axismin: # if the ray is above or below the max/min, no interaction
-            self.t=Huge
-            return self.t
+            print('no interaction')
+            t=HUGE
+            return t
         else:
             subvert=self.sortvert # creates a sorted subset of the vertices
             bandwidth=self.axisheight#establishes a bandwidth to be compared to self.bandwidth
@@ -169,39 +162,55 @@ class environment():
             A=face[0]
             B=face[1]
             C=face[2]
-            self.V1=np.array([self.vertices[A][0],self.vertices[A][2],self.vertices[A][1]]) #These create arrays of the vertices for the face, reordered to match, x,y,z format
-            self.V2=np.array([self.vertices[B][0],self.vertices[B][2],self.vertices[B][1]])
-            self.V3=np.array([self.vertices[C][0],self.vertices[C][2],self.vertices[C][1]])
-            L1=self.V2-self.V1 # calculates the two vectors using V1 as the reference vertex
-            L2=self.V3-self.V1
-            normal=np.cross(L1,L2) +zeros # adding zero gets rid of negative zero error.
-            #print('V1', self.V1, 'V2', self.V2, 'V3', self.V3)
-            #print('L1', L1, 'L2', L2, 'normal', normal)
-            self.unitnormal=normal/np.sqrt(np.dot(normal,normal)) # calculates the normal vector to the plane
-            D=-np.dot(self.unitnormal,self.V2) # calculates plane equation D: Ax+By+Cz+D=0
-            
-            #print('unit normal', self.unitnormal, 'F', F)
+            V1=np.array([self.vertices[A][0],self.vertices[A][2],self.vertices[A][1]]) #These create arrays of the vertices for the face, reordered to match, x,y,z format
+            V2=np.array([self.vertices[B][0],self.vertices[B][2],self.vertices[B][1]])
+            V3=np.array([self.vertices[C][0],self.vertices[C][2],self.vertices[C][1]])
 
-            self.vd=np.dot(self.unitnormal,F) # dot product between normal and ray direction
+            # Distance between veci and a point on the plane
             
-            if self.vd==0: # ray is parallel to plane and no intersection occurs. ## special case??
-                self.t=Huge #HOTFIX
+            L1=V2-V1 # calculates the two vectors using V1 as the reference vertex
+            L2=V3-V1
+            normal=np.cross(L1,L2) +zeros # adding zero gets rid of negative zero error.
+            unitnormal=normal/np.sqrt(np.dot(normal,normal)) # calculates the normal vector to the plane
+            D=-1*np.dot(unitnormal,V2) # calculates plane equation D: Ax+By+Cz+D=0
+
+            vd=np.dot(unitnormal,F) # dot product between normal and ray direction
+            
+            line1=V1-veci
+            line2=V2-veci
+            line3=V3-veci
+            magnitude1=np.sqrt(np.dot(line1,line1))
+            magnitude2=np.sqrt(np.dot(line2,line2))
+            magnitude3=np.sqrt(np.dot(line3,line3))
+            lines=[line1, line2, line3]
+            magnitudes = [magnitude1, magnitude2, magnitude3]
+            stepped=veci+(pf.h*F)
+            print('stepped', stepped)
+            step1=V1-stepped
+            step2=V2-stepped
+            step3=V3-stepped
+            steps=[step1, step2, step3]
+            print('steps +lines', step1, line1)
+
+            if vd==0: # ray is parallel to plane and no intersection occurs. ## special case??
+                t=HUGE #HOTFIX
                 print('face', face, 'parallel, does not hit')
                 pass
-            elif self.t>pf.h:
-                self.t=Huge #hotter fix
-                print('distance is too far', self.t)
-                pass
             else:
-                v0=-(np.dot(self.unitnormal,veci)+D)
-                print('D',D,'self.vd', self.vd, 'v0', v0)
-                self.t=v0/self.vd # distance from ray origin to plane intersection
-                print('face', face, 'distance', self.t)
-                if self.t<=pf.h and self.t>0:
-                    distances=np.append(distances,self.t)
-                    self.planes.append([face, self.vd, self.unitnormal, self.V1, self.V2, self.V3])
-                    #print('distances', distances, 'Planes', self.planes)
-                    #print(min(distances))                                                                                                                                                            
+
+                v0=-(np.dot(unitnormal,veci)+D)
+                #print('D',D,'self.vd', self.vd, 'v0', v0)
+                t=v0/vd # distance from ray origin to plane intersection
+                #rint('distance', t, 'plane', face)
+                for magnitude in magnitudes:
+                    if magnitude<=pf.h and magnitude1>0:
+                        distances=np.append(distances,magnitude)
+                        self.planes.append([face, vd, unitnormal, V1, V2, V3])
+                #if t<=pf.h and t>0:
+                #    distances=np.append(distances,t)
+                #    self.planes.append([face, vd, unitnormal, V1, V2, V3])
+                    #print('distances', distances)
+                    #print('dxbuilding', min(distances))                                                                                                                                                            
         return min(distances)
     
         ###Because of the building shape and triangulation, there are 2 planes that are possibly hit
@@ -210,7 +219,7 @@ class environment():
     
     def RayHit(self,veci,F,distance):
         ''' "RayHit is the one with intersection, you should put a 3-quote note" -G.K. Seaton '''
-        print('RayHit Began')
+        #print('RayHit Began')
         count=0
         for plane in self.planes:
             count+=1
@@ -341,7 +350,7 @@ class environment():
                     length=np.sqrt(np.dot(F,F))  
                     #print('veci', veci, 'ri', ri)    
                     print('finished plane', count)
-            print('RayHit Complete')
+            #print('RayHit Complete')
         return veci, F
 #######################################################################333        
 #triFace = range(3)

@@ -205,10 +205,10 @@ else:
 rayCounter = 0
 
 # These are for debugging, Uncomment this block and comment out the for loop below
-# ray = 606                     # @ Pf.boomSpacing = 1
-#for i in range(606):
-#     ray =      next(boomCarpet)
-#     rayCounter += 1
+ #ray = 606                     # @ Pf.boomSpacing = 1
+for i in range(607):
+     ray =      next(boomCarpet)
+     rayCounter += 1
 # if ray:
 # Begin tracing
 #print('Memory (before) : ' + str(mem.memory_usage()) + 'MB')
@@ -219,7 +219,9 @@ SingleBuilding=Env.environment('SingleBuilding.obj')
 SingleBuilding.SortVertices(SingleBuilding.vertices,1)
 bounds=SingleBuilding.Boundaries()
 print('began rays')
-for ray in boomCarpet:              # Written like this for readability
+#for ray in boomCarpet:              # Written like this for readability
+if ray:
+    next(boomCarpet)
     veci = ray      # initial ray position
     hitCount = 0
     doubleHit = 0
@@ -228,7 +230,7 @@ for ray in boomCarpet:              # Written like this for readability
     phase = frecuencias[:, 2]
     if Pf.h < (2*Pf.radius):
         print('h is less than 2r')
-        break
+    #    break
     F = np.array(FInitial)                                      # Direction
     for I in range(Pf.IMAX):      # Making small steps along the ray path.
         # For each step we should return, location, phase and amplitude
@@ -287,8 +289,8 @@ for ray in boomCarpet:              # Written like this for readability
         #     Check intersection with Boxes
         #print("Checking for ray intersection")
         dxBuilding=SingleBuilding.RayIntersection(veci,F,bounds)
-        #print(SingleBuilding.t)
-        #print('dxB',dxBuilding)
+        print('Step', I, 'veci', veci, 'F', F)
+        print('dxB',dxBuilding)
         #for Q in range(0, Bg.BoxNumber):
         #   dxNear, dxFar, hit, planeHit = Fun.box(Bg.BoxArrayNear[Q], Bg.BoxArrayFar[Q], veci, F)
         #    if dxNear < dxBuilding:
