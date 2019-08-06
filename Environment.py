@@ -10,7 +10,21 @@ import pywavefront as pwf
 from pywavefront import ObjParser
 import Parameterfile as pf
 
+<<<<<<< HEAD
 Huge = 1000000.0
+=======
+#Huge = 100000
+HUGE = 1000000.0
+
+
+def ground(height, point, normal):
+    global gHeight, gABC,gNormal
+    gHeight = -height
+    gABC = point
+    gNormal = normal
+    return 
+    # pass
+>>>>>>> fd22ade64c8c886879bc99fe76baf4d8bb34c8a7
 
 #def edgetest(aleph,bet):
 #    nc = 0
