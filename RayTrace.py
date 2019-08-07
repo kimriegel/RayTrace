@@ -11,13 +11,8 @@
 # Dr. Riegel, William Costa, and George Seaton porting program from Fortran to python
 
 # Initialize variables and functions
-<<<<<<< HEAD
-#Numpy is just python math file. 
-import numpy as np
-=======
 import numpy as np          # matricies and arrays
 import matplotlib.pyplot as plt     # for graphing
->>>>>>> 0c6f642968fbaff98345a64da4f453c73b1a6ef1
 
 #Parameters File contains variables. 
 import Parameterfile as Pf
@@ -54,12 +49,6 @@ def initial_signal(signal_length, fft_output):
 
     return output_frequency
 
-<<<<<<< HEAD
-    # A function that outputs array output_frequency that for the first three index has unique variables.
-
-
-=======
->>>>>>> 0c6f642968fbaff98345a64da4f453c73b1a6ef1
 def update_freq(dx_update, alpha_update, diffusion_update):
     """
     Update ray phase and amplitude
@@ -70,7 +59,8 @@ def update_freq(dx_update, alpha_update, diffusion_update):
     ein = phase - (two_pi_dx_update / lamb)
     zwei = ein % twopi
     masque = zwei > PI
-    twopidrei = masque * zwei - twopi
+    #twopidrei = masque * zwei - twopi
+    drei = masque * zwei - twopi
  
     phase = np.where(masque, drei, ein)
     amplitude *= ((1.0 - alpha_update) * (1.0 - diffusion_update) * np.exp(-airAbsorb * dx_update))
@@ -135,7 +125,7 @@ ySpace = Pf.boomspacing * abs(np.cos(Pf.phi))
 zSpace = Pf.boomspacing * abs(np.sin(Pf.theta))
 if Pf.xmin == Pf.xmax:
     rayMax = int((Pf.ymax - Pf.ymin) / ySpace) * int((Pf.zmax - Pf.zmin) / zSpace)
-    print(rayMax, ' is the rayMax')
+    ##print(rayMax, ' is the rayMax')
 
 j = np.arange(1, 1 + int((Pf.ymax-Pf.ymin) // ySpace))
 k = np.arange(1, 1 + int((Pf.zmax-Pf.zmin) // zSpace))
@@ -218,19 +208,19 @@ else:
 rayCounter = 0
 
 # These are for debugging, Uncomment this block and comment out the for loop below
-# ray = 606                     # @ Pf.boomSpacing = 1
+ray = 606                     # @ Pf.boomSpacing = 1
 for i in range(606):
-     ray =      next(boomCarpet)
-     rayCounter += 1
+    ray =      next(boomCarpet)
+    rayCounter += 1
 # if ray:
 # Begin tracing
 #print('Memory (before) : ' + str(mem.memory_usage()) + 'MB')
 checkDirection = [0, 0, 0]
 nBox = [0, 0, 0]
 veci = np.array([0, 0, 0])
-SingleBuilding=Env.environment('SingleBuilding.obj')
-SingleBuilding.SortVertices(SingleBuilding.vertices,1)
-print('began rays')
+#SingleBuilding=Env.environment('SingleBuilding.obj')
+#SingleBuilding.SortVertices(SingleBuilding.vertices,1)
+##print('began rays')
 for ray in boomCarpet:              # Written like this for readability
     veci = ray      # initial ray position
     hitCount = 0
@@ -239,7 +229,7 @@ for ray in boomCarpet:              # Written like this for readability
     amplitude = frecuencias[:, 1]/normalization
     phase = frecuencias[:, 2]
     if Pf.h < (2*Pf.radius):
-        print('h is less than 2r')
+        ##print('h is less than 2r')
         break
     F = np.array(FInitial)                                      # Direction
     for I in range(Pf.IMAX):      # Making small steps along the ray path.
@@ -298,17 +288,17 @@ for ray in boomCarpet:              # Written like this for readability
         planeHit = 0
         #     Check intersection with Boxes
         print("Checking for ray intersection")
-        dxBuilding=SingleBuilding.RayIntersection(veci,F)
+        #dxBuilding=SingleBuilding.RayIntersection(veci,F)
         print('dxB',dxBuilding)
-        #for Q in range(0, Bg.BoxNumber):
-        #   dxNear, dxFar, hit, planeHit = Fun.box(Bg.BoxArrayNear[Q], Bg.BoxArrayFar[Q], veci, F)
-        #    if dxNear < dxBuilding:
-        #        dxBuilding = dxNear
-        ##        Vecip1 = veci + np.multiply(dxBuilding, F)
-        #       whichBox = Q
-        #        nBox = Fun.plane(Vecip1, Bg.BoxArrayNear[whichBox], Bg.BoxArrayFar[whichBox], planeHit)
-        # This part doesn't really work well.  We have not incorporated it.
-        # Eventually all interactions will be triangles anyway so I'm leaving it here to be updated.
+        for Q in range(0, Bg.BoxNumber):
+            dxNear, dxFar, hit, planeHit = Fun.box(Bg.BoxArrayNear[Q], Bg.BoxArrayFar[Q], veci, F)
+            if dxNear < dxBuilding:
+                dxBuilding = dxNear
+        #        Vecip1 = veci + np.multiply(dxBuilding, F)
+                whichBox = Q
+                nBox = Fun.plane(Vecip1, Bg.BoxArrayNear[whichBox], Bg.BoxArrayFar[whichBox], planeHit)
+         #This part doesn't really work well.  We have not incorporated it.
+         #Eventually all interactions will be triangles anyway so I'm leaving it here to be updated.
 
         #   Check intersection with Triangles
 #        if Bg.TriangleNumber > 0:

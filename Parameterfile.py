@@ -15,15 +15,9 @@ time = .01
 hr = 20.0
 theta = 1.6863372
 phi = 3.44458181
-<<<<<<< HEAD
-#boomspaing = 0.06   #.6
-#boomspacing= 0.035
-#boomspacing= 0.01
-=======
 #boomspacing = 0.06   #.6
 #boomspacing= 0.35
 #boomspacing= 0.1
->>>>>>> 0c6f642968fbaff98345a64da4f453c73b1a6ef1
 boomspacing= 1
 xmin = -1
 ymin = 30.0
