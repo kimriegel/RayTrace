@@ -3,7 +3,7 @@
 
 # Kimberly A. Riegel, PHD created this program to propagate sonic booms 
 # around Large structures, and to graduate. It is a ray tracing model 
-# that  will include specular and diffuse reflections. It will print
+# that  will include specular and diffuse reflections. It will ##print
 # out the sound field at ear height, at relevant microphone locations,
 # and at the building walls. It will read in the fft of a sonic boom 
 # signature.
@@ -221,7 +221,8 @@ veci = np.array([0, 0, 0])
 #SingleBuilding=Env.environment('SingleBuilding.obj')
 #SingleBuilding.SortVertices(SingleBuilding.vertices,1)
 ##print('began rays')
-for ray in boomCarpet:              # Written like this for readability
+# for ray in boomCarpet:              # Written like this for readability
+if ray:
     veci = ray      # initial ray position
     hitCount = 0
     doubleHit = 0
@@ -229,8 +230,8 @@ for ray in boomCarpet:              # Written like this for readability
     amplitude = frecuencias[:, 1]/normalization
     phase = frecuencias[:, 2]
     if Pf.h < (2*Pf.radius):
-        ##print('h is less than 2r')
-        break
+        print('h is less than 2r')
+ #       break
     F = np.array(FInitial)                                      # Direction
     for I in range(Pf.IMAX):      # Making small steps along the ray path.
         # For each step we should return, location, phase and amplitude
@@ -264,7 +265,7 @@ for ray in boomCarpet:              # Written like this for readability
                 else:
                     R2 = R
                     doubleHit = 1
-                    print('double hit')
+                    ##print('double hit')
 
             #     Check Intersection with ground plane
         GroundN = GroundABC
@@ -287,16 +288,20 @@ for ray in boomCarpet:              # Written like this for readability
         hit = 0
         planeHit = 0
         #     Check intersection with Boxes
-        print("Checking for ray intersection")
+        ##print("Checking for ray intersection")
         #dxBuilding=SingleBuilding.RayIntersection(veci,F)
-        print('dxB',dxBuilding)
+        ####print('dxB',dxBuilding)
         for Q in range(0, Bg.BoxNumber):
             dxNear, dxFar, hit, planeHit = Fun.box(Bg.BoxArrayNear[Q], Bg.BoxArrayFar[Q], veci, F)
             if dxNear < dxBuilding:
                 dxBuilding = dxNear
         #        Vecip1 = veci + np.multiply(dxBuilding, F)
                 whichBox = Q
+                print(Bg.BoxArrayNear[whichBox],Bg.BoxArrayFar[whichBox])
+                print(planeHit)
                 nBox = Fun.plane(Vecip1, Bg.BoxArrayNear[whichBox], Bg.BoxArrayFar[whichBox], planeHit)
+
+                print(nBox)
          #This part doesn't really work well.  We have not incorporated it.
          #Eventually all interactions will be triangles anyway so I'm leaving it here to be updated.
 
@@ -329,8 +334,8 @@ for ray in boomCarpet:              # Written like this for readability
             #  if the ray hits a receiver, store in an array.  If the ray hits two, create two arrays to store in.
             for R in ears:
                 if dx == R.dx:
-                    # print('Ray ',ray +1,' hit receiver ',R.recNumber,' at step ',I)
-                    print('Ray ', rayCounter, ' hit receiver ', R.recNumber)
+                    # ##print('Ray ',ray +1,' hit receiver ',R.recNumber,' at step ',I)
+                    ##print('Ray ', rayCounter, ' hit receiver ', R.recNumber)
                     veci += (dx * F)
                     receiverHit = 1
                     checkDirection = F
@@ -342,7 +347,7 @@ for ray in boomCarpet:              # Written like this for readability
                     outputArray1[:, 0] = frecuencias[:, 0]
                     outputArray1[:, 1:4] = receiverPoint[:]
                     outputArray1[:, 5] = phase[:]
-                    # print(list(ears[1].magnitude))
+                    # ##print(list(ears[1].magnitude))
                     if doubleHit == 1:
                         # R2 = R      #Supposed to be other R, but just a placeholder for now
                         R.on_Hit(amplitude/2, phase)
@@ -374,7 +379,7 @@ for ray in boomCarpet:              # Written like this for readability
                 tmp = np.dot(GroundABC, veci)
                 if tmp != GroundD:
                     veci[2] = 0
-                print('hit ground at ', I)
+                ##print('hit ground at ', I)
                 dot1 = np.dot(F, nGround)
                 n2 = np.dot(nGround, nGround)
                 F -= (2.0 * (dot1 / n2 * nGround))
@@ -406,8 +411,9 @@ for ray in boomCarpet:              # Written like this for readability
                                         
             if dx == dxBuilding:   # if the ray hits the building then change the direction and continue
                 veci += (dx * F)
-                print('hit building at step ', I, veci)
+                ##print('hit building at step ', I, veci)
                 n2 = np.dot(nBox, nBox)
+                print(n2,nBox)
                 nBuilding = nBox / np.sqrt(n2)
                 dot1 = np.dot(F, nBuilding)
                 F -= (2.0 * (dot1 / n2 * nBuilding))
@@ -430,20 +436,20 @@ for ray in boomCarpet:              # Written like this for readability
                 alpha = alphaBuilding[0, :]
                 update_freq(dx, alpha, diffusion)
         else:  # If there was no interaction with buildings then proceed with one step.
-            print('no interaction, before step',I, veci, 'F', F)
+            ##print('no interaction, before step',I, veci, 'F', F)
             veci += (Pf.h * F)
-            print('after step', I, veci, 'F', F)
+            ##print('after step', I, veci, 'F', F)
             update_freq(Pf.h, alphaNothing, 0)
     rayCounter += 1
-    print('finished ray', rayCounter)
+    ##print('finished ray', rayCounter)
 
 # Radiosity removed for readability
 
-# Reconstruct the time signal and print to output file
+# Reconstruct the time signal and ##print to output file
 for R in ears:
     R.timeReconstruct(sizeFFT)
 
-print('Writing to output file')
+##print('Writing to output file')
 fileid = Pf.outputfile
 with open(fileid, 'w') as f:
     Fun.header(fileid)
@@ -451,7 +457,7 @@ with open(fileid, 'w') as f:
 with open (fileid, 'a') as f:
     for w in range(sizeFFT):
         Rps.Receiver.timeHeader(f, timeArray[w], w)
-print('time: ', time.time()-t)
+##print('time: ', time.time()-t)
 
     # Outputting graphs
 t = time.time()
@@ -491,5 +497,5 @@ for R in ears:
     #plt.savefig(Pf.graphName + str(i) + '.png', facecolor='#eeeeee')    # grey
     #plt.savefig(Pf.graphName + str(i) + '.png', facecolor='#e0dae6')    # muted lilac
     plt.savefig(Pf.graphName + str(i) + '.png', facecolor='#e6e6fa')    # lavender
-    print('Saved receiver', i)
-print('Graph time: ', time.time()-t)
+    ##print('Saved receiver', i)
+##print('Graph time: ', time.time()-t)
