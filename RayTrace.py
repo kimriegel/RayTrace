@@ -220,7 +220,9 @@ checkDirection = [0, 0, 0]
 nBox = [0, 0, 0]
 veci = np.array([0, 0, 0])
 print('began rays')
-for ray in boomCarpet:              # Written like this for readability
+#for ray in boomCarpet:              # Written like this for readability
+if ray:
+    ray = next(boomCarpet)
     veci = ray      # initial ray position
     hitCount = 0
     doubleHit = 0
@@ -229,11 +231,12 @@ for ray in boomCarpet:              # Written like this for readability
     phase = frecuencias[:, 2]
     if Pf.h < (2*Pf.radius):
         print('h is less than 2r')
-        break
+#        break
     F = np.array(FInitial)                                      # Direction
     for I in range(Pf.IMAX):      # Making small steps along the ray path.
         # For each step we should return, location, phase and amplitude
         dxReceiver = HUGE
+        print(I,veci)
         # Find the closest sphere and store that as the distance
         for R in ears:
             # The way that tempReceiver works now, it's only used here and only should be used here.
@@ -448,36 +451,36 @@ t = time.time()
 # Will eventually be moved to a receiver function,
 # here now for ease of access of others reading this 
 #######################################################################
-import matplotlib.font_manager as fm
-
-# Font
-stdfont = fm.FontProperties()
-stdfont.set_family('serif')
-stdfont.set_name('Times New Roman')
-stdfont.set_size(20)
-
-for R in ears:
-     # For N wave
-    pressure = R.signal
-    i = R.recNumber
-    #plt.figure(i)
-    #plt.figure(num = i, figsize=(19.20, 10.80), dpi=120, facecolor='#eeeeee', edgecolor='r')   # grey
-    #plt.figure(num = i, figsize=(19.20, 10.80), dpi=120, facecolor='#e0dae6', edgecolor='r')   # muted lilac
-    plt.figure(num = i, figsize=(19.20, 10.80), dpi=120, facecolor='#e6e6fa', edgecolor='r')    # lavender
-    #plt.plot(timeArray,pressure,'r--')
-    plt.grid(True)
-    plt.plot(timeArray,pressure,'#780303')
-        # Labeling axes
-    plt.xlabel('Time [s]', fontproperties=stdfont)
-    plt.ylabel('Pressure [Pa]', fontproperties=stdfont)
-    plt.title('Pressure vs Time of Receiver '+ str(i),
-                fontproperties=stdfont,
-                fontsize=26,
-                fontweight='bold')
-
-        # Saving
-    #plt.savefig(Pf.graphName + str(i) + '.png', facecolor='#eeeeee')    # grey
-    #plt.savefig(Pf.graphName + str(i) + '.png', facecolor='#e0dae6')    # muted lilac
-    plt.savefig(Pf.graphName + str(i) + '.png', facecolor='#e6e6fa')    # lavender
-    print('Saved receiver', i)
-print('Graph time: ', time.time()-t)
+#import matplotlib.font_manager as fm
+#
+## Font
+#stdfont = fm.FontProperties()
+#stdfont.set_family('serif')
+#stdfont.set_name('Times New Roman')
+#stdfont.set_size(20)
+#
+#for R in ears:
+#     # For N wave
+#    pressure = R.signal
+#    i = R.recNumber
+#    #plt.figure(i)
+#    #plt.figure(num = i, figsize=(19.20, 10.80), dpi=120, facecolor='#eeeeee', edgecolor='r')   # grey
+#    #plt.figure(num = i, figsize=(19.20, 10.80), dpi=120, facecolor='#e0dae6', edgecolor='r')   # muted lilac
+#    plt.figure(num = i, figsize=(19.20, 10.80), dpi=120, facecolor='#e6e6fa', edgecolor='r')    # lavender
+#    #plt.plot(timeArray,pressure,'r--')
+#    plt.grid(True)
+#    plt.plot(timeArray,pressure,'#780303')
+#        # Labeling axes
+#    plt.xlabel('Time [s]', fontproperties=stdfont)
+#    plt.ylabel('Pressure [Pa]', fontproperties=stdfont)
+#    plt.title('Pressure vs Time of Receiver '+ str(i),
+#                fontproperties=stdfont,
+#                fontsize=26,
+#                fontweight='bold')
+#
+#        # Saving
+#    #plt.savefig(Pf.graphName + str(i) + '.png', facecolor='#eeeeee')    # grey
+#    #plt.savefig(Pf.graphName + str(i) + '.png', facecolor='#e0dae6')    # muted lilac
+#    plt.savefig(Pf.graphName + str(i) + '.png', facecolor='#e6e6fa')    # lavender
+#    print('Saved receiver', i)
+#print('Graph time: ', time.time()-t)
