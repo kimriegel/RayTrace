@@ -6,42 +6,20 @@
 
 #     This function creates patch lengths using a geometric sum.
 
-#use For loop instead of Do loop
-#REPLACE l WITH L
 import numpy as np
-# def PATCHESSHORT(min,max,N,q,dd):
-#     W=max-min
-#     k = np.zeros(N)
-# #     For box 1 we mesh the x direction
-#     for m in range (1,N):
-#         k[m] = (W/2.0)*(1-q)/(1-q**(N/2))
-#         if m <= (N/2):
-#             dd[m] = k[m]*q**(m-1)
-#         elif (m <= N) and (m > (N/2)):
-#             dd[m] = k[m]*q**(N-m)
-
-#     return k
-    #No errors returned. Does it work?
-    #Find good values to plug
 
 def PATCHESSHORT(min,max,N,q,dd):
     int(N)
     k = ((max-min)/2)*(1-q)/(1-q**(N/2))
+    #print(k)
     for m in range (N):
         if m <= (N/2):
+            #print(k*q**(m-1))
             dd[m] = k*q**(m-1)
         elif (m <= N) and (m > (N/2)):
             dd[m] = k*q**(N-m)
 
-#PATCHESSHORT
-#Creates chops the plane with max and min limits into N many sections.
-#I'm not sure what q does.
-#After calling function, return an array dd with the lengths of patches.
-
-#Unfinished
-#def CREATEPATCHARRAY(ddm,ddL,Nm,ddL,x1,x2,y1,y2,z1,z2,patcharray,slope,b,slope1,b1,count,normal):
 def CREATEPATCHARRAY(ddm,ddL,Nm,Nl,origin,termius,patcharray,slope,b,slope1,b1,normal):
-
     """
     origin is x1,y1,z1
     termius is x2,y2,z2
@@ -61,9 +39,9 @@ def CREATEPATCHARRAY(ddm,ddL,Nm,Nl,origin,termius,patcharray,slope,b,slope1,b1,n
                 x = origin[0] - m/2 + sum(ddm[:idxm])
                 y = origin[1] - L/2 + sum(ddL[:idxL])
                 z = (-d -normal[0]*x -normal[1]*y)/normal[2]
-                if m == 0:
+                if idxm == 0:
                     zcenter=z
-                if L == 0:
+                if idxL == 0:
                     ddz=z-origin[2]
                 else:
                     ddz = 0.5*(z-zcenter)
@@ -79,9 +57,9 @@ def CREATEPATCHARRAY(ddm,ddL,Nm,Nl,origin,termius,patcharray,slope,b,slope1,b1,n
                 x = origin[0] - m/2 + sum(ddm[:idxm])
                 z = origin[2] - L/2 + sum(ddL[:idxL])
                 y = (-d -normal[0]*x-normal[2]*z)/normal[1]
-                if m == 0:
+                if idxm == 0:
                     ycenter = y
-                if L == 0:
+                if idxL == 0:
                     ddy = y-origin[1]
                 else:
                     ddy = 0.5*(y-ycenter)
@@ -98,21 +76,19 @@ def CREATEPATCHARRAY(ddm,ddL,Nm,Nl,origin,termius,patcharray,slope,b,slope1,b1,n
                 y = origin[1] - m/2 + sum(ddm[:idxm])
                 z = origin[2] - L/2 + sum(ddL[:idxL])
                 x = (-d -normal[2]*z-normal[1]*y)/normal[0]
-                if m == 0:
+                if idxm == 0:
                     xcenter=x
-                if L == 0:
+                if idxL == 0:
                     ddx= x-origin[0]
                 else:
                     ddx= 0.5*(x-xcenter)
                 if(z < slope*y+b) and (z > slope1*y+b1):
                     patcharray[count] = [x,y,z,ddx,ddm[idxm],ddL[idxL]]
                     count+=1
-    #print(patcharray)
 
 def PERPFORMFACTOR(patcharray,PatchNo,sizeffttwo,formfactors,Q,W,PI,FaceNormals,FaceNormalNo):
     S1 = np.zeros(3)
     S2 = np.zeros(3)
-
 
     dlnlm =np.sqrt((patcharray[Q,0,0]-patcharray[W,0,0])**2+(patcharray[Q,0,1]-patcharray[W,0,1])**2+(patcharray[Q,0,2]-patcharray[W,0,2])**2)
     formfactors = np.zeros((PatchNo,PatchNo,3))
@@ -127,26 +103,20 @@ def PERPFORMFACTOR(patcharray,PatchNo,sizeffttwo,formfactors,Q,W,PI,FaceNormals,
     S1[0]=patcharray[W,0,0]-patcharray[Q,0,0]
     S1[1]=patcharray[W,0,1]-patcharray[Q,0,1]
     S1[2]=patcharray[W,0,2]-patcharray[Q,0,2]
-
     S1length=np.sqrt(S1[0]**2+S1[1]**2+S1[2]**2)
 
     S2[0]=patcharray[Q,0,0]-patcharray[W,0,0]
-
     S2[1]=patcharray[Q,0,1]-patcharray[W,0,1]
-
     S2[2]=patcharray[Q,0,2]-patcharray[W,0,2]
-
     S2length=np.sqrt(S2[0]**2+S2[1]**2+S2[2]**2)
-    # print(length1*S1length)
-    # print(length2*S2length)   
+ 
     costheta1=(vec1[0]*S1[0]+vec1[1]*S1[1]+vec1[2]*S1[2])/(length1*S1length)
     costheta2=(vec2[0]*S2[0]+vec2[1]*S2[1]+vec2[2]*S2[2])/(length2*S2length)
 
     minimum=min(patcharray[W,0,3],patcharray[W,0,4],patcharray[W,0,5])
 
     if minimum == patcharray[W,0,3]:
-        area = patcharray[W,0,4]*patcharray[W,0,5]
-        
+        area = patcharray[W,0,4]*patcharray[W,0,5]       
     elif minimum == patcharray[W,0,4]:
         area = patcharray[W,0,3]*patcharray[W,0,5]
     elif minimum == patcharray[W,0,5]:

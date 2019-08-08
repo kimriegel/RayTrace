@@ -373,8 +373,7 @@ def plane(vecip1, b1, b2, plane_hit):
             point2 = (b1[0], b2[1], b2[2])
             point3 = (b2[0], b1[1], b2[2])
             n_box = cross(np.subtract(point2, b2), np.subtract(point3, b2))
-    # print('Here is that n_box it keeps saying you\'re missing', nbox )
-    print(n_box)
+    # print('Here is that n_box it keeps saying you\'re missing', nbox )s
     return n_box
 
 

@@ -1,5 +1,8 @@
 ####################################
-#unfinished
+#Needs Validation along with RadiosityFunction
+#Needs Validation along with RadiosityFunction
+#Needs Validation along with RadiosityFunction
+#Needs Validation along with RadiosityFunction
 import numpy as np
 np.set_printoptions(threshold=np.inf)
 import RadiosityFunctions as F 
@@ -82,8 +85,8 @@ a = 1
 Q=0
 
 #################################################### Plane 1 ##############################################################
-ddx1 = np.zeros((int(Nx[0])),np.int16)
-ddy1 = np.zeros((int(Ny[0])),np.int16)
+ddx1 = np.zeros((int(Nx[0])),np.float16)
+ddy1 = np.zeros((int(Ny[0])),np.float16)
 increment=1
 tempsize=Nx[0]*Ny[0]
 
@@ -115,17 +118,10 @@ while Q + increment < (increment + tempsize*a - 1):
         Q += 1
 
 a+=1
-#print("first",Q)
-
-#where i left off
-
-# right now any index after 99 doesnt show 1.0 and 4.0.  Try figuring out why.
-
-
 
 #################################################### Plane 2 ##############################################################
-ddx1 = np.zeros((int(Nx[1])),np.int16)
-ddy1 = np.zeros((int(Ny[0])),np.int16)
+ddx1 = np.zeros((int(Nx[1])),np.float16)
+ddy1 = np.zeros((int(Ny[0])),np.float16)
 increment = Q
 tempsize = Nx[1]*Ny[0]
 
@@ -158,8 +154,8 @@ a+=1
 
 
 ################################################### Plane 3 ##############################################################
-ddx1 = np.zeros((int(Nx[2])),np.int16)
-ddy1 = np.zeros((int(Ny[0])),np.int16)
+ddx1 = np.zeros((int(Nx[2])),np.float16)
+ddy1 = np.zeros((int(Ny[0])),np.float16)
 increment = Q
 tempsize = Nx[2]*Ny[0]
 
@@ -190,8 +186,8 @@ while Q + increment < (increment + tempsize*a - 1):
         Q += 1
 a+=1
 #################################################### Plane 4 ##############################################################
-ddx1=np.zeros((int(Nx[0])),np.int16)
-ddy1=np.zeros((int(Ny[1])),np.int16)
+ddx1=np.zeros((int(Nx[0])),np.float16)
+ddy1=np.zeros((int(Ny[1])),np.float16)
 increment = Q
 tempsize = Nx[0] *Ny[1]
 
@@ -221,8 +217,8 @@ while Q + increment < (increment + tempsize*a - 1):
         Q += 1
 a+=1
 #################################################### Plane 5 ##############################################################
-ddx1=np.zeros((int(Nx[2])),np.int16)
-ddy1=np.zeros((int(Ny[1])),np.int16)
+ddx1=np.zeros((int(Nx[2])),np.float16)
+ddy1=np.zeros((int(Ny[1])),np.float16)
 increment = Q
 tempsize = Nx[2] * Ny[1]
 
@@ -254,8 +250,8 @@ while Q + increment < (increment + tempsize*a - 1):
         Q += 1
 
 #################################################### Plane 6 ##############################################################
-ddx1=np.zeros((int(Nx[0])),np.int16)
-ddy1=np.zeros((int(Ny[2])),np.int16)
+ddx1=np.zeros((int(Nx[0])),np.float16)
+ddy1=np.zeros((int(Ny[2])),np.float16)
 increment = Q
 tempsize = Nx[0] * Ny[2]
 
@@ -286,8 +282,8 @@ while Q + increment < (increment + tempsize*a - 1):
         Q += 1
 a+=1
 #################################################### Plane 7 ##############################################################
-ddx1=np.zeros((int(Nx[1])),np.int16)
-ddy1=np.zeros((int(Ny[2])),np.int16)
+ddx1=np.zeros((int(Nx[1])),np.float16)
+ddy1=np.zeros((int(Ny[2])),np.float16)
 increment = Q
 tempsize = Nx[1] * Ny[2]
 
@@ -319,8 +315,8 @@ while Q + increment < (increment + tempsize*a - 1):
         Q += 1
 a+=1
 #################################################### Plane 8 ##############################################################
-ddx1=np.zeros((int(Nx[2])),np.int16)
-ddy1=np.zeros((int(Ny[2])),np.int16)
+ddx1=np.zeros((int(Nx[2])),np.float16)
+ddy1=np.zeros((int(Ny[2])),np.float16)
 increment = Q
 tempsize = Nx[2] * Ny[2]
 
@@ -352,8 +348,8 @@ while Q + increment < (increment + tempsize*a - 1):
         Q += 1
 a+=1
 #################################################### Plane 9 ##############################################################
-ddx1=np.zeros((int(Nx[1])),np.int16)
-ddz1=np.zeros((int(Nz[0])),np.int16)
+ddx1=np.zeros((int(Nx[1])),np.float16)
+ddz1=np.zeros((int(Nz[0])),np.float16)
 increment = Q
 tempsize = Nx[1] * Nz[0]
 
@@ -385,8 +381,8 @@ while Q + increment < (increment + tempsize*a - 1):
         Q += 1
 a+=1
 #################################################### Plane 10 #############################################################
-ddy1=np.zeros((int(Ny[1])),np.int16)
-ddz1=np.zeros((int(Nz[0])),np.int16)
+ddy1=np.zeros((int(Ny[1])),np.float16)
+ddz1=np.zeros((int(Nz[0])),np.float16)
 increment = Q
 tempsize=Ny[1]*Nz[0]
 
@@ -417,8 +413,8 @@ while Q + increment < (increment + tempsize*a - 1):
         Q += 1
 a+=1
 #################################################### Plane 11 #############################################################
-ddy1=np.zeros((int(Ny[1])),np.int16)
-ddz1=np.zeros((int(Nz[0])),np.int16)
+ddy1=np.zeros((int(Ny[1])),np.float16)
+ddz1=np.zeros((int(Nz[0])),np.float16)
 increment=Q
 tempsize=Ny[1]*Nz[0]
 
@@ -449,8 +445,8 @@ while Q + increment < (increment + tempsize*a - 1):
         Q += 1
 a+=1
 #################################################### Plane 12 #############################################################
-ddx1=np.zeros((int(Nx[2])),np.int16)
-ddz1=np.zeros((int(Ny[0])),np.int16)
+ddx1=np.zeros((int(Nx[2])),np.float16)
+ddz1=np.zeros((int(Ny[0])),np.float16)
 increment=Q
 tempsize=Nx[1] * Nz[0]
 
@@ -483,8 +479,8 @@ while Q + increment < (increment + tempsize*a - 1):
 a+=1
 #################################################### Plane 13 #############################################################
 
-ddy1=np.zeros((int(Ny[1])),np.int16)
-ddx1=np.zeros((int(Nx[1])),np.int16)
+ddy1=np.zeros((int(Ny[1])),np.float16)
+ddx1=np.zeros((int(Nx[1])),np.float16)
 increment = Q
 tempsize=Ny[1]*Nx[1]
 
@@ -528,28 +524,27 @@ Q = 0
 
 while Q < PatchNo:
         while W < PatchNo:
-                patchnum = patcharray[W,0,8]
-                if patchnum <= 7.0:  #442
+                if patcharray[W,0,8] <= 7.0:
                         formfactors[Q,W,1] = 1.0
-                if patchnum >= 9.0: #449
+                if patcharray[W,0,8] >= 9.0:
                         formfactors[Q,W,1] = 2.0
                 if patcharray[Q,0,8] == .10 and (patcharray[W,0,8] ==  8.0 or patcharray[W,0,8] == 9.0 or patcharray[W,0,8] == 13.0 or patcharray[W,0,8] == 14.0 or patcharray[W,0,8] == 15.0):
                         F.PERPFORMFACTOR(patcharray,PatchNo,sizeFFTTwo,formfactors,Q,W,np.pi,FaceNormals,FaceNormalNo)
-                elif(patcharray[Q,0,8] == 2.0 and patcharray[W,0,8] == 12.0): #462
+                elif(patcharray[Q,0,8] == 2.0 and patcharray[W,0,8] == 12.0):
                         F.PERPFORMFACTOR(patcharray,PatchNo,sizeFFTTwo,formfactors,Q,W,np.pi,FaceNormals,FaceNormalNo)
-                elif(patcharray[Q,0,8] == 3.0 and (patcharray[W,0,8] == 13.0 or patcharray[W,0,8] == 14.0)): # 466
+                elif(patcharray[Q,0,8] == 3.0 and (patcharray[W,0,8] == 13.0 or patcharray[W,0,8] == 14.0)):
                         F.PERPFORMFACTOR(patcharray,PatchNo,sizeFFTTwo,formfactors,Q,W,np.pi,FaceNormals,FaceNormalNo)
-                elif(patcharray[Q,0,8] == 4.0 and patcharray[W,0,8] == 15.0): #470
+                elif(patcharray[Q,0,8] == 4.0 and patcharray[W,0,8] == 15.0):
                         F.PERPFORMFACTOR(patcharray,PatchNo,sizeFFTTwo,formfactors,Q,W,np.pi,FaceNormals,FaceNormalNo)
                 elif(patcharray[Q,0,8] == 5.0 and (patcharray[W,0,8] == 10.0 or patcharray[W,0,8] == 11.0 or patcharray[W,0,8] == 12.0 or patcharray[W,0,8]== 13.0 or patcharray[W,0,8]==14.0 or patcharray[W,0,8]== 15.0)):
                         F.PERPFORMFACTOR(patcharray,PatchNo,sizeFFTTwo,formfactors,Q,W,np.pi,FaceNormals,FaceNormalNo)
-                elif(patcharray[Q,0,8]== 8.0 and (patcharray[W,0,8]==1.0)): #481
+                elif(patcharray[Q,0,8]== 8.0 and (patcharray[W,0,8]==1.0)):
                         F.PERPFORMFACTOR(patcharray,PatchNo,sizeFFTTwo,formfactors,Q,W,np.pi,FaceNormals,FaceNormalNo)
-                elif(patcharray[Q,0,8]==9.0 and patcharray[W,0,8]==1.0): #485
+                elif(patcharray[Q,0,8]==9.0 and patcharray[W,0,8]==1.0):
                         F.PERPFORMFACTOR(patcharray,PatchNo,sizeFFTTwo,formfactors,Q,W,np.pi,FaceNormals,FaceNormalNo)
-                elif(patcharray[Q,0,8]==10.0 and patcharray[W,0,9] == 5.0 ): #489
+                elif(patcharray[Q,0,8]==10.0 and patcharray[W,0,9] == 5.0 ):
                         F.PERPFORMFACTOR(patcharray,PatchNo,sizeFFTTwo,formfactors,Q,W,np.pi,FaceNormals,FaceNormalNo)
-                elif(patcharray[Q,0,8]==11.0 and patcharray[W,0,8]==5.0): #493
+                elif(patcharray[Q,0,8]==11.0 and patcharray[W,0,8]==5.0):
                         F.PERPFORMFACTOR(patcharray,PatchNo,sizeFFTTwo,formfactors,Q,W,np.pi,FaceNormals,FaceNormalNo)
                 elif(patcharray[Q,0,8]==12.0 and (patcharray[W,0,8]== 1.0 or patcharray[W,0,8]==2.0 or patcharray[W,0,8]==5.0)):
                         F.PERPFORMFACTOR(patcharray,PatchNo,sizeFFTTwo,formfactors,Q,W,np.pi,FaceNormals,FaceNormalNo)

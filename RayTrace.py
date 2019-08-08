@@ -208,8 +208,9 @@ else:
 rayCounter = 0
 
 # These are for debugging, Uncomment this block and comment out the for loop below
-ray = 606                     # @ Pf.boomSpacing = 1
-for i in range(606):
+ray = 607                     # @ Pf.boomSpacing = 1
+for i in range(607):
+    print(ray)
     ray =      next(boomCarpet)
     rayCounter += 1
 # if ray:
@@ -295,13 +296,11 @@ if ray:
             dxNear, dxFar, hit, planeHit = Fun.box(Bg.BoxArrayNear[Q], Bg.BoxArrayFar[Q], veci, F)
             if dxNear < dxBuilding:
                 dxBuilding = dxNear
-        #        Vecip1 = veci + np.multiply(dxBuilding, F)
+                Vecip1 = veci + np.multiply(dxBuilding, F)
                 whichBox = Q
-                print(Bg.BoxArrayNear[whichBox],Bg.BoxArrayFar[whichBox])
-                print(planeHit)
+                #print(Vecip1,Bg.BoxArrayNear[whichBox],Bg.BoxArrayFar[whichBox],planeHit)
                 nBox = Fun.plane(Vecip1, Bg.BoxArrayNear[whichBox], Bg.BoxArrayFar[whichBox], planeHit)
 
-                print(nBox)
          #This part doesn't really work well.  We have not incorporated it.
          #Eventually all interactions will be triangles anyway so I'm leaving it here to be updated.
 
@@ -413,7 +412,6 @@ if ray:
                 veci += (dx * F)
                 ##print('hit building at step ', I, veci)
                 n2 = np.dot(nBox, nBox)
-                print(n2,nBox)
                 nBuilding = nBox / np.sqrt(n2)
                 dot1 = np.dot(F, nBuilding)
                 F -= (2.0 * (dot1 / n2 * nBuilding))

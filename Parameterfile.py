@@ -36,7 +36,7 @@ graphName = "TestGraph"                                     # No not use full fi
 #Will's
 #outputfile = "PythonTestEnv" + str(boomspacing) + ".txt"       #debugging
 #Turn Radiosity on or off.  This will include diffuse reflections
-radiosity = 0
+radiosity = 1
 #Turn on complex absorption
 complexabsorption = 0
 
