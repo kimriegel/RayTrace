@@ -40,7 +40,7 @@ def ground(height, point, normal):
 
 
 
-
+#http://geomalgorithms.com/a05-_intersect-1.html
 # Order of Operations:
 # 1. The ray location and direction are determined
 # 2. The distance between the ray and an object is determined
