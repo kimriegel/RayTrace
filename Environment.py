@@ -56,29 +56,26 @@ class environment():
     """
 
     def __init__(self,file_name):
-        self.wavefront=pwf.Wavefront(file_name)
+        self.wavefront=pwf.Wavefront(file_name) # First three lines import and format the .obj file
         environment=ObjParser(self.wavefront,file_name, strict=False, encoding="utf-8", create_materials=False, collect_faces=True, parse=True, cache=False)
         environment.parse_f
-        #self.vertices=environment.wavefront.vertices[0:len(environment.wavefront.vertices)//2]
-        self.vertices=environment.wavefront.vertices[0:len(environment.wavefront.vertices)]
-        #seeing if twice the faces prevents it from ignoring surfaces -G 7/24
-        self.faces=environment.mesh.faces
-        self.t=100
+        self.vertices=environment.wavefront.vertices[0:len(environment.wavefront.vertices)] # generates the list of vertices for the .obj file
+        self.faces=environment.mesh.faces # generates the ordered list of faces 
     def SortVertices(self,vertices,axis):
         '''
         Sorts the list self.vertices into the list self.sortvert. List sorted by axis X-0, Z-1, Y-2
         '''
-        self.axis=axis
-        self.sortvert=[]
-        def axissort(elem):
+        self.axis=axis # The axis along which the vertices are sorted
+        self.sortvert=[] # initializes the sorted list of vertices
+        def axissort(elem): # The key by which the list is sorted
             return elem[0][axis]
         for index in range(0,len(vertices)):
-            self.sortvert.append([vertices[index],index])
-            self.sortvert.sort(key=axissort)
-        self.axismin=self.sortvert[0][0][axis]
-        self.axismax=self.sortvert[len(self.sortvert)-1][0][axis]
-        self.axisheight=self.axismax-self.axismin
-        self.bandwidth=pf.h*2 #sets bandwidth to 2x the step length
+            self.sortvert.append([vertices[index],index]) # appends the vertices into sortvert with its associated index.
+            self.sortvert.sort(key=axissort) # sorts the vertices
+        self.axismin=self.sortvert[0][0][axis] # the minimum value along the sorted axis
+        self.axismax=self.sortvert[len(self.sortvert)-1][0][axis] # The maximum value along the sorted axis
+        self.axisheight=self.axismax-self.axismin # the total length of the environment along the sorted axis 
+        self.bandwidth=pf.h*2 #sets bandwidth to 2x the step length, ray will only check faces within the band
     def Boundaries(self):
         '''creates an array that defines the minimum and maximum axis values of the imported environment(building).
             in the format boundary=([xmin,xmax],[ymin,ymax],[zmin,zmax]) '''
@@ -115,19 +112,10 @@ class environment():
         veci is the ray position as defined in RayTrace.py
         F is the ray direction as defined in RayTrace.py
         """
-        print('Calculating Ray Intersection')
-        #print('veci', veci, 'F', F)
-       # adjustment=[[-2*pf.h,+2*pf.h]]
-       # shell = bounds+adjustment
-       # if veci[0]<shell[0][0] or veci[0]>shell[0][1] or veci[1]<shell[1][0] or veci[1]>shell[1][1] or veci[2]<shell[2][0] or veci[2]>shell[2][1]:
-       #     self.t=HUGE
-       #     return self.t
-        #stepped = veci+(F*pf.h)
-        #print('stepped', stepped)
-        zeros=np.zeros(3)
-        subvert=[]
-        subfaces=[]
-        self.planes=[]
+        zeros=np.zeros(3) # establishes an array of zeros. used to remove negative zero error
+        subvert=[] # initializes the sub-list of vertices that appear within the band for each ray.
+        subfaces=[] # initializes the sub-list of faces that are generated using the vertices in subvert.
+        self.planes=[] 
         distances=np.array([HUGE])
         rayaxis=0 # index used for (x,y,z) ordered ray coordinate
         if self.axis == 1:
@@ -158,7 +146,6 @@ class environment():
                 if vertindex in self.faces[x] and self.faces[x] not in subfaces:
                     subfaces.append(self.faces[x])
         for face in subfaces: # Using ray-plane algorithm from Haines chapter 3
-            #print('Face', face)
             A=face[0]
             B=face[1]
             C=face[2]
@@ -175,6 +162,7 @@ class environment():
             D=-1*np.dot(unitnormal,V2) # calculates plane equation D: Ax+By+Cz+D=0
 
             vd=np.dot(unitnormal,F) # dot product between normal and ray direction
+            ### Test algorithm for crossing plane 
             
             line1=V1-veci
             line2=V2-veci
@@ -185,13 +173,24 @@ class environment():
             lines=[line1, line2, line3]
             magnitudes = [magnitude1, magnitude2, magnitude3]
             stepped=veci+(pf.h*F)
-            print('stepped', stepped)
-            step1=V1-stepped
-            step2=V2-stepped
-            step3=V3-stepped
-            steps=[step1, step2, step3]
-            print('steps +lines', step1, line1)
-
+            S1=V1-stepped
+            S2=V2-stepped
+            S3=V3-stepped
+            steps=[S1, S2, S3]
+            
+            # Line-plane intersection algorithm test
+            L0=veci
+            u=stepped-veci
+            if np.dot(unitnormal,u)==0:
+                t=HUGE
+                pass
+            w=V1-veci
+            numerator=-1*np.dot(unitnormal,w)
+            denominator=np.dot(unitnormal,u)
+            si=numerator/denominator
+            print('si', si)
+            if si>0 and si<1:
+                print('ray passes plane')
             if vd==0: # ray is parallel to plane and no intersection occurs. ## special case??
                 t=HUGE #HOTFIX
                 print('face', face, 'parallel, does not hit')
@@ -199,9 +198,8 @@ class environment():
             else:
 
                 v0=-(np.dot(unitnormal,veci)+D)
-                #print('D',D,'self.vd', self.vd, 'v0', v0)
                 t=v0/vd # distance from ray origin to plane intersection
-                #rint('distance', t, 'plane', face)
+                print('t', t)
                 for magnitude in magnitudes:
                     if magnitude<=pf.h and magnitude1>0:
                         distances=np.append(distances,magnitude)
@@ -219,7 +217,6 @@ class environment():
     
     def RayHit(self,veci,F,distance):
         ''' "RayHit is the one with intersection, you should put a 3-quote note" -G.K. Seaton '''
-        #print('RayHit Began')
         count=0
         for plane in self.planes:
             count+=1
@@ -251,106 +248,62 @@ class environment():
                 sh=0 # sign holder
                 nsh=0 # next sign holder
                 # first edge test
-                #print('Plane', count)
-                #print('veci', veci)
-                #print('first edge test')
-                #print('unitnormal', unitnormal, 'absolute unit normal', abs(unitnormal))
-                #print('dominant', dominant)
-                #print('ri', ri, 'riuv', riuv)
-                #print('face', face, 'triangle vertices', v1, v2, v3)
-                #print('uv coordinates', uv1p, uv2p, uv3p)
-                #print('uv1p', uv1p, 'uv2p', uv2p)
                 if uv1p[1]<0:
                     sh=-1
-                    #print('sh=-1')
                 else:
                     sh=1
-                    #print('sh=1')
                 if uv2p[1]<0:
                     nsh=-1
-                    #print('nsh=-1')
                 else:
                     nsh=1
-                    #print('nsh=1')
                 if sh!=nsh:
                     if uv1p[0]>0 and uv2p[0]>0:
                         nc=nc+1
-                        #print('nc=',nc)
                     elif uv1p[0]>0 or  uv2p[0]>0:
                         if uv1p[0]-uv1p[1]*(uv2p[0]-uv1p[0])/(uv2p[1]-uv1p[1])>0:
                             nc=nc+1
-                            #print('nc=', nc)
                     sh=nsh
-                    #print('sh=nsh=',sh, nsh, 'end first edge test')
                 #second edge test
-                #print('second edge test')
-                #print('riuv', riuv)
-                #print('uv2p', uv2p, 'uv3p', uv3p)
                 if uv2p[1]<0:
                     sh=-1
-                    #print('sh=-1')
                 else:
                     sh=1
-                    #print('sh=1')
                 if uv3p[1]<0:
                     nsh=-1
-                    #print('nsh=-1')
                 else:
                     nsh=1
-                    #print('nsh=1')
                 if sh!=nsh:
                     if uv2p[0]>0 and uv3p[0]>0:
                         nc=nc+1
-                        #print('nc=',nc)
                     elif uv2p[0]>0 or  uv3p[0]>0:
                         if uv2p[0]-uv2p[1]*(uv3p[0]-uv2p[0])/(uv3p[1]-uv2p[1])>0:
                             nc=nc+1
-                            #print('nc=',nc)
                     sh=nsh
-                    #print('sh=nsh=',sh,nsh,'end second edge test')
                 #third edge test
-                #print('third edge test')
-                #print('riuv', riuv)
-                #print('uv3p', uv3p, 'uv1p', uv1p)
                 if uv3p[1]<0:
                     sh=-1
-                    #print('sh=-1')
                 else:
                     sh=1
-                    #print('sh=1')
                 if uv1p[1]<0:
                     nsh=-1
-                    #print('nsh=-1')
                 else:
                     nsh=1
-                    #print('nsh=1')
                 if sh!=nsh:
-                    #print('BIGTEST')
-                    #print('uv3p', uv3p, 'uv1p', uv1p)
                     if uv3p[0]>0 and uv1p[0]>0:
                         nc=nc+1
-                        #print('nc=',nc)
                     elif uv3p[0]>0 or  uv1p[0]>0:
                         if uv1p[0]-uv3p[1]*(uv1p[0]-uv3p[0])/(uv1p[1]-uv3p[1])>0:
                             nc=nc+1
-                           #print('nc=',nc)
                     sh=nsh
-                    #print('sh=nsh=',sh,nsh,'end third edge test')
                 if nc%2==0:
-                    #print('number of crossings =', nc,'even, not in face', face)
-                    #print('finished plane', count)
                     pass
                 if nc%2!=0:
-                    #print('ODD!!!!!!!!!!!!!!! number of crossings=', nc, 'odd, in face', face)
-
                     rn2=np.dot(rn,rn)
                     nbuilding=rn/np.sqrt(rn2)
                     dot1=np.dot(F,nbuilding)
                     F=F-(2.0*(dot1/rn2*nbuilding))
-                    length=np.sqrt(np.dot(F,F))  
-                    #print('veci', veci, 'ri', ri)    
+                    length=np.sqrt(np.dot(F,F))    
                     print('finished plane', count)
-            #print('RayHit Complete')
         return veci, F
 #######################################################################333        
 #triFace = range(3)
