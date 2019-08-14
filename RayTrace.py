@@ -33,6 +33,9 @@ amplitude = 0
       Anything resembling radiosity
 """
 
+phase = 0
+amplitude = 0
+
 def initial_signal(signal_length, fft_output):
     """
     Making the array for the initial signals.
@@ -208,10 +211,9 @@ else:
 
 rayCounter = 0
 
-if (Pf.h < (2*Pf.radius)): 
-      print('h is less than 2r')
-      raise SystemExit
-
+if Pf.h < (2*Pf.radius):
+    print('h is less than 2r')
+    raise SystemExit
 
 # These are for debugging, Uncomment this block and comment out the for loop below
 # ray = 606                     # @ Pf.boomSpacing = 1
