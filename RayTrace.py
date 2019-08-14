@@ -23,6 +23,8 @@ import ReceiverPointSource as Rps   # For receivers
 import time                         # Time checks
 
 t = time.time()
+phase = 0 
+amplitude = 0
       
 # What it does not do
 """
@@ -70,6 +72,9 @@ def vex(y, z):
     """
     The x coordinate of the ray 
     Used for veci
+    Based on initialgrid. This is part of a generator which returns 
+    one ray at a time. This is both more memory efficient and faster
+    than making a large array as we did last time.
     """
     return (D - FInitial[1] * y - FInitial[2] * z) / FInitial[0]
 
@@ -223,6 +228,8 @@ nBox = [0, 0, 0]
 veci = np.array([0, 0, 0])
 print('began rays')
 for ray in boomCarpet:              # Written like this for readability
+#if ray:
+    #ray = next(boomCarpet)
     veci = ray      # initial ray position
     hitCount = 0
     doubleHit = 0
@@ -236,6 +243,7 @@ for ray in boomCarpet:              # Written like this for readability
     for I in range(Pf.IMAX):      # Making small steps along the ray path.
         # For each step we should return, location, phase and amplitude
         dxReceiver = HUGE
+        #print(I,veci)
         # Find the closest sphere and store that as the distance
         for R in ears:
             # The way that tempReceiver works now, it's only used here and only should be used here.

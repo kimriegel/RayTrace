@@ -1179,7 +1179,24 @@ Trying really hard to graduate in this span of time, not much progress
           ( I don't know. I don't have the book he read from )
 
 
+@r0ml 
+    Creating SQL database vs python arrays and lists in regards to memory and speed
+      Limitations of SQL databases 
+
+    How to find the method Blender uses to calculate turbulence
+
+
+@glyph
+    Creating SQL database vs python arrays and lists in regards to memory and speed
+      Speed of reading and translating SQL databases into python and back
+
+    How to encorporate multiprocessing 
+
+    Taking pieces of pypy to use is python3
+
+
 8/14/19
       RayTrace-1 exists
         It's just like raytrace but gives the option to mess up.
           Putting in a quarantine folder on dropbox then going to parse thru and look at what to take and what to leave from it
+

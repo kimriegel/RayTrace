@@ -143,7 +143,7 @@ class environment():
         print('called')
         if distance<0: # ray intersection behind ray origin
             print('Ray Intersection behind Ray Origin')
-            pass
+            return 
         else:
             adjustment=F*distance
             ri=veci+(F*distance) # calculates ray intersection
