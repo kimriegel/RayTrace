@@ -31,6 +31,9 @@ t = time.time()
       Anything resembling radiosity
 """
 
+phase = 0
+amplitude = 0
+
 def initial_signal(signal_length, fft_output):
     """
     Making the array for the initial signals.
@@ -203,11 +206,15 @@ else:
 
 rayCounter = 0
 
+if Pf.h < (2*Pf.radius):
+    print('h is less than 2r')
+    raise SystemExit
+
 # These are for debugging, Uncomment this block and comment out the for loop below
 # ray = 606                     # @ Pf.boomSpacing = 1
-for i in range(606):
-     ray =      next(boomCarpet)
-     rayCounter += 1
+#for i in range(606):
+#     ray =      next(boomCarpet)
+#     rayCounter += 1
 # if ray:
 # Begin tracing
 #print('Memory (before) : ' + str(mem.memory_usage()) + 'MB')
@@ -222,9 +229,9 @@ for ray in boomCarpet:              # Written like this for readability
 
     amplitude = frecuencias[:, 1]/normalization
     phase = frecuencias[:, 2]
-    if Pf.h < (2*Pf.radius):
-        print('h is less than 2r')
-        break
+    #if Pf.h < (2*Pf.radius):
+    #    print('h is less than 2r')
+    #    break
     F = np.array(FInitial)                                      # Direction
     for I in range(Pf.IMAX):      # Making small steps along the ray path.
         # For each step we should return, location, phase and amplitude

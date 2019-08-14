@@ -1177,3 +1177,9 @@ Trying really hard to graduate in this span of time, not much progress
       Found bug in Will's Environemnt file.
         third edge test used a different vertice and that may not have been correct
           ( I don't know. I don't have the book he read from )
+
+
+8/14/19
+      RayTrace-1 exists
+        It's just like raytrace but gives the option to mess up.
+          Putting in a quarantine folder on dropbox then going to parse thru and look at what to take and what to leave from it
