@@ -16,7 +16,15 @@ hr = 20.0
 theta = 1.6863372
 phi = 3.44458181
 #boomspacing = 0.06   #.6
+<<<<<<< HEAD
 #boomspacing= 0.035
+=======
+<<<<<<< HEAD
+boomspacing= 0.35
+=======
+boomspacing= 0.035
+>>>>>>> e0fae5929987c842942038f2e6e9a098aa384f21
+>>>>>>> 36c93029ba7c9065cf068e50ecaafa0c283460cc
 #boomspacing= 0.01
 boomspacing= 1
 xmin = -1
