@@ -1,0 +1,35 @@
+// Note: x & y values and mic locations should be given as distances from the building corner closest to the coordinate origin.
+
+// Animation parameters
+num_frame_yz = 200       // Total number of frames for YZ slice visualization 
+x_slice_yz    = 27             // x-coordinate of the slice [m]
+y_range_yz1    = -10        // Starting y-coordinate of YZ slice [m]
+y_range_yz2    = 47         // Ending y-coordinate of YZ slice [m]
+z_range_yz1    = 0           // Starting z-coordinate of YZ slice [m]
+z_range_yz2    = 18         // Ending z-coordinate of YZ slice [m]
+
+num_frame_xz = 200      // Total number of frames for XZ slice visualization
+y_slice_xz    = 18            // y-coordinate of the slice [m]
+x_range_xz1  = -10         // Starting x-coordinate of XZ slice [m]
+x_range_xz2  = 65         // Ending x-coordinate of XZ slice [m]
+z_range_xz1    = 0       // Starting z-coordinate of XZ slice [m]
+z_range_xz2    = 18       // Ending z-coordinate of XZ slice [m]
+
+num_frame_xy = 200      // Total number of frames for XY slice visualization
+z_slice_xy    = 0         // Distance from the ground in z-direction to be cut [m]
+x_range_xy1    = -10         // Starting x-coordinate of XY slice [m]
+x_range_xy2    = 65         // Ending x-coordinate of XY slice [m]
+y_range_xy1    = -10         // Starting y-coordinate of XY slice [m]
+y_range_xy2    = 47         // Ending y-coordinate of XY slice [m]
+
+n_range_surface = 200	// Number of frames for external pressure loading visualization
+
+
+// Microphone parameters
+num_mic = 2		// Number of microphones to record the pressure time history
+mic19x = 54.583		// x-coordinate of Mic19 [m]
+mic19y = 18.600		// y-coordinate of Mic19 [m]
+mic19z = 0		// z-coordinate of Mic19 [m]
+mic29x = 54.583		// x-coordinate of Mic29 [m]
+mic29y = 18.600		// y-coordinate of Mic29 [m]
+mic29z = 7.942		// z-coordinate of Mic29 [m]
