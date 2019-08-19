@@ -1200,3 +1200,33 @@ Trying really hard to graduate in this span of time, not much progress
         It's just like raytrace but gives the option to mess up.
           Putting in a quarantine folder on dropbox then going to parse thru and look at what to take and what to leave from it
 
+8/18/19
+      Making my own geometry that does exactly what I need with minimal abstraction
+
+      looking at how to target specific vertices with Wil's old method 
+      (faces[0][2] is(faces[1][2])) confirms that the keys on this list refer to the same vertex in SingleBuilding file
+
+      The nature of all these extra numbers makes this slightly harder to read, but the results appear to be the same. 
+        Remember to read each face as a set of /sets/ of three (so nine), instead of a set of 3
+        Also that this is still in x,z,y notation
+
+      Successfully created a list of the actual vertices and how they relate to each other
+        Here's my scrap paper for how I tested they are the acutal objects and not just the same values:
+          print(myFaces)
+          print(myFaces[0:2])
+          print(myFaces[0],myFaces[1])
+          print(myFaces[0][2],myFaces[1][2])
+          print(myFaces[0][2] is(myFaces[1][2]))
+          print(id(myFaces[0][2]),id(myFaces[1][2]))
+          print(id(myFaces[0][2]) == id(myFaces[1][2]))
+        
+        The next step is to be able to reliably check plane intersection with each face 
+        or calculate the normals from the points I have if I cannot integrate those yet
+
+        Working on it, the method I have now will always return positive normals tho
+
+        Q: For a very large sized building with many faces can I use a dictionary to store normals so I don't have to keep recalculating them?
+
+        Still need to check if all faces list vertices in clockwise order (So that function works)
+          Doesn't look like it: taking a break
+

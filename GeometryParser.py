@@ -72,13 +72,13 @@ faces = env.mesh.faces                                                      # li
 #print(faces)
 #print(normals)
 faceNormals = env.normals                                                   # ???
-print(len(vertices))
-print(len(faces))
-print(faces)
-print(len(faceNormals))
-print(vertices[0])
-print(faces[0])
-print(faceNormals[0])
+##print(len(vertices))
+##print(len(faces))
+##print(faces)
+##print(len(faceNormals))
+##print(vertices[0])
+##print(faces[0])
+##print(faceNormals[0])
 faceNormalNo = len(faceNormals)
 Boxnumber = 1     # supposed to import from s, come back to this later
     # Is this similar to Will's bands?
@@ -105,10 +105,60 @@ for f in env.mesh.faces:
     #print(vertices(int(f[0])))
     #pass
 
-print(myFaces[0])
-print(myFaces)
+#print(myFaces[0])
+#print(myFaces)
 face = myFaces
-    
+
+## Testing if keys point towards the same vertex
+#print(faces)
+#print(faces[0:2])
+#print(faces[0],faces[1])
+#print(faces[0][2],faces[1][2])
+#print(faces[0][2] is(faces[1][2]))
+## Yes
+
+## Testing if actual objects point towards same vertex
+#print(myFaces)
+#print(myFaces[0:2])
+#print(myFaces[0],myFaces[1])
+#print(myFaces[0][2],myFaces[1][2])
+#print(myFaces[0][2] is(myFaces[1][2]))
+#print(id(myFaces[0][2]),id(myFaces[1][2]))
+#print(id(myFaces[0][2]) == id(myFaces[1][2]))
+##print(myFaces[0][2][0],myFaces[1][2][0])
+## Yes, it identifies the coordinate as the same object (existing in memory)
+
+# Trying to make normals (help?)
+    # Dir = (B-A) cross (C-A)
+    # Normal = Dir/len(dir)
+print(myFaces[0][2]) 
+A = np.array(myFaces[0][0])
+B = np.array(myFaces[0][1])
+C = np.array(myFaces[0][2])
+Direction = np.cross((B-A),(C-A))
+print(B-A)
+print(C-A)
+print(Direction) 
+Normal = Direction/abs(Direction)
+print(np.isnan(Normal))
+N = np.where(np.isnan(Normal),    0,  Normal )      # gettings rid of nans
+print(Normal)
+print(N)
+
+def faceNormal(face):
+    a = np.array(face[0])
+    b = np.array(face[1])
+    c = np.array(face[2])
+    d = np.cross((b-a),(c-a))   # [D]irection
+    n = d/abs(d)
+    # Where n is [n]ot [a] [n]umber, return 0, else return n
+    normal = np.where(np.isnan(n),0,n)  
+    return tuple(normal)
+
+for i in range(len(env.normals)):
+    print('Viejo: ', env.normals[i])
+    print('Nueva: ', faceNormal(myFaces[i]))
+
 """
 Checks if and where a ray hits a plane
 """
@@ -166,88 +216,88 @@ drei = ein + zwei * F + planePoint              # psi
 #            whichBox = Q
 #     Check intersection with Squares
 
-def tri(veci, F, Q, Number, PointNumbers, PolyArray, v, normal,FaceNormalNo,vn,dxbuilding,behind):
-   """
-   Lab notebook 5/16
-   This is an attempt to merge box and polygon into one function since
-   we are working entirely in triangular meshes now
-   ********************************Untested***********************************
-   A 1:1 translation was made from Fortran. This is the closest match to
-   what we are trying to do with triangle geometry. However there is no
-   readily available geometry file to test this.
-   [No Description given in Fortran]
-   """
-   size = 3
-   G = np.zeros((size,2))  # (3,2)
-   # inits
-   NC=0
-   behind=0
-   normal = vn[PolyArray[Q,1],:]
-   #normal[0]=FaceNormals[int(PolyArray[Q,1]),0]
-   #normal[1]=FaceNormals[int(PolyArray[Q,1]),1]
-   #normal[2]=FaceNormals[int(PolyArray[Q,1]),2]
-   d=-np.dot(normal,ValueError(PolyArray[Q,2]))
-   Vd=np.dot(normal,F)
-   if Vd >= 0.0:
-       dxbuilding = HUGE
-   V0= -(np.dot(normal,veci)+d)
-   t=V0/Vd
-   if(t < 0.0):
-       dxbuilding=HUGE
-       behind = 1
-       #Stage 1
-   intersection = veci + F*t
-   maximum = max(abs(normal))
-       # G: What if two normal values are the same? Anyway:
-   if(maximum == abs(normal[0])):
-       for P in range(size):
-           G[P,:] = (intersection[1]-v[int(PolyArray[Q,1+P]),1]
-                     ,intersection[2]-v[int(PolyArray[Q,1+P]),2])
-   elif (maximum == normal[1]):
-       for P in range(size):
-           G[P,:] = (intersection[0]-v[int(PolyArray[Q,1+P]),0]
-                     ,intersection[2]-v[int(PolyArray[Q,1+P]),2])
-   elif (maximum == normal[2]):
-       for P in range(size):
-           G[P,:] = (intersection[0]-v[int(PolyArray[Q,1+P]),0]
-                     ,intersection[1]-v[int(PolyArray[Q,1+P]),1])
-   #Stage 2
-   for P in range(size):
-       if P == size:
-           if G[P,1] < 0.0:
-               SH = -1
-           else:
-               SH = 1
-           if G[0,1] < 0.0:
-               NSH = -1
-           else:
-               NSH = 1
-       else:
-           if G[P,1] < 0.0:
-               SH = -1
-           else:
-               SH = 1
-           if G[P+1,2] < 0.0:
-               NSH = -1
-           else:
-               NSH = 1
-       if SH != NSH:
-           if (P == size):
-               if (G[P,0] > 0.0) and (G[0,0]>0.0):
-                   NC += 1
-               elif (G[P,0]> 0.0) or (G[0,0] > 0.0):
-                   if (G[P,0]-(G[P,1]*(G[P+1,0]-G[P,0])/(G[P+1,1]-G[P,1]))) > 0.0:
-                       NC += 1
-           else:
-               if (G[P,0] > 0.0) and (G[P+1,0] > 0.0):
-                   NC += 1
-               elif (G[P,0] > 0.0) or (G[P+1,1] > 0.0):
-                   if (G[P,0]-(G[P,1]*(G[P+1,0]-G[P,0])/(G[P+1,1]-G[P,1]))) > 0.0:
-                       NC += 1
-       odd = NC % 2    #get remainder to find if odd or not
-       # This was this way in original fortran
-       if odd:
-           dxbuilding = t
-       else:
-           dxbuilding = HUGE
-       return dxbuilding,behind
+###def tri(veci, F, Q, Number, PointNumbers, PolyArray, v, normal,FaceNormalNo,vn,dxbuilding,behind):
+###   """
+###   Lab notebook 5/16
+###   This is an attempt to merge box and polygon into one function since
+###   we are working entirely in triangular meshes now
+###   ********************************Untested***********************************
+###   A 1:1 translation was made from Fortran. This is the closest match to
+###   what we are trying to do with triangle geometry. However there is no
+###   readily available geometry file to test this.
+###   [No Description given in Fortran]
+###   """
+###   size = 3
+###   G = np.zeros((size,2))  # (3,2)
+###   # inits
+###   NC=0
+###   behind=0
+###   normal = vn[PolyArray[Q,1],:]
+###   #normal[0]=FaceNormals[int(PolyArray[Q,1]),0]
+###   #normal[1]=FaceNormals[int(PolyArray[Q,1]),1]
+###   #normal[2]=FaceNormals[int(PolyArray[Q,1]),2]
+###   d=-np.dot(normal,ValueError(PolyArray[Q,2]))
+###   Vd=np.dot(normal,F)
+###   if Vd >= 0.0:
+###       dxbuilding = HUGE
+###   V0= -(np.dot(normal,veci)+d)
+###   t=V0/Vd
+###   if(t < 0.0):
+###       dxbuilding=HUGE
+###       behind = 1
+###       #Stage 1
+###   intersection = veci + F*t
+###   maximum = max(abs(normal))
+###       # G: What if two normal values are the same? Anyway:
+###   if(maximum == abs(normal[0])):
+###       for P in range(size):
+###           G[P,:] = (intersection[1]-v[int(PolyArray[Q,1+P]),1]
+###                     ,intersection[2]-v[int(PolyArray[Q,1+P]),2])
+###   elif (maximum == normal[1]):
+###       for P in range(size):
+###           G[P,:] = (intersection[0]-v[int(PolyArray[Q,1+P]),0]
+###                     ,intersection[2]-v[int(PolyArray[Q,1+P]),2])
+###   elif (maximum == normal[2]):
+###       for P in range(size):
+###           G[P,:] = (intersection[0]-v[int(PolyArray[Q,1+P]),0]
+###                     ,intersection[1]-v[int(PolyArray[Q,1+P]),1])
+###   #Stage 2
+###   for P in range(size):
+###       if P == size:
+###           if G[P,1] < 0.0:
+###               SH = -1
+###           else:
+###               SH = 1
+###           if G[0,1] < 0.0:
+###               NSH = -1
+###           else:
+###               NSH = 1
+###       else:
+###           if G[P,1] < 0.0:
+###               SH = -1
+###           else:
+###               SH = 1
+###           if G[P+1,2] < 0.0:
+###               NSH = -1
+###           else:
+###               NSH = 1
+###       if SH != NSH:
+###           if (P == size):
+###               if (G[P,0] > 0.0) and (G[0,0]>0.0):
+###                   NC += 1
+###               elif (G[P,0]> 0.0) or (G[0,0] > 0.0):
+###                   if (G[P,0]-(G[P,1]*(G[P+1,0]-G[P,0])/(G[P+1,1]-G[P,1]))) > 0.0:
+###                       NC += 1
+###           else:
+###               if (G[P,0] > 0.0) and (G[P+1,0] > 0.0):
+###                   NC += 1
+###               elif (G[P,0] > 0.0) or (G[P+1,1] > 0.0):
+###                   if (G[P,0]-(G[P,1]*(G[P+1,0]-G[P,0])/(G[P+1,1]-G[P,1]))) > 0.0:
+###                       NC += 1
+###       odd = NC % 2    #get remainder to find if odd or not
+###       # This was this way in original fortran
+###       if odd:
+###           dxbuilding = t
+###       else:
+###           dxbuilding = HUGE
+###       return dxbuilding,behind

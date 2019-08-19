@@ -36,6 +36,6 @@ Geometry outputs to intermidiate graph to allow code to work w complex geometry
 After casting then save data to file
     Make sure file can be easily read in python
 Create graphs based on output file
-    Has trouble doing multiple graphs at once, look into it
+    Has trouble doing multiple graphs at once, look into it (fixed)
 """
 
