@@ -1,4 +1,4 @@
-Have Parameterfile_methods, Building Geometry, Functions_Testing, ReceiverPointMethods in the same folder as Current RayTrace version
+Have Parameterfile, BuildingGeometry, Functions, and ReceiverPointSource in the same folder as RayTrace version
 Include input file (inputNASABOOM1)
 open folder from terminal (or vscode)
 
