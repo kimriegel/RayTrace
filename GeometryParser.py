@@ -69,7 +69,8 @@ env = pwf.ObjParser(ipfile,ipname, strict=False, encoding="utf-8",
 vertices = env.wavefront.vertices                                           # useful
 faces = env.mesh.faces                                                      # list of keys to vertices
 #normals = env.normals               # Delete normal[5] needed
-#print(faces)
+print('vertices', vertices)
+print('faces', faces)
 #print(normals)
 faceNormals = env.normals                                                   # ???
 ##print(len(vertices))
