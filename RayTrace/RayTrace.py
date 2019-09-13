@@ -22,6 +22,7 @@ import time
 #import Environment as ENV
 #import GeometryParser as BG
 #import memory_profiler as mem
+import matplotlib.pyplot as plt
 
 # What it does not do
 """
@@ -440,3 +441,43 @@ def main():
         for w in range(sizeFFT):
             Rps.Receiver.timeHeader(f, timeArray[w], w)
     print('time: ', time.time()-t)
+    # Outputting graphs
+    t = time.time()
+
+    #######################################################################
+    # Will eventually be moved to a receiver function,
+    # here now for ease of access of others reading this
+    #######################################################################
+    import matplotlib.font_manager as fm
+
+    # Font
+    stdfont = fm.FontProperties()
+    stdfont.set_family('serif')
+    stdfont.set_name('Times New Roman')
+    stdfont.set_size(20)
+
+    for R in ears:
+        # For N wave
+        pressure = R.signal
+        i = R.recNumber
+        #plt.figure(i)
+        #plt.figure(num = i, figsize=(19.20, 10.80), dpi=120, facecolor='#eeeeee', edgecolor='r')   # grey
+        #plt.figure(num = i, figsize=(19.20, 10.80), dpi=120, facecolor='#e0dae6', edgecolor='r')   # muted lilac
+        plt.figure(num = i, figsize=(19.20, 10.80), dpi=120, facecolor='#e6e6fa', edgecolor='r')    # lavender
+        #plt.plot(timeArray,pressure,'r--')
+        plt.grid(True)
+        plt.plot(timeArray,pressure,'#780303')
+        # Labeling axes
+        plt.xlabel('Time [s]', fontproperties=stdfont)
+        plt.ylabel('Pressure [Pa]', fontproperties=stdfont)
+        plt.title('Pressure vs Time of Receiver '+ str(i),
+                fontproperties=stdfont,
+                fontsize=26,
+                fontweight='bold')
+
+        # Saving
+        #plt.savefig(Pf.graphName + str(i) + '.png', facecolor='#eeeeee')    # grey
+        #plt.savefig(Pf.graphName + str(i) + '.png', facecolor='#e0dae6')    # muted lilac
+        plt.savefig(Pf.graphName + str(i) + '.png', facecolor='#e6e6fa')    # lavender
+        print('Saved receiver', i)
+    print('Graph time: ', time.time()-t)
