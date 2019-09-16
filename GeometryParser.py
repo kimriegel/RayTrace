@@ -61,26 +61,15 @@ def LinePlaneCollision(planeNormal, planePoint, rayDirection, rayPoint, epsilon=
 #    #    print(n)
 
 #ipname = 'Env/SingleBuilding.obj'
-ipname = 'SingleBuilding.obj'
+ipname = 'Env/SingleBuildingTest.obj'
 #ipname = 'TwoWalls.obj'
 ipfile = pwf.Wavefront(ipname)    # Read in geometry file
 env = pwf.ObjParser(ipfile,ipname, strict=False, encoding="utf-8", 
         create_materials=True, collect_faces=True, parse=True, cache=False)
 vertices = env.wavefront.vertices                                           # useful
 faces = env.mesh.faces                                                      # list of keys to vertices
-#normals = env.normals               # Delete normal[5] needed
-print('vertices', vertices)
-print('faces', faces)
-#print(normals)
-faceNormals = env.normals                                                   # ???
-##print(len(vertices))
-##print(len(faces))
-##print(faces)
-##print(len(faceNormals))
-##print(vertices[0])
-##print(faces[0])
-##print(faceNormals[0])
-faceNormalNo = len(faceNormals)
+
+
 Boxnumber = 1     # supposed to import from s, come back to this later
     # Is this similar to Will's bands?
 Boxarraynear=np.array([10,10,0])
@@ -95,75 +84,23 @@ myFaces = []
     # trying to make more usable faces
 for f in env.mesh.faces:
     myFaces.append((vertices[f[0]],vertices[f[1]],vertices[f[2]]))
-    #print(vertices[f[0]],vertices[f[1]],vertices[f[2]])
-    
-    #print(f[0])
-    #print(type(f[0]))
-    #x = f[0]
-    #print(vertices[f[0]])
 
-    #print(int(f[0]))
-    #print(vertices(int(f[0])))
-    #pass
-
-#print(myFaces[0])
-#print(myFaces)
 face = myFaces
 
-## Testing if keys point towards the same vertex
-#print(faces)
-#print(faces[0:2])
-#print(faces[0],faces[1])
-#print(faces[0][2],faces[1][2])
-#print(faces[0][2] is(faces[1][2]))
-## Yes
-
-## Testing if actual objects point towards same vertex
-#print(myFaces)
-#print(myFaces[0:2])
-#print(myFaces[0],myFaces[1])
-#print(myFaces[0][2],myFaces[1][2])
-#print(myFaces[0][2] is(myFaces[1][2]))
-#print(id(myFaces[0][2]),id(myFaces[1][2]))
-#print(id(myFaces[0][2]) == id(myFaces[1][2]))
-##print(myFaces[0][2][0],myFaces[1][2][0])
-## Yes, it identifies the coordinate as the same object (existing in memory)
-
-# Trying to make normals (help?)
-    # Dir = (B-A) cross (C-A)
-    # Normal = Dir/len(dir)
-print(myFaces[0][2]) 
-A = np.array(myFaces[0][0])
-B = np.array(myFaces[0][1])
-C = np.array(myFaces[0][2])
-Direction = np.cross((B-A),(C-A))
-print(B-A)
-print(C-A)
-print(Direction) 
-Normal = Direction/abs(Direction)
-print(np.isnan(Normal))
-N = np.where(np.isnan(Normal),    0,  Normal )      # gettings rid of nans
-print(Normal)
-print(N)
 
 def faceNormal(face):
     a = np.array(face[0])
     b = np.array(face[1])
     c = np.array(face[2])
     d = np.cross((b-a),(c-a))   # [D]irection
-    n = d/abs(d)
+    n = d/np.sqrt(d.dot(d))
     # Where n is [n]ot [a] [n]umber, return 0, else return n
-    normal = np.where(np.isnan(n),0,n)  
     return tuple(normal)
 
-for i in range(len(env.normals)):
-    print('Viejo: ', env.normals[i])
-    print('Nueva: ', faceNormal(myFaces[i]))
 
 """
 Checks if and where a ray hits a plane
 """
-# si
 epsilon = 0.0
 planePoint = np.array(face[0])
 normalPlane = np.array(faceNormals[0])
