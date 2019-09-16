@@ -93,7 +93,7 @@ PolyBuilding=0
 myFaces = []
     # trying to make more usable faces
 for f in env.mesh.faces:
-    myFaces.append((vertices[f[0]],vertices[f[1]],vertices[f[2]]))
+    myFaces.append((vertices[f[0]],vertices[f[1]],vertices[f[2]]))      # x,z,y notation on all points
     #print(vertices[f[0]],vertices[f[1]],vertices[f[2]])
     
     #print(f[0])
@@ -131,19 +131,19 @@ face = myFaces
 # Trying to make normals (help?)
     # Dir = (B-A) cross (C-A)
     # Normal = Dir/len(dir)
-print(myFaces[0][2]) 
+#print(myFaces[0][2]) 
 A = np.array(myFaces[0][0])
 B = np.array(myFaces[0][1])
 C = np.array(myFaces[0][2])
 Direction = np.cross((B-A),(C-A))
-print(B-A)
-print(C-A)
-print(Direction) 
+#print(B-A)
+#print(C-A)
+#print(Direction) 
 Normal = Direction/abs(Direction)
-print(np.isnan(Normal))
+#print(np.isnan(Normal))
 N = np.where(np.isnan(Normal),    0,  Normal )      # gettings rid of nans
-print(Normal)
-print(N)
+#print(Normal)
+#print(N)
 
 def faceNormal(face):
     a = np.array(face[0])
@@ -156,8 +156,10 @@ def faceNormal(face):
     return tuple(normal)
 
 for i in range(len(env.normals)):
-    print('Viejo: ', env.normals[i])
-    print('Nueva: ', faceNormal(myFaces[i]))
+    #print('Viejo: ', env.normals[i])
+    #print('Nueva: ', faceNormal(myFaces[i]))
+    print(myFaces[i])
+    print(faceNormal(myFaces[i]))
 
 """
 Checks if and where a ray hits a plane

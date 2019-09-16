@@ -1230,3 +1230,14 @@ Trying really hard to graduate in this span of time, not much progress
         Still need to check if all faces list vertices in clockwise order (So that function works)
           Doesn't look like it: taking a break
 
+
+
+9/16/18
+          Normal only seems to face outside if using x,z,y notation, otherwise faces only point inwards
+        Inner me: if it's right but negative why don't you just  *= -1 ?
+        Inner me 2: Good question. I did that now.
+
+        The parser always works in x,z,y translation. As a fellow human I'm sure we both have used x,y,z up to now.
+          This new notation is no doubt confusing. It is confusing to me too. I think the problem doesn't exist and 
+          I've been doing nothing thinking of it in x,y,z.
+
