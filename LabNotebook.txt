@@ -1232,7 +1232,7 @@ Trying really hard to graduate in this span of time, not much progress
 
 
 
-9/16/18
+9/16/19
           Normal only seems to face outside if using x,z,y notation, otherwise faces only point inwards
         Inner me: if it's right but negative why don't you just  *= -1 ?
         Inner me 2: Good question. I did that now.
@@ -1241,3 +1241,7 @@ Trying really hard to graduate in this span of time, not much progress
           This new notation is no doubt confusing. It is confusing to me too. I think the problem doesn't exist and 
           I've been doing nothing thinking of it in x,y,z.
 
+
+9/18/19
+
+      Changed myFaces to mesh and used a list comphehension to get it because those look really cool

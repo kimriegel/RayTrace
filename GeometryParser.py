@@ -79,13 +79,15 @@ TriangleNumber=0
 SquareNumber=0
 PolyBuilding=0
 
-# start here
-myFaces = []
-    # trying to make more usable faces
-for f in env.mesh.faces:
-    myFaces.append((vertices[f[0]],vertices[f[1]],vertices[f[2]]))
+## start here
+#myFaces = []
+#    # trying to make more usable faces
+#for f in env.mesh.faces:
+#    myFaces.append((vertices[f[0]],vertices[f[1]],vertices[f[2]]))
 
-face = myFaces
+mesh = [(vertices[f[0]],vertices[f[1]],vertices[f[2]]) for f in env.mesh.faces]
+
+#face = myFaces
 
 
 def faceNormal(face):
@@ -93,21 +95,22 @@ def faceNormal(face):
     b = np.array(face[1])
     c = np.array(face[2])
     d = np.cross((b-a),(c-a))   # [D]irection
-    n = d/np.sqrt(d.dot(d))
+    normal = d/np.sqrt(d.dot(d))
     # Where n is [n]ot [a] [n]umber, return 0, else return n
     return tuple(normal)
 
+#print(myFaces)
 
 """
 Checks if and where a ray hits a plane
 """
 epsilon = 0.0
-planePoint = np.array(face[0])
-normalPlane = np.array(faceNormals[0])
+planePoint = np.array(mesh[0])
+normalPlane = np.array(faceNormal(mesh[0]))
 F = np.array((1, -1, 1))
 veci = np.array((0, 0, 0))
 #print(np.array(faceNormals[0]).dot((1,1,1)))    # n dot u   or vD in old
-vD = np.array(faceNormals[0]).dot(F)
+vD = np.array(faceNormal(mesh[0])).dot(F)
 if vD <= epsilon:
     print("Nyet, no hit")
     #return
