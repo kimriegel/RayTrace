@@ -1,0 +1,9 @@
+// Computational Domain Parameters		
+extra_dim_x	= 10	// Extra space in x_direction to capture diffraction patterns near buildings [m]
+extra_dim_y	= 10	// Extra space in y_direction to capture diffraction patterns near buildings [m]
+buffer_dim_x	= 10	// Extra space in x-direction to ensure all of incident and reflected booms are initiated [m]
+buffer_dim_z	= 10	// Extra space to z-direction ensure all of incident and reflected booms are initiated [m]
+
+// Wall Geometry		
+wall_height	= 1.8	// Height of the wall in between the building [m]
+wall_thickness	= 0.2	// Thickness of the wall in between the building [m]
