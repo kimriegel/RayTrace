@@ -1245,3 +1245,19 @@ Trying really hard to graduate in this span of time, not much progress
 9/18/19
 
       Changed myFaces to mesh and used a list comphehension to get it because those look really cool
+
+10/2/19
+      Friend sent a ray intersection algorithm 
+
+10/12/19
+      Have been looking into this an several other algorithms
+
+      The one I've been looking over may be slow as it was presented, but will likely speed up similar to how py1.0 sped up in py1.1
+
+      I've also glanced over Moller-Trumble algorithm. It seems relatively fast, but when I looked into stack overflow for problems 
+      people have had with it in python it seems to slow down very much. It inherently makes use of linear math for speed so it may 
+      resemble the all-memory prototypeand upscale poorly but run fast on small tests.
+
+      Table for now but will keep in mind later
+
+      I will continue playing with the basic intersection alg from friend

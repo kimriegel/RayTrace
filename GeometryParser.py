@@ -6,6 +6,9 @@ import pywavefront as pwf
 
 def isHit(near,far,veci,F):
     """
+
+    *** unused?
+
     Returns a bool if the surface is hit or not
     Standin for the old box function for now
     Goal is to look for dxnear 
@@ -88,7 +91,6 @@ PolyBuilding=0
 mesh = [(vertices[f[0]],vertices[f[1]],vertices[f[2]]) for f in env.mesh.faces]
 
 #face = myFaces
-
 
 def faceNormal(face):
     a = np.array(face[0])
