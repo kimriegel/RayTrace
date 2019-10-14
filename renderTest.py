@@ -37,7 +37,14 @@
 
 import numpy as np
 
-
+def faceNormal(face):
+    a = np.array(face[0])
+    b = np.array(face[1])
+    c = np.array(face[2])
+    d = np.cross((b-a),(c-a))   # [D]irection
+    normal = d/np.sqrt(d.dot(d))
+    # Where n is [n]ot [a] [n]umber, return 0, else return n
+    return tuple(normal)
 
 # Triangle
 #def triTest(v):
@@ -75,8 +82,52 @@ def triTest(tri,P,N):
     
     return np.all(sha) # return whether all conditions were met or not
 
+def edgeTest(triangle,P,N):
+    """     Checks if some point P is inside a triangle, uses a given Normal    """
+    edge = np.array((triangle[1] - triangle[0]), 
+                    (triangle[2] - triangle[1]), 
+                    (triangle[0] - triangle[2]))
+
+    chi = np.array( (P - triangle[0]), 
+                    (P - triangle[1]), 
+                    (P - triangle[2]))
+    
+    sha = ( N.dot(edge[0].cross(chi[0])) > 0, 
+            N.dot(edge[1].cross(chi[1])) > 0, 
+            N.dot(edge[2].cross(chi[2])) > 0)
+
 
 # compute normal
+def foo(FACE,VECI,F):
+    """
+    find if a ray hits the face for our mesh function
+    the caps lock just reinforces that the variables are only used inside this function set
+    """
+    N = faceNormal(FACE)    # compute normal
+    # find intersection [P]oint
+        # parallel check
+    eps = 0.01              # how small it has to be not to count, exists inside function for debugging
+    NF = np.dot(N,F)        # rayDir in notes, plane normal dor F
+    isParallel = (abs(NF) < eps)    # bool
+    if isParallel:
+        print('parallel')
+        return               #ray does not hit, find an output to express that
+
+    d = np.dot(N,FACE[0])   # is tri[0] and v0 in notes
+
+    # find distance between origin and intersect
+    t = (np.dot(N,VECI) + d) / NF
+    if (t < 0):         # ray starts behind the face, break
+        return
+
+    p = VECI + (t * F)
+    if (p > stepSize):
+        return          # does not hit inside step, ignore it
+
+    else:
+        isHit = edgeTest()
+    
+
 
 # find intersection [P]oint
     #check if parallel
@@ -127,3 +178,7 @@ stepSize = 10 # Pf.h
 #N.dot( edge0.cross(C0) )
 #N.dot( edge1.cross(C1) )
 #N.dot( edge2.cross(C2) )
+
+testFace = ((0,0,0),(1,0,0),(1,1,0))
+testRay = (0,0,1)
+rayF = (0,0,-1)

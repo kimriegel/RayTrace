@@ -1261,3 +1261,15 @@ Trying really hard to graduate in this span of time, not much progress
       Table for now but will keep in mind later
 
       I will continue playing with the basic intersection alg from friend
+
+10/14/19
+
+          The numbers haunted my dreams. I coded.
+
+          The example code given was straight forward but had pitfalls
+            It used the letter "O" as a variable
+            It used the letter "C" to represent two different things
+
+            O is the ray origin, therefore it is now veci
+            The second C was used to represent a cross product
+              It is now Chi
