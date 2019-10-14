@@ -61,23 +61,69 @@ def triTest(tri,P,N):
     c1 = P - tri[1]
     c2 = P - tri[2]
 
-    (N.dot( edge0.cross(C0) ), 
-    N.dot( edge1.cross(C1) ), 
-    N.dot( edge2.cross(C2) ))
+    # check if products are positive
+    
+    sha = ( N.dot(edge0.cross(c0)) > 0, 
+            N.dot(edge1.cross(c1)) > 0, 
+            N.dot(edge2.cross(c2)) > 0)
+
+    # variables were not previously defined as arrays. 
+    # This is a backup if they need to be, otherwise useless
+    #sha =   ( np.dot(N,np.cross(edge0,c0) > 0,
+    #        ( np.dot(N,np.cross(edge1,c1) > 0,
+    #        ( np.dot(N,np.cross(edge2,c2) > 0))
+    
+    return np.all(sha) # return whether all conditions were met or not
+
+
+# compute normal
+
+# find intersection [P]oint
+    #check if parallel
+eps = 0.01              # how small it has to be not to count
+rayDir = np.dot(N,F)    #plane normal dot F
+# ^ this is n dot r   break here if 0
+isParallel = (abs(rayDir) < eps )
+# return if is Parallel or not
+
+# find distance from origin to the face
+d = np.dot(N,v0)
+
+# find t
+# the letter 'O' is a terrible variable name, why did someone write that?
+t = (np.dot(N,origin) + d ) / rayDir
+isBehind = (t < 0)      # check if ray is starting behind face
+# break? if behind or?
+
+# find intersection
+p = origin + (t * F) 
+# if (p > stepSize):
+#    ignore this then
+
+# if and only if p is within our step should we continue
+
+#Now we find if p is inside face
 
 
 
 
-edge0 = v1 - v0
-edge1 = v2 - v1
-edge2 = v0 - v2
 
-c0 = P - v0
-c1 = P - v1
-c2 = P - v2
 
-# just a placeholder for now
-# eventually turn into an array to use linear math to speed this up
-N.dot( edge0.cross(C0) )
-N.dot( edge1.cross(C1) )
-N.dot( edge2.cross(C2) )
+
+
+stepSize = 10 # Pf.h
+
+
+#edge0 = v1 - v0
+#edge1 = v2 - v1
+#edge2 = v0 - v2
+#
+#c0 = P - v0
+#c1 = P - v1
+#c2 = P - v2
+#
+## just a placeholder for now
+## eventually turn into an array to use linear math to speed this up
+#N.dot( edge0.cross(C0) )
+#N.dot( edge1.cross(C1) )
+#N.dot( edge2.cross(C2) )
