@@ -96,6 +96,8 @@ def edgeTest(triangle,P,N):
             N.dot(edge[1].cross(chi[1])) > 0, 
             N.dot(edge[2].cross(chi[2])) > 0)
 
+    return np.all(sha)
+
 
 # compute normal
 def foo(FACE,VECI,F):
@@ -111,45 +113,46 @@ def foo(FACE,VECI,F):
     isParallel = (abs(NF) < eps)    # bool
     if isParallel:
         print('parallel')
-        return               #ray does not hit, find an output to express that
+        return False        #ray does not hit, find an output to express that
 
     d = np.dot(N,FACE[0])   # is tri[0] and v0 in notes
 
     # find distance between origin and intersect
     t = (np.dot(N,VECI) + d) / NF
     if (t < 0):         # ray starts behind the face, break
-        return
+        return False
 
     p = VECI + (t * F)
     if (p > stepSize):
-        return          # does not hit inside step, ignore it
+        return False    # does not hit inside step, ignore it
 
-    else:
-        isHit = edgeTest()
-    
+    else:               # if and only if it hits within the step then
+        isHit = edgeTest(FACE,p,N)
+        return isHit
+        #return p        # should return p as it is the dx, just a placeholder for now
 
+#
+## find intersection [P]oint
+#    #check if parallel
+#eps = 0.01              # how small it has to be not to count
+#rayDir = np.dot(N,F)    #plane normal dot F
+## ^ this is n dot r   break here if 0
+#isParallel = (abs(rayDir) < eps )
+## return if is Parallel or not
+#
+## find distance from origin to the face
+#d = np.dot(N,v0)
+#
+## find t
+## the letter 'O' is a terrible variable name, why did someone write that?
+#t = (np.dot(N,origin) + d ) / rayDir
+#isBehind = (t < 0)      # check if ray is starting behind face
+## break? if behind or?
 
-# find intersection [P]oint
-    #check if parallel
-eps = 0.01              # how small it has to be not to count
-rayDir = np.dot(N,F)    #plane normal dot F
-# ^ this is n dot r   break here if 0
-isParallel = (abs(rayDir) < eps )
-# return if is Parallel or not
-
-# find distance from origin to the face
-d = np.dot(N,v0)
-
-# find t
-# the letter 'O' is a terrible variable name, why did someone write that?
-t = (np.dot(N,origin) + d ) / rayDir
-isBehind = (t < 0)      # check if ray is starting behind face
-# break? if behind or?
-
-# find intersection
-p = origin + (t * F) 
-# if (p > stepSize):
-#    ignore this then
+## find intersection
+#p = origin + (t * F) 
+## if (p > stepSize):
+##    ignore this then
 
 # if and only if p is within our step should we continue
 
