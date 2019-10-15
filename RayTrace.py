@@ -18,6 +18,7 @@ import Parameterfile as Pf
 import BuildingGeometry as Bg
 import Functions as Fun
 import ReceiverPointSource as Rps   # For receivers
+import GeometryParser as Gp
 # import GeometryParser as Bg
 
 import time                         # Time checks
@@ -211,9 +212,27 @@ else:
 
 rayCounter = 0
 
-if Pf.h < (2*Pf.radius):
+if Pf.h < (2 * Pf.radius):
     print('h is less than 2r')
     raise SystemExit
+
+    # commands to actually use parser
+################"""
+################Checks if and where a ray hits a plane
+################"""
+#################epsilon = 0.0
+################planePoint = np.array(mesh[0])
+################normalPlane = np.array(faceNormal(mesh[0]))
+#################veci = np.array((0, 0, 0))
+#################F = np.array((1, -1, 1))
+#################F = np.array((1, 1, 1))
+################veci = np.array((10, 40, 0))
+################F = np.array((0, 0, 1))
+################
+################print(planePoint)
+################collisionCheck(planePoint,veci,F)
+
+
 
 # These are for debugging, Uncomment this block and comment out the for loop below
 # ray = 606                     # @ Pf.boomSpacing = 1
@@ -303,6 +322,22 @@ for ray in boomCarpet:              # Written like this for readability
                 Vecip1 = veci + np.multiply(dxBuilding, F)
                 whichBox = Q
                 nBox = Fun.plane(Vecip1, Bg.BoxArrayNear[whichBox], Bg.BoxArrayFar[whichBox], planeHit)
+
+        #   Implement Geometry parser
+            #"""
+            #Checks if and where a ray hits a plane
+            #"""
+            #planePoint = np.array(mesh[0])
+            #normalPlane = np.array(faceNormal(mesh[0]))
+            ##veci = np.array((0, 0, 0))
+            ##F = np.array((1, -1, 1))
+            #collisionCheck(planePoint,veci,F)
+
+        for face in Gp.mesh:
+            foo = Gp.collisionCheck(face,veci,F)
+            if foo == True:
+                print(foo,hit,'dxbuilding: ',dxBuilding)
+
         # This part doesn't really work well.  We have not incorporated it.
         # Eventually all interactions will be triangles anyway so I'm leaving it here to be updated.
 

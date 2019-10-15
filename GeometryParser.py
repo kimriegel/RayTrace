@@ -2,7 +2,10 @@
 # much of it is hardcoded, but that can all be fixes
 import numpy as np
 import pywavefront as pwf
+from Parameterfile import h as stepSize     #temporary, just used to make sure we do not overstep
+
 #FaceNormals = [(-1,0,0),(0,1,0),(1,0,0),(0,-1,0),(0,0,1)]  Desired
+epsilon = 1e-6  # how small angle between ray and plane has to be to count as parallel
 
 def isHit(near,far,veci,F):
     """
@@ -18,6 +21,37 @@ def isHit(near,far,veci,F):
     step
     """
 
+
+
+def faceNormal(face):
+    a = np.array(face[0])
+    b = np.array(face[1])
+    c = np.array(face[2])
+    d = np.cross((b-a),(c-a))   # [D]irection
+    #normal = d/np.sqrt(d.dot(d))   # doesn't seem like we need to normalize
+    # Where n is [n]ot [a] [n]umber, return 0, else return n
+    #return normal
+    return d
+
+def edgeTest(triangle,P,N):
+    """
+    Checks if some point P is inside a triangle, uses a given Normal
+    """
+
+    edge = ((triangle[1] - triangle[0]), 
+            (triangle[2] - triangle[1]), 
+            (triangle[0] - triangle[2]))
+
+    chi =  ((P - triangle[0]), 
+            (P - triangle[1]), 
+            (P - triangle[2]))
+
+    sha = ( N.dot(np.cross(edge[0],chi[0])) > 0, 
+            N.dot(np.cross(edge[1],chi[1])) > 0, 
+            N.dot(np.cross(edge[2],chi[2])) > 0)
+
+    return np.all(sha)
+
 def LinePlaneCollision(planeNormal, planePoint, rayDirection, rayPoint, epsilon=1e-6):
  
 	ndotu = planeNormal.dot(rayDirection)
@@ -28,6 +62,46 @@ def LinePlaneCollision(planeNormal, planePoint, rayDirection, rayPoint, epsilon=
 	si = -planeNormal.dot(w) / ndotu
 	Psi = w + si * rayDirection + planePoint
 	return Psi
+
+#def foo(FACE,VECI,F):
+def collisionCheck(FACE,VECI,F):
+    """
+    find if a ray hits the face for our mesh function
+
+    the caps lock just reinforces that the variables are only used inside this function set
+    """
+    F = np.array(F)         # hotfix
+    N = faceNormal(FACE)    # compute plane normal
+            # Finding intersection [P]oint
+    # parallel check
+    NF = np.dot(N,F)        # rayDir in notes, plane normal dot F
+    isParallel = (abs(NF) < epsilon)    # bool, vD in old code
+    #print('NF ',NF)
+    if isParallel:
+        print('parallel')
+        return False        #ray does not hit, find an output to express that
+
+    d = np.dot(N,FACE[0])   # is tri[0] and v0 in notes
+
+    # find distance between origin and intersect
+    t = -(np.dot(N,VECI) + d) / NF          # dx, distance that ray travels
+    print('t is ', t)
+    if (t < 0):         # ray starts behind the face, break
+        print('ray behind face')
+        return False
+    elif (t > stepSize):
+        print('too far away, ignoring')
+        return False    # does not hit inside step, ignore it
+
+    else:               # if and only if it hits within the step then
+        p = VECI + (t * F)
+        isHit = edgeTest(FACE,p,N)
+        #if isHit:
+        #    print('hits at ', p)
+        return isHit
+        #return p        # should return p as it is the dx, just a placeholder for now
+
+
  
 #if __name__ == "__main__":
 #
@@ -82,46 +156,45 @@ TriangleNumber=0
 SquareNumber=0
 PolyBuilding=0
 
+mesh = [np.array((vertices[f[0]],vertices[f[1]],vertices[f[2]])) for f in env.mesh.faces]
 ## start here
 #myFaces = []
 #    # trying to make more usable faces
 #for f in env.mesh.faces:
 #    myFaces.append((vertices[f[0]],vertices[f[1]],vertices[f[2]]))
 
-mesh = [(vertices[f[0]],vertices[f[1]],vertices[f[2]]) for f in env.mesh.faces]
 
 #face = myFaces
 
-def faceNormal(face):
-    a = np.array(face[0])
-    b = np.array(face[1])
-    c = np.array(face[2])
-    d = np.cross((b-a),(c-a))   # [D]irection
-    normal = d/np.sqrt(d.dot(d))
-    # Where n is [n]ot [a] [n]umber, return 0, else return n
-    return tuple(normal)
 
 #print(myFaces)
 
-"""
-Checks if and where a ray hits a plane
-"""
-epsilon = 0.0
-planePoint = np.array(mesh[0])
-normalPlane = np.array(faceNormal(mesh[0]))
-F = np.array((1, -1, 1))
-veci = np.array((0, 0, 0))
-#print(np.array(faceNormals[0]).dot((1,1,1)))    # n dot u   or vD in old
-vD = np.array(faceNormal(mesh[0])).dot(F)
-if vD <= epsilon:
-    print("Nyet, no hit")
-    #return
-# a donde
-ein = veci - planePoint                         # w
-zwei = -np.dot(normalPlane, ein)/ vD            # si
-drei = ein + zwei * F + planePoint              # psi
-#return drei
-# el fin
+#####"""
+#####Checks if and where a ray hits a plane
+#####"""
+######epsilon = 0.0
+#####planePoint = np.array(mesh[0])
+#####normalPlane = np.array(faceNormal(mesh[0]))
+######veci = np.array((0, 0, 0))
+######F = np.array((1, -1, 1))
+######F = np.array((1, 1, 1))
+#####veci = np.array((10, 40, 0))
+#####F = np.array((0, 0, 1))
+#####
+#####print(planePoint)
+#####collisionCheck(planePoint,veci,F)
+#####
+####################print(np.array(faceNormals[0]).dot((1,1,1)))    # n dot u   or vD in old
+###################vD = np.array(faceNormal(mesh[0])).dot(F)
+###################if vD <= epsilon:
+###################    print("Nyet, no hit")
+###################    #return
+#################### a donde
+###################ein = veci - planePoint                         # w
+###################zwei = -np.dot(normalPlane, ein)/ vD            # si
+###################drei = ein + zwei * F + planePoint              # psi
+####################return drei
+#################### el fin
 
 #if __name__=="__main__":
 #	#Define plane
