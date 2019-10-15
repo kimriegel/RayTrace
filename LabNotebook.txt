@@ -1273,3 +1273,16 @@ Trying really hard to graduate in this span of time, not much progress
             O is the ray origin, therefore it is now veci
             The second C was used to represent a cross product
               It is now Chi
+
+
+
+          Is there a reason for the check to see if the ray starts behind the face
+            I know we need to know that the ray doesn't cross the boundary,
+            but it seems that it's causing too many problems as it exists now
+
+
+10/15/19
+          Tossed a -1 into t to get it to register rays facing it correctly.
+
+          After other minor bug fixes the renderer is finally in beta.
+          Testing can now begin.

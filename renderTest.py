@@ -102,13 +102,22 @@ def triTest(tri,P,N):
 
 def edgeTest(triangle,P,N):
     """     Checks if some point P is inside a triangle, uses a given Normal    """
-    edge = (np.array(triangle[1] - triangle[0]), 
-            np.array(triangle[2] - triangle[1]), 
-            np.array(triangle[0] - triangle[2]))
+    #edge = (np.array(triangle[1] - triangle[0]), 
+    #        np.array(triangle[2] - triangle[1]), 
+    #        np.array(triangle[0] - triangle[2]))
 
-    chi =  (np.array(P - triangle[0]), 
-            np.array(P - triangle[1]), 
-            np.array(P - triangle[2]))
+    edge = ((triangle[1] - triangle[0]), 
+            (triangle[2] - triangle[1]), 
+            (triangle[0] - triangle[2]))
+
+    #chi =  (np.array(P - triangle[0]), 
+    #        np.array(P - triangle[1]), 
+    #        np.array(P - triangle[2]))
+
+    chi =  ((P - triangle[0]), 
+            (P - triangle[1]), 
+            (P - triangle[2]))
+    
     
     #sha = ( N.dot(edge[0].cross(chi[0])) > 0, 
     #        N.dot(edge[1].cross(chi[1])) > 0, 
@@ -121,7 +130,7 @@ def edgeTest(triangle,P,N):
 
     return np.all(sha)
 
-def foo(FACE,VECI,F: np.array):
+def foo(FACE,VECI,F):
     """
     find if a ray hits the face for our mesh function
     the caps lock just reinforces that the variables are only used inside this function set
@@ -133,7 +142,7 @@ def foo(FACE,VECI,F: np.array):
     eps = 0.01              # how small it has to be not to count, exists inside function for debugging
     NF = np.dot(N,F)        # rayDir in notes, plane normal dor F
     isParallel = (abs(NF) < eps)    # bool
-    print('NF ',NF)
+    #print('NF ',NF)
     if isParallel:
         print('parallel')
         return False        #ray does not hit, find an output to express that
@@ -142,7 +151,7 @@ def foo(FACE,VECI,F: np.array):
 
     # find distance between origin and intersect
     t = -(np.dot(N,VECI) + d) / NF 
-    print('t is ', t)
+    #print('t is ', t)
     if (t < 0):         # ray starts behind the face, break
         print('ray behind face')
         return False
@@ -153,7 +162,9 @@ def foo(FACE,VECI,F: np.array):
     else:               # if and only if it hits within the step then
         p = VECI + (t * F)
         isHit = edgeTest(FACE,p,N)
-        print('hits at ', p)
+        if isHit:
+            print('hits at ', p)
+        #print('hits at ', p)               # forgot to put this inside the conditional, oops haha
         return isHit
         #return p        # should return p as it is the dx, just a placeholder for now
 
@@ -205,19 +216,28 @@ testFace = (np.array((0,0,0)),np.array((1,0,0)),np.array((1,1,0)))
 # face must be a tuple of arrays
 #testRay = (0,0,1)
 #rayF = (0,0,-1)
-R1 = np.array((0,0,1))
+R1 = np.array((0,0,1))      # hit
 F1 = np.array((0,0,-1))
-R2 = np.array((0,0,-1))
+R2 = np.array((0,0,-1))     # hit
 F2 = np.array((0,0,1))
-R3 = np.array((0,0,0))
+R3 = np.array((0,0,0))      # para
 F3 = np.array((0,1,0))
-R4 = np.array((1,0,0))
+R4 = np.array((1,0,0))      #para
 F4 = np.array((0,1,0))
+R5 = np.array((0,0,-11))    # far
+F5 = np.array((0,0,1))
+R6 = np.array((0,7,1))      # miss
+F6 = np.array((0,0,-1))
+R7 = np.array((0,0,0))      # start in tri
+F7 = np.array((0,0,-1))
+
 
 #foo(testFace,testRay,rayF)
 print('normal ',faceNormal(testFace))
-foo(testFace,R1,F1)
-#foo(testFace,R2,F2)
-#foo(testFace,R3,F3)
-#foo(testFace,R4,F4)
-
+print("R1",foo(testFace,R1,F1))
+print("R2",foo(testFace,R2,F2))
+print("R3",foo(testFace,R3,F3))
+print("R4",foo(testFace,R4,F4))
+print("R5",foo(testFace,R5,F5))
+print("R6",foo(testFace,R6,F6))
+print("R7",foo(testFace,R7,F7))
