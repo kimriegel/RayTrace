@@ -1286,3 +1286,24 @@ Trying really hard to graduate in this span of time, not much progress
 
           After other minor bug fixes the renderer is finally in beta.
           Testing can now begin.
+
+          Rays not bouncing at known points
+
+          Env/SingleBuildingTest is a very large skyscraper floating in midair.
+            Just a tiny bit unrealistic
+            This explains the bouncing
+
+          Remade geometry file.
+
+          Finally fixed the notation by using brute force.
+          Currently the following, but will optimize later:
+            print(  vertices[f[0]][0],      #YES
+            vertices[f[0]][2],
+            vertices[f[0]][1])
+
+          Upscaled to:
+            print(
+                  (vertices[f[0]][0], vertices[f[0]][2], vertices[f[0]][1]),
+                  (vertices[f[1]][0], vertices[f[1]][2], vertices[f[1]][1]),
+                  (vertices[f[2]][0], vertices[f[2]][2], vertices[f[2]][1])
+            )

@@ -2,26 +2,10 @@
 # much of it is hardcoded, but that can all be fixes
 import numpy as np
 import pywavefront as pwf
-from Parameterfile import h as stepSize     #temporary, just used to make sure we do not overstep
-
+#from Parameterfile import h as stepSize     #temporary, just used to make sure we do not overstep
+stepSize = 100
 #FaceNormals = [(-1,0,0),(0,1,0),(1,0,0),(0,-1,0),(0,0,1)]  Desired
 epsilon = 1e-6  # how small angle between ray and plane has to be to count as parallel
-
-def isHit(near,far,veci,F):
-    """
-
-    *** unused?
-
-    Returns a bool if the surface is hit or not
-    Standin for the old box function for now
-    Goal is to look for dxnear 
-        aka dxbuilding
-    
-    This is very important to register that something is hit during a 
-    step
-    """
-
-
 
 def faceNormal(face):
     a = np.array(face[0])
@@ -52,16 +36,16 @@ def edgeTest(triangle,P,N):
 
     return np.all(sha)
 
-def LinePlaneCollision(planeNormal, planePoint, rayDirection, rayPoint, epsilon=1e-6):
- 
-	ndotu = planeNormal.dot(rayDirection)
-	if abs(ndotu) < epsilon:
-		raise RuntimeError("no intersection or line is within plane")
- 
-	w = rayPoint - planePoint
-	si = -planeNormal.dot(w) / ndotu
-	Psi = w + si * rayDirection + planePoint
-	return Psi
+#def LinePlaneCollision(planeNormal, planePoint, rayDirection, rayPoint, epsilon=1e-6):
+# 
+#	ndotu = planeNormal.dot(rayDirection)
+#	if abs(ndotu) < epsilon:
+#		raise RuntimeError("no intersection or line is within plane")
+# 
+#	w = rayPoint - planePoint
+#	si = -planeNormal.dot(w) / ndotu
+#	Psi = w + si * rayDirection + planePoint
+#	return Psi
 
 #def foo(FACE,VECI,F):
 def collisionCheck(FACE,VECI,F):
@@ -78,26 +62,29 @@ def collisionCheck(FACE,VECI,F):
     isParallel = (abs(NF) < epsilon)    # bool, vD in old code
     #print('NF ',NF)
     if isParallel:
-        print('parallel')
+        #print('parallel',FACE)
         return False        #ray does not hit, find an output to express that
 
     d = np.dot(N,FACE[0])   # is tri[0] and v0 in notes
 
     # find distance between origin and intersect
     t = -(np.dot(N,VECI) + d) / NF          # dx, distance that ray travels
-    print('t is ', t)
+    #print('t is ', t)
     if (t < 0):         # ray starts behind the face, break
-        print('ray behind face')
+        #print('ray behind face',FACE)
         return False
     elif (t > stepSize):
-        print('too far away, ignoring')
+        #print('too far away, ignoring',FACE)
         return False    # does not hit inside step, ignore it
 
     else:               # if and only if it hits within the step then
         p = VECI + (t * F)
+        #print('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
+        #print(p,FACE)
         isHit = edgeTest(FACE,p,N)
-        #if isHit:
-        #    print('hits at ', p)
+        print(isHit)
+        if isHit == True:
+            print('hits at ', p,FACE)
         return isHit
         #return p        # should return p as it is the dx, just a placeholder for now
 
@@ -138,7 +125,8 @@ def collisionCheck(FACE,VECI,F):
 #    #    print(n)
 
 #ipname = 'Env/SingleBuilding.obj'
-ipname = 'Env/SingleBuildingTest.obj'
+#ipname = 'Env/SingleBuildingTest.obj'
+ipname = 'Env/SingleBuilding.obj'
 #ipname = 'TwoWalls.obj'
 ipfile = pwf.Wavefront(ipname)    # Read in geometry file
 env = pwf.ObjParser(ipfile,ipname, strict=False, encoding="utf-8", 
@@ -157,14 +145,119 @@ SquareNumber=0
 PolyBuilding=0
 
 mesh = [np.array((vertices[f[0]],vertices[f[1]],vertices[f[2]])) for f in env.mesh.faces]
-## start here
-#myFaces = []
-#    # trying to make more usable faces
-#for f in env.mesh.faces:
-#    myFaces.append((vertices[f[0]],vertices[f[1]],vertices[f[2]]))
+
+veci = np.array([65.64138185, 26.74269388,  8.06987805])
+F =    np.array([-0.94808515, -0.29638514,  0.11528397])
 
 
+#for face in mesh:
+##    print(face)
+#    foo = collisionCheck(face,veci,F)
+    #if foo == True:
+    #    print(foo,hit,'dxbuilding: ',dxBuilding)
+
+
+
+
+
+# start here
+myFaces = []
+    # trying to make more usable faces
+#print(mesh)
+for f in env.mesh.faces:
+    myFaces.append((vertices[f[0]],vertices[f[1]],vertices[f[2]]))
+#print(myFaces)
+
+print(env.mesh.faces[0])
+print(env.wavefront.vertices[0])
+print(env.wavefront.vertices[0][0])
+AAAA = [np.array((vertices[f[0]],vertices[f[1]],vertices[f[2]])) for f in env.mesh.faces]
+#print(AAAA[0])
+#for i in mesh:
+#    print(i)
+#    print(i[0])
+#    print(i[:,0])
+#BruteForce = 
 #face = myFaces
+#print(  vertices[f[0]][0],
+#        vertices[f[1]][0],
+#        vertices[f[2]][0])
+###print(  vertices[f[0]][0],      #YES
+###        vertices[f[0]][1],
+###        vertices[f[0]][2])
+
+print(  vertices[f[0]][0],      #YES
+        vertices[f[0]][2],
+        vertices[f[0]][1])
+
+print(
+        (vertices[f[0]][0], vertices[f[0]][2], vertices[f[0]][1]),
+        (vertices[f[1]][0], vertices[f[1]][2], vertices[f[1]][1]),
+        (vertices[f[2]][0], vertices[f[2]][2], vertices[f[2]][1])
+)
+
+print(
+    
+        np.array((vertices[f[0]][0], vertices[f[0]][2], vertices[f[0]][1])),
+        np.array((vertices[f[1]][0], vertices[f[1]][2], vertices[f[1]][1])),
+        np.array((vertices[f[2]][0], vertices[f[2]][2], vertices[f[2]][1])) 
+
+)
+
+print(
+type((        
+        np.array((vertices[f[0]][0], vertices[f[0]][2], vertices[f[0]][1])),
+        np.array((vertices[f[1]][0], vertices[f[1]][2], vertices[f[1]][1])),
+        np.array((vertices[f[2]][0], vertices[f[2]][2], vertices[f[2]][1])) 
+))
+)
+
+print(
+            [
+        np.array((vertices[f[0]][0], vertices[f[0]][2], vertices[f[0]][1])),
+        np.array((vertices[f[1]][0], vertices[f[1]][2], vertices[f[1]][1])),
+        np.array((vertices[f[2]][0], vertices[f[2]][2], vertices[f[2]][1])) 
+        ]
+)
+force = [
+        np.array((vertices[f[0]][0], vertices[f[0]][2], vertices[f[0]][1])),
+        np.array((vertices[f[1]][0], vertices[f[1]][2], vertices[f[1]][1])),
+        np.array((vertices[f[2]][0], vertices[f[2]][2], vertices[f[2]][1])) 
+        ]
+print(force[0])
+
+#print([
+#        [
+#        (vertices[f[0]][0], vertices[f[0]][2], vertices[f[0]][1]),
+#        (vertices[f[1]][0], vertices[f[1]][2], vertices[f[1]][1]),
+#        (vertices[f[2]][0], vertices[f[2]][2], vertices[f[2]][1])]
+#    for f in env.mesh.faces
+#    ])
+
+force = ([
+        [
+        (vertices[f[0]][0], vertices[f[0]][2], vertices[f[0]][1]),
+        (vertices[f[1]][0], vertices[f[1]][2], vertices[f[1]][1]),
+        (vertices[f[2]][0], vertices[f[2]][2], vertices[f[2]][1])]
+    for f in env.mesh.faces
+    ])
+
+print(force[0])
+print(force[0][1])
+print(force)
+BRUTEFORCE = 
+
+([
+        [
+        ((vertices[f[0]][0], vertices[f[0]][2], vertices[f[0]][1])),
+        ((vertices[f[1]][0], vertices[f[1]][2], vertices[f[1]][1])),
+        ((vertices[f[2]][0], vertices[f[2]][2], vertices[f[2]][1]))]
+    for f in env.mesh.faces
+    ])
+
+
+mesh = [np.array((vertices[f[0]],vertices[f[1]],vertices[f[2]])) for f in env.mesh.faces]
+#mesh = [np.array((vertices[f[:,0]],vertices[f[:,1]],vertices[f[:,2]])) for f in env.mesh.faces]        #nope
 
 
 #print(myFaces)

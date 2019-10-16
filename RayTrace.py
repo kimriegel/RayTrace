@@ -333,10 +333,10 @@ for ray in boomCarpet:              # Written like this for readability
             ##F = np.array((1, -1, 1))
             #collisionCheck(planePoint,veci,F)
 
-        for face in Gp.mesh:
-            foo = Gp.collisionCheck(face,veci,F)
-            if foo == True:
-                print(foo,hit,'dxbuilding: ',dxBuilding)
+        #for face in Gp.mesh:
+        #    foo = Gp.collisionCheck(face,veci,F)
+        #    if foo == True:
+        #        print(foo,hit,'dxbuilding: ',dxBuilding)
 
         # This part doesn't really work well.  We have not incorporated it.
         # Eventually all interactions will be triangles anyway so I'm leaving it here to be updated.
@@ -440,6 +440,7 @@ for ray in boomCarpet:              # Written like this for readability
 #                                        patchArray[Q, W, 6] = abs(temp4)
 #                                        patchArray[Q, W, 7] = np.arctan(temp4.imag,temp4.real)
             if dx == dxBuilding:   # if the ray hits the building then change the direction and continue
+                print(veci,F)
                 veci += (dx * F)
                 print('hit building at step ', I, veci)
                 n2 = np.dot(nBox, nBox)

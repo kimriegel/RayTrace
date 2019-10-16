@@ -212,32 +212,48 @@ stepSize = 10 # Pf.h
 #N.dot( edge1.cross(C1) )
 #N.dot( edge2.cross(C2) )
 
-testFace = (np.array((0,0,0)),np.array((1,0,0)),np.array((1,1,0)))
-# face must be a tuple of arrays
-#testRay = (0,0,1)
-#rayF = (0,0,-1)
-R1 = np.array((0,0,1))      # hit
-F1 = np.array((0,0,-1))
-R2 = np.array((0,0,-1))     # hit
-F2 = np.array((0,0,1))
-R3 = np.array((0,0,0))      # para
-F3 = np.array((0,1,0))
-R4 = np.array((1,0,0))      #para
-F4 = np.array((0,1,0))
-R5 = np.array((0,0,-11))    # far
-F5 = np.array((0,0,1))
-R6 = np.array((0,7,1))      # miss
-F6 = np.array((0,0,-1))
-R7 = np.array((0,0,0))      # start in tri
-F7 = np.array((0,0,-1))
+#testFace = (np.array((0,0,0)),np.array((1,0,0)),np.array((1,1,0)))
+## face must be a tuple of arrays
+##testRay = (0,0,1)
+##rayF = (0,0,-1)
+#R1 = np.array((0,0,1))      # hit
+#F1 = np.array((0,0,-1))
+#R2 = np.array((0,0,-1))     # hit
+#F2 = np.array((0,0,1))
+#R3 = np.array((0,0,0))      # para
+#F3 = np.array((0,1,0))
+#R4 = np.array((1,0,0))      #para
+#F4 = np.array((0,1,0))
+#R5 = np.array((0,0,-11))    # far
+#F5 = np.array((0,0,1))
+#R6 = np.array((0,7,1))      # miss
+#F6 = np.array((0,0,-1))
+#R7 = np.array((0,0,0))      # start in tri
+#F7 = np.array((0,0,-1))
+#
+#
+##foo(testFace,testRay,rayF)
+#print('normal ',faceNormal(testFace))
+#print("R1",foo(testFace,R1,F1))
+#print("R2",foo(testFace,R2,F2))
+#print("R3",foo(testFace,R3,F3))
+#print("R4",foo(testFace,R4,F4))
+#print("R5",foo(testFace,R5,F5))
+#print("R6",foo(testFace,R6,F6))
+#print("R7",foo(testFace,R7,F7))
 
+# should not work, doesn't
 
-#foo(testFace,testRay,rayF)
-print('normal ',faceNormal(testFace))
-print("R1",foo(testFace,R1,F1))
-print("R2",foo(testFace,R2,F2))
-print("R3",foo(testFace,R3,F3))
-print("R4",foo(testFace,R4,F4))
-print("R5",foo(testFace,R5,F5))
-print("R6",foo(testFace,R6,F6))
-print("R7",foo(testFace,R7,F7))
+psi = np.array([-10.     ,      3.09610312,  17.26761603]) 
+ABC = np.array([    [10.   ,  10.      ,0.    ],
+                    [10.   ,  10.      ,8.2423],
+                    [10.   ,  46.93    ,8.2423]])
+
+print(edgeTest(ABC,psi,faceNormal(ABC)))
+
+# shouldn't work, does
+psi = np.array([-10.      ,     3.09610312 , 17.26761603])
+ABC = np.array(    [[10.   ,     0.      , 10.      ],
+                    [10.   ,     0.      , 46.931599],
+                    [10.   ,     8.2423  , 10.      ]])
+print(edgeTest(ABC,psi,faceNormal(ABC)))
