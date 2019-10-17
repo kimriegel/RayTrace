@@ -1307,3 +1307,7 @@ Trying really hard to graduate in this span of time, not much progress
                   (vertices[f[1]][0], vertices[f[1]][2], vertices[f[1]][1]),
                   (vertices[f[2]][0], vertices[f[2]][2], vertices[f[2]][1])
             )
+
+10/17/19
+          Included beta of renderer into main file
+            Seems to register negative of geometry

@@ -324,19 +324,11 @@ for ray in boomCarpet:              # Written like this for readability
                 nBox = Fun.plane(Vecip1, Bg.BoxArrayNear[whichBox], Bg.BoxArrayFar[whichBox], planeHit)
 
         #   Implement Geometry parser
-            #"""
-            #Checks if and where a ray hits a plane
-            #"""
-            #planePoint = np.array(mesh[0])
-            #normalPlane = np.array(faceNormal(mesh[0]))
-            ##veci = np.array((0, 0, 0))
-            ##F = np.array((1, -1, 1))
-            #collisionCheck(planePoint,veci,F)
 
-        #for face in Gp.mesh:
-        #    foo = Gp.collisionCheck(face,veci,F)
-        #    if foo == True:
-        #        print(foo,hit,'dxbuilding: ',dxBuilding)
+        for face in Gp.mesh:
+            foo = Gp.collisionCheck(face,veci,F)
+            if foo == True:
+                print(foo,hit,'dxbuilding: ',dxBuilding)
 
         # This part doesn't really work well.  We have not incorporated it.
         # Eventually all interactions will be triangles anyway so I'm leaving it here to be updated.
