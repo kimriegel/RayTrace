@@ -1,0 +1,29 @@
+// For initializing incoming wave
+input_name    = input_boom_original.txt
+fs            = 96000     // Sampling frequency of the input wave time series [Hz]
+input_length_i   = 19202    // Length of the input boom file [samples]
+boom_length_i   = 12000    // Length of the boom portion of the input boom file [samples]
+
+// Simulation parameters
+rho           = 1.21      // Volumetric density of the medium [kg/m^3]
+c0            = 343       // Speed of sound in the medium [m/s]
+dx            = 0.02       // Spatial spacing of a uniform grid [m]
+CFL           = 1.5       // Courant-Fredrich-Lewy number
+t_max         = 0.20     // Time elapsed from the beginning to the end of the simulation [s]
+sigma_m       = 2         // Damping coefficient for PML boundaries
+B             = 2         // Exponential factor for setting damping constants for PML boundaries
+D             = 10        // Thickness of PML boundaries [points]
+angle_elv     = 6.65      // Elevation angle of the incident boom direction [deg]
+angle_azm     = 0       // Azimuthal angle of the incident boom direction, measured from negative x-direction, aligned with the left building wall [deg]
+
+// Rigid structure parameters
+bldg_dim_x    = 2.82     // Building dimension in x [m]
+bldg_dim_y    = 4.82     // Building dimension in y [m]
+bldg_dim_z    = 3.05       // Building dimension in z [m]
+bldg_offset_x = 3              // Building offset from the PML boundary in x [m]
+bldg_offset_y = 3              // Building offset from the PML boundary in y [m]
+
+// Domain size parameters
+buffer_dim_x = 5             // Extra space to avoid input wave getting distorted towards the back in x [m]
+buffer_dim_y = 3             // Extra space to avoid input wave getting distorted towards the back in y [m]
+buffer_dim_z = 5             // Extra space to avoid input wave getting distorted towards the back in z [m]
