@@ -82,6 +82,7 @@ def main():
     # port and import receiver file
     receiverHit = 0
     groundHit = 0
+    buildingHit = 0
 
     # Initialize counters
     XJ = complex(0.0, 1.0)
@@ -118,7 +119,8 @@ def main():
     nInitial = np.sin(Pf.phi) * np.sin(Pf.theta)
     zetaInitial = np.cos(Pf.theta)
     length = np.sqrt(xiInitial * xiInitial + nInitial * nInitial + zetaInitial * zetaInitial)
-
+    FInitial = np.array([xiInitial, nInitial, zetaInitial])
+    D4 = np.dot(FInitial, vInitial)   # equivalent to tmp
     #       Create initial boom array
     #  Roll this all into a function later
     ySpace = Pf.boomspacing * abs(np.cos(Pf.phi))
@@ -132,8 +134,8 @@ def main():
     rayY = Pf.ymin + j * ySpace
     rayZ = Pf.zmin + k * zSpace
 
-    FInitial = np.array([xiInitial, nInitial, zetaInitial])
-    D4 = np.dot(FInitial, vInitial)   # equivalent to tmp
+
+
     boomCarpet = ((vex(D4, FInitial, y, z), y, z) for z in rayZ for y in rayY)
     # Create a receiver array, include a receiver file.
     alphaNothing = np.zeros(sizeFFTTwo)
@@ -198,7 +200,7 @@ def main():
                 alphaBuilding[W, D2] = Pf.tempalphabuilding[W, 7]
 
     # This does not appear to be used, so I commented it out -- r0ml
-    # D3 = np.dot(FInitial, vInitial)   # Hotfix  We used this name right above
+    # D = np.dot(FInitial, vInitial)   # Hotfix  We used this name right above
 
     #        Mesh the patches for the environment.  Include patching file.
     diffusionGround = 0.0
@@ -209,6 +211,10 @@ def main():
         diffusion = 0.0
 
     rayCounter = 0
+
+    if Pf.h < (2 * Pf.radius):
+        print('h is less than 2r')
+        raise SystemExit
 
     # These are for debugging, Uncomment this block and comment out the for loop below
     # ray = 606                     # @ Pf.boomSpacing = 1
@@ -229,9 +235,7 @@ def main():
 
         amplitude = frecuencias[:, 1]/normalization
         phase = frecuencias[:, 2]
-        if Pf.h < (2*Pf.radius):
-            print('h is less than 2r')
-            break
+
         F = np.array(FInitial)                                      # Direction
         for I in range(Pf.IMAX):      # Making small steps along the ray path.
             # For each step we should return, location, phase and amplitude
@@ -285,6 +289,7 @@ def main():
 
             #     Check intersection with building
             dxBuilding = HUGE
+            hit=0
             planeHit = 0
             #     Check intersection with Boxes
             #      for Q in range(0, Bg.BoxNumber):
