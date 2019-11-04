@@ -14,7 +14,7 @@ import numpy as np  # matricies and arrays
 import matplotlib.pyplot as plt  # for graphing
 
 import Parameterfile as Pf
-import BuildingGeometry as Bg
+#import BuildingGeometry as Bg
 import Functions as Fun
 import ReceiverPointSource as Rps  # For receivers
 import GeometryParser as Gp
