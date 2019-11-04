@@ -3,9 +3,12 @@
 import numpy as np
 import pywavefront as pwf
 #from Parameterfile import h as stepSize     #temporary, just used to make sure we do not overstep
-stepSize = 100
+stepSize = 10
 #FaceNormals = [(-1,0,0),(0,1,0),(1,0,0),(0,-1,0),(0,0,1)]  Desired
 epsilon = 1e-6  # how small angle between ray and plane has to be to count as parallel
+HUGE = 1000000.0
+
+
 
 def faceNormal(face):
     a = np.array(face[0])
@@ -47,8 +50,8 @@ def collisionCheck(FACE,VECI,F):
     isParallel = (abs(NF) < epsilon)    # bool, vD in old code
     #print('NF ',NF)
     if isParallel:
+        return HUGE
         #print('parallel','\n',FACE)
-        return False        #ray does not hit, find an output to express that
 
     d = np.dot(N,FACE[0])   # is tri[0] and v0 in notes
 
@@ -57,10 +60,10 @@ def collisionCheck(FACE,VECI,F):
     #print('t is ', t)
     if (t < 0):         # ray starts behind the face, break
         #print('ray behind face','\n',FACE)
-        return False
+        return HUGE
     elif (t > stepSize):
         #3print('too far away, ignoring','\n',FACE)
-        return False    # does not hit inside step, ignore it
+        return HUGE    # does not hit inside step, ignore it
 
     else:               # if and only if it hits within the step then
         p = VECI + (t * F)
@@ -69,7 +72,8 @@ def collisionCheck(FACE,VECI,F):
         #print(isHit)
         if isHit == True:
             print('hits at ', p,'\n',FACE)
-        return isHit
+        #return isHit
+        return t
         #return p        # should return p as it is the dx, just a placeholder for now
 
 ipname = 'Env/SingleBuilding.obj'

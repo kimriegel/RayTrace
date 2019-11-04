@@ -1311,3 +1311,11 @@ Trying really hard to graduate in this span of time, not much progress
 10/17/19
           Included beta of renderer into main file
             Seems to register negative of geometry
+
+
+11/3/19
+          Changed collision function to return t instead of a bool
+          
+          It will sometimes return a dx of 0
+
+          This function also increases runtime five fold

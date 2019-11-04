@@ -314,21 +314,32 @@ for ray in boomCarpet:              # Written like this for readability
         dxBuilding = HUGE
         hit = 0
         planeHit = 0
+        for face in Gp.mesh:
+            dxMesh = Gp.collisionCheck(face,veci,F)
+            #print(dxMesh)
+            #if dxMesh < HUGE:
+            #    print(foo,hit,'dxbuilding: ',dxMesh)
+            if dxMesh < dxBuilding:     #Closest face in mesh
+                dxBuilding = dxMesh
+                #nBox = normal
+                nBox = Gp.faceNormal(face)
         #     Check intersection with Boxes
-        for Q in range(0, Bg.BoxNumber):
-            dxNear, dxFar, hit, planeHit = Fun.box(Bg.BoxArrayNear[Q], Bg.BoxArrayFar[Q], veci, F)
-            if dxNear < dxBuilding:
-                dxBuilding = dxNear
-                Vecip1 = veci + np.multiply(dxBuilding, F)
-                whichBox = Q
-                nBox = Fun.plane(Vecip1, Bg.BoxArrayNear[whichBox], Bg.BoxArrayFar[whichBox], planeHit)
+        #for Q in range(0, Bg.BoxNumber):
+        #    dxNear, dxFar, hit, planeHit = Fun.box(Bg.BoxArrayNear[Q], Bg.BoxArrayFar[Q], veci, F)
+        #    if dxNear < dxBuilding:
+        #        dxBuilding = dxNear
+        #        Vecip1 = veci + np.multiply(dxBuilding, F)
+        #        whichBox = Q
+        #        nBox = Fun.plane(Vecip1, Bg.BoxArrayNear[whichBox], Bg.BoxArrayFar[whichBox], planeHit)
 
         #   Implement Geometry parser
 
-        for face in Gp.mesh:
-            foo = Gp.collisionCheck(face,veci,F)
-            if foo == True:
-                print(foo,hit,'dxbuilding: ',dxBuilding)
+        #for face in Gp.mesh:
+        #    foo = Gp.collisionCheck(face,veci,F)
+        #    if foo == True:
+        #        print(foo,hit,'dxbuilding: ',dxBuilding)
+
+
 
         # This part doesn't really work well.  We have not incorporated it.
         # Eventually all interactions will be triangles anyway so I'm leaving it here to be updated.
@@ -432,9 +443,11 @@ for ray in boomCarpet:              # Written like this for readability
 #                                        patchArray[Q, W, 6] = abs(temp4)
 #                                        patchArray[Q, W, 7] = np.arctan(temp4.imag,temp4.real)
             if dx == dxBuilding:   # if the ray hits the building then change the direction and continue
-                print(veci,F)
+                #print(veci,F)
+                #print (dx)
                 veci += (dx * F)
-                print('hit building at step ', I, veci)
+                #print('hit building at step ', I, veci)
+                print('hit building at step ', I)
                 n2 = np.dot(nBox, nBox)
                 nBuilding = nBox / np.sqrt(n2)
                 dot1 = np.dot(F, nBuilding)
