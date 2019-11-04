@@ -10,18 +10,21 @@
 # Dr. Riegel, William Costa, and George Seaton porting program from Fortran to python
 
 # Initialize variables and functions
-import numpy as np
+import numpy as np  # matricies and arrays
+import matplotlib.pyplot as plt  # for graphing
 
 import Parameterfile as Pf
 import BuildingGeometry as Bg
 import Functions as Fun
-import ReceiverPointSource as Rps
+import ReceiverPointSource as Rps  # For receivers
+import GeometryParser as Gp
 # import GeometryParser as Bg
 
-import time
-#import Environment as ENV
-#import GeometryParser as BG
-#import memory_profiler as mem
+import time  # Time checks
+
+t = time.time()
+phase = 0
+amplitude = 0
 
 # What it does not do
 """
@@ -36,8 +39,8 @@ def initial_signal(signal_length, fft_output):
     Input sizeFFT and output_signal
     """
     signal_length2 = int(signal_length // 2)  # Making sizeFFTTwo and setting it as an int again just to be sure
-    output_frequency = np.zeros((signal_length2, 3))    # Making output array equivalent to input_array in old code
-    throw_array = np.arange(1, signal_length2 + 1)     # Helps get rid of for-loops in old version
+    output_frequency = np.zeros((signal_length2, 3))  # Making output array equivalent to input_array in old code
+    throw_array = np.arange(1, signal_length2 + 1)  # Helps get rid of for-loops in old version
 
     output_frequency[:, 0] = throw_array * Pf.Fs / signal_length  # Tried simplifying the math a bit from original
     output_frequency[:, 1] = abs(fft_output[1:1 + signal_length2] / signal_length)  # Only go up to sizeFFTTwo
@@ -51,7 +54,7 @@ def update_freq(dx_update, alpha_update, diffusion_update, lamb, airAbsorb):
     """
     Update ray phase and amplitude
     """
-    global phase, amplitude        # works directly
+    global phase, amplitude  # works directly
 
     twopi = np.pi * 2
     two_pi_dx_update = twopi * dx_update
@@ -282,44 +285,55 @@ def main():
 
             #     Check intersection with building
             dxBuilding = HUGE
-            hit = 0
             planeHit = 0
             #     Check intersection with Boxes
-            for Q in range(0, Bg.BoxNumber):
-                dxNear, dxFar, hit, planeHit = Fun.box(Bg.BoxArrayNear[Q], Bg.BoxArrayFar[Q], veci, F)
-                if dxNear < dxBuilding:
-                    dxBuilding = dxNear
-                    print(dxBuilding)
-                    Vecip1 = veci + np.multiply(dxBuilding, F)
-                    whichBox = Q
-                    nBox = Fun.plane(Vecip1, Bg.BoxArrayNear[whichBox], Bg.BoxArrayFar[whichBox], planeHit)
+            #      for Q in range(0, Bg.BoxNumber):
+            #          dxNear, dxFar, hit, planeHit = Fun.box(Bg.BoxArrayNear[Q], Bg.BoxArrayFar[Q], veci, F)
+            #          if dxNear < dxBuilding:
+            #              dxBuilding = dxNear
+            #              Vecip1 = veci + np.multiply(dxBuilding, F)
+            #              whichBox = Q
+            #              nBox = Fun.plane(Vecip1, Bg.BoxArrayNear[whichBox], Bg.BoxArrayFar[whichBox], planeHit)
+            #   Implement Geometry parser
+            if buildingHit == 1:
+                dxBuilding = HUGE
+            else:
+                for face in Gp.mesh:
+                    dxnear, nTemp = Gp.collisionCheck(face, veci, F)
+                    if dxnear < dxBuilding:
+                        dxBuilding = dxnear
+                        nBox = nTemp
+                        Vecip1 = veci + np.multiply(dxBuilding, F)
+
+            #        print('dxbuilding: ',dxBuilding, dxBuilding1)
+
             # This part doesn't really work well.  We have not incorporated it.
             # Eventually all interactions will be triangles anyway so I'm leaving it here to be updated.
 
             #   Check intersection with Triangles
-    #        if Bg.TriangleNumber > 0:
-    #            for Q in range(0, Bg.TriangleNumber):
-    #                dxNear, behind = Fun.Polygon(veci, F, Q, 3, Bg.TriangleNumber, Bg.PointNumbers, Bg.TriangleArray,
-    #                                             Bg.BuildingPoints, normal, FaceNormalNo, FaceNormals)
-    #                if dxNear < dxBuilding:
-    #                    dxBuilding = dxNear
-    #                    nBox = normal
-    #                    whichBox = Q
+            #        if Bg.TriangleNumber > 0:
+            #            for Q in range(0, Bg.TriangleNumber):
+            #                dxNear, behind = Fun.Polygon(veci, F, Q, 3, Bg.TriangleNumber, Bg.PointNumbers, Bg.TriangleArray,
+            #                                             Bg.BuildingPoints, normal, FaceNormalNo, FaceNormals)
+            #                if dxNear < dxBuilding:
+            #                    dxBuilding = dxNear
+            #                    nBox = normal
+            #                    whichBox = Q
             #     Check intersection with Squares
-    #        if Bg.SquareNumber > 0:
-    #            for Q in range(0, Bg.SquareNumber):
-    #                dxNear, behind = Fun.Polygon(veci, F, Q, 4, SquareNumber,
+            #        if Bg.SquareNumber > 0:
+            #            for Q in range(0, Bg.SquareNumber):
+            #                dxNear, behind = Fun.Polygon(veci, F, Q, 4, SquareNumber,
             #                PointNumbers, SquareArray, BuildingPoints,
             #                normal, FaceNormalNo, FaceNormals)
-    #                if dxNear < dxBuilding:
-    #                    dxBuilding = dxNear
-    #                    nBox = normal
-    #                    whichBox = Q
+            #                if dxNear < dxBuilding:
+            #                    dxBuilding = dxNear
+            #                    nBox = normal
+            #                    whichBox = Q
             buildingHit = 0
             receiverHit = 0
             groundHit = 0
 
-            #     Check to see if ray hits within step size
+                #     Check to see if ray hits within step size
             if dxReceiver < Pf.h or dxGround < Pf.h or dxBuilding < Pf.h:
                 dx = min(dxReceiver, dxGround, dxBuilding)
                 #  if the ray hits a receiver, store in an array.  If the ray hits two, create two arrays to store in.
@@ -346,7 +360,7 @@ def main():
                         else:
                             R.on_Hit(amplitude, phase)
 
-                        # if(doubleHit==1):
+                       # if(doubleHit==1):
                         #      outputArray1[:,4]=amplitude[:]/2.0
                         #      dHOutputArray1[:,0]=inputArray[:,0]
                         #      dHOutputArray1[:,1:4]=receiverPoint2[:]
@@ -366,7 +380,6 @@ def main():
 
                 if abs(dx - dxGround) < 10.0**(-13.0):  # If the ray hits the ground then bounce and continue
                     veci += (dxGround * F)
-
                     tmp = np.dot(GroundABC, veci)
                     if tmp != GroundD:
                         veci[2] = 0
@@ -385,9 +398,9 @@ def main():
     #                            if (veci[0] <= (patchArray[Q, W, 0] + 0.5 * patchArray[Q, W, 3]) and
                 #                            veci[0]>=(patchArray[Q, W, 0] - 0.5 * patchArray[Q, W, 3])):
     #                                if veci[1] <= (patchArray[Q, W, 1] + 0.5 * patchArray[Q, W, 4]) and
-                #                                veci[1]>=(patchArray[Q, W, 1] - 0.5 * patchArray[Q, W, 4]):
+                    #                                veci[1]>=(patchArray[Q, W, 1] - 0.5 * patchArray[Q, W, 4]):
     #                                    if veci[2] <= (patchArray[Q, W, 2] + 0.5 * patchArray[Q, W, 5]) and
-                #                                    veci[2]>=(patchArray[Q, W, 2] - 0.5 * patchArray[Q, W, 5]):
+                    #                                    veci[2]>=(patchArray[Q, W, 2] - 0.5 * patchArray[Q, W, 5]):
     #                                        temp2 = complex(abs(patchArray[Q, W, 6])*np.exp(XJ*patchArray[Q, W, 7]))
     #                                        temp3 = complex(abs(amplitude[W] * (1.0 - alphaGround[W]) * diffusionGround *
                 #                                        exp(-m * dxGround)) * exp(1j * phaseFinal))
@@ -440,3 +453,44 @@ def main():
         for w in range(sizeFFT):
             Rps.Receiver.timeHeader(f, timeArray[w], w)
     print('time: ', time.time()-t)
+
+    # Outputting graphs
+    t = time.time()
+
+    #######################################################################
+    # Will eventually be moved to a receiver function,
+    # here now for ease of access of others reading this
+    #######################################################################
+    import matplotlib.font_manager as fm
+
+    # Font
+    stdfont = fm.FontProperties()
+    stdfont.set_family('serif')
+    stdfont.set_name('Times New Roman')
+    stdfont.set_size(20)
+
+    for R in ears:
+        # For N wave
+        pressure = R.signal
+        i = R.recNumber
+        # plt.figure(i)
+        # plt.figure(num = i, figsize=(19.20, 10.80), dpi=120, facecolor='#eeeeee', edgecolor='r')   # grey
+        # plt.figure(num = i, figsize=(19.20, 10.80), dpi=120, facecolor='#e0dae6', edgecolor='r')   # muted lilac
+        plt.figure(num=i, figsize=(19.20, 10.80), dpi=120, facecolor='#e6e6fa', edgecolor='r')  # lavender
+        # plt.plot(timeArray,pressure,'r--')
+        plt.grid(True)
+        plt.plot(timeArray, pressure, '#780303')
+        # Labeling axes
+        plt.xlabel('Time [s]', fontproperties=stdfont)
+        plt.ylabel('Pressure [Pa]', fontproperties=stdfont)
+        plt.title('Pressure vs Time of Receiver ' + str(i),
+                  fontproperties=stdfont,
+                  fontsize=26,
+                  fontweight='bold')
+
+        # Saving
+        # plt.savefig(Pf.graphName + str(i) + '.png', facecolor='#eeeeee')    # grey
+        # plt.savefig(Pf.graphName + str(i) + '.png', facecolor='#e0dae6')    # muted lilac
+        plt.savefig(Pf.graphName + str(i) + '.png', facecolor='#e6e6fa')  # lavender
+        print('Saved receiver', i)
+    print('Graph time: ', time.time() - t)
