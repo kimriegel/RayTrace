@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2a07ac13-e7fb-4220-b635-634433aa2cda" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/GeometryParser.py" beforeDir="false" afterPath="$PROJECT_DIR$/GeometryParser.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Parameterfile.py" beforeDir="false" afterPath="$PROJECT_DIR$/Parameterfile.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RayTrace.py" beforeDir="false" afterPath="$PROJECT_DIR$/RayTrace.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -30,8 +26,8 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/Environment.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="107">
-                  <caret line="129" column="35" selection-start-line="129" selection-start-column="35" selection-end-line="129" selection-end-column="35" />
+                <state relative-caret-position="1890">
+                  <caret line="129" column="20" selection-start-line="129" selection-start-column="20" selection-end-line="129" selection-end-column="20" />
                 </state>
               </provider>
             </entry>
@@ -39,8 +35,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/RayTrace.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="241">
-                  <caret line="337" column="54" selection-start-line="337" selection-start-column="54" selection-end-line="337" selection-end-column="54" />
+                <state relative-caret-position="7800">
+                  <caret line="530" column="36" selection-start-line="530" selection-start-column="36" selection-end-line="530" selection-end-column="36" />
                 </state>
               </provider>
             </entry>
@@ -48,7 +44,7 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/Parameterfile.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="246">
+                <state relative-caret-position="630">
                   <caret line="42" column="14" selection-start-line="42" selection-start-column="14" selection-end-line="42" selection-end-column="14" />
                 </state>
               </provider>
@@ -57,7 +53,7 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/Functions.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-30">
+                <state relative-caret-position="2070">
                   <caret line="139" column="14" selection-start-line="139" selection-start-column="14" selection-end-line="139" selection-end-column="14" />
                 </state>
               </provider>
@@ -66,21 +62,21 @@
         </leaf>
       </split-first>
       <split-second>
-        <leaf>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/Functions.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="22">
+                <state relative-caret-position="2145">
                   <caret line="144" selection-start-line="144" selection-end-line="144" />
                 </state>
               </provider>
             </entry>
           </file>
-          <file pinned="false" current-in-tab="false">
+          <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/GeometryParser.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="138">
-                  <caret line="80" column="37" selection-start-line="80" selection-start-column="37" selection-end-line="80" selection-end-column="37" />
+                <state relative-caret-position="251">
+                  <caret line="109" column="49" selection-start-line="109" selection-start-column="49" selection-end-line="109" selection-end-column="49" />
                   <folding>
                     <element signature="e#101#119#0" expanded="true" />
                   </folding>
@@ -88,11 +84,12 @@
               </provider>
             </entry>
           </file>
-          <file pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/PythonTestNewGeom2.txt">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="158">
-                  <caret line="57961" column="48" lean-forward="true" selection-start-line="57961" selection-start-column="48" selection-end-line="57961" selection-end-column="48" />
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/README.md">
+              <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+                <state split_layout="SPLIT">
+                  <first_editor />
+                  <second_editor />
                 </state>
               </provider>
             </entry>
@@ -110,14 +107,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>607</find>
-      <find>True</find>
-      <find>606</find>
-      <find>collision</find>
-      <find>Gp</find>
-      <find>receiver</find>
-      <find>plane</find>
-      <find>609</find>
       <find>hi</find>
       <find>edge</find>
       <find>huge</find>
@@ -129,7 +118,6 @@
       <find>dxBuil</find>
       <find>dxnear</find>
       <find>nBox</find>
-      <find>buildingHit</find>
       <find>buildinghit</find>
       <find>groundhit</find>
       <find>dxground</find>
@@ -140,13 +128,23 @@
       <find>dxbuilding</find>
       <find>nTemp</find>
       <find>rece</find>
+      <find>making specific</find>
+      <find>r.</find>
+      <find>phase</find>
+      <find>ears</find>
+      <find>finished Ray</find>
+      <find>buildingHit</find>
+      <find>PI</find>
+      <find>D4</find>
+      <find>if Pf.</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
+    <option name="UPDATE_TYPE" value="REBASE" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="Riegel-Speed" />
+        <entry key="$PROJECT_DIR$" value="master" />
       </map>
     </option>
   </component>
@@ -157,6 +155,9 @@
         <option value="$PROJECT_DIR$/Parameterfile.py" />
         <option value="$PROJECT_DIR$/RayTrace.py" />
         <option value="$PROJECT_DIR$/GeometryParser.py" />
+        <option value="$PROJECT_DIR$/RayTrace/RayTraceOld.py" />
+        <option value="$PROJECT_DIR$/RayTrace/GeometryParser.py" />
+        <option value="$PROJECT_DIR$/RayTrace/RayTrace.py" />
       </list>
     </option>
   </component>
@@ -168,9 +169,9 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-113" />
+    <option name="x" value="162" />
     <option name="y" value="23" />
-    <option name="width" value="1621" />
+    <option name="width" value="1295" />
     <option name="height" value="827" />
   </component>
   <component name="ProjectId" id="1QjwSVMKhyzzmSqtVERiGNbvXg0" />
@@ -187,6 +188,11 @@
             <path>
               <item name="RayTrace" type="b2602c69:ProjectViewProjectNode" />
               <item name="RayTrace" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="RayTrace" type="b2602c69:ProjectViewProjectNode" />
+              <item name="RayTrace" type="462c0819:PsiDirectoryNode" />
+              <item name="Env" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -210,7 +216,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.RayTrace">
+  <component name="RunManager" selected="Python.runRays">
     <configuration name="GeometryParser (1)" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="RayTrace" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -245,6 +251,27 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Env/GeometryParser.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="RayTrace (1)" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="RayTrace" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/RayTrace" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/RayTrace/RayTrace.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -297,11 +324,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.runRays" />
+        <item itemvalue="Python.RayTrace (1)" />
         <item itemvalue="Python.RayTrace" />
         <item itemvalue="Python.GeometryParser (1)" />
         <item itemvalue="Python.GeometryParser" />
-        <item itemvalue="Python.runRays" />
-        <item itemvalue="Python.runRays" />
       </list>
     </recent_temporary>
   </component>
@@ -344,27 +371,57 @@
       <option name="project" value="LOCAL" />
       <updated>1568407976528</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Updating from Seaton-Receivers by hand, currently very broken">
+      <created>1572890557572</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1572890557572</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Updating from Seaton-Receivers by hand, currently very broken">
+      <created>1572891810700</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1572891810700</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Updating from Seaton-Receivers by hand seems to be working again">
+      <created>1572891950632</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1572891950632</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
   <component name="ToolWindowManager">
-    <frame x="-113" y="23" width="1621" height="827" extended-state="0" />
+    <frame x="-61" y="24" width="1295" height="827" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.21625" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.27158555" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.771875" visible="true" weight="0.34285715" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.77080065" visible="true" weight="0.34285715" />
       <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49891695" weight="0.3993174" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Version Control" order="7" />
+      <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.499375" weight="0.3292517" />
+      <window_info anchor="bottom" id="Version Control" order="7" sideWeight="0.499375" weight="0.3292517" />
       <window_info anchor="bottom" id="Terminal" order="8" />
-      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.228125" side_tool="true" visible="true" weight="0.34285715" />
-      <window_info anchor="bottom" id="Python Console" order="10" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.22919936" side_tool="true" visible="true" weight="0.34285715" />
+      <window_info anchor="bottom" id="Python Console" order="10" sideWeight="0.499375" weight="0.3292517" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -476,50 +533,12 @@
     <MESSAGE value="Merge branch 'master' into Riegel-Speed&#10;&#10;# Conflicts:&#10;#&#9;Fortran/Parameterfile.f&#10;#&#9;Fortran/raytrace.o&#10;#&#9;RayTrace.py&#10;#&#9;RayTrace/ReceiverPointSource.py&#10;#&#9;__pycache__/BuildingGeometry.cpython-37.pyc&#10;#&#9;__pycache__/Functions.cpython-37.pyc&#10;#&#9;__pycache__/Parameterfile.cpython-37.pyc&#10;#&#9;__pycache__/RayTrace.cpython-37.pyc&#10;#&#9;__pycache__/ReceiverPointSource.cpython-37.pyc&#10;#&#9;scrap/Parameterfile_costa.py" />
     <MESSAGE value="Adding Graphing Back in" />
     <MESSAGE value="Added New obj files for corrected vertices." />
-    <option name="LAST_COMMIT_MESSAGE" value="Added New obj files for corrected vertices." />
+    <MESSAGE value="Updating from Seaton-Receivers by hand, currently very broken" />
+    <MESSAGE value="Updating from Seaton-Receivers by hand seems to be working again" />
+    <option name="LAST_COMMIT_MESSAGE" value="Updating from Seaton-Receivers by hand seems to be working again" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" selection-start-line="3" selection-end-line="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Functions.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-30">
-          <caret line="139" column="14" selection-start-line="139" selection-start-column="14" selection-end-line="139" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/GeometryParser.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="138">
-          <caret line="80" column="37" selection-start-line="80" selection-start-column="37" selection-end-line="80" selection-end-column="37" />
-          <folding>
-            <element signature="e#101#119#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Parameterfile.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="246">
-          <caret line="42" column="14" selection-start-line="42" selection-start-column="14" selection-end-line="42" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Environment.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="107">
-          <caret line="129" column="35" selection-start-line="129" selection-start-column="35" selection-end-line="129" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/test.py" />
     <entry file="file://$PROJECT_DIR$/PythonTestNewGeom.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-868797">
@@ -534,10 +553,99 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/SingleBuildingGeometry.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/RayTrace/RayTraceOld.py" />
+    <entry file="file://$PROJECT_DIR$/RayTrace/GeometryParser.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1590">
+          <caret line="107" column="15" selection-start-line="107" selection-start-column="15" selection-end-line="107" selection-end-column="15" />
+          <folding>
+            <element signature="e#101#119#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/runRays.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="19" selection-start-line="7" selection-start-column="19" selection-end-line="7" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/RayTrace/Parameterfile.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="14" selection-start-line="6" selection-start-column="14" selection-end-line="6" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/PythonTest1.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-753" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/RayTrace/BuildingGeometry.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/RayTrace/RayTrace.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="203">
+          <caret line="16" column="1" selection-start-line="16" selection-start-column="1" selection-end-line="16" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="3" selection-start-line="3" selection-end-line="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Environment.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1890">
+          <caret line="129" column="20" selection-start-line="129" selection-start-column="20" selection-end-line="129" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Parameterfile.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="630">
+          <caret line="42" column="14" selection-start-line="42" selection-start-column="14" selection-end-line="42" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/RayTrace.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="241">
-          <caret line="337" column="54" selection-start-line="337" selection-start-column="54" selection-end-line="337" selection-end-column="54" />
+        <state relative-caret-position="7800">
+          <caret line="530" column="36" selection-start-line="530" selection-start-column="36" selection-end-line="530" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Functions.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2145">
+          <caret line="144" selection-start-line="144" selection-end-line="144" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor />
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/GeometryParser.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="251">
+          <caret line="109" column="49" selection-start-line="109" selection-start-column="49" selection-end-line="109" selection-end-column="49" />
+          <folding>
+            <element signature="e#101#119#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
