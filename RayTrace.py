@@ -83,6 +83,7 @@ def vex(y, z):
 # port and import receiver file
 receiverHit = 0
 groundHit = 0
+buildingHit=0
 
 # Initialize counters 
 PI = np.pi
@@ -243,7 +244,7 @@ if Pf.h < (2 * Pf.radius):
 # Begin tracing
 #print('Memory (before) : ' + str(mem.memory_usage()) + 'MB')
 checkDirection = [0, 0, 0]
-nBox = [0, 0, 0]
+nTemp = [0, 0, 0]
 veci = np.array([0, 0, 0])
 print('began rays')
 for ray in boomCarpet:              # Written like this for readability
@@ -315,23 +316,30 @@ for ray in boomCarpet:              # Written like this for readability
         hit = 0
         planeHit = 0
         #     Check intersection with Boxes
-        for Q in range(0, Bg.BoxNumber):
-            dxNear, dxFar, hit, planeHit = Fun.box(Bg.BoxArrayNear[Q], Bg.BoxArrayFar[Q], veci, F)
-            if dxNear < dxBuilding:
-                dxBuilding = dxNear
-                Vecip1 = veci + np.multiply(dxBuilding, F)
-                whichBox = Q
-                nBox = Fun.plane(Vecip1, Bg.BoxArrayNear[whichBox], Bg.BoxArrayFar[whichBox], planeHit)
-
+  #      for Q in range(0, Bg.BoxNumber):
+  #          dxNear, dxFar, hit, planeHit = Fun.box(Bg.BoxArrayNear[Q], Bg.BoxArrayFar[Q], veci, F)
+  #          if dxNear < dxBuilding:
+  #              dxBuilding = dxNear
+  #              Vecip1 = veci + np.multiply(dxBuilding, F)
+  #              whichBox = Q
+  #              nBox = Fun.plane(Vecip1, Bg.BoxArrayNear[whichBox], Bg.BoxArrayFar[whichBox], planeHit)
         #   Implement Geometry parser
+        if buildingHit == 1:
+            dxBuilding=HUGE
+        else:
+            for face in Gp.mesh:
+                dxnear, nTemp = Gp.collisionCheck(face,veci,F)
+                if dxnear < dxBuilding:
+                    dxBuilding = dxnear
+                    nBox = nTemp
+                    Vecip1 = veci+np.multiply(dxBuilding,F)
 
-        for face in Gp.mesh:
-            foo = Gp.collisionCheck(face,veci,F)
-            if foo == True:
-                print(foo,hit,'dxbuilding: ',dxBuilding)
+
+#        print('dxbuilding: ',dxBuilding, dxBuilding1)
 
         # This part doesn't really work well.  We have not incorporated it.
         # Eventually all interactions will be triangles anyway so I'm leaving it here to be updated.
+
 
         #   Check intersection with Triangles
 #        if Bg.TriangleNumber > 0:
@@ -357,6 +365,7 @@ for ray in boomCarpet:              # Written like this for readability
         groundHit = 0
 
         #     Check to see if ray hits within step size
+#        print(dxReceiver,dxGround,dxBuilding)
         if dxReceiver < Pf.h or dxGround < Pf.h or dxBuilding < Pf.h:
             dx = min(dxReceiver, dxGround, dxBuilding)
             #  if the ray hits a receiver, store in an array.  If the ray hits two, create two arrays to store in.
@@ -432,10 +441,10 @@ for ray in boomCarpet:              # Written like this for readability
 #                                        patchArray[Q, W, 6] = abs(temp4)
 #                                        patchArray[Q, W, 7] = np.arctan(temp4.imag,temp4.real)
             if dx == dxBuilding:   # if the ray hits the building then change the direction and continue
-                print(veci,F)
+#                print(veci,F)
                 veci += (dx * F)
-                print('hit building at step ', I, veci)
-                n2 = np.dot(nBox, nBox)
+                print('hit building at step ', I, veci,dx,nBox)
+                n2 = nBox.dot(nBox)
                 nBuilding = nBox / np.sqrt(n2)
                 dot1 = np.dot(F, nBuilding)
                 F -= (2.0 * (dot1 / n2 * nBuilding))
@@ -460,6 +469,7 @@ for ray in boomCarpet:              # Written like this for readability
         else:  # If there was no interaction with buildings then proceed with one step.
             veci += (Pf.h * F)
             update_freq(Pf.h, alphaNothing, 0)
+ #       print(veci, F)
     rayCounter += 1
     print('finished ray', rayCounter)
 

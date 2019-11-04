@@ -30,8 +30,8 @@ h = 10.0
 absorbplanes = 1
 #allocate(tempalphabuilding(absorbplanes,8))
 #Find way to rephrase
-#outputfile = 'PythonTest1.txt'
-outputfile = "PythonTest" + str(boomspacing) + ".txt"       #debugging
+outputfile = 'PythonTestNewGeom2.txt'
+#outputfile = "PythonTest" + str(boomspacing) + ".txt"       #debugging
 graphName = "TestGraph"                                     # No not use full file extension here
 #Will's
 #outputfile = "PythonTestEnv" + str(boomspacing) + ".txt"       #debugging
