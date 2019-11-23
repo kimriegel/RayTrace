@@ -1319,3 +1319,25 @@ Trying really hard to graduate in this span of time, not much progress
           It will sometimes return a dx of 0
 
           This function also increases runtime five fold
+
+11/5/19 
+        Looking at Dr R's changes
+          Final runtime: 160.96 seconds
+
+          Now to:
+            Make receiver-geometry
+            Make duck files
+            Speed it up again
+
+11/23/19 
+        Used duck file from free model site. Added details in slides
+
+        printable_models @free3d.com for duck mesh
+        https://free3d.com/3d-model/mandarin-duck-v1--786872.html
+
+        PyWaveFront makes a vertex list 2x the size of verticies
+          Using a list comp means it repeats halfway through.
+          Fine for now, come back later
+
+
+        Successfully made a list of faces, where faces are receiver objects

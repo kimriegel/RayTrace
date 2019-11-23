@@ -156,18 +156,6 @@ def initialize_receivers():
 
     return 
 
-if __name__ == "__main__" :
-    #Only exists for checking bugs with specific parameters now
-    #initialize_receivers()
-    #ears = Receiver.rList
-    #for R in ears:
-    #    print(R)
-    import RayTrace
-    #Receiver.initialize("PointReceivers.txt")
-    #print(Receiver.rList)
-    #print(Receiver.arraysize)
-    pass
-
 #def from input():
 #
 #ip = 'PointReceivers.txt'
