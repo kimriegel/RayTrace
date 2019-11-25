@@ -10,26 +10,20 @@
 # Dr. Riegel, William Costa, and George Seaton porting program from Fortran to python
 
 # Initialize variables and functions
-import numpy as np
+import numpy as np  # matricies and arrays
+import matplotlib.pyplot as plt  # for graphing
 
 import Parameterfile as Pf
-import BuildingGeometry as Bg
+#import BuildingGeometry as Bg
 import Functions as Fun
-import ReceiverPointSource as Rps
-# import GeometryParser as Bg
+import ReceiverPointSource as Rps  # For receivers
+import GeometryParser as Gp
 
-import time
-#import Environment as ENV
-#import GeometryParser as BG
-#import memory_profiler as mem
-import matplotlib.pyplot as plt
+import time  # Time checks
 
-# What it does not do
-"""
-      Interacts with geometry parser
-      Have a way of reading in complex geometries - Yes, but not yet integrated
-      Anything resembling radiosity
-"""
+t = time.time()
+phase = 0
+amplitude = 0
 
 def initial_signal(signal_length, fft_output):
     """
@@ -80,6 +74,7 @@ def main():
     # port and import receiver file
     receiverHit = 0
     groundHit = 0
+    buildingHit = 0
 
     # Initialize counters
     XJ = complex(0.0, 1.0)
@@ -117,6 +112,8 @@ def main():
     zetaInitial = np.cos(Pf.theta)
     length = np.sqrt(xiInitial * xiInitial + nInitial * nInitial + zetaInitial * zetaInitial)
 
+    FInitial = np.array([xiInitial, nInitial, zetaInitial])
+    D4 = np.dot(FInitial, vInitial)   # equivalent to tmp
     #       Create initial boom array
     #  Roll this all into a function later
     ySpace = Pf.boomspacing * abs(np.cos(Pf.phi))
@@ -130,8 +127,6 @@ def main():
     rayY = Pf.ymin + j * ySpace
     rayZ = Pf.zmin + k * zSpace
 
-    FInitial = np.array([xiInitial, nInitial, zetaInitial])
-    D4 = np.dot(FInitial, vInitial)   # equivalent to tmp
     boomCarpet = ((vex(D4, FInitial, y, z), y, z) for z in rayZ for y in rayY)
     # Create a receiver array, include a receiver file.
     alphaNothing = np.zeros(sizeFFTTwo)
@@ -195,9 +190,6 @@ def main():
             elif frecuencias[D2, 0] >= 5680.0 or frecuencias[D2, 0] < frecuencias[sizeFFTTwo, 0]:
                 alphaBuilding[W, D2] = Pf.tempalphabuilding[W, 7]
 
-    # This does not appear to be used, so I commented it out -- r0ml
-    # D3 = np.dot(FInitial, vInitial)   # Hotfix  We used this name right above
-
     #        Mesh the patches for the environment.  Include patching file.
     diffusionGround = 0.0
     if Pf.radiosity:  # If it exists as a non-zero number
@@ -207,6 +199,10 @@ def main():
         diffusion = 0.0
 
     rayCounter = 0
+
+    if Pf.h < (2 * Pf.radius):
+        print('h is less than 2r')
+        raise SystemExit
 
     # These are for debugging, Uncomment this block and comment out the for loop below
     # ray = 606                     # @ Pf.boomSpacing = 1
@@ -227,9 +223,7 @@ def main():
 
         amplitude = frecuencias[:, 1]/normalization
         phase = frecuencias[:, 2]
-        if Pf.h < (2*Pf.radius):
-            print('h is less than 2r')
-            break
+
         F = np.array(FInitial)                                      # Direction
         for I in range(Pf.IMAX):      # Making small steps along the ray path.
             # For each step we should return, location, phase and amplitude
@@ -285,15 +279,18 @@ def main():
             dxBuilding = HUGE
             hit = 0
             planeHit = 0
-            #     Check intersection with Boxes
-            for Q in range(0, Bg.BoxNumber):
-                dxNear, dxFar, hit, planeHit = Fun.box(Bg.BoxArrayNear[Q], Bg.BoxArrayFar[Q], veci, F)
-                if dxNear < dxBuilding:
-                    dxBuilding = dxNear
-                    print(dxBuilding)
-                    Vecip1 = veci + np.multiply(dxBuilding, F)
-                    whichBox = Q
-                    nBox = Fun.plane(Vecip1, Bg.BoxArrayNear[whichBox], Bg.BoxArrayFar[whichBox], planeHit)
+            if buildingHit == 1:
+                dxBuilding = HUGE
+            else:
+                for face in Gp.mesh:
+                    dxnear, nTemp = Gp.collisionCheck(face, veci, F)
+                    if dxnear < dxBuilding:
+                        dxBuilding = dxnear
+                        nBox = nTemp
+                        Vecip1 = veci + np.multiply(dxBuilding, F)
+
+            #        print('dxbuilding: ',dxBuilding, dxBuilding1)
+
             # This part doesn't really work well.  We have not incorporated it.
             # Eventually all interactions will be triangles anyway so I'm leaving it here to be updated.
 
@@ -367,7 +364,6 @@ def main():
 
                 if abs(dx - dxGround) < 10.0**(-13.0):  # If the ray hits the ground then bounce and continue
                     veci += (dxGround * F)
-
                     tmp = np.dot(GroundABC, veci)
                     if tmp != GroundD:
                         veci[2] = 0
