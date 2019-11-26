@@ -14,16 +14,29 @@ import numpy as np  # matricies and arrays
 import matplotlib.pyplot as plt  # for graphing
 
 import Parameterfile as Pf
-#import BuildingGeometry as Bg
 import Functions as Fun
 import ReceiverPointSource as Rps  # For receivers
 import GeometryParser as Gp
+import multiprocessing
+from joblib import Parallel, delayed
+
+
+# import GeometryParser as Bg
 
 import time  # Time checks
-
+num_cores = multiprocessing.cpu_count()
+print(num_cores)
 t = time.time()
 phase = 0
 amplitude = 0
+
+
+# What it does not do
+"""
+      Interacts with geometry parser
+      Have a way of reading in complex geometries - Yes, but not yet integrated
+      Anything resembling radiosity
+"""
 
 def initial_signal(signal_length, fft_output):
     """
@@ -31,8 +44,8 @@ def initial_signal(signal_length, fft_output):
     Input sizeFFT and output_signal
     """
     signal_length2 = int(signal_length // 2)  # Making sizeFFTTwo and setting it as an int again just to be sure
-    output_frequency = np.zeros((signal_length2, 3))    # Making output array equivalent to input_array in old code
-    throw_array = np.arange(1, signal_length2 + 1)     # Helps get rid of for-loops in old version
+    output_frequency = np.zeros((signal_length2, 3))  # Making output array equivalent to input_array in old code
+    throw_array = np.arange(1, signal_length2 + 1)  # Helps get rid of for-loops in old version
 
     output_frequency[:, 0] = throw_array * Pf.Fs / signal_length  # Tried simplifying the math a bit from original
     output_frequency[:, 1] = abs(fft_output[1:1 + signal_length2] / signal_length)  # Only go up to sizeFFTTwo
@@ -46,9 +59,7 @@ def update_freq(dx_update, alpha_update, diffusion_update, lamb, airAbsorb):
     """
     Update ray phase and amplitude
     """
-    global phase, amplitude        # works directly
-
-    twopi = np.pi * 2
+    global phase, amplitude  # works directly
     two_pi_dx_update = twopi * dx_update
     ein = phase - (two_pi_dx_update / lamb)
     zwei = ein % twopi
@@ -64,11 +75,11 @@ def vex(D, FInitial, y, z):
     Used for veci"""
     return (D - FInitial[1] * y - FInitial[2] * z) / FInitial[0]
 
-
 def main():
     global phase
     global amplitude
-
+    global twopi
+    twopi = np.pi * 2
     t = time.time()
 
     # port and import receiver file
@@ -111,7 +122,6 @@ def main():
     nInitial = np.sin(Pf.phi) * np.sin(Pf.theta)
     zetaInitial = np.cos(Pf.theta)
     length = np.sqrt(xiInitial * xiInitial + nInitial * nInitial + zetaInitial * zetaInitial)
-
     FInitial = np.array([xiInitial, nInitial, zetaInitial])
     D4 = np.dot(FInitial, vInitial)   # equivalent to tmp
     #       Create initial boom array
@@ -128,6 +138,7 @@ def main():
     rayZ = Pf.zmin + k * zSpace
 
     boomCarpet = ((vex(D4, FInitial, y, z), y, z) for z in rayZ for y in rayY)
+
     # Create a receiver array, include a receiver file.
     alphaNothing = np.zeros(sizeFFTTwo)
 
@@ -137,7 +148,7 @@ def main():
     for R in ears:          # hotfix
         R.magnitude = np.zeros(sizeFFTTwo)
         R.direction = np.zeros(sizeFFTTwo)
-
+    tempReceiver = np.array(np.zeros(len(ears)))
     #       Initialize normalization factor
     normalization = (np.pi*radius2)/(Pf.boomspacing**2)
 
@@ -146,7 +157,7 @@ def main():
 
     #       Define ground plane
     groundHeight = 0.000000000
-    GroundABC = np.array([0.000000000, 0.000000000, 1.00000000])
+    GroundN = np.array([0.000000000, 0.000000000, 1.00000000])
     GroundD = -groundHeight
     nGround = np.array([0.0, 0.0, 1.0])
 
@@ -190,6 +201,9 @@ def main():
             elif frecuencias[D2, 0] >= 5680.0 or frecuencias[D2, 0] < frecuencias[sizeFFTTwo, 0]:
                 alphaBuilding[W, D2] = Pf.tempalphabuilding[W, 7]
 
+    # This does not appear to be used, so I commented it out -- r0ml
+    # D = np.dot(FInitial, vInitial)   # Hotfix  We used this name right above
+
     #        Mesh the patches for the environment.  Include patching file.
     diffusionGround = 0.0
     if Pf.radiosity:  # If it exists as a non-zero number
@@ -229,47 +243,55 @@ def main():
             # For each step we should return, location, phase and amplitude
             dxReceiver = HUGE
             # Find the closest sphere and store that as the distance
+            i=0
             for R in ears:
                 # The way that tempReceiver works now, it's only used here and only should be used here.
                 # It's not defined inside the receiver because it's ray dependant.
-                tempReceiver = R.SphereCheck(radius2, F, veci)    # Distance to receiver
-                if receiverHit >= 1:  # if you hit a receiver last time, don't hit it again
-                    if np.all(R.position == lastReceiver):
-                        tempReceiver = HUGE
-                    if np.all(F == checkDirection):
-                        OC = R.position - veci
-                        OCLength = np.dot(OC, OC)
-                        if OCLength < radius2:
-                            tempReceiver = HUGE
-                if receiverHit >= 2:
-                    if np.all(R.position == lastReceiver):
-                        tempReceiver = HUGE
-                if tempReceiver < dxReceiver:
-                    dxReceiver = tempReceiver
-                    receiverPoint = R.position
-                elif tempReceiver == dxReceiver and tempReceiver != HUGE:
-                    receiverCheck = tempReceiver
+                tempReceiver[i] = R.SphereCheck(radius2, F, veci)    # Distance to receiver
+                i+=1
+
+                # if receiverHit >= 1:  # if you hit a receiver last time, don't hit it again
+                #     if np.all(R.position == lastReceiver):
+                #         tempReceiver = HUGE
+                #     if np.all(F == checkDirection):
+                #         OC = R.position - veci
+                #         OCLength = np.dot(OC, OC)
+                #         if OCLength < radius2:
+                #             tempReceiver = HUGE
+                # if receiverHit >= 2:
+                #     if np.all(R.position == lastReceiver):
+                #         tempReceiver = HUGE
+                # if tempReceiver < dxReceiver:
+                #     dxReceiver = tempReceiver
+                #     receiverPoint = R.position
+                # elif tempReceiver == dxReceiver and tempReceiver != HUGE:
+                #     receiverCheck = tempReceiver
 
     # We need to double check that double hit actually works.  R2 is not really
     # a thing, we should make sure it is doing what we want.
-                    if np.all(R.position == receiverPoint):
-                        doubleHit = 0
-                    else:
-                        R2 = R
-                        doubleHit = 1
-                        print('double hit')
+    #                 if np.all(R.position == receiverPoint):
+    #                     doubleHit = 0
+    #                 else:
+    #                     R2 = R
+    #                     doubleHit = 1
+    #                     print('double hit')
+            tempReceiver[np.where((tempReceiver < (10.0**(-13.0))))] = HUGE
+            tmp = np.argmin(tempReceiver)
+            dxReceiver = tempReceiver[tmp]
+            if(dxReceiver!= HUGE):
+                receiverPoint=ears[tmp].position
 
+
+
+                    #            print('time: ', time.time() - t)
                 #     Check Intersection with ground plane
-            GroundN = GroundABC
-            GroundVD = GroundN[0] * F[0] + GroundN[1] * F[1] + GroundN[2] * F[2]
+            GroundVD = np.dot(GroundN, F)
+#            GroundVD = GroundN[0] * F[0] + GroundN[1] * F[1] + GroundN[2] * F[2]
             if groundHit == 1:
                 dxGround = HUGE
             elif GroundVD != 0.0:
-                GroundVO = ((GroundN[0] * veci[0] + GroundN[1] * veci[1] + GroundN[2] * veci[2]) + GroundD)
-                dxGround1 = (-1.000) * GroundVO * 1.000 / GroundVD
-                dxGround = dxGround1
-                Vecip1 = veci + dxGround * F
-                tmp = (GroundABC[0] * Vecip1[0] + GroundABC[1] * Vecip1[1] + GroundABC[2] * Vecip1[2] + GroundD)
+                GroundVO = ((np.dot(GroundN, veci)) + GroundD)
+                dxGround = -GroundVO / GroundVD
                 if dxGround < 0.0:
                     dxGround = HUGE
             else:
@@ -277,8 +299,17 @@ def main():
 
             #     Check intersection with building
             dxBuilding = HUGE
-            hit = 0
-            planeHit = 0
+#            hit=0
+#            planeHit = 0
+            #     Check intersection with Boxes
+            #      for Q in range(0, Bg.BoxNumber):
+            #          dxNear, dxFar, hit, planeHit = Fun.box(Bg.BoxArrayNear[Q], Bg.BoxArrayFar[Q], veci, F)
+            #          if dxNear < dxBuilding:
+            #              dxBuilding = dxNear
+            #              Vecip1 = veci + np.multiply(dxBuilding, F)
+            #              whichBox = Q
+            #              nBox = Fun.plane(Vecip1, Bg.BoxArrayNear[whichBox], Bg.BoxArrayFar[whichBox], planeHit)
+            #   Implement Geometry parser
             if buildingHit == 1:
                 dxBuilding = HUGE
             else:
@@ -287,64 +318,58 @@ def main():
                     if dxnear < dxBuilding:
                         dxBuilding = dxnear
                         nBox = nTemp
-                        Vecip1 = veci + np.multiply(dxBuilding, F)
-
-            #        print('dxbuilding: ',dxBuilding, dxBuilding1)
 
             # This part doesn't really work well.  We have not incorporated it.
             # Eventually all interactions will be triangles anyway so I'm leaving it here to be updated.
 
             #   Check intersection with Triangles
-    #        if Bg.TriangleNumber > 0:
-    #            for Q in range(0, Bg.TriangleNumber):
-    #                dxNear, behind = Fun.Polygon(veci, F, Q, 3, Bg.TriangleNumber, Bg.PointNumbers, Bg.TriangleArray,
-    #                                             Bg.BuildingPoints, normal, FaceNormalNo, FaceNormals)
-    #                if dxNear < dxBuilding:
-    #                    dxBuilding = dxNear
-    #                    nBox = normal
-    #                    whichBox = Q
+            #        if Bg.TriangleNumber > 0:
+            #            for Q in range(0, Bg.TriangleNumber):
+            #                dxNear, behind = Fun.Polygon(veci, F, Q, 3, Bg.TriangleNumber, Bg.PointNumbers, Bg.TriangleArray,
+            #                                             Bg.BuildingPoints, normal, FaceNormalNo, FaceNormals)
+            #                if dxNear < dxBuilding:
+            #                    dxBuilding = dxNear
+            #                    nBox = normal
+            #                    whichBox = Q
             #     Check intersection with Squares
-    #        if Bg.SquareNumber > 0:
-    #            for Q in range(0, Bg.SquareNumber):
-    #                dxNear, behind = Fun.Polygon(veci, F, Q, 4, SquareNumber,
+            #        if Bg.SquareNumber > 0:
+            #            for Q in range(0, Bg.SquareNumber):
+            #                dxNear, behind = Fun.Polygon(veci, F, Q, 4, SquareNumber,
             #                PointNumbers, SquareArray, BuildingPoints,
             #                normal, FaceNormalNo, FaceNormals)
-    #                if dxNear < dxBuilding:
-    #                    dxBuilding = dxNear
-    #                    nBox = normal
-    #                    whichBox = Q
+            #                if dxNear < dxBuilding:
+            #                    dxBuilding = dxNear
+            #                    nBox = normal
+            #                    whichBox = Q
             buildingHit = 0
             receiverHit = 0
             groundHit = 0
 
-            #     Check to see if ray hits within step size
+                #     Check to see if ray hits within step size
             if dxReceiver < Pf.h or dxGround < Pf.h or dxBuilding < Pf.h:
                 dx = min(dxReceiver, dxGround, dxBuilding)
                 #  if the ray hits a receiver, store in an array.  If the ray hits two, create two arrays to store in.
-                for R in ears:
-                    if dx == R.dx:
-                        # print('Ray ',ray +1,' hit receiver ',R.recNumber,' at step ',I)
-                        print('Ray ', rayCounter, ' hit receiver ', R.recNumber)
-                        veci += (dx * F)
-                        receiverHit = 1
-                        checkDirection = F
-                        if doubleHit == 1:
-                            receiverHit = 2
-                        hitCount = hitCount + 1
-                        update_freq(dx, alphaNothing, 0, lamb, airAbsorb)
-                        lastReceiver = receiverPoint
-                        outputArray1[:, 0] = frecuencias[:, 0]
-                        outputArray1[:, 1:4] = receiverPoint[:]
-                        outputArray1[:, 5] = phase[:]
-                        # print(list(ears[1].magnitude))
-                        if doubleHit == 1:
-                            # R2 = R      #Supposed to be other R, but just a placeholder for now
-                            R.on_Hit(amplitude/2, phase)
-                            R2.on_Hit(amplitude/2, phase)
-                        else:
-                            R.on_Hit(amplitude, phase)
+        #        for R in ears:
+                if dx == dxReceiver:
+                    print('Ray ', rayCounter, ' hit receiver ', R.recNumber)
+                    veci += (dx * F)
+                    #receiverHit = 1
+                    #checkDirection = F
+                    #if doubleHit == 1:
+                    #    receiverHit = 2
+                    hitCount = hitCount + 1
+                    update_freq(dx, alphaNothing, 0, lamb, airAbsorb)
+                    #lastReceiver = receiverPoint
+                    outputArray1[:, 0] = frecuencias[:, 0]
+                    outputArray1[:, 1:4] = receiverPoint[:]
+                    outputArray1[:, 5] = phase[:]
+                    #if doubleHit == 1:
+                    #    # R2 = R      #Supposed to be other R, but just a placeholder for now                            R.on_Hit(amplitude/2, phase)
+                    #    R2.on_Hit(amplitude/2, phase)
+                    #else:
+                    ears[tmp].on_Hit(amplitude, phase)
 
-                        # if(doubleHit==1):
+                       # if(doubleHit==1):
                         #      outputArray1[:,4]=amplitude[:]/2.0
                         #      dHOutputArray1[:,0]=inputArray[:,0]
                         #      dHOutputArray1[:,1:4]=receiverPoint2[:]
@@ -364,16 +389,16 @@ def main():
 
                 if abs(dx - dxGround) < 10.0**(-13.0):  # If the ray hits the ground then bounce and continue
                     veci += (dxGround * F)
-                    tmp = np.dot(GroundABC, veci)
+                    tmp = np.dot(GroundN, veci)
                     if tmp != GroundD:
                         veci[2] = 0
     #                print('hit ground at ', I)
-                    dot1 = np.dot(F, nGround)
-                    n2 = np.dot(nGround, nGround)
-                    F -= (2.0 * (dot1 / n2 * nGround))
-                    length = np.sqrt(np.dot(F, F))
+                    dot1 = np.dot(F, GroundN)
+                    n2 = np.dot(GroundN, GroundN)
+                    F -= (2.0 * (dot1 / n2 * GroundN))
+#                    length = np.sqrt(np.dot(F, F))
                     groundHit = 1
-                    twoPiDx = np.pi * 2 * dxGround
+#                    twoPiDx = np.pi * 2 * dxGround
                     #     Loop through all the frequencies
                     update_freq(dxGround, alphaGround, diffusionGround, lamb, airAbsorb)
     #                if Pf.radiosity == 1 and (diffusionGround != 0.0):
@@ -382,9 +407,9 @@ def main():
     #                            if (veci[0] <= (patchArray[Q, W, 0] + 0.5 * patchArray[Q, W, 3]) and
                 #                            veci[0]>=(patchArray[Q, W, 0] - 0.5 * patchArray[Q, W, 3])):
     #                                if veci[1] <= (patchArray[Q, W, 1] + 0.5 * patchArray[Q, W, 4]) and
-                #                                veci[1]>=(patchArray[Q, W, 1] - 0.5 * patchArray[Q, W, 4]):
+                    #                                veci[1]>=(patchArray[Q, W, 1] - 0.5 * patchArray[Q, W, 4]):
     #                                    if veci[2] <= (patchArray[Q, W, 2] + 0.5 * patchArray[Q, W, 5]) and
-                #                                    veci[2]>=(patchArray[Q, W, 2] - 0.5 * patchArray[Q, W, 5]):
+                    #                                    veci[2]>=(patchArray[Q, W, 2] - 0.5 * patchArray[Q, W, 5]):
     #                                        temp2 = complex(abs(patchArray[Q, W, 6])*np.exp(XJ*patchArray[Q, W, 7]))
     #                                        temp3 = complex(abs(amplitude[W] * (1.0 - alphaGround[W]) * diffusionGround *
                 #                                        exp(-m * dxGround)) * exp(1j * phaseFinal))
@@ -398,7 +423,7 @@ def main():
                     nBuilding = nBox / np.sqrt(n2)
                     dot1 = np.dot(F, nBuilding)
                     F -= (2.0 * (dot1 / n2 * nBuilding))
-                    length = np.sqrt(np.dot(F, F))
+#                    length = np.sqrt(np.dot(F, F))
                     buildingHit = 1
                     # We need to look into complex absorption and see if this is really the best way.
     #                if Pf.complexAbsorption:
@@ -437,6 +462,7 @@ def main():
         for w in range(sizeFFT):
             Rps.Receiver.timeHeader(f, timeArray[w], w)
     print('time: ', time.time()-t)
+
     # Outputting graphs
     t = time.time()
 
@@ -456,24 +482,24 @@ def main():
         # For N wave
         pressure = R.signal
         i = R.recNumber
-        #plt.figure(i)
-        #plt.figure(num = i, figsize=(19.20, 10.80), dpi=120, facecolor='#eeeeee', edgecolor='r')   # grey
-        #plt.figure(num = i, figsize=(19.20, 10.80), dpi=120, facecolor='#e0dae6', edgecolor='r')   # muted lilac
-        plt.figure(num = i, figsize=(19.20, 10.80), dpi=120, facecolor='#e6e6fa', edgecolor='r')    # lavender
-        #plt.plot(timeArray,pressure,'r--')
+        # plt.figure(i)
+        # plt.figure(num = i, figsize=(19.20, 10.80), dpi=120, facecolor='#eeeeee', edgecolor='r')   # grey
+        # plt.figure(num = i, figsize=(19.20, 10.80), dpi=120, facecolor='#e0dae6', edgecolor='r')   # muted lilac
+        plt.figure(num=i, figsize=(19.20, 10.80), dpi=120, facecolor='#e6e6fa', edgecolor='r')  # lavender
+        # plt.plot(timeArray,pressure,'r--')
         plt.grid(True)
-        plt.plot(timeArray,pressure,'#780303')
+        plt.plot(timeArray, pressure, '#780303')
         # Labeling axes
         plt.xlabel('Time [s]', fontproperties=stdfont)
         plt.ylabel('Pressure [Pa]', fontproperties=stdfont)
-        plt.title('Pressure vs Time of Receiver '+ str(i),
-                fontproperties=stdfont,
-                fontsize=26,
-                fontweight='bold')
+        plt.title('Pressure vs Time of Receiver ' + str(i),
+                  fontproperties=stdfont,
+                  fontsize=26,
+                  fontweight='bold')
 
         # Saving
-        #plt.savefig(Pf.graphName + str(i) + '.png', facecolor='#eeeeee')    # grey
-        #plt.savefig(Pf.graphName + str(i) + '.png', facecolor='#e0dae6')    # muted lilac
-        plt.savefig(Pf.graphName + str(i) + '.png', facecolor='#e6e6fa')    # lavender
+        # plt.savefig(Pf.graphName + str(i) + '.png', facecolor='#eeeeee')    # grey
+        # plt.savefig(Pf.graphName + str(i) + '.png', facecolor='#e0dae6')    # muted lilac
+        plt.savefig(Pf.graphName + str(i) + '.png', facecolor='#e6e6fa')  # lavender
         print('Saved receiver', i)
-    print('Graph time: ', time.time()-t)
+    print('Graph time: ', time.time() - t)

@@ -41,7 +41,7 @@ def collisionCheck(FACE,VECI,F):
     the caps lock just reinforces that the variables are only used inside this function set
     """
     HUGE = 1000000.0
-    F = np.array(F)         # hotfix
+#    F = np.array(F)         # hotfix
     N = faceNormal(FACE)    # compute plane normal
             # Finding intersection [P]oint
     # parallel check
@@ -49,25 +49,20 @@ def collisionCheck(FACE,VECI,F):
     isParallel = (abs(NF) < epsilon)    # bool, vD in old code
     #print('NF ',NF)
     if isParallel:
-        #print('parallel','\n',FACE)
         return HUGE        #ray does not hit, find an output to express that
-#    d = np.dot(N,FACE[2])   # is tri[0] and v0 in notes
     w = VECI-FACE[2]
     si= -N.dot(w)/NF
     # find distance between origin and intersect
-#    t = -(np.dot(N,VECI) + d) / NF          # dx, distance that ray travels
-
     if (si < 0):         # ray starts behind the face, break
-        #print('ray behind face','\n',FACE)
         return HUGE,N
     elif (si > stepSize):
-        #print('too far away, ignoring','\n',FACE)
         return HUGE,N    # does not hit inside step, ignore it
     else:               # if and only if it hits within the step then
         p = VECI + (si * F)
-        a = np.cross(FACE[1]-FACE[0],p-FACE[0])
-        b = np.cross(FACE[2]-FACE[1],p-FACE[1])
-        c = np.cross(FACE[0]-FACE[2],p-FACE[2])
+        tmp = p-FACE
+        a = np.cross(FACE[1]-FACE[0],tmp[0])
+        b = np.cross(FACE[2]-FACE[1],tmp[1])
+        c = np.cross(FACE[0]-FACE[2],tmp[2])
         if (a.dot(N) < 0):
             return HUGE,N
         elif (b.dot(N) < 0):
@@ -75,12 +70,7 @@ def collisionCheck(FACE,VECI,F):
         elif (c.dot(N) < 0):
             return HUGE, N
         else:
-        #isHit = edgeTest(FACE,p,N)
-        #print(isHit)
-#        if isHit == True:
-#            print('hits at ', p, si)
             return si, N
-        #return p        # should return p as it is the dx, just a placeholder for now
 
 ipname = 'Env/SingleBuilding.obj'
 ipfile = pwf.Wavefront(ipname)    # Read in geometry file
