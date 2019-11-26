@@ -281,9 +281,6 @@ def main():
             if(dxReceiver!= HUGE):
                 receiverPoint=ears[tmp].position
 
-
-
-                    #            print('time: ', time.time() - t)
                 #     Check Intersection with ground plane
             GroundVD = np.dot(GroundN, F)
 #            GroundVD = GroundN[0] * F[0] + GroundN[1] * F[1] + GroundN[2] * F[2]
