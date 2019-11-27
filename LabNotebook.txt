@@ -1346,3 +1346,17 @@ Trying really hard to graduate in this span of time, not much progress
         It could likely be a conditional that runs if the ray bounces in main and R-G is active
 
         
+11/27/19
+        Collapsed during the middle of the day. Woke up around 9PM, looked up my problem and successfully reoriented duck mesh.
+
+        Looked up a method to decrease number of polys in blender.
+
+        This has all been way easier since I slept
+
+        Hey future me: I get the feeling you're going to need this in the future. If you want to do this in Blender 2.8.1 again
+          You select the object in object mode (not edit)
+          You go to the modifiers tab and pick Decimate
+          Un-sub-divide it. It's an option.
+            Doesn't sound like a word, does it. Well it also didn't sound like it'd be that easy. Enjoy the rest of your day
+
+          Stay Happy!
