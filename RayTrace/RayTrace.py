@@ -239,6 +239,7 @@ def main():
             # For each step we should return, location, phase and amplitude
             dxReceiver = HUGE
             # Find the closest sphere and store that as the distance
+ #           print(veci)
             i=0
             for R in ears:
                 # The way that tempReceiver works now, it's only used here and only should be used here.
@@ -291,7 +292,7 @@ def main():
                 dxGround = HUGE
 
             #     Check intersection with building
-            dxBuilding = HUGE
+            #dxBuilding = HUGE
 #            hit=0
 #            planeHit = 0
             #     Check intersection with Boxes
@@ -306,16 +307,14 @@ def main():
             if buildingHit == 1:
                 dxBuilding = HUGE
             else:
-                # dxBuilding1,nBox1=Gp.collisionCheck2(Gp.mesh,veci,F)
-                # if (rayCounter==606):
-                #     print('New',dxBuilding1,nBox1)
-                for face in Gp.mesh:
-                    dxnear, nTemp = Gp.collisionCheck(face, veci, F)
-                    if dxnear < dxBuilding:
-                        dxBuilding = dxnear
-                        nBox = nTemp
-                if (rayCounter == 606):
-                    print('original',dxBuilding,nBox)
+                dxBuilding,nBox=Gp.collisionCheck2(Gp.mesh,veci,F)
+                # for face in Gp.mesh:
+                #     dxnear, nTemp = Gp.collisionCheck(face, veci, F)
+                #     if dxnear < dxBuilding:
+                #         dxBuilding1 = dxnear
+                #         nBox1 = nTemp
+                # if (rayCounter == 606):
+                #     print('original',dxBuilding,nBox)
 
             # This part doesn't really work well.  We have not incorporated it.
             # Eventually all interactions will be triangles anyway so I'm leaving it here to be updated.
@@ -390,7 +389,7 @@ def main():
                     tmp = np.dot(GroundN, veci)
                     if tmp != GroundD:
                         veci[2] = 0
-    #                print('hit ground at ', I)
+                    print('hit ground at ', I)
                     dot1 = np.dot(F, GroundN)
                     n2 = np.dot(GroundN, GroundN)
                     F -= (2.0 * (dot1 / n2 * GroundN))
@@ -419,8 +418,10 @@ def main():
                     print('hit building at step ', I)
                     n2 = np.dot(nBox, nBox)
                     nBuilding = nBox / np.sqrt(n2)
+                    n3 = np.dot(nBuilding, nBuilding)
                     dot1 = np.dot(F, nBuilding)
-                    F -= (2.0 * (dot1 / n2 * nBuilding))
+                    F -= (2.0 * (dot1 / n3 * nBuilding))
+
 #                    length = np.sqrt(np.dot(F, F))
                     buildingHit = 1
                     # We need to look into complex absorption and see if this is really the best way.

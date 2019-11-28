@@ -2,8 +2,7 @@
 # much of it is hardcoded, but that can all be fixes
 import numpy as np
 import pywavefront as pwf
-#from Parameterfile import h as stepSize     #temporary, just used to make sure we do not overstep
-stepSize = 100
+from Parameterfile import h as stepSize     #temporary, just used to make sure we do not overstep
 #FaceNormals = [(-1,0,0),(0,1,0),(1,0,0),(0,-1,0),(0,0,1)]  Desired
 epsilon = 1e-6  # how small angle between ray and plane has to be to count as parallel
 
@@ -13,6 +12,7 @@ def faceNormal(face):
     c = np.array(face[2])
     d = np.cross((b-a),(c-a))   # [D]irection
 #    e = d//np.sqrt(d.dot(d))
+#    print('d1',d)
     return d
 
 def edgeTest(triangle,P,N):
@@ -59,10 +59,9 @@ def collisionCheck(FACE,VECI,F):
         return HUGE,N    # does not hit inside step, ignore it
     else:               # if and only if it hits within the step then
         p = VECI + (si * F)
-        tmp = p-FACE
-        a = np.cross(FACE[1]-FACE[0],tmp[0])
-        b = np.cross(FACE[2]-FACE[1],tmp[1])
-        c = np.cross(FACE[0]-FACE[2],tmp[2])
+        a = np.cross(FACE[1]-FACE[0],p-FACE[0])
+        b = np.cross(FACE[2]-FACE[1],p-FACE[1])
+        c = np.cross(FACE[0]-FACE[2],p-FACE[2])
         if (a.dot(N) < 0):
             return HUGE,N
         elif (b.dot(N) < 0):
@@ -129,9 +128,9 @@ faces = env.mesh.faces       # list of keys to vertices
 #mesh = [np.array((vertices[f[0]],vertices[f[1]],vertices[f[2]])) for f in env.mesh.faces]
 
 mesh = [np.array((
-        (vertices[f[0]][0], vertices[f[0]][2], vertices[f[0]][1]),
-        (vertices[f[1]][0], vertices[f[1]][2], vertices[f[1]][1]),
-        (vertices[f[2]][0], vertices[f[2]][2], vertices[f[2]][1])))
+        (vertices[f[0]][0], vertices[f[0]][1], vertices[f[0]][2]),
+        (vertices[f[1]][0], vertices[f[1]][1], vertices[f[1]][2]),
+        (vertices[f[2]][0], vertices[f[2]][1], vertices[f[2]][2])))
     for f in env.mesh.faces]    # Brute force technique just to get source to x,y,z
 
 #for face in mesh:
