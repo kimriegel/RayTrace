@@ -17,15 +17,11 @@ import Parameterfile as Pf
 import Functions as Fun
 import ReceiverPointSource as Rps  # For receivers
 import GeometryParser as Gp
-import multiprocessing
-from joblib import Parallel, delayed
 
 
 # import GeometryParser as Bg
 
 import time  # Time checks
-num_cores = multiprocessing.cpu_count()
-print(num_cores)
 t = time.time()
 phase = 0
 amplitude = 0
@@ -310,11 +306,16 @@ def main():
             if buildingHit == 1:
                 dxBuilding = HUGE
             else:
+                # dxBuilding1,nBox1=Gp.collisionCheck2(Gp.mesh,veci,F)
+                # if (rayCounter==606):
+                #     print('New',dxBuilding1,nBox1)
                 for face in Gp.mesh:
                     dxnear, nTemp = Gp.collisionCheck(face, veci, F)
                     if dxnear < dxBuilding:
                         dxBuilding = dxnear
                         nBox = nTemp
+                if (rayCounter == 606):
+                    print('original',dxBuilding,nBox)
 
             # This part doesn't really work well.  We have not incorporated it.
             # Eventually all interactions will be triangles anyway so I'm leaving it here to be updated.

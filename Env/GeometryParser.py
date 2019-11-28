@@ -12,8 +12,8 @@ def faceNormal(face):
     b = np.array(face[1])
     c = np.array(face[2])
     d = np.cross((b-a),(c-a))   # [D]irection
-    e = d//np.sqrt(d.dot(d))
-    return e
+#    e = d//np.sqrt(d.dot(d))
+    return d
 
 def edgeTest(triangle,P,N):
     """
@@ -72,13 +72,55 @@ def collisionCheck(FACE,VECI,F):
         else:
             return si, N
 
-ipname = 'Env/SingleBuilding.obj'
+
+def faceNormal_array(face):
+    a = np.array(face)[:,0]
+    b = np.array(face)[:,1]
+    c = np.array(face)[:,2]
+    d = np.cross((b-a),(c-a))   # [D]irection
+#    e = d//np.sqrt(d.dot(d))
+    return d
+
+def collisionCheck2(FACE,VECI,F):
+    """
+    find if a ray hits the face for our mesh function
+
+    the caps lock just reinforces that the variables are only used inside this function set
+    """
+    si = np.array([])
+    tmp = np.zeros([3,len(FACE),3])
+    HUGE = 1000000.0
+    N = faceNormal_array(FACE)    # compute plane normal
+    # Finding intersection [P]oint
+    # parallel check
+    NF = np.dot(N,F)        # rayDir in notes, plane normal dot F
+#    si[(np.where((abs(NF) < epsilon)))] = HUGE
+#    isParallel = (abs(NF) < epsilon)    # bool, vD in old code
+
+#    if isParallel:
+#        return HUGE        #ray does not hit, find an output to express that
+    w = VECI-np.array(FACE)[:,2]
+    si= -np.einsum('ij,ij->i',N,w)/NF
+    p = VECI + si[:,np.newaxis]*F
+    tmp[0] = np.subtract(p,np.array(FACE)[:,0])
+    tmp[1] = np.subtract(p, np.array(FACE)[:, 1])
+    tmp[2] = np.subtract(p, np.array(FACE)[:, 2])
+    a = np.cross((np.array(FACE)[:,1]-np.array(FACE)[:,0]),tmp[0,:])
+    b = np.cross((np.array(FACE)[:,2]-np.array(FACE)[:,1]),tmp[1,:])
+    c = np.cross((np.array(FACE)[:,0]-np.array(FACE)[:,2]),tmp[2,:])
+    Cond=((np.einsum('ij,ij->i', a, N)<0)) | (np.einsum('ij,ij->i', b, N)<0) | (np.einsum('ij,ij->i', c, N)<0)
+    si[np.where((Cond) | (abs(NF)<epsilon) | (si < 0.0) | (si > stepSize ))] = HUGE
+    index=np.argmin(si)
+    return(si[index], N[index])
+
+
+ipname = 'Env/SingleBuildingTest.obj'
+#ipname = 'Env/duckscaled.obj'
 ipfile = pwf.Wavefront(ipname)    # Read in geometry file
 env = pwf.ObjParser(ipfile,ipname, strict=False, encoding="utf-8",
         create_materials=True, collect_faces=True, parse=True, cache=False)
 vertices = env.wavefront.vertices                                           # useful
-faces = env.mesh.faces                                                      # list of keys to vertices
-
+faces = env.mesh.faces       # list of keys to vertices
 #Boxnumber = 1     # supposed to import from s, come back to this later
     # Is this similar to Will's bands?
 #Boxarraynear=np.array([10,10,0])
