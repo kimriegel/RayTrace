@@ -1360,3 +1360,46 @@ Trying really hard to graduate in this span of time, not much progress
             Doesn't sound like a word, does it. Well it also didn't sound like it'd be that easy. Enjoy the rest of your day
 
           Stay Happy!
+
+
+12/3/2019
+          Idea to use dask, idea from Frank [lastname] at ASA conference in 2019
+            He wore a really nice lavender shirt
+
+12/4/2019
+        I finally had time to try dask. Tutorials seem more complicated than necessary
+          I see why people think python is hard
+
+        btw use %% to call Jupyter Notebook
+          I don't use one now, but FutureMe, or someone else might not know that
+
+      Seem to have installed dask wrong. Come back later
+
+       use pip install "dask[complete]"
+
+12/6/2019
+        Dask ran a function that would seemingly take 3 seconds in 
+        2 seconds and change. Sounds impossible, but here we are
+
+      
+        Dask is faster, but it seems to not have an effect on our current code practices
+
+12/14/19
+        For-loops seem difficult to do as delays, but it seems I may find my answers in bags
+
+
+        Plan: 
+          create a list of delayed objects
+          the list will inherently be a tree 
+          compute the tree to run all the tasks in parallel
+
+12/18/19
+          Mi Plan Futuro
+
+            Make that intermediary step between the geometry parser and the main code that can cut corners and improve runtime
+
+
+          Outputing
+            print('x', file = [name] ) is used to easily write down whatever. It implies \n at the end of everything
+            functionally identical to 
+            [name].write('x')

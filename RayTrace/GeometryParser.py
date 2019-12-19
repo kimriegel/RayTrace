@@ -3,9 +3,12 @@
 import numpy as np
 import pywavefront as pwf
 #from Parameterfile import h as stepSize     #temporary, just used to make sure we do not overstep
-stepSize = 100
+stepSize = 10
 #FaceNormals = [(-1,0,0),(0,1,0),(1,0,0),(0,-1,0),(0,0,1)]  Desired
 epsilon = 1e-6  # how small angle between ray and plane has to be to count as parallel
+HUGE = 1000000.0
+
+
 
 def faceNormal(face):
     a = np.array(face[0])
@@ -20,16 +23,16 @@ def edgeTest(triangle,P,N):
     Checks if some point P is inside a triangle, uses a given Normal
     """
 
-    edge = ((triangle[1] - triangle[0]),
-            (triangle[2] - triangle[1]),
+    edge = ((triangle[1] - triangle[0]), 
+            (triangle[2] - triangle[1]), 
             (triangle[0] - triangle[2]))
 
-    chi =  ((P - triangle[0]),
-            (P - triangle[1]),
+    chi =  ((P - triangle[0]), 
+            (P - triangle[1]), 
             (P - triangle[2]))
 
-    sha = ( N.dot(np.cross(edge[0],chi[0])) > 0,
-            N.dot(np.cross(edge[1],chi[1])) > 0,
+    sha = ( N.dot(np.cross(edge[0],chi[0])) > 0, 
+            N.dot(np.cross(edge[1],chi[1])) > 0, 
             N.dot(np.cross(edge[2],chi[2])) > 0)
 
     return np.all(sha)
@@ -49,8 +52,8 @@ def collisionCheck(FACE,VECI,F):
     isParallel = (abs(NF) < epsilon)    # bool, vD in old code
     #print('NF ',NF)
     if isParallel:
+        return HUGE
         #print('parallel','\n',FACE)
-        return HUGE        #ray does not hit, find an output to express that
 #    d = np.dot(N,FACE[2])   # is tri[0] and v0 in notes
     w = VECI-FACE[2]
     si= -N.dot(w)/NF
@@ -84,7 +87,7 @@ def collisionCheck(FACE,VECI,F):
 
 ipname = 'Env/SingleBuilding.obj'
 ipfile = pwf.Wavefront(ipname)    # Read in geometry file
-env = pwf.ObjParser(ipfile,ipname, strict=False, encoding="utf-8",
+env = pwf.ObjParser(ipfile,ipname, strict=False, encoding="utf-8", 
         create_materials=True, collect_faces=True, parse=True, cache=False)
 vertices = env.wavefront.vertices                                           # useful
 faces = env.mesh.faces                                                      # list of keys to vertices
