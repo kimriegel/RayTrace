@@ -3,6 +3,7 @@
 import numpy as np
 INPUTFILE = "inputNASABOOM1.txt"
 RecInput = "PointReceivers.txt"
+ipname = 'Env/SingleBuildingTest.obj'
 Fs = 24000.0
 xinitial = 145.0
 yinitial = 35.0
@@ -31,7 +32,7 @@ absorbplanes = 1
 #allocate(tempalphabuilding(absorbplanes,8))
 #Find way to rephrase
 #outputfile = 'PythonTest1.txt'
-outputfile = "PythonTestSimpleBuilding" + str(boomspacing) + ".txt"       #debugging
+outputfile = "PythonTestSimple" + str(boomspacing) + ".txt"       #debugging
 graphName = "TestGraph"                                     # No not use full file extension here
 #Will's
 #outputfile = "PythonTestEnv" + str(boomspacing) + ".txt"       #debugging

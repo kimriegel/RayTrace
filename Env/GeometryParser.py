@@ -2,6 +2,7 @@
 # much of it is hardcoded, but that can all be fixes
 import numpy as np
 import pywavefront as pwf
+from Parameterfile import ipname
 from Parameterfile import h as stepSize     #temporary, just used to make sure we do not overstep
 #FaceNormals = [(-1,0,0),(0,1,0),(1,0,0),(0,-1,0),(0,0,1)]  Desired
 epsilon = 1e-6  # how small angle between ray and plane has to be to count as parallel
@@ -113,7 +114,7 @@ def collisionCheck2(FACE,VECI,F):
     return(si[index], N[index])
 
 
-ipname = 'Env/SingleBuildingTest.obj'
+
 #ipname = 'Env/duckscaled.obj'
 ipfile = pwf.Wavefront(ipname)    # Read in geometry file
 env = pwf.ObjParser(ipfile,ipname, strict=False, encoding="utf-8",
