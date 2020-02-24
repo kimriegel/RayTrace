@@ -1,0 +1,23 @@
+// Note: x & y values should be given with respect to the coordinate origin.
+
+// Animation Parameters
+num_frame_yz 	= 200	// Total number of frames for YZ slice visualization 
+x_slice_yz	= 15	// x-coordinate of the slice [m]
+y_range_yz1   	= 0	// Starting y-coordinate of YZ slice [m]
+y_range_yz2   	= 24	// Ending y-coordinate of YZ slice [m]
+z_range_yz1   	= 0 	// Starting z-coordinate of YZ slice [m]
+z_range_yz2    	= 6	// Ending z-coordinate of YZ slice [m]
+
+num_frame_xz 	= 200	// Total number of frames for XZ slice visualization
+y_slice_xz    	= 15	// y-coordinate of the slice [m]
+x_range_xz1  	= 0	// Starting x-coordinate of XZ slice [m]
+x_range_xz2  	= 30	// Ending x-coordinate of XZ slice [m]
+z_range_xz1    	= 0	// Starting z-coordinate of XZ slice [m]
+z_range_xz2   	= 6	// Ending z-coordinate of XZ slice [m]
+
+num_frame_xy 	= 200	// Total number of frames for XY slice visualization
+z_slice_xy    	= 0	// Distance from the ground in z-direction to be cut [m]
+x_range_xy1    	= 0	// Starting x-coordinate of XY slice [m]
+x_range_xy2    	= 30	// Ending x-coordinate of XY slice [m]
+y_range_xy1    	= 0	// Starting y-coordinate of XY slice [m]
+y_range_xy2    	= 24	// Ending y-coordinate of XY slice [m]

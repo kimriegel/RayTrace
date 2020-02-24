@@ -36,7 +36,7 @@ def updateFreq(dx,alpha,diffusion):
 def cast():
     if (PF.h < (2*PF.radius)): 
         print('h is less than 2r')
-        #break
+        # break
         return
     F = np.array(Finitial)         # If not defined this way it will make them the same object. This will break the entire program. Do not change
     veci = boomarray[ray,:]
@@ -93,13 +93,13 @@ def cast():
         hit=0
         planehit=0
         #     Check intersection with Boxes
-        for Q in range(0,BG.Boxnumber):
-            dxnear, dxfar, hit, planehit=fun.BOX(BG.Boxarraynear[Q], BG.Boxarrayfar[Q],veci,F)
+        for Q in range(0, BG.BoxNumber):
+            dxnear, dxfar, hit, planehit=fun.box(BG.BoxArrayNear[Q], BG.BoxArrayFar[Q], veci, F)
             if (dxnear < dxbuilding):
                 dxbuilding=dxnear
                 Vecip1=veci+np.multiply(dxbuilding,F)
                 whichbox=Q
-                nbox=fun.PLANE(Vecip1, BG.Boxarraynear[whichbox],BG.Boxarrayfar[whichbox], planehit)
+                nbox=fun.plane(Vecip1, BG.BoxArrayNear[whichbox], BG.BoxArrayFar[whichbox], planehit)
         #     Check intersection with Triangles
         if(BG.TriangleNumber > 0):
             for Q in range(0, BG.TriangleNumber):

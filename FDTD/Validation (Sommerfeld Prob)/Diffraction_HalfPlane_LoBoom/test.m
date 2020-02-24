@@ -1,0 +1,15 @@
+Diffraction_HalfPlane_LoBoom45;
+Diffraction_HalfPlane_LoBoom60;
+Diffraction_HalfPlane_LoBoom75;
+Diffraction_HalfPlane_LoBoom90;
+Diffraction_HalfPlane_LoBoom105;
+Diffraction_HalfPlane_LoBoom120;
+Diffraction_HalfPlane_LoBoom135;
+Diffraction_HalfPlane_LoBoom150;
+Diffraction_HalfPlane_LoBoom165;
+
+cd('..')
+Diffraction_HalfPlane_Nwave(135);
+Diffraction_HalfPlane_Nwave(150);
+Diffraction_HalfPlane_Nwave(165);
+
