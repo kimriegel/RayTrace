@@ -1,11 +1,19 @@
-# wip
+# Initialize all the important variables. 
+
 import initializer as i
+
+# import math libraries. 
 import numpy as np 
+
+#import the building Geometry. 
 import BuildingGeometry as bg
+
+# import relevant functions for Ray Trace
 import Functions as fun
 BG = bg
 print('began rays')
-ray = 606                     # @ PF.boomspacing = 1
+# These Ray counts are where they hit the receivers when we need to check that things are working. 
+#ray = 606                     # @ PF.boomspacing = 1
 #ray = 455174                 # @ PF.boomspacing = 0.06
 hitcount=0
 doublehit=0

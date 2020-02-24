@@ -1,7 +1,21 @@
 # wip
-import Parameterfile as PF
+
+# This file initializes all of the important variables.  
+# This file is called from raycaster.py 
+
+
+# include built in math library
+
 import numpy as np
+
+# initialize all user defined variables.
+
+import Parameterfile as PF
+
+#include all functions needed for ray trace
 import Functions as fun
+
+# initialie all receivers. 
 import ReceiverPointSource as RPS
 
 def initial_signal(signalLength,fftOutput):
