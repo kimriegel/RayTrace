@@ -89,7 +89,12 @@ ipname = 'Env/SingleBuilding.obj'
 ipfile = pwf.Wavefront(ipname)    # Read in geometry file
 env = pwf.ObjParser(ipfile,ipname, strict=False, encoding="utf-8", 
         create_materials=True, collect_faces=True, parse=True, cache=False)
-vertices = env.wavefront.vertices                                           # useful
+#vertices = env.wavefront.vertices                                           # useful but twice
+
+uselessV = env.wavefront.vertices                                           # useful
+vertices = [uselessV[v] for v in range(len(uselessV)//2)]
+
+
 faces = env.mesh.faces                                                      # list of keys to vertices
 
 #Boxnumber = 1     # supposed to import from s, come back to this later
@@ -114,11 +119,31 @@ mesh = [np.array((
 #
 #
 ## start here   (debugging)
-#myFaces = []
-#    # trying to make more usable faces
-##print(mesh)
-#for f in env.mesh.faces:
-#    myFaces.append((vertices[f[0]],vertices[f[1]],vertices[f[2]]))
-##print(myFaces)
-#
-#collisionCheck(([[0,1,5],[1,0,5],[0,0,5]]),np.array([0,0,10]),np.array([0,-1,-1]))
+
+#######################################################################################################
+
+###print(vertices)
+##with open("foo.py",'w') as f:
+##    #print(('vertices = ',vertices),file=f)
+##    #print('vertices = ')
+##    #for v in vertices:
+##    f.write('vertices = [\n')
+##    for v in range(len(vertices)//2):
+##        #f.write(str(v))
+##        #f.write(str(('\t',vertices[v])))
+##        print(( vertices[v]), file=f)
+##        #f.write(str(('\t',vertices[v])))
+##        #f.write('\n,')
+##    f.write(']')
+#mlem = [x for x in range(10//2)]
+#print(mlem)
+#mlem = [v for v in range(len(vertices)//2)]
+#mlem
+
+#print(vertices)
+
+#          print('\t%f\t%f\t%f\t%f' %(R.position[0],R.position[1],R.position[2],R.signal[w]),file=f)    #time signal
+
+#with open("foo.py",'w') as f:
+#    f.write('#\n')
+#    f.write('')
