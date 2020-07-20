@@ -12,7 +12,7 @@ C     BigBertha
       hr=20.0
       theta=1.6863372
       phi=3.44458181
-      boomspacing=.35
+      boomspacing=.035
       xmin=-1
       ymin=30.0
       zmin=0.0
@@ -23,7 +23,7 @@ C     BigBertha
       h=10.0
       absorbplanes=1
       allocate(tempalphabuilding(absorbplanes,8))
-      OUTPUTFILE='FortranTest1.dat'
+      OUTPUTFILE='Fortran_simpleBuildingComp.dat'
 C     Turn Radiosity on or off.  This will include diffuse reflections
       radiosity=0
 C     Turn on complex absorption
