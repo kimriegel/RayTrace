@@ -428,7 +428,7 @@ def box(b1, b2, vecip1, f):
             if dx_near > dx_far:
                 hit = 0
                 dx_near = huge_box
-                return dx_near, dx_far, it, plane_hit
+                return dx_near, dx_far, hit, plane_hit
             elif dx_far < 0.0:
                 hit = 0
                 dx_near = huge_box
