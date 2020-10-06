@@ -47,7 +47,6 @@ def collisionCheck(FACE,VECI,F):
     # parallel check
     NF = N.dot(F)        # rayDir in notes, plane normal dot F
     isParallel = (abs(NF) < epsilon)    # bool, vD in old code
-    #print('NF ',NF)
     if isParallel:
         #print('parallel','\n',FACE)
         return HUGE        #ray does not hit, find an output to express that

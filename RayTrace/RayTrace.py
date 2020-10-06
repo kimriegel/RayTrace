@@ -165,7 +165,7 @@ def main():
         if frecuencias[D1, 0] >= 0.0 or frecuencias[D1, 0] < 88.0:
             alphaGround[D1] = Pf.tempalphaground[0]
         elif frecuencias[D1, 0] >= 88.0 or frecuencias[D1, 0] < 177.0:
-            alphaGround[D] = Pf.tempalphaground[1]
+            alphaGround[D1] = Pf.tempalphaground[1]
         elif frecuencias[D1, 0] >= 177.0 or frecuencias[D1, 0] < 355.0:
             alphaGround[D1] = Pf.tempalphaground[2]
         elif frecuencias[D1, 0] >= 355.0 or frecuencias[D1, 0] < 710.0:
@@ -182,7 +182,7 @@ def main():
     alphaBuilding = np.zeros((Pf.absorbplanes, sizeFFTTwo))
     for W in range(Pf.absorbplanes):        # These also look minimal
         for D2 in range(sizeFFTTwo):
-            if frecuencias[D2, 0] >= 0.0 or frecuencias[D, 0] < 88.0:
+            if frecuencias[D2, 0] >= 0.0 or frecuencias[D2, 0] < 88.0:
                 alphaBuilding[W, D2] = Pf.tempalphabuilding[W, 0]
             elif frecuencias[D2, 0] >= 88.0 or frecuencias[D2, 0] < 177.0:
                 alphaBuilding[W, D2] = Pf.tempalphabuilding[W, 1]
