@@ -1,325 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="2a07ac13-e7fb-4220-b635-634433aa2cda" name="Default Changelist" comment="">
+    <list default="true" id="b1cdacbb-04ed-4032-a219-5d00b79fe37b" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Env/GeometryParser.py" beforeDir="false" afterPath="$PROJECT_DIR$/Env/GeometryParser.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Fortran/Parameterfile.f" beforeDir="false" afterPath="$PROJECT_DIR$/Fortran/Parameterfile.f" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Fortran/RayTrace" beforeDir="false" afterPath="$PROJECT_DIR$/Fortran/RayTrace" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Fortran/raytrace.o" beforeDir="false" afterPath="$PROJECT_DIR$/Fortran/raytrace.o" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RayTrace/Parameterfile.py" beforeDir="false" afterPath="$PROJECT_DIR$/RayTrace/Parameterfile.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/readme.txt" beforeDir="false" afterPath="$PROJECT_DIR$/readme.txt" afterDir="false" />
     </list>
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/RayTrace/Parameterfile.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="176">
-              <caret line="34" column="30" selection-start-line="34" selection-start-column="30" selection-end-line="34" selection-end-column="30" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/readme.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="8" column="57" selection-start-line="8" selection-start-column="57" selection-end-line="8" selection-end-column="57" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/RayTrace/RayTrace.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1016">
-              <caret line="30" column="3" selection-start-line="30" selection-start-column="3" selection-end-line="30" selection-end-column="3" />
-              <folding>
-                <element signature="e#516#558#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Env/GeometryParser.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="190">
-              <caret line="116" selection-start-line="116" selection-end-line="116" />
-              <folding>
-                <element signature="e#101#119#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/TestGraphDuck3.png">
-          <provider selected="true" editor-type-id="images" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/TestGraphDuck4.png">
-          <provider selected="true" editor-type-id="images" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/TestGraphDuck5.png">
-          <provider selected="true" editor-type-id="images" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/TestGraphSimple1.png">
-          <provider selected="true" editor-type-id="images" />
-        </entry>
-      </file>
-    </leaf>
-  </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Python Script" />
-      </list>
-    </option>
-  </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>huge</find>
-      <find>tr</find>
-      <find>tri(</find>
-      <find>dxbuil</find>
-      <find>dxb</find>
-      <find>whichbox</find>
-      <find>dxBuil</find>
-      <find>dxnear</find>
-      <find>nBox</find>
-      <find>buildinghit</find>
-      <find>groundhit</find>
-      <find>dxground</find>
-      <find>hit building</find>
-      <find>nbox</find>
-      <find>ntemp</find>
-      <find>print</find>
-      <find>dxbuilding</find>
-      <find>nTemp</find>
-      <find>rece</find>
-      <find>making specific</find>
-      <find>r.</find>
-      <find>phase</find>
-      <find>ears</find>
-      <find>finished Ray</find>
-      <find>buildingHit</find>
-      <find>PI</find>
-      <find>D4</find>
-      <find>if Pf.</find>
-      <find>obj</find>
-      <find>ipname</find>
-    </findStrings>
-  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-    <option name="RECENT_BRANCH_BY_REPOSITORY">
-      <map>
-        <entry key="$PROJECT_DIR$" value="master" />
-      </map>
-    </option>
   </component>
-  <component name="IdeDocumentHistory">
-    <option name="CHANGED_PATHS">
-      <list>
-        <option value="$PROJECT_DIR$/test.py" />
-        <option value="$PROJECT_DIR$/Parameterfile.py" />
-        <option value="$PROJECT_DIR$/RayTrace.py" />
-        <option value="$PROJECT_DIR$/GeometryParser.py" />
-        <option value="$PROJECT_DIR$/RayTrace/RayTraceOld.py" />
-        <option value="$PROJECT_DIR$/RayTrace/GeometryParser.py" />
-        <option value="$PROJECT_DIR$/RayTrace/RayTrace.py" />
-        <option value="$PROJECT_DIR$/Env/GeometryParser.py" />
-        <option value="$PROJECT_DIR$/readme.txt" />
-        <option value="$PROJECT_DIR$/RayTrace/Parameterfile.py" />
-      </list>
-    </option>
-  </component>
-  <component name="IgnoredFileRootStore">
-    <option name="generatedRoots">
-      <set>
-        <option value="$PROJECT_DIR$/.idea" />
-      </set>
-    </option>
-  </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="58" />
-    <option name="y" value="23" />
-    <option name="width" value="1338" />
-    <option name="height" value="821" />
-  </component>
-  <component name="ProjectId" id="1QjwSVMKhyzzmSqtVERiGNbvXg0" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
-  <component name="ProjectView">
-    <navigator currentView="Scope" currentSubView="Scope 'Project Files'; set:Project Files; class com.intellij.psi.search.scope.ProjectFilesScope" proportions="" version="1">
-      <foldersAlwaysOnTop value="true" />
-    </navigator>
-    <panes>
-      <pane id="Scope">
-        <subPane subId="Scope 'Project Files'; set:Project Files; class com.intellij.psi.search.scope.ProjectFilesScope">
-          <expand>
-            <path>
-              <item name="RayTrace" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="~/PycharmProjects/RayTrace" type="442cc68d:ScopeViewTreeModel$RootNode" />
-            </path>
-            <path>
-              <item name="RayTrace" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="~/PycharmProjects/RayTrace" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name="Env" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-            </path>
-            <path>
-              <item name="RayTrace" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="~/PycharmProjects/RayTrace" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name="RayTrace" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="RayTrace" type="b2602c69:ProjectViewProjectNode" />
-              <item name="RayTrace" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="RayTrace" type="b2602c69:ProjectViewProjectNode" />
-              <item name="RayTrace" type="462c0819:PsiDirectoryNode" />
-              <item name="Env" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="RayTrace" type="b2602c69:ProjectViewProjectNode" />
-              <item name="RayTrace" type="462c0819:PsiDirectoryNode" />
-              <item name="EnvTest" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="RayTrace" type="b2602c69:ProjectViewProjectNode" />
-              <item name="RayTrace" type="462c0819:PsiDirectoryNode" />
-              <item name="output" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="RayTrace" type="b2602c69:ProjectViewProjectNode" />
-              <item name="RayTrace" type="462c0819:PsiDirectoryNode" />
-              <item name="RayTrace" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
-    </panes>
+  <component name="ProjectId" id="1jiX1HkUFupKb5Ljpdk6571zp7L" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
-    <property name="run.code.analysis.last.selected.profile" value="aDefault" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
-  </component>
-  <component name="RunManager" selected="Python.runRays">
-    <configuration name="GeometryParser (1)" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="RayTrace" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/GeometryParser.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="GeometryParser" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="RayTrace" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Env" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Env/GeometryParser.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="RayTrace (1)" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="RayTrace" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/RayTrace" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/RayTrace/RayTrace.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="RayTrace" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <module name="RayTrace" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/RayTrace.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="runRays" type="PythonConfigurationType" factoryName="Python" temporary="true">
+  <component name="RunManager">
+    <configuration name="runRays" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="RayTrace" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -340,375 +47,42 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Python.runRays" />
-        <item itemvalue="Python.runRays" />
-        <item itemvalue="Python.RayTrace (1)" />
-        <item itemvalue="Python.RayTrace" />
-        <item itemvalue="Python.GeometryParser (1)" />
-      </list>
-    </recent_temporary>
   </component>
-  <component name="SvnConfiguration">
-    <configuration />
-  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="2a07ac13-e7fb-4220-b635-634433aa2cda" name="Default Changelist" comment="" />
-      <created>1568297315103</created>
+      <changelist id="b1cdacbb-04ed-4032-a219-5d00b79fe37b" name="Default Changelist" comment="" />
+      <created>1604287669229</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1568297315103</updated>
+      <updated>1604287669229</updated>
     </task>
-    <task id="LOCAL-00001" summary="Merge branch 'master' into Riegel-Speed&#10;&#10;# Conflicts:&#10;#&#9;Fortran/Parameterfile.f&#10;#&#9;Fortran/raytrace.o&#10;#&#9;RayTrace.py&#10;#&#9;RayTrace/ReceiverPointSource.py&#10;#&#9;__pycache__/BuildingGeometry.cpython-37.pyc&#10;#&#9;__pycache__/Functions.cpython-37.pyc&#10;#&#9;__pycache__/Parameterfile.cpython-37.pyc&#10;#&#9;__pycache__/RayTrace.cpython-37.pyc&#10;#&#9;__pycache__/ReceiverPointSource.cpython-37.pyc&#10;#&#9;scrap/Parameterfile_costa.py">
-      <created>1568339330911</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1568339330911</updated>
-    </task>
-    <task id="LOCAL-00002" summary="Merge branch 'master' into Riegel-Speed&#10;&#10;# Conflicts:&#10;#&#9;Fortran/Parameterfile.f&#10;#&#9;Fortran/raytrace.o&#10;#&#9;RayTrace.py&#10;#&#9;RayTrace/ReceiverPointSource.py&#10;#&#9;__pycache__/BuildingGeometry.cpython-37.pyc&#10;#&#9;__pycache__/Functions.cpython-37.pyc&#10;#&#9;__pycache__/Parameterfile.cpython-37.pyc&#10;#&#9;__pycache__/RayTrace.cpython-37.pyc&#10;#&#9;__pycache__/ReceiverPointSource.cpython-37.pyc&#10;#&#9;scrap/Parameterfile_costa.py">
-      <created>1568339947545</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1568339947545</updated>
-    </task>
-    <task id="LOCAL-00003" summary="Adding Graphing Back in">
-      <created>1568342265735</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1568342265735</updated>
-    </task>
-    <task id="LOCAL-00004" summary="Added New obj files for corrected vertices.">
-      <created>1568407976528</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1568407976528</updated>
-    </task>
-    <task id="LOCAL-00005" summary="Updating from Seaton-Receivers by hand, currently very broken">
-      <created>1572890557572</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1572890557572</updated>
-    </task>
-    <task id="LOCAL-00006" summary="Updating from Seaton-Receivers by hand, currently very broken">
-      <created>1572891810700</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1572891810700</updated>
-    </task>
-    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
-  <component name="TodoView">
-    <todo-panel id="selected-file">
-      <is-autoscroll-to-source value="true" />
-    </todo-panel>
-    <todo-panel id="all">
-      <are-packages-shown value="true" />
-      <is-autoscroll-to-source value="true" />
-    </todo-panel>
-  </component>
-  <component name="ToolWindowManager">
-    <frame x="58" y="23" width="1338" height="821" extended-state="0" />
-    <editor active="true" />
-    <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2627183" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.61199695" visible="true" weight="0.3415638" />
-      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49891695" weight="0.3993174" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.499375" weight="0.3292517" />
-      <window_info anchor="bottom" id="Version Control" order="7" sideWeight="0.49886104" weight="0.32921812" />
-      <window_info anchor="bottom" id="Terminal" order="8" />
-      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.38800305" side_tool="true" visible="true" weight="0.3415638" />
-      <window_info anchor="bottom" id="Python Console" order="10" sideWeight="0.499375" weight="0.3292517" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-    </layout>
-    <layout-to-restore>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2627183" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.76461655" visible="true" weight="0.29766804" />
-      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49734244" weight="0.39917696" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.499375" weight="0.3292517" />
-      <window_info anchor="bottom" id="Version Control" order="7" sideWeight="0.49886104" weight="0.32921812" />
-      <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.4968603" weight="0.3296355" />
-      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.23538345" side_tool="true" visible="true" weight="0.29766804" />
-      <window_info anchor="bottom" id="Python Console" order="10" sideWeight="0.4976452" weight="0.32784638" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-    </layout-to-restore>
-  </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="1">
-          <value>
-            <State>
-              <option name="RECENTLY_FILTERED_USER_GROUPS">
-                <collection />
-              </option>
-              <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
-                <collection />
-              </option>
-              <option name="FILTERS">
-                <map>
-                  <entry key="range">
-                    <value>
-                      <list>
-                        <option value="HEAD..Riegel-Speed" />
-                      </list>
-                    </value>
-                  </entry>
-                </map>
-              </option>
-              <option name="COLUMN_ORDER">
-                <list>
-                  <option value="0" />
-                  <option value="1" />
-                  <option value="2" />
-                  <option value="3" />
-                </list>
-              </option>
-            </State>
-          </value>
-        </entry>
-        <entry key="2">
-          <value>
-            <State>
-              <option name="RECENTLY_FILTERED_USER_GROUPS">
-                <collection />
-              </option>
-              <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
-                <collection />
-              </option>
-              <option name="FILTERS">
-                <map>
-                  <entry key="range">
-                    <value>
-                      <list>
-                        <option value="HEAD..origin/Riegel-Speed" />
-                      </list>
-                    </value>
-                  </entry>
-                </map>
-              </option>
-              <option name="COLUMN_ORDER">
-                <list>
-                  <option value="0" />
-                  <option value="1" />
-                  <option value="2" />
-                  <option value="3" />
-                </list>
-              </option>
-            </State>
-          </value>
-        </entry>
-        <entry key="MAIN">
-          <value>
-            <State>
-              <option name="RECENTLY_FILTERED_USER_GROUPS">
-                <collection />
-              </option>
-              <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
-                <collection />
-              </option>
-              <option name="COLUMN_ORDER" />
-            </State>
-          </value>
-        </entry>
-      </map>
-    </option>
-    <option name="OPEN_TABS">
-      <set>
-        <option value="1" />
-        <option value="2" />
-      </set>
-    </option>
-    <option name="RECENT_FILTERS">
-      <map>
-        <entry key="Branch">
-          <value>
-            <list />
-          </value>
-        </entry>
-        <entry key="User">
-          <value>
-            <list />
-          </value>
-        </entry>
-      </map>
-    </option>
-  </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="Merge branch 'master' into Riegel-Speed&#10;&#10;# Conflicts:&#10;#&#9;Fortran/Parameterfile.f&#10;#&#9;Fortran/raytrace.o&#10;#&#9;RayTrace.py&#10;#&#9;RayTrace/ReceiverPointSource.py&#10;#&#9;scrap/Parameterfile_costa.py" />
-    <MESSAGE value="Merge branch 'master' into Riegel-Speed&#10;&#10;# Conflicts:&#10;#&#9;Fortran/Parameterfile.f&#10;#&#9;Fortran/raytrace.o&#10;#&#9;RayTrace.py&#10;#&#9;RayTrace/ReceiverPointSource.py&#10;#&#9;__pycache__/BuildingGeometry.cpython-37.pyc&#10;#&#9;__pycache__/Functions.cpython-37.pyc&#10;#&#9;__pycache__/Parameterfile.cpython-37.pyc&#10;#&#9;__pycache__/RayTrace.cpython-37.pyc&#10;#&#9;__pycache__/ReceiverPointSource.cpython-37.pyc&#10;#&#9;scrap/Parameterfile_costa.py" />
-    <MESSAGE value="Adding Graphing Back in" />
-    <MESSAGE value="Added New obj files for corrected vertices." />
-    <MESSAGE value="Updating from Seaton-Receivers by hand, currently very broken" />
-    <option name="LAST_COMMIT_MESSAGE" value="Updating from Seaton-Receivers by hand, currently very broken" />
-  </component>
-  <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/test.py" />
-    <entry file="file://$PROJECT_DIR$/PythonTestNewGeom.txt" />
-    <entry file="file://$PROJECT_DIR$/PythonTestNewGeom2.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="158">
-          <caret line="57961" column="48" lean-forward="true" selection-start-line="57961" selection-start-column="48" selection-end-line="57961" selection-end-column="48" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Environment.py" />
-    <entry file="file://$PROJECT_DIR$/Parameterfile.py" />
-    <entry file="file://$PROJECT_DIR$/Functions.py" />
-    <entry file="file://$PROJECT_DIR$/RayTrace.py" />
-    <entry file="file://$PROJECT_DIR$/GeometryParser.py" />
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor />
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" selection-start-line="3" selection-end-line="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/RayTrace/RayTraceOld.py" />
-    <entry file="file://$PROJECT_DIR$/PythonTest1.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-753" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/RayTrace/Parameterfile_TestGround.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-368">
-          <caret line="4" column="35" selection-start-line="4" selection-start-column="35" selection-end-line="4" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/PointReceivers_testGround.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="16" selection-start-column="16" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/runRays.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" column="19" selection-start-line="4" selection-start-column="19" selection-end-line="4" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/RayTrace/BuildingGeometry.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/RayTrace/GeometryParser.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Env/Environment.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1845">
-          <caret line="126" column="44" selection-start-line="126" selection-start-column="44" selection-end-line="126" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/PointReceivers.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" column="27" selection-start-line="4" selection-start-column="27" selection-end-line="4" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SingleBuildingGeometry.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/RayTrace/Functions.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="13" column="11" selection-start-line="13" selection-end-line="14" />
-          <folding>
-            <element signature="e#453#471#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/TestGraphDuck3.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/TestGraphDuck4.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/TestGraphDuck5.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/TestGraphSimple1.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/RayTrace/RayTrace.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1016">
-          <caret line="30" column="3" selection-start-line="30" selection-start-column="3" selection-end-line="30" selection-end-column="3" />
-          <folding>
-            <element signature="e#516#558#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/PythonTestSimple006.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-31" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/PythonTestSimpleBuilding006v1.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/readme.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="57" selection-start-line="8" selection-start-column="57" selection-end-line="8" selection-end-column="57" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Env/GeometryParser.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="190">
-          <caret line="116" selection-start-line="116" selection-end-line="116" />
-          <folding>
-            <element signature="e#101#119#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/RayTrace/Parameterfile.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="34" column="30" selection-start-line="34" selection-start-column="30" selection-end-line="34" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
+  <component name="WindowStateProjectService">
+    <state x="666" y="185" width="1071" height="700" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1604470896496">
+      <screen x="0" y="23" width="1920" height="1097" />
+    </state>
+    <state x="666" y="185" width="1071" height="700" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1920.1097@0.23.1920.1097" timestamp="1604470896496" />
+    <state width="1379" height="271" key="GridCell.Tab.0.bottom" timestamp="1605283317674">
+      <screen x="0" y="23" width="1920" height="1097" />
+    </state>
+    <state width="1379" height="271" key="GridCell.Tab.0.bottom/0.23.1920.1097@0.23.1920.1097" timestamp="1605283317674" />
+    <state width="1379" height="271" key="GridCell.Tab.0.center" timestamp="1605283317673">
+      <screen x="0" y="23" width="1920" height="1097" />
+    </state>
+    <state width="1379" height="271" key="GridCell.Tab.0.center/0.23.1920.1097@0.23.1920.1097" timestamp="1605283317673" />
+    <state width="1379" height="271" key="GridCell.Tab.0.left" timestamp="1605283317672">
+      <screen x="0" y="23" width="1920" height="1097" />
+    </state>
+    <state width="1379" height="271" key="GridCell.Tab.0.left/0.23.1920.1097@0.23.1920.1097" timestamp="1605283317672" />
+    <state width="1379" height="271" key="GridCell.Tab.0.right" timestamp="1605283317673">
+      <screen x="0" y="23" width="1920" height="1097" />
+    </state>
+    <state width="1379" height="271" key="GridCell.Tab.0.right/0.23.1920.1097@0.23.1920.1097" timestamp="1605283317673" />
+    <state x="711" y="162" key="SettingsEditor" timestamp="1604470814953">
+      <screen x="0" y="23" width="1920" height="1097" />
+    </state>
+    <state x="711" y="162" key="SettingsEditor/0.23.1920.1097@0.23.1920.1097" timestamp="1604470814953" />
   </component>
 </project>

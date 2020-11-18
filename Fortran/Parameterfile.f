@@ -23,7 +23,7 @@ C     BigBertha
       h=10.0
       absorbplanes=1
       allocate(tempalphabuilding(absorbplanes,8))
-      OUTPUTFILE='Fortran_simpleBuildingComp.dat'
+      OUTPUTFILE='Fortran_SimpleBuildingComp_0035.dat'
 C     Turn Radiosity on or off.  This will include diffuse reflections
       radiosity=0
 C     Turn on complex absorption
