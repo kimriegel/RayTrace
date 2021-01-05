@@ -1177,3 +1177,51 @@ Trying really hard to graduate in this span of time, not much progress
       Found bug in Will's Environemnt file.
         third edge test used a different vertice and that may not have been correct
           ( I don't know. I don't have the book he read from )
+
+12/5/2020
+      I haven't seen you since the plague!
+      Tried many versions of an input file maker, the ones I remeber as follows
+
+        My own from scratch:
+          Many bugs, but has what I need
+
+        Copied from encodedna.com(no changes):
+          Exactly the form of what I want, but does not have what I need
+
+        Copied from encodedna.com(small changes):
+          Proof of concept. Proves promising, still works
+
+        The data I need put into the encodedna code:
+          Broken, unknown where. Tried going in pieces from the beginning and end.
+          Breaks both ways
+
+
+12/10/2020
+      Made a Progress ba for the UI 
+      It is a bar that fills up. It looks pretty
+      I don't know how to link front and back end yet. ALL it does is look pretty.
+
+      Looking into AJAX to link them
+      AJAX also works directly in html
+      This might become an elaborate compendium of languages just to make less print statements.
+
+12/26/2020
+      Electron does exactly the thing I need
+        Not the running part, but hopefully it runs.
+        It allows me to link the UI and python
+
+1/1/2021
+      Learning electron now
+
+
+1/4/2021
+      Teaching my friend, Joel coding. Saw a cool video. Nerded for a bit. 
+      Learned of the Quake algorithm. 
+        Supposed to improve collision performance by 3x for 1% loss in accuracy
+        Accuracy loss can be reduced with further addition of Newton Iteration 
+
+1/5/2021
+      Tried working on dropbox to reduce the syncing that breaks all my local files
+	Accidentally nuked all my local files
+	This is the notebook that seems most recent
+	Gui file was recovered from most recent backup

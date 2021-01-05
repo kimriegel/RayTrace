@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Save form Data in a Text File using JavaScript</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+    	div {
+            padding: 10px;
+            background-color: #f6f6f6;
+            overflow: hidden;
+        }
+    	input[type=text], textarea, select {
+            font: 17px Calibri;
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        input[type=button]{ 
+            font: 17px Calibri;
+            width: auto;
+            float: right;
+            cursor: pointer;
+            padding: 7px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        
+        <!--Add few elements to the form-->
+        <div>
+            
+            <div>
+            <div><input type="text" id="fName" placeholder="Enter the name of the file to be created"/></div>
+            <div><input type= "text" id="INPUTFILE"   placeholder = "INPUTFILE "  /></div>
+            <div><input type= "text" id="RecInput"    placeholder = "RecInput "   /></div>
+            <div><input type= "text" id="ipname"      placeholder = "ipname"     /></div>
+            <div><input type= "text" id="Fs"           placeholder = "Fs"          /></div>
+            <div><input type= "text" id="xinitial "    placeholder = "xinitial "   /></div>
+            <div><input type= "text" id="yinitial "    placeholder = "yinitial "   /></div>
+            <div><input type= "text" id="zinitial"     placeholder = "zinitial"    /></div>
+            <div><input type= "text" id="radius      " placeholder = "radius      "/></div>
+            <div><input type= "text" id="soundspeed  " placeholder = "soundspeed  "/></div>
+            <div><input type= "text" id="ps          " placeholder = "ps          "/></div>
+            <div><input type="text" id="Temp" placeholder="Temperature (K)"        /></div>
+            <div><input type= "text" id="Temp        " placeholder = "Temp        "/></div>
+            <div><input type= "text" id="time        " placeholder = "time        "/></div>
+            <div><input type= "text" id="hr          " placeholder = "hr          "/></div>
+            <div><input type= "text" id="theta       " placeholder = "theta       "/></div>
+            <div><input type= "text" id="phi         " placeholder = "phi         "/></div>
+            <div><input type= "text" id="boomspacing " placeholder = "boomspacing "/></div>
+            <div><input type= "text" id="xmin        " placeholder = "xmin        "/></div>
+            <div><input type= "text" id="ymin        " placeholder = "ymin        "/></div>
+            <div><input type= "text" id="zmin        " placeholder = "zmin        "/></div>
+            <div><input type= "text" id="xmax        " placeholder = "xmax        "/></div>
+            <div><input type= "text" id="ymax        " placeholder = "ymax        "/></div>
+            <div><input type= "text" id="zmax        " placeholder = "zmax        "/></div>
+            <div><input type= "text" id="IMAX        " placeholder = "IMAX        "/></div>
+            <div><input type= "text" id="h           " placeholder = "h           "/></div>
+            <div><input type= "text" id="absorbplanes" placeholder = "absorbplanes"/></div>
+            <div><input type= "text" id="outputfile "  placeholder = "outputfile " /></div>
+            <div><input type= "text" id="graphName "   placeholder = "graphName "  /></div>
+            <div><input type= "text" id="radiosity "   placeholder = "radiosity "  /></div>
+            <div><input type= "text" id="complexabsorption " placeholder = "complexabsorption "/></div>
+        <div>
+            <input type="button" id="bt" value="Save data to file" onclick="saveFile()" />
+        </div>
+
+    </div>
+</body>
+<script>
+    let saveFile = () => {
+    	
+        // Get the data from each element on the form.
+        
+        const fname = document.getElementById('fName');
+        const INPUTFILE = document.getElementById('INPUTFILE');
+        const RecInput = document.getElementById('RecInput');
+        const ipname = document.getElementById('ipname');
+        const Fs = document.getElementById('Fs');
+        const xinitial  = document.getElementById('xinitial ');
+        const yinitial  = document.getElementById('yinitial ');
+        const zinitial = document.getElementById('zinitial');
+        const radius    = document.getElementById('radius   ');
+        const soundspeed = document.getElementById('soundspeed');
+        const ps = document.getElementById('ps');
+        const Temp = document.getElementById('Temp');
+        const time = document.getElementById('time');
+        const hr = document.getElementById('hr');
+        const theta = document.getElementById('theta');
+        const phi = document.getElementById('phi');
+        const boomspacing = document.getElementById('boomspacing');
+        const xmin = document.getElementById('xmin');
+        const ymin = document.getElementById('ymin');
+        const zmin = document.getElementById('zmin');
+        const xmax = document.getElementById('xmax');
+        const ymax = document.getElementById('ymax');
+        const zmax = document.getElementById('zmax');
+        const IMAX = document.getElementById('IMAX');
+        const h = document.getElementById('h');
+        const absorbplanes  = document.getElementById('absorbplanes ');
+        const outputfile  = document.getElementById('outputfile ');
+        const graphName  = document.getElementById('graphName ');
+        const radiosity  = document.getElementById('radiosity ');
+        const complexabsorption = document.getElementById('complexabsorption');
+         
+        
+        // This variable stores all the data.
+        let data = 
+            "\r fName="  +fName.value + "\r\n " + 
+            "INPUTFILE= " + INPUTFILE.value + "\r\n" +
+            "RecInput= " + RecInput.value + "\r\n" +
+            "ipname= " + ipname.value + "\r\n" +
+            "Fs= " + Fs.value + "\r\n" +
+            "xinitial = " + xinitial .value + "\r\n" +
+            "yinitial = " + yinitial .value + "\r\n" +
+            "zinitial= " + zinitial.value + "\r\n" +
+            "radius   = " + radius   .value + "\r\n" +
+            "soundspeed= " + soundspeed.value + "\r\n" +
+            "ps= " + ps.value + "\r\n" +
+            "Temp= " + Temp.value + "\r\n" +
+            "time= " + time.value + "\r\n" +
+            "hr= " + hr.value + "\r\n" +
+            "theta= " + theta.value + "\r\n" +
+            "phi= " + phi.value + "\r\n" +
+            "boomspacing= " + boomspacing.value + "\r\n" +
+            "xmin= " + xmin.value + "\r\n" +
+            "ymin= " + ymin.value + "\r\n" +
+            "zmin= " + zmin.value + "\r\n" +
+            "xmax= " + xmax.value + "\r\n" +
+            "ymax= " + ymax.value + "\r\n" +
+            "zmax= " + zmax.value + "\r\n" +
+            "IMAX= " + IMAX.value + "\r\n" +
+            "h= " + h.value + "\r\n" +
+            "absorbplanes = " + absorbplanes .value + "\r\n" +
+            "outputfile = " + outputfile .value + "\r\n" +
+            "graphName = " + graphName .value + "\r\n" +
+            "radiosity = " + radiosity .value + "\r\n" +
+            "complexabsorption = " + complexabsorption .value + "\r\n";
+        
+        // Convert the text to BLOB.
+        const textToBLOB = new Blob([data], { type: 'text/plain' });
+        const sFileName = fName.value +'.txt';	   // The file to save the data.
+
+        let newLink = document.createElement("a");
+        newLink.download = sFileName;
+
+        if (window.webkitURL != null) {
+            newLink.href = window.webkitURL.createObjectURL(textToBLOB);
+        }
+        else {
+            newLink.href = window.URL.createObjectURL(textToBLOB);
+            newLink.style.display = "none";
+            document.body.appendChild(newLink);
+        }
+
+        newLink.click(); 
+    }
+</script>
+</html>
