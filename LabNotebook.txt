@@ -1235,3 +1235,29 @@ Trying really hard to graduate in this span of time, not much progress
 
 	I find the nature of written speech amazing, as I can document the 
 	happenings of this decade inside this file that was once just a log for bugs
+
+1/15/2021
+  Meeting with Dr Riegel:
+
+  Q: weather bot with non homo weather  (See notes on knitting poll)
+  A: we currently use standard atmosphere
+    currently use international standard for atm
+	    we can get weather up to 160k ft
+	    stratified in z dir
+
+      Good idea for international weather, not for rn tho
+      Less coding for me
+
+  Q: bithack, can we?
+  A: Look into python specific optimizations
+
+1/19/2021
+  Had the idea to work in more complex geometry than only triangles
+    That would decrease the amount of itterations we need to do
+
+  Looking into adapting triangle function to work with general polygons
+    Strange shaped polys might be a problem
+      Looking into just quads for now
+      Biggest issue with quads is making sure everything is in same plane
+
+      We could definitely try turning step function I into a generator
