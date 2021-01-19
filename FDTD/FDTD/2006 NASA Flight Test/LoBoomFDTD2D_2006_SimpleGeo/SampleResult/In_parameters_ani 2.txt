@@ -1,0 +1,6 @@
+// Note: x range values should be given with respect to the coordinate origin.
+
+num_frame 	= 100	// Total number of frames for animation
+x_range_lo 	= 115	// Starting x-coordinate of animation snapshot [m]
+x_range_hi 	= 134	// Ending x-coordinate of animation snapshot [m]
+z_range_hi 	= 45	// Starting z-coordinate of animation snapshot [m]

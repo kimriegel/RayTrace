@@ -1,0 +1,50 @@
+// Note: x & y values and mic locations should be given as distances from the building corner closest to the coordinate origin.
+
+// Animation parameters
+num_frame_yz = 200       // Total number of frames for YZ slice visualization 
+x_slice_yz    = 1.41             // x-coordinate of the slice [m]
+y_range_yz1    = -3        // Starting y-coordinate of YZ slice [m]
+y_range_yz2    = 7.82         // Ending y-coordinate of YZ slice [m]
+z_range_yz1    = 0           // Starting z-coordinate of YZ slice [m]
+z_range_yz2    = 7         // Ending z-coordinate of YZ slice [m]
+
+num_frame_xz = 200      // Total number of frames for XZ slice visualization
+y_slice_xz    = 2.41            // y-coordinate of the slice [m]
+x_range_xz1  = -3         // Starting x-coordinate of XZ slice [m]
+x_range_xz2  = 5.82         // Ending x-coordinate of XZ slice [m]
+z_range_xz1    = 0       // Starting z-coordinate of XZ slice [m]
+z_range_xz2    = 7       // Ending z-coordinate of XZ slice [m]
+
+num_frame_xy = 200      // Total number of frames for XY slice visualization
+z_slice_xy    = 0         // Distance from the ground in z-direction to be cut [m]
+x_range_xy1    = -3         // Starting x-coordinate of XY slice [m]
+x_range_xy2    = 5.82         // Ending x-coordinate of XY slice [m]
+y_range_xy1    = -3         // Starting y-coordinate of XY slice [m]
+y_range_xy2    = 7.82         // Ending y-coordinate of XY slice [m]
+
+n_range_surface = 200	// Number of frames for external pressure loading visualization
+
+
+// Microphone parameters
+num_mic = 7		// Number of microphones to record the pressure time history
+mic1x = 2.82		// x-coordinate of Mic1 [m]
+mic1y = 2.41		// y-coordinate of Mic1 [m]
+mic1z = 0		// z-coordinate of Mic1 [m]
+mic2x = 2.82		// x-coordinate of Mic2 [m]
+mic2y = 2.41		// y-coordinate of Mic2 [m]
+mic2z = 1.525		// z-coordinate of Mic2 [m]
+mic3x = 2.82		// x-coordinate of Mic3 [m]
+mic3y = 2.41		// y-coordinate of Mic3 [m]
+mic3z = 3.05		// z-coordinate of Mic3 [m]
+mic4x = 1.41		// x-coordinate of Mic4 [m]
+mic4y = 2.41		// y-coordinate of Mic4 [m]
+mic4z = 3.05		// z-coordinate of Mic4 [m]
+mic5x = 0		// x-coordinate of Mic5 [m]
+mic5y = 2.41		// y-coordinate of Mic5 [m]
+mic5z = 3.05		// z-coordinate of Mic5 [m]
+mic6x = 0		// x-coordinate of Mic6 [m]
+mic6y = 2.41		// y-coordinate of Mic6 [m]
+mic6z = 1.525		// z-coordinate of Mic6 [m]
+mic7x = 0		// x-coordinate of Mic7 [m]
+mic7y = 2.41		// y-coordinate of Mic7 [m]
+mic7z = 0		// z-coordinate of Mic7 [m]
