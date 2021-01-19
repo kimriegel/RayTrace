@@ -3,9 +3,12 @@
 import numpy as np
 import pywavefront as pwf
 #from Parameterfile import h as stepSize     #temporary, just used to make sure we do not overstep
-stepSize = 100
+stepSize = 10
 #FaceNormals = [(-1,0,0),(0,1,0),(1,0,0),(0,-1,0),(0,0,1)]  Desired
 epsilon = 1e-6  # how small angle between ray and plane has to be to count as parallel
+HUGE = 1000000.0
+
+
 
 def faceNormal(face):
     a = np.array(face[0])
@@ -20,16 +23,16 @@ def edgeTest(triangle,P,N):
     Checks if some point P is inside a triangle, uses a given Normal
     """
 
-    edge = ((triangle[1] - triangle[0]),
-            (triangle[2] - triangle[1]),
+    edge = ((triangle[1] - triangle[0]), 
+            (triangle[2] - triangle[1]), 
             (triangle[0] - triangle[2]))
 
-    chi =  ((P - triangle[0]),
-            (P - triangle[1]),
+    chi =  ((P - triangle[0]), 
+            (P - triangle[1]), 
             (P - triangle[2]))
 
-    sha = ( N.dot(np.cross(edge[0],chi[0])) > 0,
-            N.dot(np.cross(edge[1],chi[1])) > 0,
+    sha = ( N.dot(np.cross(edge[0],chi[0])) > 0, 
+            N.dot(np.cross(edge[1],chi[1])) > 0, 
             N.dot(np.cross(edge[2],chi[2])) > 0)
 
     return np.all(sha)
@@ -49,8 +52,8 @@ def collisionCheck(FACE,VECI,F):
     isParallel = (abs(NF) < epsilon)    # bool, vD in old code
     #print('NF ',NF)
     if isParallel:
+        return HUGE
         #print('parallel','\n',FACE)
-        return HUGE        #ray does not hit, find an output to express that
 #    d = np.dot(N,FACE[2])   # is tri[0] and v0 in notes
     w = VECI-FACE[2]
     si= -N.dot(w)/NF
@@ -84,9 +87,14 @@ def collisionCheck(FACE,VECI,F):
 
 ipname = 'Env/SingleBuilding.obj'
 ipfile = pwf.Wavefront(ipname)    # Read in geometry file
-env = pwf.ObjParser(ipfile,ipname, strict=False, encoding="utf-8",
+env = pwf.ObjParser(ipfile,ipname, strict=False, encoding="utf-8", 
         create_materials=True, collect_faces=True, parse=True, cache=False)
-vertices = env.wavefront.vertices                                           # useful
+#vertices = env.wavefront.vertices                                           # useful but twice
+
+uselessV = env.wavefront.vertices                                           # useful
+vertices = [uselessV[v] for v in range(len(uselessV)//2)]
+
+
 faces = env.mesh.faces                                                      # list of keys to vertices
 
 #Boxnumber = 1     # supposed to import from s, come back to this later
@@ -111,11 +119,31 @@ mesh = [np.array((
 #
 #
 ## start here   (debugging)
-#myFaces = []
-#    # trying to make more usable faces
-##print(mesh)
-#for f in env.mesh.faces:
-#    myFaces.append((vertices[f[0]],vertices[f[1]],vertices[f[2]]))
-##print(myFaces)
-#
-#collisionCheck(([[0,1,5],[1,0,5],[0,0,5]]),np.array([0,0,10]),np.array([0,-1,-1]))
+
+#######################################################################################################
+
+###print(vertices)
+##with open("foo.py",'w') as f:
+##    #print(('vertices = ',vertices),file=f)
+##    #print('vertices = ')
+##    #for v in vertices:
+##    f.write('vertices = [\n')
+##    for v in range(len(vertices)//2):
+##        #f.write(str(v))
+##        #f.write(str(('\t',vertices[v])))
+##        print(( vertices[v]), file=f)
+##        #f.write(str(('\t',vertices[v])))
+##        #f.write('\n,')
+##    f.write(']')
+#mlem = [x for x in range(10//2)]
+#print(mlem)
+#mlem = [v for v in range(len(vertices)//2)]
+#mlem
+
+#print(vertices)
+
+#          print('\t%f\t%f\t%f\t%f' %(R.position[0],R.position[1],R.position[2],R.signal[w]),file=f)    #time signal
+
+#with open("foo.py",'w') as f:
+#    f.write('#\n')
+#    f.write('')

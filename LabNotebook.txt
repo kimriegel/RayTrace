@@ -1177,3 +1177,229 @@ Trying really hard to graduate in this span of time, not much progress
       Found bug in Will's Environemnt file.
         third edge test used a different vertice and that may not have been correct
           ( I don't know. I don't have the book he read from )
+
+
+@r0ml 
+    Creating SQL database vs python arrays and lists in regards to memory and speed
+      Limitations of SQL databases 
+
+    How to find the method Blender uses to calculate turbulence
+
+
+@glyph
+    Creating SQL database vs python arrays and lists in regards to memory and speed
+      Speed of reading and translating SQL databases into python and back
+
+    How to encorporate multiprocessing 
+
+    Taking pieces of pypy to use is python3
+
+
+8/14/19
+      RayTrace-1 exists
+        It's just like raytrace but gives the option to mess up.
+          Putting in a quarantine folder on dropbox then going to parse thru and look at what to take and what to leave from it
+
+8/18/19
+      Making my own geometry that does exactly what I need with minimal abstraction
+
+      looking at how to target specific vertices with Wil's old method 
+      (faces[0][2] is(faces[1][2])) confirms that the keys on this list refer to the same vertex in SingleBuilding file
+
+      The nature of all these extra numbers makes this slightly harder to read, but the results appear to be the same. 
+        Remember to read each face as a set of /sets/ of three (so nine), instead of a set of 3
+        Also that this is still in x,z,y notation
+
+      Successfully created a list of the actual vertices and how they relate to each other
+        Here's my scrap paper for how I tested they are the acutal objects and not just the same values:
+          print(myFaces)
+          print(myFaces[0:2])
+          print(myFaces[0],myFaces[1])
+          print(myFaces[0][2],myFaces[1][2])
+          print(myFaces[0][2] is(myFaces[1][2]))
+          print(id(myFaces[0][2]),id(myFaces[1][2]))
+          print(id(myFaces[0][2]) == id(myFaces[1][2]))
+        
+        The next step is to be able to reliably check plane intersection with each face 
+        or calculate the normals from the points I have if I cannot integrate those yet
+
+        Working on it, the method I have now will always return positive normals tho
+
+        Q: For a very large sized building with many faces can I use a dictionary to store normals so I don't have to keep recalculating them?
+
+        Still need to check if all faces list vertices in clockwise order (So that function works)
+          Doesn't look like it: taking a break
+
+
+
+9/16/19
+          Normal only seems to face outside if using x,z,y notation, otherwise faces only point inwards
+        Inner me: if it's right but negative why don't you just  *= -1 ?
+        Inner me 2: Good question. I did that now.
+
+        The parser always works in x,z,y translation. As a fellow human I'm sure we both have used x,y,z up to now.
+          This new notation is no doubt confusing. It is confusing to me too. I think the problem doesn't exist and 
+          I've been doing nothing thinking of it in x,y,z.
+
+
+9/18/19
+
+      Changed myFaces to mesh and used a list comphehension to get it because those look really cool
+
+10/2/19
+      Friend sent a ray intersection algorithm 
+
+10/12/19
+      Have been looking into this an several other algorithms
+
+      The one I've been looking over may be slow as it was presented, but will likely speed up similar to how py1.0 sped up in py1.1
+
+      I've also glanced over Moller-Trumble algorithm. It seems relatively fast, but when I looked into stack overflow for problems 
+      people have had with it in python it seems to slow down very much. It inherently makes use of linear math for speed so it may 
+      resemble the all-memory prototypeand upscale poorly but run fast on small tests.
+
+      Table for now but will keep in mind later
+
+      I will continue playing with the basic intersection alg from friend
+
+10/14/19
+
+          The numbers haunted my dreams. I coded.
+
+          The example code given was straight forward but had pitfalls
+            It used the letter "O" as a variable
+            It used the letter "C" to represent two different things
+
+            O is the ray origin, therefore it is now veci
+            The second C was used to represent a cross product
+              It is now Chi
+
+
+
+          Is there a reason for the check to see if the ray starts behind the face
+            I know we need to know that the ray doesn't cross the boundary,
+            but it seems that it's causing too many problems as it exists now
+
+
+10/15/19
+          Tossed a -1 into t to get it to register rays facing it correctly.
+
+          After other minor bug fixes the renderer is finally in beta.
+          Testing can now begin.
+
+          Rays not bouncing at known points
+
+          Env/SingleBuildingTest is a very large skyscraper floating in midair.
+            Just a tiny bit unrealistic
+            This explains the bouncing
+
+          Remade geometry file.
+
+          Finally fixed the notation by using brute force.
+          Currently the following, but will optimize later:
+            print(  vertices[f[0]][0],      #YES
+            vertices[f[0]][2],
+            vertices[f[0]][1])
+
+          Upscaled to:
+            print(
+                  (vertices[f[0]][0], vertices[f[0]][2], vertices[f[0]][1]),
+                  (vertices[f[1]][0], vertices[f[1]][2], vertices[f[1]][1]),
+                  (vertices[f[2]][0], vertices[f[2]][2], vertices[f[2]][1])
+            )
+
+10/17/19
+          Included beta of renderer into main file
+            Seems to register negative of geometry
+
+
+11/3/19
+          Changed collision function to return t instead of a bool
+          
+          It will sometimes return a dx of 0
+
+          This function also increases runtime five fold
+
+11/5/19 
+        Looking at Dr R's changes
+          Final runtime: 160.96 seconds
+
+          Now to:
+            Make receiver-geometry
+            Make duck files
+            Speed it up again
+
+11/23/19 
+        Used duck file from free model site. Added details in slides
+
+        printable_models @free3d.com for duck mesh
+        https://free3d.com/3d-model/mandarin-duck-v1--786872.html
+
+        PyWaveFront makes a vertex list 2x the size of verticies
+          Using a list comp means it repeats halfway through.
+          Fine for now, come back later
+
+
+        Successfully made a list of faces, where faces are receiver objects
+
+        I can't see a way to include amplitude and phase of the ray in receiver-geometry without crippling the function's speed.
+        It could likely be a conditional that runs if the ray bounces in main and R-G is active
+
+        
+11/27/19
+        Collapsed during the middle of the day. Woke up around 9PM, looked up my problem and successfully reoriented duck mesh.
+
+        Looked up a method to decrease number of polys in blender.
+
+        This has all been way easier since I slept
+
+        Hey future me: I get the feeling you're going to need this in the future. If you want to do this in Blender 2.8.1 again
+          You select the object in object mode (not edit)
+          You go to the modifiers tab and pick Decimate
+          Un-sub-divide it. It's an option.
+            Doesn't sound like a word, does it. Well it also didn't sound like it'd be that easy. Enjoy the rest of your day
+
+          Stay Happy!
+
+
+12/3/2019
+          Idea to use dask, idea from Frank [lastname] at ASA conference in 2019
+            He wore a really nice lavender shirt
+
+12/4/2019
+        I finally had time to try dask. Tutorials seem more complicated than necessary
+          I see why people think python is hard
+
+        btw use %% to call Jupyter Notebook
+          I don't use one now, but FutureMe, or someone else might not know that
+
+      Seem to have installed dask wrong. Come back later
+
+       use pip install "dask[complete]"
+
+12/6/2019
+        Dask ran a function that would seemingly take 3 seconds in 
+        2 seconds and change. Sounds impossible, but here we are
+
+      
+        Dask is faster, but it seems to not have an effect on our current code practices
+
+12/14/19
+        For-loops seem difficult to do as delays, but it seems I may find my answers in bags
+
+
+        Plan: 
+          create a list of delayed objects
+          the list will inherently be a tree 
+          compute the tree to run all the tasks in parallel
+
+12/18/19
+          Mi Plan Futuro
+
+            Make that intermediary step between the geometry parser and the main code that can cut corners and improve runtime
+
+
+          Outputing
+            print('x', file = [name] ) is used to easily write down whatever. It implies \n at the end of everything
+            functionally identical to 
+            [name].write('x')
