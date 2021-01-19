@@ -1403,3 +1403,86 @@ Trying really hard to graduate in this span of time, not much progress
             print('x', file = [name] ) is used to easily write down whatever. It implies \n at the end of everything
             functionally identical to 
             [name].write('x')
+12/5/2020
+      I haven't seen you since the plague!
+      Tried many versions of an input file maker, the ones I remeber as follows
+
+        My own from scratch:
+          Many bugs, but has what I need
+
+        Copied from encodedna.com(no changes):
+          Exactly the form of what I want, but does not have what I need
+
+        Copied from encodedna.com(small changes):
+          Proof of concept. Proves promising, still works
+
+        The data I need put into the encodedna code:
+          Broken, unknown where. Tried going in pieces from the beginning and end.
+          Breaks both ways
+
+
+12/10/2020
+      Made a Progress ba for the UI 
+      It is a bar that fills up. It looks pretty
+      I don't know how to link front and back end yet. ALL it does is look pretty.
+
+      Looking into AJAX to link them
+      AJAX also works directly in html
+      This might become an elaborate compendium of languages just to make less print statements.
+
+12/26/2020
+      Electron does exactly the thing I need
+        Not the running part, but hopefully it runs.
+        It allows me to link the UI and python
+
+1/1/2021
+      Learning electron now
+
+
+1/4/2021
+      Teaching my friend, Joel coding. Saw a cool video. Nerded for a bit. 
+      Learned of the Quake algorithm. 
+        Supposed to improve collision performance by 3x for 1% loss in accuracy
+        Accuracy loss can be reduced with further addition of Newton Iteration 
+
+1/5/2021
+      Tried working on dropbox to reduce the syncing that breaks all my local files
+	Accidentally nuked all my local files
+	This is the notebook that seems most recent
+	Gui file was recovered from most recent backup
+
+1/6/2021
+      I fully understand the nature of a lab notebook needing to pertain to the lab
+	However
+	 There was a coup today, so nothing really got done.
+	 Similar to the plague that swept the world last year,
+	  also keeping things from getting done.
+
+	I find the nature of written speech amazing, as I can document the 
+	happenings of this decade inside this file that was once just a log for bugs
+
+1/15/2021
+  Meeting with Dr Riegel:
+
+  Q: weather bot with non homo weather  (See notes on knitting poll)
+  A: we currently use standard atmosphere
+    currently use international standard for atm
+	    we can get weather up to 160k ft
+	    stratified in z dir
+
+      Good idea for international weather, not for rn tho
+      Less coding for me
+
+  Q: bithack, can we?
+  A: Look into python specific optimizations
+
+1/19/2021
+  Had the idea to work in more complex geometry than only triangles
+    That would decrease the amount of itterations we need to do
+
+  Looking into adapting triangle function to work with general polygons
+    Strange shaped polys might be a problem
+      Looking into just quads for now
+      Biggest issue with quads is making sure everything is in same plane
+
+      We could definitely try turning step function I into a generator
