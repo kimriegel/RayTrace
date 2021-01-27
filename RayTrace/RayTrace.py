@@ -71,7 +71,9 @@ def vex(D, FInitial, y, z):
     Used for veci"""
     return (D - FInitial[1] * y - FInitial[2] * z) / FInitial[0]
 
+
 def main():
+
     global phase
     global amplitude
     global twopi
