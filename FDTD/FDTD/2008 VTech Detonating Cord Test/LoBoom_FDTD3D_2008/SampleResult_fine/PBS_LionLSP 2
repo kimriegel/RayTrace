@@ -1,0 +1,19 @@
+#PBS -N 2008_LDDRK4_fine
+#PBS -l nodes=1:ppn=32
+#PBS -l mem=256gb
+#PBS -l walltime=32:00:00 
+#PBS -j oe
+#PBS -o job.done
+#PBS -m be
+#PBS -M cho.sangik@gmail.com
+
+cd $PBS_O_WORKDIR
+export OMP_NUM_THREADS=32
+
+echo " "
+echo "Job started on `hostname` at `date`"
+time ../Modules/FDTD_run
+echo " "
+echo "Job finished at `date`"
+echo " "
+ 

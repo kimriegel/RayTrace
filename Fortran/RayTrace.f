@@ -452,7 +452,7 @@ C     Allocate absorption coefficients for each surface for each frequency
 
 C     Mesh the patches for the environment.  Include patching file. 
       if(radiosity.eq.1)then
-C         INCLUDE 'SingleBuildingGeometry.f'
+         INCLUDE 'SingleBuildingGeometry.f'
 C         INCLUDE 'SingleBuildingGeometryVal.f'
 C         INCLUDE 'NASAEMBuilding.f'
 C         INCLUDE 'NASAMuseBuilding.f'
@@ -502,7 +502,8 @@ C         INCLUDE 'UrbanCanyonG2H24L14Geo.f'
       count=0
 C      print*, 'normalization',normalization
 C     Loop through the intial ray locations
-      DO 40 ray=1,RAYMAX,1
+C      DO 40 ray=1,RAYMAX,1
+      DO 40 ray=607,612,1
 C         ray = 607
          hitcount=0
          tmpsum=0.0
@@ -1012,7 +1013,7 @@ C     If radiosity is turned on then do the energy exchange.
  56                  CONTINUE
                   endif
  54            CONTINUE
-C               print*, 'finished patch', D, 'of',PatchNo
+               print*, 'finished patch', D, 'of',PatchNo
  55         CONTINUE
 C            print*, arraysize,PatchNo,sizefft
 C     Do energy exchange with other receivers

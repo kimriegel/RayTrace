@@ -27,6 +27,10 @@ def absorption(ps, freq, hr, temp):
     
     # This function computes the air absorption for a given frequency, 
     # ambient pressure, relative humidity and temperature.
+    if temp == 0 or ps == 0:
+        raise ValueError('Cannot divide by Zero!')
+    if temp < 0:
+        raise ValueError('Temperature is in Kelvin. Non-negative values only.')
 
     # Define all variables and reference values
     ps0 = 1.0
@@ -123,6 +127,10 @@ def sphere_check(sc, sr2, f, veci):
 def cross(a, b):
 
     #    This function calculates a cross product of A and B and returns normal
+    
+    
+    if len(a)!= 3 or len(b) != 3:
+        raise ValueError('Input must be 3D vector.')
 
     normal = np.zeros(3)
     normal[0] = a[1] * b[2] - a[2] * b[1]
@@ -373,7 +381,7 @@ def plane(vecip1, b1, b2, plane_hit):
             point2 = (b1[0], b2[1], b2[2])
             point3 = (b2[0], b1[1], b2[2])
             n_box = cross(np.subtract(point2, b2), np.subtract(point3, b2))
-    # print('Here is that n_box it keeps saying you\'re missing', nbox )
+    # print('Here is that n_box it keeps saying you\'re missing', nbox )s
     return n_box
 
 
@@ -428,7 +436,7 @@ def box(b1, b2, vecip1, f):
             if dx_near > dx_far:
                 hit = 0
                 dx_near = huge_box
-                return dx_near, dx_far, it, plane_hit
+                return dx_near, dx_far, hit, plane_hit
             elif dx_far < 0.0:
                 hit = 0
                 dx_near = huge_box

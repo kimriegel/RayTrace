@@ -37,7 +37,7 @@ C     This function creates an array of patches for each plane
       d=-x1*normal(1)-y1*normal(2)-z1*normal(3)
       if (z1.eq.z2)then
          count=1
-         print*, 'ZPLANE',Nl, Nm, x1, y1, z1
+         print*, 'ZPLANE',ddl, Nm, x1, y1, z1
          DO 2 l=1, Nl
             DO 3 m=1, Nm
                x=x1-0.5*ddm(m)+SUM(ddm(1:m))
@@ -67,7 +67,7 @@ C     This function creates an array of patches for each plane
  2       CONTINUE
       elseif(y1.eq.y2)then
          count=1
-         print*, 'YPLANE',Nl, Nm, x1, y1, z1
+         print*, 'YPLANE',ddl, Nm, x1, y1, z1
          DO 4 l=1, Nl
             DO 5 m=1, Nm
                x=x1-0.5*ddm(m)+SUM(ddm(1:m))

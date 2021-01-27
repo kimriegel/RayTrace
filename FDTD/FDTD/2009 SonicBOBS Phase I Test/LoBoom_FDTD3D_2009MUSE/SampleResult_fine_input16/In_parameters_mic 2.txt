@@ -1,0 +1,20 @@
+// Microphone Selection
+// List the names of the microphones that should operate during the numerical simulation, separated by new lines.
+
+CC
+CD
+CE
+CF
+CG
+CH
+CI
+CJ
+WA
+WB
+WC
+WD
+WE
+WF
+WG
+WH
+WY

@@ -1,0 +1,13 @@
+// Simulation Parameters
+input_name 	= input_boom190.txt
+input_length_i 	= 10200		// Length of the input boom file [samples]
+input_fs 		= 25600		// Sampling frequency of the input boom file [Hz]
+c0 		= 348.616	// Speed of sound in the medium [m/s]
+theta_inc 	= 18.643		// Elevation angle of the incident boom direction [deg]
+num_floors 	= 1		// Number of floors of the house 
+x_max 		= 200		// Domain size in horizontal direction[m]
+z_max		= 160		// Domain size in vertical direction[m]
+x_intersect	= 105		// x-coordinate of the initial wavefront intersection with the ground [m]
+x0 		= 120		// x-coordinate of the building wall on the incident side [m]
+dx 		= 0.0625		// Grid spacing of a uniform grid [m]
+tmax 		= 0.40		// Time elapsed from the beginning to the end of the simulation [s]

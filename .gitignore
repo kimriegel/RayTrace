@@ -1,5 +1,6 @@
 *.pyc
 venv
 __pycache__
+workspace.xml
 .DS_Store
-
+/output/

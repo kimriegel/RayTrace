@@ -1,8 +1,9 @@
 #     BigBertha
 #   Same as NASABOOM1EMParameterFile
 import numpy as np
-INPUTFILE = "inputNASABOOM1.txt"
-RecInput = "PointReceivers.txt"
+INPUTFILE = "input/inputNASABOOM1.txt"
+RecInput = "Env/Receivers/PointReceivers.txt"
+ipname = 'Env/SimpleEMBuilding/SingleBuilding.obj'
 Fs = 24000.0
 xinitial = 145.0
 yinitial = 35.0
@@ -15,10 +16,10 @@ time = .01
 hr = 20.0
 theta = 1.6863372
 phi = 3.44458181
-#boomspacing = 0.06   #.6
-#boomspacing= 0.35
+boomspacing = 0.035   #.6
+#boomspacing= 0.035
 #boomspacing= 0.1
-boomspacing= 1
+#boomspacing= 1
 xmin = -1
 ymin = 30.0
 zmin = 0.0
@@ -31,12 +32,12 @@ absorbplanes = 1
 #allocate(tempalphabuilding(absorbplanes,8))
 #Find way to rephrase
 #outputfile = 'PythonTest1.txt'
-outputfile = "PythonTester" + str(boomspacing) + ".txt"       #debugging
+outputfile = "PythonTestSimple" + str(boomspacing) + ".txt"       #debugging
 graphName = "TestGraph"                                     # No not use full file extension here
 #Will's
 #outputfile = "PythonTestEnv" + str(boomspacing) + ".txt"       #debugging
 #Turn Radiosity on or off.  This will include diffuse reflections
-radiosity = 0
+radiosity = 1
 #Turn on complex absorption
 complexabsorption = 0
 
@@ -63,6 +64,6 @@ percentdiffuse = 0.0
 #     [0.01,0.01,0.01,0.02,0.02,0.02,0.03,0.03],[0.01,0.01,0.01,0.02,0.02,0.02,0.03,0.03]])
 # print(tempalphaground)
 
-if __name__ == "__main__":      #being lazy. You can run from here now
-    import RayTrace
+#if __name__ == "__main__":      #being lazy. You can run from here now
+#    import RayTrace
     #pass

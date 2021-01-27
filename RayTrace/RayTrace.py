@@ -14,17 +14,18 @@ import numpy as np  # matricies and arrays
 import matplotlib.pyplot as plt  # for graphing
 
 import Parameterfile as Pf
-#import BuildingGeometry as Bg
 import Functions as Fun
 import ReceiverPointSource as Rps  # For receivers
 import GeometryParser as Gp
+
+
 # import GeometryParser as Bg
 
 import time  # Time checks
-
 t = time.time()
 phase = 0
 amplitude = 0
+
 
 # What it does not do
 """
@@ -55,8 +56,6 @@ def update_freq(dx_update, alpha_update, diffusion_update, lamb, airAbsorb):
     Update ray phase and amplitude
     """
     global phase, amplitude  # works directly
-
-    twopi = np.pi * 2
     two_pi_dx_update = twopi * dx_update
     ein = phase - (two_pi_dx_update / lamb)
     zwei = ein % twopi
@@ -74,9 +73,11 @@ def vex(D, FInitial, y, z):
 
 
 def main():
+
     global phase
     global amplitude
-
+    global twopi
+    twopi = np.pi * 2
     t = time.time()
 
     # port and import receiver file
@@ -134,9 +135,8 @@ def main():
     rayY = Pf.ymin + j * ySpace
     rayZ = Pf.zmin + k * zSpace
 
-
-
     boomCarpet = ((vex(D4, FInitial, y, z), y, z) for z in rayZ for y in rayY)
+
     # Create a receiver array, include a receiver file.
     alphaNothing = np.zeros(sizeFFTTwo)
 
@@ -146,7 +146,7 @@ def main():
     for R in ears:          # hotfix
         R.magnitude = np.zeros(sizeFFTTwo)
         R.direction = np.zeros(sizeFFTTwo)
-
+    tempReceiver = np.array(np.zeros(len(ears)))
     #       Initialize normalization factor
     normalization = (np.pi*radius2)/(Pf.boomspacing**2)
 
@@ -155,7 +155,7 @@ def main():
 
     #       Define ground plane
     groundHeight = 0.000000000
-    GroundABC = np.array([0.000000000, 0.000000000, 1.00000000])
+    GroundN = np.array([0.000000000, 0.000000000, 1.00000000])
     GroundD = -groundHeight
     nGround = np.array([0.0, 0.0, 1.0])
 
@@ -241,56 +241,62 @@ def main():
             # For each step we should return, location, phase and amplitude
             dxReceiver = HUGE
             # Find the closest sphere and store that as the distance
+ #           print(veci)
+            i=0
             for R in ears:
                 # The way that tempReceiver works now, it's only used here and only should be used here.
                 # It's not defined inside the receiver because it's ray dependant.
-                tempReceiver = R.SphereCheck(radius2, F, veci)    # Distance to receiver
-                if receiverHit >= 1:  # if you hit a receiver last time, don't hit it again
-                    if np.all(R.position == lastReceiver):
-                        tempReceiver = HUGE
-                    if np.all(F == checkDirection):
-                        OC = R.position - veci
-                        OCLength = np.dot(OC, OC)
-                        if OCLength < radius2:
-                            tempReceiver = HUGE
-                if receiverHit >= 2:
-                    if np.all(R.position == lastReceiver):
-                        tempReceiver = HUGE
-                if tempReceiver < dxReceiver:
-                    dxReceiver = tempReceiver
-                    receiverPoint = R.position
-                elif tempReceiver == dxReceiver and tempReceiver != HUGE:
-                    receiverCheck = tempReceiver
+                tempReceiver[i] = R.SphereCheck(radius2, F, veci)    # Distance to receiver
+                i+=1
+
+                # if receiverHit >= 1:  # if you hit a receiver last time, don't hit it again
+                #     if np.all(R.position == lastReceiver):
+                #         tempReceiver = HUGE
+                #     if np.all(F == checkDirection):
+                #         OC = R.position - veci
+                #         OCLength = np.dot(OC, OC)
+                #         if OCLength < radius2:
+                #             tempReceiver = HUGE
+                # if receiverHit >= 2:
+                #     if np.all(R.position == lastReceiver):
+                #         tempReceiver = HUGE
+                # if tempReceiver < dxReceiver:
+                #     dxReceiver = tempReceiver
+                #     receiverPoint = R.position
+                # elif tempReceiver == dxReceiver and tempReceiver != HUGE:
+                #     receiverCheck = tempReceiver
 
     # We need to double check that double hit actually works.  R2 is not really
     # a thing, we should make sure it is doing what we want.
-                    if np.all(R.position == receiverPoint):
-                        doubleHit = 0
-                    else:
-                        R2 = R
-                        doubleHit = 1
-                        print('double hit')
+    #                 if np.all(R.position == receiverPoint):
+    #                     doubleHit = 0
+    #                 else:
+    #                     R2 = R
+    #                     doubleHit = 1
+    #                     print('double hit')
+            tempReceiver[np.where((tempReceiver < (10.0**(-13.0))))] = HUGE
+            tmp = np.argmin(tempReceiver)
+            dxReceiver = tempReceiver[tmp]
+            if(dxReceiver!= HUGE):
+                receiverPoint=ears[tmp].position
 
                 #     Check Intersection with ground plane
-            GroundN = GroundABC
-            GroundVD = GroundN[0] * F[0] + GroundN[1] * F[1] + GroundN[2] * F[2]
+            GroundVD = np.dot(GroundN, F)
+#            GroundVD = GroundN[0] * F[0] + GroundN[1] * F[1] + GroundN[2] * F[2]
             if groundHit == 1:
                 dxGround = HUGE
             elif GroundVD != 0.0:
-                GroundVO = ((GroundN[0] * veci[0] + GroundN[1] * veci[1] + GroundN[2] * veci[2]) + GroundD)
-                dxGround1 = (-1.000) * GroundVO * 1.000 / GroundVD
-                dxGround = dxGround1
-                Vecip1 = veci + dxGround * F
-                tmp = (GroundABC[0] * Vecip1[0] + GroundABC[1] * Vecip1[1] + GroundABC[2] * Vecip1[2] + GroundD)
+                GroundVO = ((np.dot(GroundN, veci)) + GroundD)
+                dxGround = -GroundVO / GroundVD
                 if dxGround < 0.0:
                     dxGround = HUGE
             else:
                 dxGround = HUGE
 
             #     Check intersection with building
-            dxBuilding = HUGE
-            hit=0
-            planeHit = 0
+            #dxBuilding = HUGE
+#            hit=0
+#            planeHit = 0
             #     Check intersection with Boxes
             #      for Q in range(0, Bg.BoxNumber):
             #          dxNear, dxFar, hit, planeHit = Fun.box(Bg.BoxArrayNear[Q], Bg.BoxArrayFar[Q], veci, F)
@@ -303,14 +309,14 @@ def main():
             if buildingHit == 1:
                 dxBuilding = HUGE
             else:
-                for face in Gp.mesh:
-                    dxnear, nTemp = Gp.collisionCheck(face, veci, F)
-                    if dxnear < dxBuilding:
-                        dxBuilding = dxnear
-                        nBox = nTemp
-                        Vecip1 = veci + np.multiply(dxBuilding, F)
-
-            #        print('dxbuilding: ',dxBuilding, dxBuilding1)
+                dxBuilding,nBox=Gp.collisionCheck2(Gp.mesh,veci,F)
+                # for face in Gp.mesh:
+                #     dxnear, nTemp = Gp.collisionCheck(face, veci, F)
+                #     if dxnear < dxBuilding:
+                #         dxBuilding1 = dxnear
+                #         nBox1 = nTemp
+                # if (rayCounter == 606):
+                #     print('original',dxBuilding,nBox)
 
             # This part doesn't really work well.  We have not incorporated it.
             # Eventually all interactions will be triangles anyway so I'm leaving it here to be updated.
@@ -342,28 +348,25 @@ def main():
             if dxReceiver < Pf.h or dxGround < Pf.h or dxBuilding < Pf.h:
                 dx = min(dxReceiver, dxGround, dxBuilding)
                 #  if the ray hits a receiver, store in an array.  If the ray hits two, create two arrays to store in.
-                for R in ears:
-                    if dx == R.dx:
-                        # print('Ray ',ray +1,' hit receiver ',R.recNumber,' at step ',I)
-                        print('Ray ', rayCounter, ' hit receiver ', R.recNumber)
-                        veci += (dx * F)
-                        receiverHit = 1
-                        checkDirection = F
-                        if doubleHit == 1:
-                            receiverHit = 2
-                        hitCount = hitCount + 1
-                        update_freq(dx, alphaNothing, 0, lamb, airAbsorb)
-                        lastReceiver = receiverPoint
-                        outputArray1[:, 0] = frecuencias[:, 0]
-                        outputArray1[:, 1:4] = receiverPoint[:]
-                        outputArray1[:, 5] = phase[:]
-                        # print(list(ears[1].magnitude))
-                        if doubleHit == 1:
-                            # R2 = R      #Supposed to be other R, but just a placeholder for now
-                            R.on_Hit(amplitude/2, phase)
-                            R2.on_Hit(amplitude/2, phase)
-                        else:
-                            R.on_Hit(amplitude, phase)
+        #        for R in ears:
+                if dx == dxReceiver:
+                    print('Ray ', rayCounter, ' hit receiver ', R.recNumber)
+                    veci += (dx * F)
+                    #receiverHit = 1
+                    #checkDirection = F
+                    #if doubleHit == 1:
+                    #    receiverHit = 2
+                    hitCount = hitCount + 1
+                    update_freq(dx, alphaNothing, 0, lamb, airAbsorb)
+                    #lastReceiver = receiverPoint
+                    outputArray1[:, 0] = frecuencias[:, 0]
+                    outputArray1[:, 1:4] = receiverPoint[:]
+                    outputArray1[:, 5] = phase[:]
+                    #if doubleHit == 1:
+                    #    # R2 = R      #Supposed to be other R, but just a placeholder for now                            R.on_Hit(amplitude/2, phase)
+                    #    R2.on_Hit(amplitude/2, phase)
+                    #else:
+                    ears[tmp].on_Hit(amplitude, phase)
 
                        # if(doubleHit==1):
                         #      outputArray1[:,4]=amplitude[:]/2.0
@@ -385,16 +388,16 @@ def main():
 
                 if abs(dx - dxGround) < 10.0**(-13.0):  # If the ray hits the ground then bounce and continue
                     veci += (dxGround * F)
-                    tmp = np.dot(GroundABC, veci)
+                    tmp = np.dot(GroundN, veci)
                     if tmp != GroundD:
                         veci[2] = 0
-    #                print('hit ground at ', I)
-                    dot1 = np.dot(F, nGround)
-                    n2 = np.dot(nGround, nGround)
-                    F -= (2.0 * (dot1 / n2 * nGround))
-                    length = np.sqrt(np.dot(F, F))
+                    print('hit ground at ', I)
+                    dot1 = np.dot(F, GroundN)
+                    n2 = np.dot(GroundN, GroundN)
+                    F -= (2.0 * (dot1 / n2 * GroundN))
+#                    length = np.sqrt(np.dot(F, F))
                     groundHit = 1
-                    twoPiDx = np.pi * 2 * dxGround
+#                    twoPiDx = np.pi * 2 * dxGround
                     #     Loop through all the frequencies
                     update_freq(dxGround, alphaGround, diffusionGround, lamb, airAbsorb)
     #                if Pf.radiosity == 1 and (diffusionGround != 0.0):
@@ -417,9 +420,11 @@ def main():
                     print('hit building at step ', I)
                     n2 = np.dot(nBox, nBox)
                     nBuilding = nBox / np.sqrt(n2)
+                    n3 = np.dot(nBuilding, nBuilding)
                     dot1 = np.dot(F, nBuilding)
-                    F -= (2.0 * (dot1 / n2 * nBuilding))
-                    length = np.sqrt(np.dot(F, F))
+                    F -= (2.0 * (dot1 / n3 * nBuilding))
+
+#                    length = np.sqrt(np.dot(F, F))
                     buildingHit = 1
                     # We need to look into complex absorption and see if this is really the best way.
     #                if Pf.complexAbsorption:

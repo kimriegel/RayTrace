@@ -1,0 +1,46 @@
+#PBS -S /bin/csh
+## The job name to be displayed in the queue:
+#PBS -N LoBoom
+
+## In this example, 1 Harpertown computing node 
+## with 8 processors is requested for a wall time 
+## of 1 hour.  For the optimal performance of the 
+## program, the selection on this computing 
+## resource request should be tailored to the need 
+## of each simulation:
+#PBS -l select=1:ncpus=8:model=har
+#PBS -l walltime=3:00:00 
+
+## The PBS standard output and error messages are 
+## combined to one output file called job.done:
+#PBS -j oe
+#PBS -o ./job.done
+
+## Specify the group name of the NAS account to 
+## which the wall time will be charged:
+#PBS -W group_list=a0909
+
+## E-mail is sent to the specified e-mail address 
+## when the job starts and ends: 
+#PBS -m be
+#PBS -M cho.sangik@gmail.com
+
+## Load the compiler and OpenMP modules and set 
+## the OpenMP environment variable.  It makes 
+## sense to set the number of threads equal to the 
+## number of processors requested:
+module load comp-intel/11.1.046
+module load mpi-sgi/mpt.1.26
+setenv OMP_NUM_THREADS 8
+
+## Change directory to where the PBS job is being 
+## submitted from:
+cd $PBS_O_WORKDIR
+
+## Run the executable file named "FDTD_run".
+echo " "
+echo "Job started on `hostname` at `date`"
+time ../Modules/FDTD_run
+echo " "
+echo "Job finished at `date`"
+echo " "
