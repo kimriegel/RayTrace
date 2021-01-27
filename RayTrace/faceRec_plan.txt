@@ -1,7 +1,0 @@
-hit face
-find connected vertices
-run hit coordinates
-
-    If using really small faces then go as is
-    OR
-    For big faces find distances to nearest then divide force by that

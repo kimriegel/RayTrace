@@ -10,7 +10,7 @@
 # Dr. Riegel, William Costa, and George Seaton porting program from Fortran to python
 
 # Initialize variables and functions
-import numpy as np  # matricies and arrays
+import numpy as np  # matrices and arrays
 import matplotlib.pyplot as plt  # for graphing
 
 import Parameterfile as Pf
@@ -25,6 +25,7 @@ import time  # Time checks
 t = time.time()
 phase = 0
 amplitude = 0
+print(Pf.Fs)
 
 
 # What it does not do
@@ -34,24 +35,25 @@ amplitude = 0
       Anything resembling radiosity
 """
 
+
 def initial_signal(signal_length, fft_output):
     """
     Making the array for the initial signals.
-    Input sizeFFT and output_signal
+    Input size_fft_two and output_signal
     """
-    signal_length2 = int(signal_length // 2)  # Making sizeFFTTwo and setting it as an int again just to be sure
+    signal_length2 = int(signal_length // 2)  # Making size_fft_two and setting it as an int again just to be sure
     output_frequency = np.zeros((signal_length2, 3))  # Making output array equivalent to input_array in old code
     throw_array = np.arange(1, signal_length2 + 1)  # Helps get rid of for-loops in old version
 
     output_frequency[:, 0] = throw_array * Pf.Fs / signal_length  # Tried simplifying the math a bit from original
-    output_frequency[:, 1] = abs(fft_output[1:1 + signal_length2] / signal_length)  # Only go up to sizeFFTTwo
+    output_frequency[:, 1] = abs(fft_output[1:1 + signal_length2] / signal_length)  # Only go up to size_ftt_two
     output_frequency[:, 2] = np.arctan2(np.imag(fft_output[1:1 + signal_length2] / signal_length),
                                         np.real(fft_output[1:1 + signal_length2] / signal_length))
 
     return output_frequency
 
 
-def update_freq(dx_update, alpha_update, diffusion_update, lamb, airAbsorb):
+def update_freq(dx_update, alpha_update, diffusion_update, lamb, air_absorb):
     """
     Update ray phase and amplitude
     """
@@ -63,13 +65,13 @@ def update_freq(dx_update, alpha_update, diffusion_update, lamb, airAbsorb):
     drei = masque * zwei - twopi
  
     phase = np.where(masque, drei, ein)
-    amplitude *= ((1.0 - alpha_update) * (1.0 - diffusion_update) * np.exp(-airAbsorb * dx_update))
+    amplitude *= ((1.0 - alpha_update) * (1.0 - diffusion_update) * np.exp(-air_absorb * dx_update))
 
 
-def vex(D, FInitial, y, z):
+def vex(d, f_initial, y, z):
     """The x coordinate of the ray 
     Used for veci"""
-    return (D - FInitial[1] * y - FInitial[2] * z) / FInitial[0]
+    return (d - f_initial[1] * y - f_initial[2] * z) / f_initial[0]
 
 
 def main():
@@ -81,136 +83,133 @@ def main():
     t = time.time()
 
     # port and import receiver file
-    receiverHit = 0
-    groundHit = 0
-    buildingHit = 0
+    receiver_hit = 0
+    ground_hit = 0
+    building_hit = 0
 
     # Initialize counters
-    XJ = complex(0.0, 1.0)
+    xj = complex(0.0, 1.0)
     radius2 = Pf.radius**2
-    raySum = 0
+    ray_sum = 0
 
     # Initialize receiver variables
-    lastReceiver = np.zeros(3)
-    lastReceiver2 = np.zeros(3)
-    receiverPoint = np.zeros(3)
-    receiverPoint2 = np.zeros(3)
-    # OC = np.empty(3)
+    last_receiver = np.zeros(3)
+    last_receiver2 = np.zeros(3)
+    receiver_point = np.zeros(3)
+    receiver_point2 = np.zeros(3)
 
     # Read in input file
-    inputSignal = np.loadtxt(Pf.INPUTFILE)
-    K = len(inputSignal)
-    # masque = inputSignal > 0
-    HUGE = 1000000.0
+    input_signal = np.loadtxt(Pf.INPUTFILE)
+    k = len(input_signal)
+    # masque = input_signal > 0
+    huge = 1000000.0
 
     # Allocate the correct size to the signal and fft arrays
-    sizeFFT = K
-    sizeFFTTwo = sizeFFT // 2
-    outputSignal = np.fft.rfft(inputSignal, sizeFFT)
+    size_fft = k
+    size_fft_two = size_fft // 2
+    output_signal = np.fft.rfft(input_signal, size_fft)
 
     # Create initial signal
-    frecuencias = initial_signal(sizeFFT, outputSignal)      # Equivalent to inputArray in original
-    airAbsorb = Fun.absorption(Pf.ps, frecuencias[:, 0], Pf.hr, Pf.Temp)   # sizeFFTTwo
+    frecuencias = initial_signal(size_fft, output_signal)      # Equivalent to inputArray in original
+    air_absorb = Fun.absorption(Pf.ps, frecuencias[:, 0], Pf.hr, Pf.Temp)   # size_fft_two
     lamb = Pf.soundspeed/frecuencias[:, 0]     # Used for updating frequencies in update function
-    timeArray = np.arange(K) / Pf.Fs
+    time_array = np.arange(k) / Pf.Fs
 
     #       Set initial values
-    vInitial = np.array([Pf.xinitial, Pf.yinitial, Pf.zinitial])
-    xiInitial = np.cos(Pf.phi) * np.sin(Pf.theta)
-    nInitial = np.sin(Pf.phi) * np.sin(Pf.theta)
-    zetaInitial = np.cos(Pf.theta)
-    length = np.sqrt(xiInitial * xiInitial + nInitial * nInitial + zetaInitial * zetaInitial)
-    FInitial = np.array([xiInitial, nInitial, zetaInitial])
-    D4 = np.dot(FInitial, vInitial)   # equivalent to tmp
+    v_initial = np.array([Pf.xinitial, Pf.yinitial, Pf.zinitial])
+    xi_initial = np.cos(Pf.phi) * np.sin(Pf.theta)
+    n_initial = np.sin(Pf.phi) * np.sin(Pf.theta)
+    zeta_initial = np.cos(Pf.theta)
+    length = np.sqrt(xi_initial * xi_initial + n_initial * n_initial + zeta_initial * zeta_initial)
+    f_initial = np.array([xi_initial, n_initial, zeta_initial])
+    d4 = np.dot(f_initial, v_initial)   # equivalent to tmp
     #       Create initial boom array
     #  Roll this all into a function later
-    ySpace = Pf.boomspacing * abs(np.cos(Pf.phi))
-    zSpace = Pf.boomspacing * abs(np.sin(Pf.theta))
+    y_space = Pf.boomspacing * abs(np.cos(Pf.phi))
+    z_space = Pf.boomspacing * abs(np.sin(Pf.theta))
     if Pf.xmin == Pf.xmax:
-        rayMax = int((Pf.ymax - Pf.ymin) / ySpace) * int((Pf.zmax - Pf.zmin) / zSpace)
-        print(rayMax, ' is the rayMax')
+        ray_max = int((Pf.ymax - Pf.ymin) / y_space) * int((Pf.zmax - Pf.zmin) / z_space)
+        print(ray_max, ' is the ray_max')
 
-    j = np.arange(1, 1 + int((Pf.ymax-Pf.ymin) // ySpace))
-    k = np.arange(1, 1 + int((Pf.zmax-Pf.zmin) // zSpace))
-    rayY = Pf.ymin + j * ySpace
-    rayZ = Pf.zmin + k * zSpace
+    j = np.arange(1, 1 + int((Pf.ymax-Pf.ymin) // y_space))
+    k_2 = np.arange(1, 1 + int((Pf.zmax-Pf.zmin) // z_space))
+    ray_y = Pf.ymin + j * y_space
+    ray_z = Pf.zmin + k_2 * z_space
 
-    boomCarpet = ((vex(D4, FInitial, y, z), y, z) for z in rayZ for y in rayY)
-
+    boom_carpet = ((vex(d4, f_initial, y, z), y, z) for z in ray_z for y in ray_y)
     # Create a receiver array, include a receiver file.
-    alphaNothing = np.zeros(sizeFFTTwo)
+    alpha_nothing = np.zeros(size_fft_two)
 
     # Making specific receiver points using receiver module
     Rps.Receiver.initialize(Pf.RecInput)
     ears = Rps.Receiver.rList           # easier to write
     for R in ears:          # hotfix
-        R.magnitude = np.zeros(sizeFFTTwo)
-        R.direction = np.zeros(sizeFFTTwo)
-    tempReceiver = np.array(np.zeros(len(ears)))
+        R.magnitude = np.zeros(size_fft_two)
+        R.direction = np.zeros(size_fft_two)
+    temp_receiver = np.array(np.zeros(len(ears)))
     #       Initialize normalization factor
     normalization = (np.pi*radius2)/(Pf.boomspacing**2)
 
-    outputArray1 = np.zeros((sizeFFTTwo, 6))
-    dHOutputArray1 = np.zeros((sizeFFTTwo, 6))
+    output_array1 = np.zeros((size_fft_two, 6))
+    dh_output_array1 = np.zeros((size_fft_two, 6))
 
     #       Define ground plane
-    groundHeight = 0.000000000
-    GroundN = np.array([0.000000000, 0.000000000, 1.00000000])
-    GroundD = -groundHeight
-    nGround = np.array([0.0, 0.0, 1.0])
+    ground_height = 0.000000000
+    ground_n = np.array([0.000000000, 0.000000000, 1.00000000])
+    ground_d = -ground_height
 
     #     Allocate absorption coefficients for each surface for each frequency
-    alphaGround = np.zeros(sizeFFTTwo)
-    for D1 in range(0, sizeFFTTwo):       # This loop has a minimal impact on performance
+    alpha_ground = np.zeros(size_fft_two)
+    for D1 in range(0, size_fft_two):       # This loop has a minimal impact on performance
         if frecuencias[D1, 0] >= 0.0 or frecuencias[D1, 0] < 88.0:
-            alphaGround[D1] = Pf.tempalphaground[0]
+            alpha_ground[D1] = Pf.tempalphaground[0]
         elif frecuencias[D1, 0] >= 88.0 or frecuencias[D1, 0] < 177.0:
-            alphaGround[D1] = Pf.tempalphaground[1]
+            alpha_ground[D1] = Pf.tempalphaground[1]
         elif frecuencias[D1, 0] >= 177.0 or frecuencias[D1, 0] < 355.0:
-            alphaGround[D1] = Pf.tempalphaground[2]
+            alpha_ground[D1] = Pf.tempalphaground[2]
         elif frecuencias[D1, 0] >= 355.0 or frecuencias[D1, 0] < 710.0:
-            alphaGround[D1] = Pf.tempalphaground[3]
+            alpha_ground[D1] = Pf.tempalphaground[3]
         elif frecuencias[D1, 0] >= 710.0 or frecuencias[D1, 0] < 1420.0:
-            alphaGround[D1] = Pf.tempalphaground[4]
+            alpha_ground[D1] = Pf.tempalphaground[4]
         elif frecuencias[D1, 0] >= 1420.0 or frecuencias[D1, 0] < 2840.0:
-            alphaGround[D1] = Pf.tempalphaground[5]
+            alpha_ground[D1] = Pf.tempalphaground[5]
         elif frecuencias[D1, 0] >= 2840.0 or frecuencias[D1, 0] < 5680.0:
-            alphaGround[D1] = Pf.tempalphaground[6]
-        elif frecuencias[D1, 0] >= 5680.0 or frecuencias[D1, 0] < frecuencias[sizeFFTTwo, 0]:
-            alphaGround[D1] = Pf.tempalphaground[7]
+            alpha_ground[D1] = Pf.tempalphaground[6]
+        elif frecuencias[D1, 0] >= 5680.0 or frecuencias[D1, 0] < frecuencias[size_fft_two, 0]:
+            alpha_ground[D1] = Pf.tempalphaground[7]
 
-    alphaBuilding = np.zeros((Pf.absorbplanes, sizeFFTTwo))
+    alpha_building = np.zeros((Pf.absorbplanes, size_fft_two))
     for W in range(Pf.absorbplanes):        # These also look minimal
-        for D2 in range(sizeFFTTwo):
+        for D2 in range(size_fft_two):
             if frecuencias[D2, 0] >= 0.0 or frecuencias[D2, 0] < 88.0:
-                alphaBuilding[W, D2] = Pf.tempalphabuilding[W, 0]
+                alpha_building[W, D2] = Pf.tempalphabuilding[W, 0]
             elif frecuencias[D2, 0] >= 88.0 or frecuencias[D2, 0] < 177.0:
-                alphaBuilding[W, D2] = Pf.tempalphabuilding[W, 1]
+                alpha_building[W, D2] = Pf.tempalphabuilding[W, 1]
             elif frecuencias[D2, 0] >= 177.0 or frecuencias[D2, 0] < 355.0:
-                alphaBuilding[W, D2] = Pf.tempalphabuilding[W, 2]
+                alpha_building[W, D2] = Pf.tempalphabuilding[W, 2]
             elif frecuencias[D2, 0] >= 355.0 or frecuencias[D2, 0] < 710.0:
-                alphaBuilding[W, D2] = Pf.tempalphabuilding[W, 3]
+                alpha_building[W, D2] = Pf.tempalphabuilding[W, 3]
             elif frecuencias[D2, 0] >= 710.0 or frecuencias[D2, 0] < 1420.0:
-                alphaBuilding[W, D2] = Pf.tempalphabuilding[W, 4]
+                alpha_building[W, D2] = Pf.tempalphabuilding[W, 4]
             elif frecuencias[D2, 0] >= 1420.0 or frecuencias[D2, 0] < 2840.0:
-                alphaBuilding[W, D2] = Pf.tempalphabuilding[W, 5]
+                alpha_building[W, D2] = Pf.tempalphabuilding[W, 5]
             elif frecuencias[D2, 0] >= 2840.0 or frecuencias[D2, 0] < 5680.0:
-                alphaBuilding[W, D2] = Pf.tempalphabuilding[W, 6]
-            elif frecuencias[D2, 0] >= 5680.0 or frecuencias[D2, 0] < frecuencias[sizeFFTTwo, 0]:
-                alphaBuilding[W, D2] = Pf.tempalphabuilding[W, 7]
+                alpha_building[W, D2] = Pf.tempalphabuilding[W, 6]
+            elif frecuencias[D2, 0] >= 5680.0 or frecuencias[D2, 0] < frecuencias[size_fft_two, 0]:
+                alpha_building[W, D2] = Pf.tempalphabuilding[W, 7]
 
     # This does not appear to be used, so I commented it out -- r0ml
-    # D = np.dot(FInitial, vInitial)   # Hotfix  We used this name right above
+    # D = np.dot(f_initial, v_initial)   # Hotfix  We used this name right above
 
     #        Mesh the patches for the environment.  Include patching file.
-    diffusionGround = 0.0
+    diffusion_ground = 0.0
     if Pf.radiosity:  # If it exists as a non-zero number
         #    import SingleBuildingGeometry
         diffusion = Pf.radiosity
     else:
         diffusion = 0.0
 
-    rayCounter = 0
+    ray_counter = 0
 
     if Pf.h < (2 * Pf.radius):
         print('h is less than 2r')
@@ -219,104 +218,103 @@ def main():
     # These are for debugging, Uncomment this block and comment out the for loop below
     # ray = 606                     # @ Pf.boomSpacing = 1
     # for i in range(606):
-    #      ray =      next(boomCarpet)
-    #      rayCounter += 1
+    #      ray =      next(boom_carpet)
+    #      ray_counter += 1
     #
     # if ray:
     # Begin tracing
-    checkDirection = [0, 0, 0]
-    nBox = [0, 0, 0]
+    check_direction = [0, 0, 0]
+    n_box = [0, 0, 0]
     veci = np.array([0, 0, 0])
     print('began rays')
-    for ray in boomCarpet:              # Written like this for readability
+    for ray in boom_carpet:              # Written like this for readability
         veci = ray      # initial ray position
-        hitCount = 0
-        doubleHit = 0
+        hit_count = 0
+        double_hit = 0
 
         amplitude = frecuencias[:, 1]/normalization
         phase = frecuencias[:, 2]
 
-        F = np.array(FInitial)                                      # Direction
+        f = np.array(f_initial)                                      # Direction
         for I in range(Pf.IMAX):      # Making small steps along the ray path.
             # For each step we should return, location, phase and amplitude
-            dxReceiver = HUGE
+            dx_receiver = huge
             # Find the closest sphere and store that as the distance
- #           print(veci)
-            i=0
+            i = 0
             for R in ears:
                 # The way that tempReceiver works now, it's only used here and only should be used here.
                 # It's not defined inside the receiver because it's ray dependant.
-                tempReceiver[i] = R.SphereCheck(radius2, F, veci)    # Distance to receiver
-                i+=1
+                temp_receiver[i] = R.sphere_check(radius2, f, veci)    # Distance to receiver
+                i += 1
 
-                # if receiverHit >= 1:  # if you hit a receiver last time, don't hit it again
-                #     if np.all(R.position == lastReceiver):
-                #         tempReceiver = HUGE
-                #     if np.all(F == checkDirection):
+                # if receiver_hit >= 1:  # if you hit a receiver last time, don't hit it again
+                #     if np.all(R.position == last_receiver):
+                #         tempReceiver = huge
+                #     if np.all(f == check_direction):
                 #         OC = R.position - veci
                 #         OCLength = np.dot(OC, OC)
                 #         if OCLength < radius2:
-                #             tempReceiver = HUGE
-                # if receiverHit >= 2:
-                #     if np.all(R.position == lastReceiver):
-                #         tempReceiver = HUGE
-                # if tempReceiver < dxReceiver:
-                #     dxReceiver = tempReceiver
-                #     receiverPoint = R.position
-                # elif tempReceiver == dxReceiver and tempReceiver != HUGE:
+                #             tempReceiver = huge
+                # if receiver_hit >= 2:
+                #     if np.all(R.position == last_receiver):
+                #         tempReceiver = huge
+                # if tempReceiver < dx_receiver:
+                #     dx_receiver = tempReceiver
+                #     receiver_point = R.position
+                # elif tempReceiver == dx_receiver and tempReceiver != huge:
                 #     receiverCheck = tempReceiver
 
     # We need to double check that double hit actually works.  R2 is not really
     # a thing, we should make sure it is doing what we want.
-    #                 if np.all(R.position == receiverPoint):
-    #                     doubleHit = 0
+    #                 if np.all(R.position == receiver_point):
+    #                     double_hit = 0
     #                 else:
     #                     R2 = R
-    #                     doubleHit = 1
+    #                     double_hit = 1
     #                     print('double hit')
-            tempReceiver[np.where((tempReceiver < (10.0**(-13.0))))] = HUGE
-            tmp = np.argmin(tempReceiver)
-            dxReceiver = tempReceiver[tmp]
-            if(dxReceiver!= HUGE):
-                receiverPoint=ears[tmp].position
+            temp_receiver[np.where((temp_receiver < (10.0**(-13.0))))] = huge
+            tmp = np.argmin(temp_receiver)
+            dx_receiver = temp_receiver[tmp]
+            if dx_receiver != huge:
+                receiver_point = ears[tmp].position
 
                 #     Check Intersection with ground plane
-            GroundVD = np.dot(GroundN, F)
-#            GroundVD = GroundN[0] * F[0] + GroundN[1] * F[1] + GroundN[2] * F[2]
-            if groundHit == 1:
-                dxGround = HUGE
-            elif GroundVD != 0.0:
-                GroundVO = ((np.dot(GroundN, veci)) + GroundD)
-                dxGround = -GroundVO / GroundVD
-                if dxGround < 0.0:
-                    dxGround = HUGE
+            ground_vd = np.dot(ground_n, f)
+#            ground_vd = ground_n[0] * f[0] + ground_n[1] * f[1] + ground_n[2] * f[2]
+            if ground_hit == 1:
+                dx_ground = huge
+            elif ground_vd != 0.0:
+                ground_vo = ((np.dot(ground_n, veci)) + ground_d)
+                dx_ground = -ground_vo / ground_vd
+                if dx_ground < 0.0:
+                    dx_ground = huge
             else:
-                dxGround = HUGE
+                dx_ground = huge
 
             #     Check intersection with building
-            #dxBuilding = HUGE
+            # dx_building = huge
 #            hit=0
 #            planeHit = 0
             #     Check intersection with Boxes
             #      for Q in range(0, Bg.BoxNumber):
-            #          dxNear, dxFar, hit, planeHit = Fun.box(Bg.BoxArrayNear[Q], Bg.BoxArrayFar[Q], veci, F)
-            #          if dxNear < dxBuilding:
-            #              dxBuilding = dxNear
-            #              Vecip1 = veci + np.multiply(dxBuilding, F)
+            #          dxNear, dxFar, hit, planeHit = Fun.box(Bg.BoxArrayNear[Q], Bg.BoxArrayFar[Q], veci, f)
+            #          if dxNear < dx_building:
+            #              dx_building = dxNear
+            #              Vecip1 = veci + np.multiply(dx_building, f)
             #              whichBox = Q
-            #              nBox = Fun.plane(Vecip1, Bg.BoxArrayNear[whichBox], Bg.BoxArrayFar[whichBox], planeHit)
+            #              n_box = Fun.plane(Vecip1, Bg.BoxArrayNear[whichBox], Bg.BoxArrayFar[whichBox], planeHit)
             #   Implement Geometry parser
-            if buildingHit == 1:
-                dxBuilding = HUGE
+            if building_hit == 1:
+                dx_building = huge
             else:
-                dxBuilding,nBox=Gp.collisionCheck2(Gp.mesh,veci,F)
+                dx_building, n_box = Gp.collisionCheck2(Gp.mesh, veci, f)
                 # for face in Gp.mesh:
-                #     dxnear, nTemp = Gp.collisionCheck(face, veci, F)
-                #     if dxnear < dxBuilding:
-                #         dxBuilding1 = dxnear
-                #         nBox1 = nTemp
-                # if (rayCounter == 606):
-                #     print('original',dxBuilding,nBox)
+                #     dxnear, nTemp = Gp.collisionCheck(face, veci, f)
+                #     if dxnear < dx_building:
+                #         dx_building1 = dxnear
+                #         n_box1 = nTemp
+                # if (ray_counter == 606):
+                #     print('original',dx_building,n_box)
 
             # This part doesn't really work well.  We have not incorporated it.
             # Eventually all interactions will be triangles anyway so I'm leaving it here to be updated.
@@ -324,83 +322,85 @@ def main():
             #   Check intersection with Triangles
             #        if Bg.TriangleNumber > 0:
             #            for Q in range(0, Bg.TriangleNumber):
-            #                dxNear, behind = Fun.Polygon(veci, F, Q, 3, Bg.TriangleNumber, Bg.PointNumbers, Bg.TriangleArray,
+            #                dxNear, behind = Fun.Polygon(veci, f, Q, 3, Bg.TriangleNumber, Bg.PointNumbers,
+            #                Bg.TriangleArray,
             #                                             Bg.BuildingPoints, normal, FaceNormalNo, FaceNormals)
-            #                if dxNear < dxBuilding:
-            #                    dxBuilding = dxNear
-            #                    nBox = normal
+            #                if dxNear < dx_building:
+            #                    dx_building = dxNear
+            #                    n_box = normal
             #                    whichBox = Q
             #     Check intersection with Squares
             #        if Bg.SquareNumber > 0:
             #            for Q in range(0, Bg.SquareNumber):
-            #                dxNear, behind = Fun.Polygon(veci, F, Q, 4, SquareNumber,
+            #                dxNear, behind = Fun.Polygon(veci, f, Q, 4, SquareNumber,
             #                PointNumbers, SquareArray, BuildingPoints,
             #                normal, FaceNormalNo, FaceNormals)
-            #                if dxNear < dxBuilding:
-            #                    dxBuilding = dxNear
-            #                    nBox = normal
+            #                if dxNear < dx_building:
+            #                    dx_building = dxNear
+            #                    n_box = normal
             #                    whichBox = Q
-            buildingHit = 0
-            receiverHit = 0
-            groundHit = 0
+            building_hit = 0
+            receiver_hit = 0
+            ground_hit = 0
 
-                #     Check to see if ray hits within step size
-            if dxReceiver < Pf.h or dxGround < Pf.h or dxBuilding < Pf.h:
-                dx = min(dxReceiver, dxGround, dxBuilding)
+            #     Check to see if ray hits within step size
+            if dx_receiver < Pf.h or dx_ground < Pf.h or dx_building < Pf.h:
+                dx = min(dx_receiver, dx_ground, dx_building)
                 #  if the ray hits a receiver, store in an array.  If the ray hits two, create two arrays to store in.
         #        for R in ears:
-                if dx == dxReceiver:
-                    print('Ray ', rayCounter, ' hit receiver ', R.recNumber)
-                    veci += (dx * F)
-                    #receiverHit = 1
-                    #checkDirection = F
-                    #if doubleHit == 1:
-                    #    receiverHit = 2
-                    hitCount = hitCount + 1
-                    update_freq(dx, alphaNothing, 0, lamb, airAbsorb)
-                    #lastReceiver = receiverPoint
-                    outputArray1[:, 0] = frecuencias[:, 0]
-                    outputArray1[:, 1:4] = receiverPoint[:]
-                    outputArray1[:, 5] = phase[:]
-                    #if doubleHit == 1:
-                    #    # R2 = R      #Supposed to be other R, but just a placeholder for now                            R.on_Hit(amplitude/2, phase)
-                    #    R2.on_Hit(amplitude/2, phase)
-                    #else:
-                    ears[tmp].on_Hit(amplitude, phase)
+                if dx == dx_receiver:
+                    print('Ray ', ray_counter, ' hit receiver ', R.recNumber)
+                    veci += (dx * f)
+                    # receiver_hit = 1
+                    # checkDirection = f
+                    # if double_hit == 1:
+                    #    receiver_hit = 2
+                    hit_count = hit_count + 1
+                    update_freq(dx, alpha_nothing, 0, lamb, air_absorb)
+                    # last_receiver = receiver_point
+                    output_array1[:, 0] = frecuencias[:, 0]
+                    output_array1[:, 1:4] = receiver_point[:]
+                    output_array1[:, 5] = phase[:]
+                    # if double_hit == 1:
+                    #    # R2 = R      #Supposed to be other R, but just a placeholder for now
+                    #    R.on_hit(amplitude/2, phase)
+                    #    R2.on_hit(amplitude/2, phase)
+                    # else:
+                    ears[tmp].on_hit(amplitude, phase)
 
-                       # if(doubleHit==1):
-                        #      outputArray1[:,4]=amplitude[:]/2.0
-                        #      dHOutputArray1[:,0]=inputArray[:,0]
-                        #      dHOutputArray1[:,1:4]=receiverPoint2[:]
-                        #      dHOutputArray1[:,4]=amplitude[:]/2.0
-                        #      dHOutputArray1[:,5]=phase[:]
-                        #      lastReceiver2 = receiverPoint2
-                        # else:
-                        #      outputArray1[:,4]=amplitude[:]
-                        # tempArray=Fun.receiverHITFUNC(sizeFFT,outputArray1,Rps.arraySize,tempArray)
-                        # looks like it does the same thing as on_Hit. Here later
-                        # R.on_Hit(amplitude,phase)
-                        # if (doubleHit==1):
-                        #      tempArray=Fun.receiverHITFUNC(sizeFFT,dHOutputArray1,Rps.arraySize,tempArray)
-                        #      Using objects may circumvent the need to have this, but it stays for now
-                        #      count+=1
-                        # count+=1
+                    # if(double_hit==1):
+                    #      output_array1[:,4]=amplitude[:]/2.0
+                    #      dh_output_array1[:,0]=inputArray[:,0]
+                    #      dh_output_array1[:,1:4]=receiver_point2[:]
+                    #      dh_output_array1[:,4]=amplitude[:]/2.0
+                    #      dh_output_array1[:,5]=phase[:]
+                    #      last_receiver2 = receiver_point2
+                    # else:
+                    #      output_array1[:,4]=amplitude[:]
+                    # tempArray=Fun.receiverHITFUNC(size_fft,output_array1,Rps.arraySize,tempArray)
+                    # looks like it does the same thing as on_hit. Here later
+                    # R.on_hit(amplitude,phase)
+                    # if (double_hit==1):
+                    #      tempArray=Fun.receiverHITFUNC(size_fft,dh_output_array1,Rps.arraySize,tempArray)
+                    #      Using objects may circumvent the need to have this, but it stays for now
+                    #      count+=1
+                    # count+=1
 
-                if abs(dx - dxGround) < 10.0**(-13.0):  # If the ray hits the ground then bounce and continue
-                    veci += (dxGround * F)
-                    tmp = np.dot(GroundN, veci)
-                    if tmp != GroundD:
+                if abs(dx - dx_ground) < 10.0**(-13.0):  # If the ray hits the ground then bounce and continue
+                    veci += (dx_ground * f)
+                    tmp = np.dot(ground_n, veci)
+                    if tmp != ground_d:
                         veci[2] = 0
                     print('hit ground at ', I)
-                    dot1 = np.dot(F, GroundN)
-                    n2 = np.dot(GroundN, GroundN)
-                    F -= (2.0 * (dot1 / n2 * GroundN))
-#                    length = np.sqrt(np.dot(F, F))
-                    groundHit = 1
-#                    twoPiDx = np.pi * 2 * dxGround
+                    dot1 = np.dot(f, ground_n)
+                    n2 = np.dot(ground_n, ground_n)
+                    f -= (2.0 * (dot1 / n2 * ground_n))
+#                    length = np.sqrt(np.dot(f, f))
+                    ground_hit = 1
+#                    twoPiDx = np.pi * 2 * dx_ground
                     #     Loop through all the frequencies
-                    update_freq(dxGround, alphaGround, diffusionGround, lamb, airAbsorb)
-    #                if Pf.radiosity == 1 and (diffusionGround != 0.0):
+                    update_freq(dx_ground, alpha_ground, diffusion_ground, lamb, air_absorb)
+    #                if Pf.radiosity == 1 and (diffusion_ground != 0.0):
     #                    for Q in range(0, PatchNo):
     #                        if formFactors[0, Q, 1] == 1:
     #                            if (veci[0] <= (patchArray[Q, W, 0] + 0.5 * patchArray[Q, W, 3]) and
@@ -409,70 +409,70 @@ def main():
                     #                                veci[1]>=(patchArray[Q, W, 1] - 0.5 * patchArray[Q, W, 4]):
     #                                    if veci[2] <= (patchArray[Q, W, 2] + 0.5 * patchArray[Q, W, 5]) and
                     #                                    veci[2]>=(patchArray[Q, W, 2] - 0.5 * patchArray[Q, W, 5]):
-    #                                        temp2 = complex(abs(patchArray[Q, W, 6])*np.exp(XJ*patchArray[Q, W, 7]))
-    #                                        temp3 = complex(abs(amplitude[W] * (1.0 - alphaGround[W]) * diffusionGround *
-                #                                        exp(-m * dxGround)) * exp(1j * phaseFinal))
+    #                                        temp2 = complex(abs(patchArray[Q, W, 6])*np.exp(xj*patchArray[Q, W, 7]))
+    #                                        temp3 = complex(abs(amplitude[W] * (1.0 - alphaGround[W]) *
+                #                                        diffusion_ground *
+                #                                        exp(-m * dx_ground)) * exp(1j * phaseFinal))
     #                                        temp4 = temp2 + temp3
     #                                        patchArray[Q, W, 6] = abs(temp4)
     #                                        patchArray[Q, W, 7] = np.arctan(temp4.imag,temp4.real)
-                if dx == dxBuilding:   # if the ray hits the building then change the direction and continue
-                    veci += (dx * F)
+                if dx == dx_building:   # if the ray hits the building then change the direction and continue
+                    veci += (dx * f)
                     print('hit building at step ', I)
-                    n2 = np.dot(nBox, nBox)
-                    nBuilding = nBox / np.sqrt(n2)
-                    n3 = np.dot(nBuilding, nBuilding)
-                    dot1 = np.dot(F, nBuilding)
-                    F -= (2.0 * (dot1 / n3 * nBuilding))
+                    n2 = np.dot(n_box, n_box)
+                    n_building = n_box / np.sqrt(n2)
+                    n3 = np.dot(n_building, n_building)
+                    dot1 = np.dot(f, n_building)
+                    f -= (2.0 * (dot1 / n3 * n_building))
 
-#                    length = np.sqrt(np.dot(F, F))
-                    buildingHit = 1
+#                    length = np.sqrt(np.dot(f, f))
+                    building_hit = 1
                     # We need to look into complex absorption and see if this is really the best way.
     #                if Pf.complexAbsorption:
     #                    if Pf.absorbPlanes == 2:
     #                        if (veci[2] > 0.0) and (veci[2] < height1):
-    #                            alpha = alphaBuilding[0, :]
+    #                            alpha = alpha_building[0, :]
     #                        elif veci[2] > height1 and veci[2] <= height2:
-    #                            alpha = alphaBuilding[1, :]
+    #                            alpha = alpha_building[1, :]
     #                    if Pf.absorbPlanes == 3:
     #                        if veci[2] > height2 and veci[2] <= height3:
-    #                            alpha = alphaBuilding[2, :]
+    #                            alpha = alpha_building[2, :]
     #                    if Pf.absorbPlanes == 4:
     #                        if veci[2] > height3:
-    #                            alpha = alphaBuilding[4, :]
+    #                            alpha = alpha_building[4, :]
     #                else:
-                    alpha = alphaBuilding[0, :]
-                    update_freq(dx, alpha, diffusion, lamb, airAbsorb)
+                    alpha = alpha_building[0, :]
+                    update_freq(dx, alpha, diffusion, lamb, air_absorb)
             else:  # If there was no interaction with buildings then proceed with one step.
-                veci += (Pf.h * F)
-                update_freq(Pf.h, alphaNothing, 0, lamb, airAbsorb)
-        rayCounter += 1
-        print('finished ray', rayCounter)
+                veci += (Pf.h * f)
+                update_freq(Pf.h, alpha_nothing, 0, lamb, air_absorb)
+        ray_counter += 1
+        print('finished ray', ray_counter)
 
     # Radiosity removed for readability
 
     # Reconstruct the time signal and print to output file
     for R in ears:
-        R.timeReconstruct(sizeFFT)
+        R.time_reconstruct(size_fft)
 
     print('Writing to output file')
     fileid = Pf.outputfile
-    with open(fileid, 'w') as f:
+    with open(fileid, 'w') as file:
         Fun.header(fileid)
 
-    with open (fileid, 'a') as f:
-        for w in range(sizeFFT):
-            Rps.Receiver.timeHeader(f, timeArray[w], w)
+    with open(fileid, 'a') as file:
+        for w in range(size_fft):
+            Rps.Receiver.timeHeader(file, time_array[w], w)
     print('time: ', time.time()-t)
 
     # Outputting graphs
     t = time.time()
 
-    #######################################################################
+    # ######################################################################
     # Will eventually be moved to a receiver function,
     # here now for ease of access of others reading this
-    #######################################################################
+    # ######################################################################
     import matplotlib.font_manager as fm
-
     # Font
     stdfont = fm.FontProperties()
     stdfont.set_family('serif')
@@ -487,9 +487,9 @@ def main():
         # plt.figure(num = i, figsize=(19.20, 10.80), dpi=120, facecolor='#eeeeee', edgecolor='r')   # grey
         # plt.figure(num = i, figsize=(19.20, 10.80), dpi=120, facecolor='#e0dae6', edgecolor='r')   # muted lilac
         plt.figure(num=i, figsize=(19.20, 10.80), dpi=120, facecolor='#e6e6fa', edgecolor='r')  # lavender
-        # plt.plot(timeArray,pressure,'r--')
+        # plt.plot(time_array,pressure,'r--')
         plt.grid(True)
-        plt.plot(timeArray, pressure, '#780303')
+        plt.plot(time_array, pressure, '#780303')
         # Labeling axes
         plt.xlabel('Time [s]', fontproperties=stdfont)
         plt.ylabel('Pressure [Pa]', fontproperties=stdfont)
