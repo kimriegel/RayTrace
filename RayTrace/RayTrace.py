@@ -264,14 +264,14 @@ def main():
                 # elif tempReceiver == dx_receiver and tempReceiver != huge:
                 #     receiverCheck = tempReceiver
 
-    # We need to double check that double hit actually works.  R2 is not really
-    # a thing, we should make sure it is doing what we want.
-    #                 if np.all(R.position == receiver_point):
-    #                     double_hit = 0
-    #                 else:
-    #                     R2 = R
-    #                     double_hit = 1
-    #                     print('double hit')
+            # We need to double check that double hit actually works.  R2 is not really
+            # a thing, we should make sure it is doing what we want.
+            #                 if np.all(R.position == receiver_point):
+            #                     double_hit = 0
+            #                 else:
+            #                     R2 = R
+            #                     double_hit = 1
+            #                     print('double hit')
             temp_receiver[np.where((temp_receiver < (10.0**(-13.0))))] = huge
             tmp = np.argmin(temp_receiver)
             dx_receiver = temp_receiver[tmp]
@@ -280,7 +280,7 @@ def main():
 
                 #     Check Intersection with ground plane
             ground_vd = np.dot(ground_n, f)
-#            ground_vd = ground_n[0] * f[0] + ground_n[1] * f[1] + ground_n[2] * f[2]
+            #ground_vd = ground_n[0] * f[0] + ground_n[1] * f[1] + ground_n[2] * f[2]
             if ground_hit == 1:
                 dx_ground = huge
             elif ground_vd != 0.0:
@@ -293,8 +293,8 @@ def main():
 
             #     Check intersection with building
             # dx_building = huge
-#            hit=0
-#            planeHit = 0
+            #hit=0
+            #planeHit = 0
             #     Check intersection with Boxes
             #      for Q in range(0, Bg.BoxNumber):
             #          dxNear, dxFar, hit, planeHit = Fun.box(Bg.BoxArrayNear[Q], Bg.BoxArrayFar[Q], veci, f)
@@ -347,7 +347,7 @@ def main():
             if dx_receiver < Pf.h or dx_ground < Pf.h or dx_building < Pf.h:
                 dx = min(dx_receiver, dx_ground, dx_building)
                 #  if the ray hits a receiver, store in an array.  If the ray hits two, create two arrays to store in.
-        #        for R in ears:
+                #for R in ears:
                 if dx == dx_receiver:
                     print('Ray ', ray_counter, ' hit receiver ', R.recNumber)
                     veci += (dx * f)
@@ -395,27 +395,27 @@ def main():
                     dot1 = np.dot(f, ground_n)
                     n2 = np.dot(ground_n, ground_n)
                     f -= (2.0 * (dot1 / n2 * ground_n))
-#                    length = np.sqrt(np.dot(f, f))
+                    #length = np.sqrt(np.dot(f, f))
                     ground_hit = 1
-#                    twoPiDx = np.pi * 2 * dx_ground
+                    #twoPiDx = np.pi * 2 * dx_ground
                     #     Loop through all the frequencies
                     update_freq(dx_ground, alpha_ground, diffusion_ground, lamb, air_absorb)
-    #                if Pf.radiosity == 1 and (diffusion_ground != 0.0):
-    #                    for Q in range(0, PatchNo):
-    #                        if formFactors[0, Q, 1] == 1:
-    #                            if (veci[0] <= (patchArray[Q, W, 0] + 0.5 * patchArray[Q, W, 3]) and
-                #                            veci[0]>=(patchArray[Q, W, 0] - 0.5 * patchArray[Q, W, 3])):
-    #                                if veci[1] <= (patchArray[Q, W, 1] + 0.5 * patchArray[Q, W, 4]) and
+                    #if Pf.radiosity == 1 and (diffusion_ground != 0.0):
+                    #    for Q in range(0, PatchNo):
+                    #        if formFactors[0, Q, 1] == 1:
+                    #            if (veci[0] <= (patchArray[Q, W, 0] + 0.5 * patchArray[Q, W, 3]) and
+                    #                        veci[0]>=(patchArray[Q, W, 0] - 0.5 * patchArray[Q, W, 3])):
+                    #                if veci[1] <= (patchArray[Q, W, 1] + 0.5 * patchArray[Q, W, 4]) and
                     #                                veci[1]>=(patchArray[Q, W, 1] - 0.5 * patchArray[Q, W, 4]):
-    #                                    if veci[2] <= (patchArray[Q, W, 2] + 0.5 * patchArray[Q, W, 5]) and
+                    #                    if veci[2] <= (patchArray[Q, W, 2] + 0.5 * patchArray[Q, W, 5]) and
                     #                                    veci[2]>=(patchArray[Q, W, 2] - 0.5 * patchArray[Q, W, 5]):
-    #                                        temp2 = complex(abs(patchArray[Q, W, 6])*np.exp(xj*patchArray[Q, W, 7]))
-    #                                        temp3 = complex(abs(amplitude[W] * (1.0 - alphaGround[W]) *
-                #                                        diffusion_ground *
-                #                                        exp(-m * dx_ground)) * exp(1j * phaseFinal))
-    #                                        temp4 = temp2 + temp3
-    #                                        patchArray[Q, W, 6] = abs(temp4)
-    #                                        patchArray[Q, W, 7] = np.arctan(temp4.imag,temp4.real)
+                    #                        temp2 = complex(abs(patchArray[Q, W, 6])*np.exp(xj*patchArray[Q, W, 7]))
+                    #                        temp3 = complex(abs(amplitude[W] * (1.0 - alphaGround[W]) *
+                    #                                    diffusion_ground *
+                    #                                    exp(-m * dx_ground)) * exp(1j * phaseFinal))
+                    #                        temp4 = temp2 + temp3
+                    #                        patchArray[Q, W, 6] = abs(temp4)
+                    #                        patchArray[Q, W, 7] = np.arctan(temp4.imag,temp4.real)
                 if dx == dx_building:   # if the ray hits the building then change the direction and continue
                     veci += (dx * f)
                     print('hit building at step ', I)
@@ -425,22 +425,22 @@ def main():
                     dot1 = np.dot(f, n_building)
                     f -= (2.0 * (dot1 / n3 * n_building))
 
-#                    length = np.sqrt(np.dot(f, f))
+                    #length = np.sqrt(np.dot(f, f))
                     building_hit = 1
                     # We need to look into complex absorption and see if this is really the best way.
-    #                if Pf.complexAbsorption:
-    #                    if Pf.absorbPlanes == 2:
-    #                        if (veci[2] > 0.0) and (veci[2] < height1):
-    #                            alpha = alpha_building[0, :]
-    #                        elif veci[2] > height1 and veci[2] <= height2:
-    #                            alpha = alpha_building[1, :]
-    #                    if Pf.absorbPlanes == 3:
-    #                        if veci[2] > height2 and veci[2] <= height3:
-    #                            alpha = alpha_building[2, :]
-    #                    if Pf.absorbPlanes == 4:
-    #                        if veci[2] > height3:
-    #                            alpha = alpha_building[4, :]
-    #                else:
+                    #if Pf.complexAbsorption:
+                    #    if Pf.absorbPlanes == 2:
+                    #        if (veci[2] > 0.0) and (veci[2] < height1):
+                    #            alpha = alpha_building[0, :]
+                    #        elif veci[2] > height1 and veci[2] <= height2:
+                    #            alpha = alpha_building[1, :]
+                    #    if Pf.absorbPlanes == 3:
+                    #        if veci[2] > height2 and veci[2] <= height3:
+                    #            alpha = alpha_building[2, :]
+                    #    if Pf.absorbPlanes == 4:
+                    #        if veci[2] > height3:
+                    #            alpha = alpha_building[4, :]
+                    #else:
                     alpha = alpha_building[0, :]
                     update_freq(dx, alpha, diffusion, lamb, air_absorb)
             else:  # If there was no interaction with buildings then proceed with one step.
