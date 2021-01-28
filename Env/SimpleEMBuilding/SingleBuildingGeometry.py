@@ -5,8 +5,7 @@
 #Needs Validation along with RadiosityFunction
 import numpy as np
 np.set_printoptions(threshold=np.inf)
-import RadiosityFunctions as F 
-import Parameterfile as Pf
+from RayTrace import RadiosityFunctions as F
 
 FaceNormalNo = 5
 FaceNormals = [(-1, 0, 0), (0, 1, 0), (1, 0, 0), (0, -1, 0), (0, 0, 1)]
