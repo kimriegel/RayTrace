@@ -18,14 +18,13 @@ import Functions as Fun
 import ReceiverPointSource as Rps  # For receivers
 import GeometryParser as Gp
 
-
 # import GeometryParser as Bg
 
 import time  # Time checks
 t = time.time()
 phase = 0
 amplitude = 0
-print(Pf.Fs)
+#print(Pf.Fs)
 
 
 # What it does not do
@@ -349,7 +348,7 @@ def main():
                 #  if the ray hits a receiver, store in an array.  If the ray hits two, create two arrays to store in.
                 #for R in ears:
                 if dx == dx_receiver:
-                    print('Ray ', ray_counter, ' hit receiver ', R.recNumber)
+                    #print('Ray ', ray_counter, ' hit receiver ', R.recNumber)
                     veci += (dx * f)
                     # receiver_hit = 1
                     # checkDirection = f
@@ -391,7 +390,7 @@ def main():
                     tmp = np.dot(ground_n, veci)
                     if tmp != ground_d:
                         veci[2] = 0
-                    print('hit ground at ', I)
+                    #print('hit ground at ', I)
                     dot1 = np.dot(f, ground_n)
                     n2 = np.dot(ground_n, ground_n)
                     f -= (2.0 * (dot1 / n2 * ground_n))
@@ -418,7 +417,7 @@ def main():
                     #                        patchArray[Q, W, 7] = np.arctan(temp4.imag,temp4.real)
                 if dx == dx_building:   # if the ray hits the building then change the direction and continue
                     veci += (dx * f)
-                    print('hit building at step ', I)
+                    #print('hit building at step ', I)
                     n2 = np.dot(n_box, n_box)
                     n_building = n_box / np.sqrt(n2)
                     n3 = np.dot(n_building, n_building)
@@ -447,7 +446,7 @@ def main():
                 veci += (Pf.h * f)
                 update_freq(Pf.h, alpha_nothing, 0, lamb, air_absorb)
         ray_counter += 1
-        print('finished ray', ray_counter)
+        #print('finished ray', ray_counter)
 
     # Radiosity removed for readability
 
@@ -462,7 +461,7 @@ def main():
 
     with open(fileid, 'a') as file:
         for w in range(size_fft):
-            Rps.Receiver.timeHeader(file, time_array[w], w)
+            Rps.Receiver.time_header(file, time_array[w], w)
     print('time: ', time.time()-t)
 
     # Outputting graphs

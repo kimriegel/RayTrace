@@ -1486,3 +1486,17 @@ Trying really hard to graduate in this span of time, not much progress
       Biggest issue with quads is making sure everything is in same plane
 
       We could definitely try turning step function I into a generator
+
+1/27/2021
+  I remember why I didn't use I as a generator.
+    I'd have to convert the operations that it does into functions
+
+    Time w/ old prints: 106.226
+      Graph:2.260
+    Time w/o old prints: 89.2357
+      Graph:1.897
+
+    Supressing print statements reduces time needed
+      But it FEELS like it takes longer
+      Interestingly, graph time seemed faster this time 
+        May be a fluke, but graphing time has been static so far
