@@ -1500,3 +1500,12 @@ Trying really hard to graduate in this span of time, not much progress
       But it FEELS like it takes longer
       Interestingly, graph time seemed faster this time 
         May be a fluke, but graphing time has been static so far
+
+
+2/3/2021
+  Making incisions recommended by Will:
+
+    1.  Remove Radiosity mentions (temporarily) to increase readability
+
+    2.  Add descriptions to functions
+      I tought I did, either I missed something or I'm defining other people's functions

@@ -119,7 +119,6 @@ def main():
     xi_initial = np.cos(Pf.phi) * np.sin(Pf.theta)
     n_initial = np.sin(Pf.phi) * np.sin(Pf.theta)
     zeta_initial = np.cos(Pf.theta)
-    length = np.sqrt(xi_initial * xi_initial + n_initial * n_initial + zeta_initial * zeta_initial)
     f_initial = np.array([xi_initial, n_initial, zeta_initial])
     d4 = np.dot(f_initial, v_initial)   # equivalent to tmp
     #       Create initial boom array
@@ -196,9 +195,6 @@ def main():
                 alpha_building[W, D2] = Pf.tempalphabuilding[W, 6]
             elif frecuencias[D2, 0] >= 5680.0 or frecuencias[D2, 0] < frecuencias[size_fft_two, 0]:
                 alpha_building[W, D2] = Pf.tempalphabuilding[W, 7]
-
-    # This does not appear to be used, so I commented it out -- r0ml
-    # D = np.dot(f_initial, v_initial)   # Hotfix  We used this name right above
 
     #        Mesh the patches for the environment.  Include patching file.
     diffusion_ground = 0.0
@@ -289,55 +285,12 @@ def main():
                     dx_ground = huge
             else:
                 dx_ground = huge
-
-            #     Check intersection with building
-            # dx_building = huge
-            #hit=0
-            #planeHit = 0
-            #     Check intersection with Boxes
-            #      for Q in range(0, Bg.BoxNumber):
-            #          dxNear, dxFar, hit, planeHit = Fun.box(Bg.BoxArrayNear[Q], Bg.BoxArrayFar[Q], veci, f)
-            #          if dxNear < dx_building:
-            #              dx_building = dxNear
-            #              Vecip1 = veci + np.multiply(dx_building, f)
-            #              whichBox = Q
-            #              n_box = Fun.plane(Vecip1, Bg.BoxArrayNear[whichBox], Bg.BoxArrayFar[whichBox], planeHit)
+                
             #   Implement Geometry parser
             if building_hit == 1:
                 dx_building = huge
             else:
                 dx_building, n_box = Gp.collision_check2(Gp.mesh, veci, f)
-                # for face in Gp.mesh:
-                #     dxnear, nTemp = Gp.collisionCheck(face, veci, f)
-                #     if dxnear < dx_building:
-                #         dx_building1 = dxnear
-                #         n_box1 = nTemp
-                # if (ray_counter == 606):
-                #     print('original',dx_building,n_box)
-
-            # This part doesn't really work well.  We have not incorporated it.
-            # Eventually all interactions will be triangles anyway so I'm leaving it here to be updated.
-
-            #   Check intersection with Triangles
-            #        if Bg.TriangleNumber > 0:
-            #            for Q in range(0, Bg.TriangleNumber):
-            #                dxNear, behind = Fun.Polygon(veci, f, Q, 3, Bg.TriangleNumber, Bg.PointNumbers,
-            #                Bg.TriangleArray,
-            #                                             Bg.BuildingPoints, normal, FaceNormalNo, FaceNormals)
-            #                if dxNear < dx_building:
-            #                    dx_building = dxNear
-            #                    n_box = normal
-            #                    whichBox = Q
-            #     Check intersection with Squares
-            #        if Bg.SquareNumber > 0:
-            #            for Q in range(0, Bg.SquareNumber):
-            #                dxNear, behind = Fun.Polygon(veci, f, Q, 4, SquareNumber,
-            #                PointNumbers, SquareArray, BuildingPoints,
-            #                normal, FaceNormalNo, FaceNormals)
-            #                if dxNear < dx_building:
-            #                    dx_building = dxNear
-            #                    n_box = normal
-            #                    whichBox = Q
             building_hit = 0
             receiver_hit = 0
             ground_hit = 0
@@ -394,27 +347,10 @@ def main():
                     dot1 = np.dot(f, ground_n)
                     n2 = np.dot(ground_n, ground_n)
                     f -= (2.0 * (dot1 / n2 * ground_n))
-                    #length = np.sqrt(np.dot(f, f))
                     ground_hit = 1
                     #twoPiDx = np.pi * 2 * dx_ground
-                    #     Loop through all the frequencies
-                    update_freq(dx_ground, alpha_ground, diffusion_ground, lamb, air_absorb)
-                    #if Pf.radiosity == 1 and (diffusion_ground != 0.0):
-                    #    for Q in range(0, PatchNo):
-                    #        if formFactors[0, Q, 1] == 1:
-                    #            if (veci[0] <= (patchArray[Q, W, 0] + 0.5 * patchArray[Q, W, 3]) and
-                    #                        veci[0]>=(patchArray[Q, W, 0] - 0.5 * patchArray[Q, W, 3])):
-                    #                if veci[1] <= (patchArray[Q, W, 1] + 0.5 * patchArray[Q, W, 4]) and
-                    #                                veci[1]>=(patchArray[Q, W, 1] - 0.5 * patchArray[Q, W, 4]):
-                    #                    if veci[2] <= (patchArray[Q, W, 2] + 0.5 * patchArray[Q, W, 5]) and
-                    #                                    veci[2]>=(patchArray[Q, W, 2] - 0.5 * patchArray[Q, W, 5]):
-                    #                        temp2 = complex(abs(patchArray[Q, W, 6])*np.exp(xj*patchArray[Q, W, 7]))
-                    #                        temp3 = complex(abs(amplitude[W] * (1.0 - alphaGround[W]) *
-                    #                                    diffusion_ground *
-                    #                                    exp(-m * dx_ground)) * exp(1j * phaseFinal))
-                    #                        temp4 = temp2 + temp3
-                    #                        patchArray[Q, W, 6] = abs(temp4)
-                    #                        patchArray[Q, W, 7] = np.arctan(temp4.imag,temp4.real)
+                    update_freq(dx_ground, alpha_ground, diffusion_ground, lamb, air_absorb)    #     Loop through all the frequencies
+
                 if dx == dx_building:   # if the ray hits the building then change the direction and continue
                     veci += (dx * f)
                     #print('hit building at step ', I)
@@ -423,23 +359,8 @@ def main():
                     n3 = np.dot(n_building, n_building)
                     dot1 = np.dot(f, n_building)
                     f -= (2.0 * (dot1 / n3 * n_building))
-
-                    #length = np.sqrt(np.dot(f, f))
                     building_hit = 1
-                    # We need to look into complex absorption and see if this is really the best way.
-                    #if Pf.complexAbsorption:
-                    #    if Pf.absorbPlanes == 2:
-                    #        if (veci[2] > 0.0) and (veci[2] < height1):
-                    #            alpha = alpha_building[0, :]
-                    #        elif veci[2] > height1 and veci[2] <= height2:
-                    #            alpha = alpha_building[1, :]
-                    #    if Pf.absorbPlanes == 3:
-                    #        if veci[2] > height2 and veci[2] <= height3:
-                    #            alpha = alpha_building[2, :]
-                    #    if Pf.absorbPlanes == 4:
-                    #        if veci[2] > height3:
-                    #            alpha = alpha_building[4, :]
-                    #else:
+
                     alpha = alpha_building[0, :]
                     update_freq(dx, alpha, diffusion, lamb, air_absorb)
             else:  # If there was no interaction with buildings then proceed with one step.

@@ -3,7 +3,7 @@
         "xstring": "cpp",
         "xutility": "cpp"
     },
-    "python.pythonPath": "C:\\Users\\19148\\AppData\\Local\\Microsoft\\WindowsApps\\python.exe",
+    "python.pythonPath": "C:\\Python39\\python.exe",
     "python.linting.pylintEnabled": true,
     "python.linting.enabled": true
 }

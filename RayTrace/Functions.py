@@ -1,32 +1,28 @@
 # Table of Contents:
-# 1.    absorption
-# 2.    TimeReconstruct
-# 3.    ReceiverHitFunc
-# 4.    Header
-# 5.    TimeHeader
-# 6.    Grid
-# 7.    InitialGrid
-# 8.    SphereCheck
-# 9.    CROSS
-# 10.   Polygon (Messy array definitions, I will return later)
-# 11.   InsideCheck (I just realized I skipped this one 
-# 12.   Plane (Finished, but should double and triple check for typos)
-# 13.   Box
+# 1.   absorption
+# 2.   receiver_hit_func
+# 3.   header
+# 4.   sphere_check
+# 5.   cross
+# 6.   tri
+# 7.   plane
+# 8.   box
+# 9.   rotation
 
-# Notes:
-# Eventually get to seeing how much memory it eats
 import numpy as np
 import math as m
 
-# Using to check how long functions take
 HUGE = 1000000.0
 XJ = complex(0, 1)
 
 
 def absorption(ps, freq, hr, temp):
-    
-    # This function computes the air absorption for a given frequency, 
-    # ambient pressure, relative humidity and temperature.
+    '''
+    This function computes the air absorption for a given frequency,
+    ambient pressure, relative humidity, and temperature.
+
+    ps, hr, and temp are defined in Parameterfile.py
+    '''
     if temp == 0 or ps == 0:
         raise ValueError('Cannot divide by Zero!')
     if temp < 0:
@@ -38,7 +34,7 @@ def absorption(ps, freq, hr, temp):
     t01 = 273.16
     f = freq/ps
 
-# Compute all relevant parameters
+    # Compute all relevant parameters
     p_sat = ps0*10**(-6.8346 * (t01 / temp) ** 1.261 + 4.6151)
     h = ps0*(hr/ps)*(p_sat/ps0)
     fr_n = 1 / ps0 * (t0 / temp) ** (1 / 2) * (9 + 280 * h * m.exp(-4.17 * ((t0 / temp) ** (1 / 3) - 1)))
@@ -51,8 +47,9 @@ def absorption(ps, freq, hr, temp):
 
 
 def receiver_hit_func(size_fft, output_array, array_size, temp_array):
-
-    # This Function adds the pressures from a ray when it hits the receiver.
+    '''
+    This Function adds the pressures from a ray when it hits the receiver.
+    '''
 
     # Define arrays with numpy zeros function
     xj = complex(0, 1)
@@ -74,8 +71,9 @@ def receiver_hit_func(size_fft, output_array, array_size, temp_array):
 
 
 def header(output_file):
-
-    #    This function prints the header for the tecplot data
+    '''
+    This function prints the header for the tecplot data.
+    '''
 
     f = open(output_file, "w")
 
@@ -99,19 +97,19 @@ def header(output_file):
 
 
 def sphere_check(sc, sr2, f, veci):
-
-    # This function performs a check whether a ray hits a sphere.  If
-    # it does hit the function returns the distance to the sphere
+    '''
+    This function performs a check wwhether a ray hits a sphere. If
+    it does hit the function returns the distance to the sphere
+    '''
 
     huge_check = 1000000.0
-    oc = np.zeros(3)      # put a pin in this
+    oc = np.zeros(3)
 
     oc[0] = sc[0] - veci[0]
     oc[1] = sc[1] - veci[1]
     oc[2] = sc[2] - veci[2]
     l2_oc = np.dot(oc, oc)
     tca = np.dot(oc, f)
-    # Takes dot product of OC and OC (Dot square?)
     t2hc = sr2 - l2_oc + tca ** 2
     if l2_oc == sr2:
         dx = huge_check
@@ -125,8 +123,9 @@ def sphere_check(sc, sr2, f, veci):
 
 
 def cross(a, b):
-
-    #    This function calculates a cross product of A and B and returns normal
+    '''
+    This function calculates a cross product of A and B and returns normal
+    '''
 
     if len(a) != 3 or len(b) != 3:
         raise ValueError('Input must be 3D vector.')
@@ -153,7 +152,7 @@ def tri(veci, f, q, number, point_numbers, poly_array, v, normal, face_normal_no
     [No Description given in Fortran]
     """
     size = 3
-    g = np.zeros((size, 2))  # (3,2)
+    g = np.zeros((size, 2))  
     # inits
     nc = 0
     behind = 0
@@ -170,7 +169,7 @@ def tri(veci, f, q, number, point_numbers, poly_array, v, normal, face_normal_no
         # Stage 1
     intersection = veci + f*t
     maximum = max(abs(normal))
-    # G: What if two normal values are the same? Anyway:
+
     if maximum == abs(normal[0]):
         for P in range(size):
             g[P, :] = (intersection[1]-v[int(poly_array[q, 1+P]), 1], intersection[2]-v[int(poly_array[q, 1+P]), 2])
@@ -191,148 +190,34 @@ def tri(veci, f, q, number, point_numbers, poly_array, v, normal, face_normal_no
             if (g[P, 0]-(g[P, 1]*(g[P+1, 0]-g[P, 0])/(g[P+1, 1]-g[P, 1]))) > 0.0:
                 nc += 1
         odd = nc % 2    # get remainder to find if odd or not
-        # This was this way in original fortran
         if odd:
             dxbuilding = t
         else:
             dxbuilding = HUGE
         return dxbuilding, behind
 
-# Commenting this out until we have some progress on the environment variables.
-# def polygon(vecip1, f, q, size, number, PointNumbers, PolyArray, BuildingPoints, normal,
-# FaceNormalNo, FaceNormals, dxbuilding):
-
-#    ********************************Untested***********************************
-#    A 1:1 translation was made from Fortran. This is the closest match to
-#    what we are trying to do with triangle geometry. However there is no
-#    readily available geometry file to test this.
-    
-#    [No Description given in Fortran]
-
-#    G = np.zeros((size,2))
-#    HUGE=1000000.0
-#    NC=0
-#    behind=0
-#    normal[1]=FaceNormals[int(PolyArray[q, 1]), 0]
-#    normal[2]=FaceNormals[int(PolyArray[q, 1]), 1]
-#    normal[3]=FaceNormals[int(PolyArray[q, 1]), 2]
-    # An array defined as an array from a function of an array and a point.
-    # I will recheck syntax, just getting through everything now
-
-    # This is what Kory originally had written, returning syntax error-Will
-    # d=-np.dot(normal,BuildingPoints(int(PolyArray[Q,2]),1:3))
-    # ^^^unsure how to translate this part
-
-    # Will's attempt (To avoid error):
-#    d=-np.dot(normal, BuildingPoints(PolyArray[q, 2]))
-#    # it ran, doesn't mean it's right. Will check back.
-#    Vd=np.dot(normal, f)
-
-#    if Vd >= 0.0:
-#        dxbuilding = HUGE
-#    V0= -(np.dot(normal, vecip1) + d)
-#    t=V0/Vd
-#    if(t < 0.0):
-#        dxbuilding=HUGE
-#        behind = 1
-    
-#    intersection = vecip1 + f * t
-#    #intersection[1]=Vecip1[1]+F[1]*t
-#    #intersection[2]=Vecip1[2]+F[2]*t
-#    #intersection[3]=Vecip1[3]+F[3]*t
-#    maximum = max(abs(normal))
-#    if(maximum == abs(normal[0])):
-#        for P in range(size):
-#            G[P,:2] = (intersection[1]-BuildingPoints[int(PolyArray[q, 1 + P]), 1]
-#                      ,intersection[2]-BuildingPoints[int(PolyArray[q, 1 + P]), 2])
-#    elif (maximum == normal[1]):
-#        for P in range(size):
-#            G[P,:2] = (intersection[0]-BuildingPoints[int(PolyArray[q, 1 + P]), 0]
-#                      ,intersection[2]-BuildingPoints[int(PolyArray[q, 1 + P]), 2])
-#    elif (maximum == normal[2]):
-#        for P in range(size):
-#            G[P,:2] = (intersection[0]-BuildingPoints[int(PolyArray[q, 1 + P]), 0]
-#                      ,intersection[1]-BuildingPoints[int(PolyArray[q, 1 + P]), 1])
-#    for P in range(size):
-#        if P == size:
-#            if G[P,1] < 0.0:
-#                SH = -1
-#            else:
-#                SH = 1
-#            if G[0,1] < 0.0:
-#                NSH = -1
-#            else:
-#                NSH = 1
-#        else:
-#            if G[P,1] < 0.0:
-#                SH = -1
-#            else:
-#                SH = 1
-#            if G[P+1,2] < 0.0:
-#                NSH = -1
-#            else:
-#                NSH = 1
-#        if SH != NSH:
-#            if (P == size):
-#                if (G[P,0] > 0.0) and (G[0,0]>0.0):
-#                    NC += 1
-#                elif (G[P,0]> 0.0) or (G[0,0] > 0.0):
-#                    if (G[P,0]-(G[P,1]*(G[P+1,0]-G[P,0])/(G[P+1,1]-G[P,1]))) > 0.0:
-#                        NC += 1
-#            else:
-#                if (G[P,0] > 0.0) and (G[P+1,0] > 0.0):
-#                    NC += 1
-#                elif (G[P,0] > 0.0) or (G[P+1,1] > 0.0):
-#                    if (G[P,0]-(G[P,1]*(G[P+1,0]-G[P,0])/(G[P+1,1]-G[P,1]))) > 0.0:
-#                        NC += 1
-#        odd = NC % 2    #get remainder to find if odd or not
-#        # This was this way in original fortran
-#        #if odd== 0:
-#        #    dxbuilding = HUGE
-#        #else:
-#        #    dxbuilding = t
-#        # Setting it this way myself:
-#        if odd:
-#            dxbuilding = t
-#        else:
-#            dxbuilding = HUGE
-#        return dxbuilding,behind
-
 
 def plane(vecip1, b1, b2, plane_hit):
+    '''
+    This function calculates the normal at the hitpoint of a box.
+    '''
 
-    #    This function calculates the normal at the hitpoint of a box.
-
-    # George:It sure would be a mess if there was a typo anywhere in here
-    # This function calculates the normal at the hit point of a box.
-    # import numpy as np
-    # print('plane_hit is ', plane_hit)
-    # global n_box
     n_box = [0, 0, 0]
     if plane_hit == 1:
-        # print('vecip1',Vecip1)
-        # print('B1 is ',B1)
         if vecip1[0] == b1[0]:
             point2 = [b1[0], b1[1], b2[2]]
             point3 = [b1[0], b2[1], b1[2]]
             n_box = cross(np.subtract(point2, b1), np.subtract(point3, b1))
-            # n_box=np.cross(np.subtract(Point2,B1),np.subtract(Point3,B1))
 
         elif vecip1[0] == b2[0]:
             point1 = (b2[0], b1[1], b1[2])
             point2 = (b2[0], b1[1], b2[2])
             point3 = (b2[0], b2[1], b1[2])
-            # print('points: ',Point1,Point2,Point3)
-            # n_box=CROSS((Point3-Point1),(Point2-Point1))
-            n_box = cross(np.subtract(point3, point1), np.subtract(point2, point1))
-            # n_box=np.cross(np.subtract(Point3,Point1),np.subtract(Point2,Point1))
-            # print('n_box works. It is', n_box)
-    if plane_hit == 2:
-        # print('this happens 2')
 
-        # print(Vecip1[1],B1[1])
-        # ****************************************************************
-        # This is not a good solution
+            n_box = cross(np.subtract(point3, point1), np.subtract(point2, point1))
+
+    if plane_hit == 2:
+
         if vecip1[1] == b1[1]:
             point2 = (b2[0], b1[1], b1[2])
             point3 = (b1[0], b1[1], b2[2])
@@ -351,16 +236,17 @@ def plane(vecip1, b1, b2, plane_hit):
             point2 = (b1[0], b2[1], b2[2])
             point3 = (b2[0], b1[1], b2[2])
             n_box = cross(np.subtract(point2, b2), np.subtract(point3, b2))
-    # print('Here is that n_box it keeps saying you\'re missing', nbox )s
+
     return n_box
 
 
 def box(b1, b2, vecip1, f):
-
-    #    This function checks to see if the ray hits a box.  It determines which
-    #    plane the ray hits
-    #        t1x is the distance to the close side
-    #        t2x is th distance to the far side
+    '''
+    This function checks to see if the ray hits a box. It determines which
+    plane the ray hits.
+    t1x is the distance to the close side
+    t2x is the distance to the far side
+    '''
 
     hit = 5
     huge_box = 1000000.0
@@ -431,8 +317,6 @@ def box(b1, b2, vecip1, f):
                 dx_near = huge_box
                 return dx_near, dx_far, hit, plane_hit
 
-            # "break outside loop"
-            # Look into it later -G
 
         if f[2] != 0.0:
             t1_z = (b1[2] - vecip1[2]) / temp_f[2]
