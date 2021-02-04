@@ -419,8 +419,6 @@ def main():
                   fontweight='bold')
 
         # Saving
-        # plt.savefig(Pf.graphName + str(i) + '.png', facecolor='#eeeeee')    # grey
-        # plt.savefig(Pf.graphName + str(i) + '.png', facecolor='#e0dae6')    # muted lilac
         plt.savefig(Pf.graphName + str(i) + '.png', facecolor='#e6e6fa')  # lavender
         print('Saved receiver', i)
     print('Graph time: ', time.time() - t)

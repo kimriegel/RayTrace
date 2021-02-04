@@ -242,6 +242,8 @@ def plane(vecip1, b1, b2, plane_hit):
 
 def box(b1, b2, vecip1, f):
     '''
+    Defunct with meshes
+
     This function checks to see if the ray hits a box. It determines which
     plane the ray hits.
     t1x is the distance to the close side
@@ -354,6 +356,10 @@ def box(b1, b2, vecip1, f):
 
 
 def rotation(axis, angle, rotation_matrix):
+    '''
+    What DOES this do?
+    Do we call this?
+    '''
 
     rotation_matrix[1, 1] = axis[1] ** 2 + (1 - axis[1] ** 2) * m.cos(angle)
     rotation_matrix[1, 2] = axis[1] * axis[2] * (1 - m.cos(angle)) + axis[3] * m.sin(angle)
