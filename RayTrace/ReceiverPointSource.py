@@ -20,8 +20,6 @@ class Receiver:
     initial_frequency = None    # Gives this value to all receivers
     rList = []  # See append_list
 
-    # I personally prefer writing Receiver.Array to Receiver.receiverarray
-    # Array = np.array([None])
     # This is now completely overlapped by rlist
 
     def __init__(self, position):
@@ -50,10 +48,7 @@ class Receiver:
 
         temp1 = abs(self.magnitude) * np.exp(xj*self.direction)
         temp2 = abs(amplitude[:]) * np.exp(xj*phase[:])
-        # print(temp2.shape)
-        # print(list(temp2[-20:]))
-        # print(list(temp2[:]))
-        # print(list(phase))
+
         temp3 = temp1 + temp2 
 
         self.magnitude = abs(temp3)
@@ -61,12 +56,13 @@ class Receiver:
         # See bug log 3/13 for what happened with positions checks
 
     def sphere_check(self, sr_2, f, veci):
+        """
+        This function performs a check whether a ray hits a sphere.  If
+        it does hit then the function returns the distance to the sphere        
 
-        # This function performs a check whether a ray hits a sphere.  If
-        # it does hit then the function returns the distance to the sphere
-
-        # Sc is receiver position
-        # sr2 is radius2
+        Sc is receiver position
+        sr2 is radius2
+        """
         huge = 1000000.0
 
         s_c = self.position
@@ -84,15 +80,18 @@ class Receiver:
         else:
             dx = tca - (t2hc**(1/2))
         # Hey future me, remember to delete one of these later
+        # No, lmao
 
         self.dx = dx
         return dx
 
     def time_reconstruct(self, sizefft):
 
-        # This Function computes the timesignal from a given fft.  It writes the
-        # time signal to an array
-        # Timearray is now defined in here. Do not call it.
+        """
+        This Function computes the timesignal from a given fft.  It writes the
+        time signal to an array
+        Timearray is now defined in here. Do not call it.
+        """
         xj = complex(0, 1)
 
         # Create the complex array to feed into the inverse fft function
@@ -111,13 +110,13 @@ class Receiver:
     # def timeheader(cls,f,time,sizex,sizey,sizez,planename):
     @classmethod
     def time_header(cls, f, time, w):
-
-        # This function prints the header between each time set
-        # Time is the real time that the event happens
-        # omega (w) is the signal in that receiver at the specified time
+        """
+        This function prints the header between each time set
+        Time is the real time that the event happens
+        omega (w) is the signal in that receiver at the specified time
+        """
 
         # time = pass
-        # This function prints the header between each time set
         f.write('ZONE T=" %s "\n' % (planename, ))  # this worked in the command line
         f.write('STRANDID=1, SOLUTIONTIME= %f \n' % time)                     # timearray tiempo/PF.Fs
         f.write('I= %d\t J= %d\t K=%d\t ZONETYPE=Ordered\n' % (sizex, sizey, sizez))
@@ -131,10 +130,10 @@ class Receiver:
 
     @classmethod
     def initialize(cls, ipfile):
-
-        # Reads in receiver points from the txt file and translates them to be used in our receiver method
-        # Receivers are automatically initialized from given inputfile
-
+        """
+        Reads in receiver points from the txt file and translates them to be used in our receiver method
+        Receivers are automatically initialized from given inputfile
+        """
         with open(ipfile) as vertex:        # Read in from file
             rho = np.genfromtxt(vertex)
         cls.Array = rho
@@ -146,9 +145,10 @@ class Receiver:
 
 # Initializing receivers
 def initialize_receivers():     
-
-    # Create Individual receivers
-    # For debugging, do not use
+    """
+    Create Individual receivers
+    For debugging, do not use
+    """
 
     r_1 = Receiver((93.4428213, 28.8397178, 0.151))
     r_2 = Receiver((64.5832, 28.5998, 0.151))

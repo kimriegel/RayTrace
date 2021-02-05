@@ -1509,3 +1509,8 @@ Trying really hard to graduate in this span of time, not much progress
 
     2.  Add descriptions to functions
       I tought I did, either I missed something or I'm defining other people's functions
+
+      
+2/5/2021
+  Removed outputarray1 and outputarray
+  Added better descriptions to some functions

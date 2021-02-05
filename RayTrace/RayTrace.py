@@ -18,19 +18,13 @@ import Functions as Fun
 import ReceiverPointSource as Rps  # For receivers
 import GeometryParser as Gp
 
-# import GeometryParser as Bg
-
 import time  # Time checks
 t = time.time()
 phase = 0
 amplitude = 0
-#print(Pf.Fs)
-
 
 # What it does not do
 """
-      Interacts with geometry parser
-      Have a way of reading in complex geometries - Yes, but not yet integrated
       Anything resembling radiosity
 """
 
@@ -87,15 +81,7 @@ def main():
     building_hit = 0
 
     # Initialize counters
-    xj = complex(0.0, 1.0)
     radius2 = Pf.radius**2
-    ray_sum = 0
-
-    # Initialize receiver variables
-    last_receiver = np.zeros(3)
-    last_receiver2 = np.zeros(3)
-    receiver_point = np.zeros(3)
-    receiver_point2 = np.zeros(3)
 
     # Read in input file
     input_signal = np.loadtxt(Pf.INPUTFILE)
@@ -148,9 +134,6 @@ def main():
     #       Initialize normalization factor
     normalization = (np.pi*radius2)/(Pf.boomspacing**2)
 
-    output_array1 = np.zeros((size_fft_two, 6))
-    dh_output_array1 = np.zeros((size_fft_two, 6))
-
     #       Define ground plane
     ground_height = 0.000000000
     ground_n = np.array([0.000000000, 0.000000000, 1.00000000])
@@ -199,7 +182,6 @@ def main():
     #        Mesh the patches for the environment.  Include patching file.
     diffusion_ground = 0.0
     if Pf.radiosity:  # If it exists as a non-zero number
-        #    import SingleBuildingGeometry
         diffusion = Pf.radiosity
     else:
         diffusion = 0.0
@@ -215,17 +197,15 @@ def main():
     # for i in range(606):
     #      ray =      next(boom_carpet)
     #      ray_counter += 1
-    #
     # if ray:
+    #
     # Begin tracing
-    check_direction = [0, 0, 0]
     n_box = [0, 0, 0]
     veci = np.array([0, 0, 0])
     print('began rays')
     for ray in boom_carpet:              # Written like this for readability
         veci = ray      # initial ray position
         hit_count = 0
-        double_hit = 0
 
         amplitude = frecuencias[:, 1]/normalization
         phase = frecuencias[:, 2]
@@ -241,37 +221,9 @@ def main():
                 # It's not defined inside the receiver because it's ray dependant.
                 temp_receiver[i] = R.sphere_check(radius2, f, veci)    # Distance to receiver
                 i += 1
-
-                # if receiver_hit >= 1:  # if you hit a receiver last time, don't hit it again
-                #     if np.all(R.position == last_receiver):
-                #         tempReceiver = huge
-                #     if np.all(f == check_direction):
-                #         OC = R.position - veci
-                #         OCLength = np.dot(OC, OC)
-                #         if OCLength < radius2:
-                #             tempReceiver = huge
-                # if receiver_hit >= 2:
-                #     if np.all(R.position == last_receiver):
-                #         tempReceiver = huge
-                # if tempReceiver < dx_receiver:
-                #     dx_receiver = tempReceiver
-                #     receiver_point = R.position
-                # elif tempReceiver == dx_receiver and tempReceiver != huge:
-                #     receiverCheck = tempReceiver
-
-            # We need to double check that double hit actually works.  R2 is not really
-            # a thing, we should make sure it is doing what we want.
-            #                 if np.all(R.position == receiver_point):
-            #                     double_hit = 0
-            #                 else:
-            #                     R2 = R
-            #                     double_hit = 1
-            #                     print('double hit')
             temp_receiver[np.where((temp_receiver < (10.0**(-13.0))))] = huge
             tmp = np.argmin(temp_receiver)
             dx_receiver = temp_receiver[tmp]
-            if dx_receiver != huge:
-                receiver_point = ears[tmp].position
 
                 #     Check Intersection with ground plane
             ground_vd = np.dot(ground_n, f)
@@ -287,7 +239,7 @@ def main():
                 dx_ground = huge
                 
             #   Implement Geometry parser
-            if building_hit == 1:
+            if building_hit == 1:   #Avoid hitting building twice
                 dx_building = huge
             else:
                 dx_building, n_box = Gp.collision_check2(Gp.mesh, veci, f)
@@ -303,40 +255,9 @@ def main():
                 if dx == dx_receiver:
                     #print('Ray ', ray_counter, ' hit receiver ', R.recNumber)
                     veci += (dx * f)
-                    # receiver_hit = 1
-                    # checkDirection = f
-                    # if double_hit == 1:
-                    #    receiver_hit = 2
                     hit_count = hit_count + 1
                     update_freq(dx, alpha_nothing, 0, lamb, air_absorb)
-                    # last_receiver = receiver_point
-                    output_array1[:, 0] = frecuencias[:, 0]
-                    output_array1[:, 1:4] = receiver_point[:]
-                    output_array1[:, 5] = phase[:]
-                    # if double_hit == 1:
-                    #    # R2 = R      #Supposed to be other R, but just a placeholder for now
-                    #    R.on_hit(amplitude/2, phase)
-                    #    R2.on_hit(amplitude/2, phase)
-                    # else:
                     ears[tmp].on_hit(amplitude, phase)
-
-                    # if(double_hit==1):
-                    #      output_array1[:,4]=amplitude[:]/2.0
-                    #      dh_output_array1[:,0]=inputArray[:,0]
-                    #      dh_output_array1[:,1:4]=receiver_point2[:]
-                    #      dh_output_array1[:,4]=amplitude[:]/2.0
-                    #      dh_output_array1[:,5]=phase[:]
-                    #      last_receiver2 = receiver_point2
-                    # else:
-                    #      output_array1[:,4]=amplitude[:]
-                    # tempArray=Fun.receiverHITFUNC(size_fft,output_array1,Rps.arraySize,tempArray)
-                    # looks like it does the same thing as on_hit. Here later
-                    # R.on_hit(amplitude,phase)
-                    # if (double_hit==1):
-                    #      tempArray=Fun.receiverHITFUNC(size_fft,dh_output_array1,Rps.arraySize,tempArray)
-                    #      Using objects may circumvent the need to have this, but it stays for now
-                    #      count+=1
-                    # count+=1
 
                 if abs(dx - dx_ground) < 10.0**(-13.0):  # If the ray hits the ground then bounce and continue
                     veci += (dx_ground * f)
@@ -369,13 +290,11 @@ def main():
         ray_counter += 1
         #print('finished ray', ray_counter)
 
-    # Radiosity removed for readability
-
     # Reconstruct the time signal and print to output file
     for R in ears:
         R.time_reconstruct(size_fft)
 
-    print('Writing to output file')
+    print('Writing to output file')         #For Matlab compatibility
     fileid = Pf.outputfile
     with open(fileid, 'w') as file:
         Fun.header(fileid)
