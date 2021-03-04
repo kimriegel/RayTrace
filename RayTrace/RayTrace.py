@@ -206,9 +206,12 @@ def main():
     for ray in boom_carpet:              # Written like this for readability
         veci = ray      # initial ray position
         hit_count = 0
-
         amplitude = frecuencias[:, 1]/normalization
         phase = frecuencias[:, 2]
+        #rayPath = (x for step in range(Pf.IMAX) )  
+        #for I in rayPath:
+        #x is output, not sure there even is one
+        # step is everything that happens within I loop now
 
         f = np.array(f_initial)                                      # Direction
         for I in range(Pf.IMAX):      # Making small steps along the ray path.
@@ -216,6 +219,9 @@ def main():
             dx_receiver = huge
             # Find the closest sphere and store that as the distance
             i = 0
+
+            # Find dx here
+
             for R in ears:
                 # The way that tempReceiver works now, it's only used here and only should be used here.
                 # It's not defined inside the receiver because it's ray dependant.
@@ -243,6 +249,9 @@ def main():
                 dx_building = huge
             else:
                 dx_building, n_box = Gp.collision_check2(Gp.mesh, veci, f)
+
+            # Use found dx
+
             building_hit = 0
             receiver_hit = 0
             ground_hit = 0
@@ -281,7 +290,6 @@ def main():
                     dot1 = np.dot(f, n_building)
                     f -= (2.0 * (dot1 / n3 * n_building))
                     building_hit = 1
-
                     alpha = alpha_building[0, :]
                     update_freq(dx, alpha, diffusion, lamb, air_absorb)
             else:  # If there was no interaction with buildings then proceed with one step.

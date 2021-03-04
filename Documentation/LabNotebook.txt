@@ -1514,3 +1514,14 @@ Trying really hard to graduate in this span of time, not much progress
 2/5/2021
   Removed outputarray1 and outputarray
   Added better descriptions to some functions
+
+2/19/2021
+  Third time code has needed to be redownloaded due to sync issues
+    However recovered ue to all the syncing
+    unsure if that means to sync less or more
+
+    
+
+3/4/2021
+  Keep moving forward.
+    Trying to break down original step into workable chunks
