@@ -22,7 +22,7 @@ class Ray:
         Create and defines position of ray        
         """
 
-        Ray.rayList.append(self)  # See append_list
+        #Ray.rayList.append(self)  # See append_list
 
         self.position = np.array(position)
         self.frequency = np.array(Ray.frequency )
@@ -41,7 +41,8 @@ class Ray:
         Delete when this is figured out
 
         """
-        Ray.rayList.append(self)  # See append_list
+
+        # Can use list to make sure there is still one object but multiple names
 
         self.position = np.array(position)
         self.frequency = np.array(Ray.frequency )
@@ -83,10 +84,14 @@ class Ray:
 #    for j in step:
 #        print(j)
 
-print(Ray.rayList)
-Jeff = Ray((1,1,1))
-print(Ray.rayList)
-Jeff = Ray((1,1,1))
-print(Ray.rayList)
-Jeff.reset((1,1,1))
-print(Ray.rayList)
+# Sucessfully uses only one ray
+#print(Ray.rayList)
+#Jeff = Ray((1,1,1))
+#print(Ray.rayList)
+#Jeff = Ray((1,1,1))
+#print(Ray.rayList)
+#Jeff.reset((1,1,1))
+#print(Ray.rayList)
+
+
+#

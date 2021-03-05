@@ -1525,3 +1525,12 @@ Trying really hard to graduate in this span of time, not much progress
 3/4/2021
   Keep moving forward.
     Trying to break down original step into workable chunks
+
+    Made Yogi rays
+      Copied from Receiver
+      Must first create a blank ray, then use reset function to input actual data
+      Otherwise it makes a large amount of rays that save all their data and only run once
+
+      Wait for Will's update that cleans up aesthetics, getting hard to make cuts
+
+      Goal: 100 lines in main file
