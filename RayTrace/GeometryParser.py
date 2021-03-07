@@ -104,7 +104,7 @@ def collision_check2(face, veci, f):
 #    if isParallel:
 #        return HUGE        #ray does not hit, find an output to express that
     w = veci-np.array(face)[:, 2]
-    si = -np.einsum('ij,ij->i', n, w)/nf
+    si = np.einsum('ij,ij->i', n, w)/nf
     p = veci + si[:, np.newaxis]*f
     tmp[0] = np.subtract(p, np.array(face)[:, 0])
     tmp[1] = np.subtract(p, np.array(face)[:, 1])

@@ -23,50 +23,6 @@ t = time.time()
 phase = 0
 amplitude = 0
 
-# What it does not do
-"""
-      Anything resembling radiosity
-"""
-
-
-def initial_signal(signal_length, fft_output):
-    """
-    Making the array for the initial signals.
-    Input size_fft_two and output_signal
-    """
-    signal_length2 = int(signal_length // 2)  # Making size_fft_two and setting it as an int again just to be sure
-    output_frequency = np.zeros((signal_length2, 3))  # Making output array equivalent to input_array in old code
-    throw_array = np.arange(1, signal_length2 + 1)  # Helps get rid of for-loops in old version
-
-    output_frequency[:, 0] = throw_array * Pf.Fs / signal_length  # Tried simplifying the math a bit from original
-    output_frequency[:, 1] = abs(fft_output[1:1 + signal_length2] / signal_length)  # Only go up to size_ftt_two
-    output_frequency[:, 2] = np.arctan2(np.imag(fft_output[1:1 + signal_length2] / signal_length),
-                                        np.real(fft_output[1:1 + signal_length2] / signal_length))
-
-    return output_frequency
-
-
-def update_freq(dx_update, alpha_update, diffusion_update, lamb, air_absorb):
-    """
-    Update ray phase and amplitude
-    """
-    global phase, amplitude  # works directly
-    two_pi_dx_update = twopi * dx_update
-    ein = phase - (two_pi_dx_update / lamb)
-    zwei = ein % twopi
-    masque = zwei > np.pi
-    drei = masque * zwei - twopi
- 
-    phase = np.where(masque, drei, ein)
-    amplitude *= ((1.0 - alpha_update) * (1.0 - diffusion_update) * np.exp(-air_absorb * dx_update))
-
-
-def vex(d, f_initial, y, z):
-    """The x coordinate of the ray 
-    Used for veci"""
-    return (d - f_initial[1] * y - f_initial[2] * z) / f_initial[0]
-
-
 def main():
 
     global phase
@@ -76,7 +32,6 @@ def main():
     t = time.time()
 
     # port and import receiver file
-    receiver_hit = 0
     ground_hit = 0
     building_hit = 0
 
@@ -95,7 +50,7 @@ def main():
     output_signal = np.fft.rfft(input_signal, size_fft)
 
     # Create initial signal
-    frecuencias = initial_signal(size_fft, output_signal)      # Equivalent to inputArray in original
+    frecuencias = Fun.initial_signal(size_fft, output_signal)      # Equivalent to inputArray in original
     air_absorb = Fun.absorption(Pf.ps, frecuencias[:, 0], Pf.hr, Pf.Temp)   # size_fft_two
     lamb = Pf.soundspeed/frecuencias[:, 0]     # Used for updating frequencies in update function
     time_array = np.arange(k) / Pf.Fs
@@ -120,7 +75,7 @@ def main():
     ray_y = Pf.ymin + j * y_space
     ray_z = Pf.zmin + k_2 * z_space
 
-    boom_carpet = ((vex(d4, f_initial, y, z), y, z) for z in ray_z for y in ray_y)
+    boom_carpet = ((Fun.vex(d4, f_initial, y, z), y, z) for z in ray_z for y in ray_y)
     # Create a receiver array, include a receiver file.
     alpha_nothing = np.zeros(size_fft_two)
 
@@ -142,41 +97,41 @@ def main():
     #     Allocate absorption coefficients for each surface for each frequency
     alpha_ground = np.zeros(size_fft_two)
     for D1 in range(0, size_fft_two):       # This loop has a minimal impact on performance
-        if frecuencias[D1, 0] >= 0.0 or frecuencias[D1, 0] < 88.0:
+        if frecuencias[D1, 0] >= 0.0 and frecuencias[D1, 0] < 88.0:
             alpha_ground[D1] = Pf.tempalphaground[0]
-        elif frecuencias[D1, 0] >= 88.0 or frecuencias[D1, 0] < 177.0:
+        elif frecuencias[D1, 0] >= 88.0 and frecuencias[D1, 0] < 177.0:
             alpha_ground[D1] = Pf.tempalphaground[1]
-        elif frecuencias[D1, 0] >= 177.0 or frecuencias[D1, 0] < 355.0:
+        elif frecuencias[D1, 0] >= 177.0 and frecuencias[D1, 0] < 355.0:
             alpha_ground[D1] = Pf.tempalphaground[2]
-        elif frecuencias[D1, 0] >= 355.0 or frecuencias[D1, 0] < 710.0:
+        elif frecuencias[D1, 0] >= 355.0 and frecuencias[D1, 0] < 710.0:
             alpha_ground[D1] = Pf.tempalphaground[3]
-        elif frecuencias[D1, 0] >= 710.0 or frecuencias[D1, 0] < 1420.0:
+        elif frecuencias[D1, 0] >= 710.0 and frecuencias[D1, 0] < 1420.0:
             alpha_ground[D1] = Pf.tempalphaground[4]
-        elif frecuencias[D1, 0] >= 1420.0 or frecuencias[D1, 0] < 2840.0:
+        elif frecuencias[D1, 0] >= 1420.0 and frecuencias[D1, 0] < 2840.0:
             alpha_ground[D1] = Pf.tempalphaground[5]
-        elif frecuencias[D1, 0] >= 2840.0 or frecuencias[D1, 0] < 5680.0:
+        elif frecuencias[D1, 0] >= 2840.0 and frecuencias[D1, 0] < 5680.0:
             alpha_ground[D1] = Pf.tempalphaground[6]
-        elif frecuencias[D1, 0] >= 5680.0 or frecuencias[D1, 0] < frecuencias[size_fft_two, 0]:
+        elif frecuencias[D1, 0] >= 5680.0 and frecuencias[D1, 0] < frecuencias[size_fft_two, 0]:
             alpha_ground[D1] = Pf.tempalphaground[7]
 
     alpha_building = np.zeros((Pf.absorbplanes, size_fft_two))
     for W in range(Pf.absorbplanes):        # These also look minimal
         for D2 in range(size_fft_two):
-            if frecuencias[D2, 0] >= 0.0 or frecuencias[D2, 0] < 88.0:
+            if frecuencias[D2, 0] >= 0.0 and frecuencias[D2, 0] < 88.0:
                 alpha_building[W, D2] = Pf.tempalphabuilding[W, 0]
-            elif frecuencias[D2, 0] >= 88.0 or frecuencias[D2, 0] < 177.0:
+            elif frecuencias[D2, 0] >= 88.0 and frecuencias[D2, 0] < 177.0:
                 alpha_building[W, D2] = Pf.tempalphabuilding[W, 1]
-            elif frecuencias[D2, 0] >= 177.0 or frecuencias[D2, 0] < 355.0:
+            elif frecuencias[D2, 0] >= 177.0 and frecuencias[D2, 0] < 355.0:
                 alpha_building[W, D2] = Pf.tempalphabuilding[W, 2]
-            elif frecuencias[D2, 0] >= 355.0 or frecuencias[D2, 0] < 710.0:
+            elif frecuencias[D2, 0] >= 355.0 and frecuencias[D2, 0] < 710.0:
                 alpha_building[W, D2] = Pf.tempalphabuilding[W, 3]
-            elif frecuencias[D2, 0] >= 710.0 or frecuencias[D2, 0] < 1420.0:
+            elif frecuencias[D2, 0] >= 710.0 and frecuencias[D2, 0] < 1420.0:
                 alpha_building[W, D2] = Pf.tempalphabuilding[W, 4]
-            elif frecuencias[D2, 0] >= 1420.0 or frecuencias[D2, 0] < 2840.0:
+            elif frecuencias[D2, 0] >= 1420.0 and frecuencias[D2, 0] < 2840.0:
                 alpha_building[W, D2] = Pf.tempalphabuilding[W, 5]
-            elif frecuencias[D2, 0] >= 2840.0 or frecuencias[D2, 0] < 5680.0:
+            elif frecuencias[D2, 0] >= 2840.0 and frecuencias[D2, 0] < 5680.0:
                 alpha_building[W, D2] = Pf.tempalphabuilding[W, 6]
-            elif frecuencias[D2, 0] >= 5680.0 or frecuencias[D2, 0] < frecuencias[size_fft_two, 0]:
+            elif frecuencias[D2, 0] >= 5680.0 and frecuencias[D2, 0] < frecuencias[size_fft_two, 0]:
                 alpha_building[W, D2] = Pf.tempalphabuilding[W, 7]
 
     #        Mesh the patches for the environment.  Include patching file.
@@ -244,7 +199,6 @@ def main():
             else:
                 dx_building, n_box = Gp.collision_check2(Gp.mesh, veci, f)
             building_hit = 0
-            receiver_hit = 0
             ground_hit = 0
 
             #     Check to see if ray hits within step size
@@ -256,7 +210,7 @@ def main():
                     #print('Ray ', ray_counter, ' hit receiver ', R.recNumber)
                     veci += (dx * f)
                     hit_count = hit_count + 1
-                    update_freq(dx, alpha_nothing, 0, lamb, air_absorb)
+                    Fun.update_freq(dx, alpha_nothing, 0, lamb, air_absorb)
                     ears[tmp].on_hit(amplitude, phase)
 
                 if abs(dx - dx_ground) < 10.0**(-13.0):  # If the ray hits the ground then bounce and continue
@@ -270,7 +224,7 @@ def main():
                     f -= (2.0 * (dot1 / n2 * ground_n))
                     ground_hit = 1
                     #twoPiDx = np.pi * 2 * dx_ground
-                    update_freq(dx_ground, alpha_ground, diffusion_ground, lamb, air_absorb)    #     Loop through all the frequencies
+                    Fun.update_freq(dx_ground, alpha_ground, diffusion_ground, lamb, air_absorb)    #     Loop through all the frequencies
 
                 if dx == dx_building:   # if the ray hits the building then change the direction and continue
                     veci += (dx * f)
@@ -283,10 +237,10 @@ def main():
                     building_hit = 1
 
                     alpha = alpha_building[0, :]
-                    update_freq(dx, alpha, diffusion, lamb, air_absorb)
+                    Fun.update_freq(dx, alpha, diffusion, lamb, air_absorb)
             else:  # If there was no interaction with buildings then proceed with one step.
                 veci += (Pf.h * f)
-                update_freq(Pf.h, alpha_nothing, 0, lamb, air_absorb)
+                Fun.update_freq(Pf.h, alpha_nothing, 0, lamb, air_absorb)
         ray_counter += 1
         #print('finished ray', ray_counter)
 

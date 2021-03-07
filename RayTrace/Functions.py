@@ -8,9 +8,13 @@
 # 7.   plane
 # 8.   box
 # 9.   rotation
-
+# 10. initial_signal
+# 11. update_freq
+# 12. vec
 import numpy as np
 import math as m
+import Parameterfile as Pf
+import config
 
 HUGE = 1000000.0
 XJ = complex(0, 1)
@@ -371,3 +375,40 @@ def rotation(axis, angle, rotation_matrix):
     rotation_matrix[3, 2] = axis[2] * axis[3] * (1 - m.cos(angle)) - axis[1] * m.sin(angle)
     rotation_matrix[3, 3] = axis[3] ** 2 + (1 - axis[3] ** 2) * m.cos(angle)
     return rotation_matrix
+
+
+def initial_signal(signal_length, fft_output):
+    """
+    Making the array for the initial signals.
+    Input size_fft_two and output_signal
+    """
+    signal_length2 = int(signal_length // 2)  # Making size_fft_two and setting it as an int again just to be sure
+    output_frequency = np.zeros((signal_length2, 3))  # Making output array equivalent to input_array in old code
+    throw_array = np.arange(1, signal_length2 + 1)  # Helps get rid of for-loops in old version
+
+    output_frequency[:, 0] = throw_array * Pf.Fs / signal_length  # Tried simplifying the math a bit from original
+    output_frequency[:, 1] = abs(fft_output[1:1 + signal_length2] / signal_length)  # Only go up to size_ftt_two
+    output_frequency[:, 2] = np.arctan2(np.imag(fft_output[1:1 + signal_length2] / signal_length),
+                                        np.real(fft_output[1:1 + signal_length2] / signal_length))
+
+    return output_frequency
+
+def update_freq(dx_update, alpha_update, diffusion_update, lamb, air_absorb):
+    """
+    Update ray phase and amplitude
+    """
+    global phase, amplitude  # works directly
+    two_pi_dx_update = config.twopi * dx_update
+    ein = phase - (two_pi_dx_update / lamb)
+    zwei = ein % config.twopi
+    masque = zwei > np.pi
+    drei = masque * zwei - config.twopi 
+
+    phase = np.where(masque, drei, ein)
+    amplitude *= ((1.0 - alpha_update) * (1.0 - diffusion_update) * np.exp(-air_absorb * dx_update))
+
+
+def vex(d, f_initial, y, z):
+    """The x coordinate of the ray 
+    Used for veci"""
+    return (d - f_initial[1] * y - f_initial[2] * z) / f_initial[0]
