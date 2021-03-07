@@ -1534,3 +1534,10 @@ Trying really hard to graduate in this span of time, not much progress
       Wait for Will's update that cleans up aesthetics, getting hard to make cuts
 
       Goal: 100 lines in main file
+
+
+3/7/21
+  dxreceiver and dxground are dx between two objects
+
+  sqrt(sum(ray.position - dx)) I think 
+  I right

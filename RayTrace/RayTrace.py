@@ -158,11 +158,13 @@ def main():
     n_box = [0, 0, 0]
     veci = np.array([0, 0, 0])
     print('began rays')
-    for ray in boom_carpet:              # Written like this for readability
-        veci = ray      # initial ray position
+    for rayPosition in boom_carpet:              # Written like this for readability
+        ray=R.ray(rayPosition)
         hit_count = 0
-        amplitude = frecuencias[:, 1]/normalization
-        phase = frecuencias[:, 2]
+        # veci = ray.position
+        ray.frequency = frecuencias[:, 0] 
+        ray.amplitude = frecuencias[:, 1]/normalization
+        ray.phase = frecuencias[:, 2]
         #rayPath = (x for step in range(Pf.IMAX) )  
         #for I in rayPath:
         #x is output, not sure there even is one
@@ -171,18 +173,15 @@ def main():
         f = np.array(f_initial)                                      # Direction
         for I in range(Pf.IMAX):      # Making small steps along the ray path.
             # For each step we should return, location, phase and amplitude
-            dx_receiver = huge
-            # Find the closest sphere and store that as the distance
+            dx_receiver = huge        # Find the closest sphere and store that as the distance
             i = 0
-
-            # Find dx here
 
             for R in ears:
                 # The way that tempReceiver works now, it's only used here and only should be used here.
                 # It's not defined inside the receiver because it's ray dependant.
-                temp_receiver[i] = R.sphere_check(radius2, f, veci)    # Distance to receiver
+                temp_receiver[i] = R.sphere_check(radius2, f, ray.position)    # Distance to receiver
                 i += 1
-            temp_receiver[np.where((temp_receiver < (10.0**(-13.0))))] = huge
+            temp_receiver[np.where((temp_receiver < (1e-13.0)))] = huge
             tmp = np.argmin(temp_receiver)
             dx_receiver = temp_receiver[tmp]
 
@@ -192,7 +191,7 @@ def main():
             if ground_hit == 1:
                 dx_ground = huge
             elif ground_vd != 0.0:
-                ground_vo = ((np.dot(ground_n, veci)) + ground_d)
+                ground_vo = ((np.dot(ground_n, ray.position)) + ground_d)
                 dx_ground = -ground_vo / ground_vd
                 if dx_ground < 0.0:
                     dx_ground = huge
@@ -203,7 +202,7 @@ def main():
             if building_hit == 1:   #Avoid hitting building twice
                 dx_building = huge
             else:
-                dx_building, n_box = Gp.collision_check2(Gp.mesh, veci, f)
+                dx_building, n_box = Gp.collision_check2(Gp.mesh, ray.position, f)
 
             # Use found dx
 
@@ -217,26 +216,27 @@ def main():
                 #for R in ears:
                 if dx == dx_receiver:
                     #print('Ray ', ray_counter, ' hit receiver ', R.recNumber)
-                    veci += (dx * f)
+                    ray.position += (dx * f)
                     hit_count = hit_count + 1
-                    Fun.update_freq(dx, alpha_nothing, 0, lamb, air_absorb)
-                    ears[tmp].on_hit(amplitude, phase)
+                    ray.update_freq(dx, alpha_nothing, 0, lamb, air_absorb)
+                    ears[tmp].on_hit(ray.amplitude, ray.phase)
 
-                if abs(dx - dx_ground) < 10.0**(-13.0):  # If the ray hits the ground then bounce and continue
-                    veci += (dx_ground * f)
-                    tmp = np.dot(ground_n, veci)
+                #if abs(dx - dx_ground) < 10.0**(-13.0):  # If the ray hits the ground then bounce and continue
+                if abs(dx - dx_ground) < 1e-13:  # If the ray hits the ground then bounce and continue
+                    ray.position += (dx_ground * f)
+                    tmp = np.dot(ground_n, ray.position)
                     if tmp != ground_d:
-                        veci[2] = 0
+                        ray.position[2] = 0
                     #print('hit ground at ', I)
                     dot1 = np.dot(f, ground_n)
                     n2 = np.dot(ground_n, ground_n)
                     f -= (2.0 * (dot1 / n2 * ground_n))
                     ground_hit = 1
                     #twoPiDx = np.pi * 2 * dx_ground
-                    Fun.update_freq(dx_ground, alpha_ground, diffusion_ground, lamb, air_absorb)    #     Loop through all the frequencies
+                    ray.update_freq(dx_ground, alpha_ground, diffusion_ground, lamb, air_absorb)    #     Loop through all the frequencies
 
                 if dx == dx_building:   # if the ray hits the building then change the direction and continue
-                    veci += (dx * f)
+                    ray.position += (dx * f)
                     #print('hit building at step ', I)
                     n2 = np.dot(n_box, n_box)
                     n_building = n_box / np.sqrt(n2)
@@ -245,10 +245,10 @@ def main():
                     f -= (2.0 * (dot1 / n3 * n_building))
                     building_hit = 1
                     alpha = alpha_building[0, :]
-                    Fun.update_freq(dx, alpha, diffusion, lamb, air_absorb)
+                    ray.update_freq(dx, alpha, diffusion, lamb, air_absorb)
             else:  # If there was no interaction with buildings then proceed with one step.
-                veci += (Pf.h * f)
-                Fun.update_freq(Pf.h, alpha_nothing, 0, lamb, air_absorb)
+                ray.position += (Pf.h * f)
+                ray.update_freq(Pf.h, alpha_nothing, 0, lamb, air_absorb)
         ray_counter += 1
         #print('finished ray', ray_counter)
 

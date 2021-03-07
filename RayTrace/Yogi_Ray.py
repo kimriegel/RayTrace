@@ -1,6 +1,7 @@
 # Smarter than the average ray
 
 import numpy as np
+import config 
 
 class Ray:
     """
@@ -22,7 +23,7 @@ class Ray:
         Create and defines position of ray        
         """
 
-        #Ray.rayList.append(self)  # See append_list
+        Ray.rayList.append(self)  #debug
 
         self.position = np.array(position)
         self.frequency = np.array(Ray.frequency )
@@ -43,14 +44,28 @@ class Ray:
         """
 
         # Can use list to make sure there is still one object but multiple names
+        Ray.rayList.append(self)  #debug
 
-        self.position = np.array(position)
+        self.position =  np.array(position)
         self.frequency = np.array(Ray.frequency )
         self.direction = np.array(Ray.direction )
         self.phase     = np.array(Ray.phase     )
         self.amplitude = np.array(Ray.amplitude )
 
         self.step = (foo(i) for i in range(Ray.imax))
+        
+    def update_freq(self,dx_update, alpha_update, diffusion_update, lamb, air_absorb):
+        """
+        Update ray phase and amplitude
+        """
+        two_pi_dx_update = config.twopi * dx_update
+        ein = self.phase - (two_pi_dx_update / lamb)
+        zwei = ein % config.twopi
+        masque = zwei > np.pi
+        drei = masque * zwei - config.twopi 
+
+        self.phase = np.where(masque, drei, ein)
+        self.amplitude *= ((1.0 - alpha_update) * (1.0 - diffusion_update) * np.exp(-air_absorb * dx_update))
 
 
     def foo(self,data):
@@ -85,13 +100,19 @@ class Ray:
 #        print(j)
 
 # Sucessfully uses only one ray
-#print(Ray.rayList)
-#Jeff = Ray((1,1,1))
-#print(Ray.rayList)
-#Jeff = Ray((1,1,1))
-#print(Ray.rayList)
-#Jeff.reset((1,1,1))
-#print(Ray.rayList)
+print(Ray.rayList)
+Jeff = Ray((1,1,1))
+print(Ray.rayList)
+Jeff = Ray((1,1,1))
+print(Ray.rayList)
+Jeff.reset((1,1,1))
+print(Ray.rayList)
 
+x=Jeff.position
+print(x is Jeff.position)
+print(Jeff.position)
+Jeff.position += 1
+print(Jeff.position)
+print(x)
 
 #
