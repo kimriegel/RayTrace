@@ -17,6 +17,7 @@ import Parameterfile as Pf
 import Functions as Fun
 import ReceiverPointSource as Rps  # For receivers
 import GeometryParser as Gp
+import RayModule as R
 
 import time  # Time checks
 t = time.time()
@@ -159,7 +160,7 @@ def main():
     veci = np.array([0, 0, 0])
     print('began rays')
     for rayPosition in boom_carpet:              # Written like this for readability
-        ray=R.ray(rayPosition)
+        ray=R.RayModule(rayPosition)
         hit_count = 0
         # veci = ray.position
         ray.frequency = frecuencias[:, 0] 

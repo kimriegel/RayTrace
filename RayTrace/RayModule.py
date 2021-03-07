@@ -3,10 +3,11 @@
 import numpy as np
 import config 
 
-class Ray:
+class RayModule:
     """
     To increase functionality and available perfomance increases
     """
+    #Default values
     frequency = None
     direction = None
     phase = None
@@ -20,16 +21,17 @@ class Ray:
 
     def __init__(self, position ):
         """
+        Ray Module
         Create and defines position of ray        
         """
 
-        Ray.rayList.append(self)  #debug
+        RayModule.rayList.append(self)  #debug
 
         self.position = np.array(position)
-        self.frequency = np.array(Ray.frequency )
-        self.direction = np.array(Ray.direction )
-        self.phase     = np.array(Ray.phase     )
-        self.amplitude = np.array(Ray.amplitude )
+        self.frequency = np.array(RayModule.frequency )
+        self.direction = np.array(RayModule.direction )
+        self.phase     = np.array(RayModule.phase     )
+        self.amplitude = np.array(RayModule.amplitude )
 
         self.step = (foo(i) for i in range(Ray.imax))
 
@@ -44,13 +46,13 @@ class Ray:
         """
 
         # Can use list to make sure there is still one object but multiple names
-        Ray.rayList.append(self)  #debug
+        RayModule.rayList.append(self)  #debug
 
         self.position =  np.array(position)
-        self.frequency = np.array(Ray.frequency )
-        self.direction = np.array(Ray.direction )
-        self.phase     = np.array(Ray.phase     )
-        self.amplitude = np.array(Ray.amplitude )
+        self.frequency = np.array(RayModule.frequency )
+        self.direction = np.array(RayModule.direction )
+        self.phase     = np.array(RayModule.phase     )
+        self.amplitude = np.array(RayModule.amplitude )
 
         self.step = (foo(i) for i in range(Ray.imax))
         
@@ -89,8 +91,8 @@ class Ray:
 
 # Initializing Rays
 
-#r_1 = Ray((93.4428213, 28.8397178, 0.151))
-#r_2 = Ray((64.5832, 28.5998, 0.151))
+#r_1 = RayModule((93.4428213, 28.8397178, 0.151))
+#r_2 = RayModule((64.5832, 28.5998, 0.151))
 
 #I=3
 #for k in range(3):
@@ -100,13 +102,13 @@ class Ray:
 #        print(j)
 
 # Sucessfully uses only one ray
-print(Ray.rayList)
-Jeff = Ray((1,1,1))
-print(Ray.rayList)
-Jeff = Ray((1,1,1))
-print(Ray.rayList)
+print(RayModule.rayList)
+Jeff = RayModule((1,1,1))
+print(RayModule.rayList)
+Jeff = RayModule((1,1,1))
+print(RayModule.rayList)
 Jeff.reset((1,1,1))
-print(Ray.rayList)
+print(RayModule.rayList)
 
 x=Jeff.position
 print(x is Jeff.position)
