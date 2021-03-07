@@ -3,7 +3,7 @@
 import numpy as np
 import pywavefront as pwf
 from Parameterfile import ipname
-import Functions as f
+#import Functions as f
 from Parameterfile import h as step_size     # temporary, just used to make sure we do not overstep
 
 # ipname = 'Env/duckscaled.obj'

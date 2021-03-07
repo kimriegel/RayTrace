@@ -17,36 +17,29 @@ import Parameterfile as Pf
 import Functions as Fun
 import ReceiverPointSource as Rps  # For receivers
 import GeometryParser as Gp
-import RayModule as R
+import RayModule as Rm              # Meat of the code
 
 import time  # Time checks
-t = time.time()
-phase = 0
-amplitude = 0
+#t = time.time()
 
 def main():
 
-    global phase
-    global amplitude
-    global twopi
-    twopi = np.pi * 2
     t = time.time()
+    global twopi          # Do we use this varin this file anymore?
+    twopi = np.pi * 2
+    radius2 = Pf.radius**2
 
-    # port and import receiver file
+    # Initialize counters
     ground_hit = 0
     building_hit = 0
 
-    # Initialize counters
-    radius2 = Pf.radius**2
-
     # Read in input file
     input_signal = np.loadtxt(Pf.INPUTFILE)
-    k = len(input_signal)
-    # masque = input_signal > 0
     huge = 1000000.0
+    tiny = 1e-13        # that really small number we used beause == 0 doesn't work
 
     # Allocate the correct size to the signal and fft arrays
-    size_fft = k
+    size_fft = len(input_signal)
     size_fft_two = size_fft // 2
     output_signal = np.fft.rfft(input_signal, size_fft)
 
@@ -54,7 +47,7 @@ def main():
     frecuencias = Fun.initial_signal(size_fft, output_signal)      # Equivalent to inputArray in original
     air_absorb = Fun.absorption(Pf.ps, frecuencias[:, 0], Pf.hr, Pf.Temp)   # size_fft_two
     lamb = Pf.soundspeed/frecuencias[:, 0]     # Used for updating frequencies in update function
-    time_array = np.arange(k) / Pf.Fs
+    time_array = np.arange(size_fft) / Pf.Fs
 
     #       Set initial values
     v_initial = np.array([Pf.xinitial, Pf.yinitial, Pf.zinitial])
@@ -157,20 +150,13 @@ def main():
     #
     # Begin tracing
     n_box = [0, 0, 0]
-    veci = np.array([0, 0, 0])
     print('began rays')
-    for rayPosition in boom_carpet:              # Written like this for readability
-        ray=R.RayModule(rayPosition)
+    for rayPosition in boom_carpet:             # Written like this for readability
+        ray=Rm.RayModule(rayPosition)           # veci = ray.position now
         hit_count = 0
-        # veci = ray.position
         ray.frequency = frecuencias[:, 0] 
         ray.amplitude = frecuencias[:, 1]/normalization
         ray.phase = frecuencias[:, 2]
-        #rayPath = (x for step in range(Pf.IMAX) )  
-        #for I in rayPath:
-        #x is output, not sure there even is one
-        # step is everything that happens within I loop now
-
         f = np.array(f_initial)                                      # Direction
         for I in range(Pf.IMAX):      # Making small steps along the ray path.
             # For each step we should return, location, phase and amplitude
@@ -182,7 +168,8 @@ def main():
                 # It's not defined inside the receiver because it's ray dependant.
                 temp_receiver[i] = R.sphere_check(radius2, f, ray.position)    # Distance to receiver
                 i += 1
-            temp_receiver[np.where((temp_receiver < (1e-13.0)))] = huge
+            # I wrote this and even I'm staring at this and wondering what it does tbh -George
+            temp_receiver[np.where((temp_receiver < (tiny)))] = huge
             tmp = np.argmin(temp_receiver)
             dx_receiver = temp_receiver[tmp]
 
@@ -199,14 +186,12 @@ def main():
             else:
                 dx_ground = huge
                 
-            #   Implement Geometry parser
             if building_hit == 1:   #Avoid hitting building twice
                 dx_building = huge
             else:
-                dx_building, n_box = Gp.collision_check2(Gp.mesh, ray.position, f)
+                dx_building, n_box = Fun.collision_check2(Gp.mesh, ray.position, f)
 
-            # Use found dx
-
+            # Use found dx instead of hits ******************************************
             building_hit = 0
             ground_hit = 0
 
@@ -222,8 +207,7 @@ def main():
                     ray.update_freq(dx, alpha_nothing, 0, lamb, air_absorb)
                     ears[tmp].on_hit(ray.amplitude, ray.phase)
 
-                #if abs(dx - dx_ground) < 10.0**(-13.0):  # If the ray hits the ground then bounce and continue
-                if abs(dx - dx_ground) < 1e-13:  # If the ray hits the ground then bounce and continue
+                if abs(dx - dx_ground) < tiny:  # If the ray hits the ground then bounce and continue
                     ray.position += (dx_ground * f)
                     tmp = np.dot(ground_n, ray.position)
                     if tmp != ground_d:

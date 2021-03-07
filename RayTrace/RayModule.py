@@ -33,7 +33,7 @@ class RayModule:
         self.phase     = np.array(RayModule.phase     )
         self.amplitude = np.array(RayModule.amplitude )
 
-        self.step = (foo(i) for i in range(Ray.imax))
+        self.step = (foo(i) for i in range(RayModule.imax))
 
     def reset(self, position ):
         """

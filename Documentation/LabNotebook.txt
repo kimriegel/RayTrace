@@ -1541,3 +1541,6 @@ Trying really hard to graduate in this span of time, not much progress
 
   sqrt(sum(ray.position - dx)) I think 
   I right
+
+    Some of the variable names we added conflict with module names
+    Did a quick sanity check
