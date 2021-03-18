@@ -151,7 +151,7 @@ def main():
     # Begin tracing
     n_box = [0, 0, 0]
     print('began rays')
-    for rayPosition in boom_carpet:             # Written like this for readability
+    for rayPosition in boom_carpet:             # for every initial vector in carpet
         ray=Rm.RayModule(rayPosition)           # veci = ray.position now
         hit_count = 0
         ray.frequency = frecuencias[:, 0] 
