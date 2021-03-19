@@ -499,10 +499,7 @@ def face_normal_array(face):
 
 
 def collision_check2(face, veci, f):
-
-    # find if a ray hits the face for our mesh function
-
-    # the caps lock just reinforces that the variables are only used inside this function set
+    """find if a ray hits the face for our mesh function"""
 
     si = np.array([])
     tmp = np.zeros([3, len(face), 3])
@@ -512,7 +509,7 @@ def collision_check2(face, veci, f):
     # parallel check
     nf = np.dot(n, f)        # rayDir in notes, plane normal dot F
     w = veci-np.array(face)[:, 2]
-    si = np.einsum('ij,ij->i', n, w)/nf
+    si = np.einsum('ij,ij->i', n, w)/nf         # data compression thing
     p = veci + si[:, np.newaxis]*f
     tmp[0] = np.subtract(p, np.array(face)[:, 0])
     tmp[1] = np.subtract(p, np.array(face)[:, 1])
