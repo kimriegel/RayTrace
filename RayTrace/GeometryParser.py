@@ -42,3 +42,41 @@ mesh = [np.array((
 # #print(myFaces)
 #
 # collisionCheck(([[0,1,5],[1,0,5],[0,0,5]]),np.array([0,0,10]),np.array([0,-1,-1]))
+
+# Move everything below here to Terrain
+
+epsilon = 1e-6  # how small angle between ray and plane has to be to count as parallel
+
+def collision_check2(face, veci, f):
+    """find if a ray hits the face for our mesh function
+    Only exists here because of weird python things. Will eventually move to Terrain
+    """
+
+    si = np.array([])
+    tmp = np.zeros([3, len(face), 3])
+    huge = 1000000.0
+    n = face_normal_array(face)    # compute plane normal
+    # Finding intersection [P]oint
+    # parallel check
+    nf = np.dot(n, f)        # rayDir in notes, plane normal dot F
+    w = veci-np.array(face)[:, 2]
+    si = np.einsum('ij,ij->i', n, w)/nf         # data compression thing
+    p = veci + si[:, np.newaxis]*f
+    tmp[0] = np.subtract(p, np.array(face)[:, 0])
+    tmp[1] = np.subtract(p, np.array(face)[:, 1])
+    tmp[2] = np.subtract(p, np.array(face)[:, 2])
+    a = np.cross((np.array(face)[:, 1]-np.array(face)[:, 0]), tmp[0, :])
+    b = np.cross((np.array(face)[:, 2]-np.array(face)[:, 1]), tmp[1, :])
+    c = np.cross((np.array(face)[:, 0]-np.array(face)[:, 2]), tmp[2, :])
+    cond = (np.einsum('ij,ij->i', a, n) < 0) | (np.einsum('ij,ij->i', b, n) < 0) | (np.einsum('ij,ij->i', c, n) < 0)
+    si[np.where(cond | (abs(nf) < epsilon) | (si < 0.0) | (si > step_size))] = huge
+    index = np.argmin(si)
+    return si[index], n[index]
+
+def face_normal_array(face):
+    a = np.array(face)[:, 0]
+    b = np.array(face)[:, 1]
+    c = np.array(face)[:, 2]
+    d = np.cross((b-a), (c-a))   # [D]irection
+#    e = d//np.sqrt(d.dot(d))
+    return d

@@ -36,7 +36,8 @@ Default: 0.035
 """
 # boomspacing = 0.6
 # boomspacing= 0.035
-boomspacing= 0.1
+# boomspacing= 0.1
+boomspacing= 1
 
 """
 Receiver Variables

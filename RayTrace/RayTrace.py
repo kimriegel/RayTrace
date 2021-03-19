@@ -90,42 +90,42 @@ def main():
 
     #     Allocate absorption coefficients for each surface for each frequency
     alpha_ground = np.zeros(size_fft_two)
-    for D1 in range(0, size_fft_two):       # This loop has a minimal impact on performance
-        if frecuencias[D1, 0] >= 0.0 and frecuencias[D1, 0] < 88.0:
+    for D1 in range(0, size_fft_two):       # These functions are temporary, will be removed later
+        if frecuencias[D1, 0] >= 0.0 or frecuencias[D1, 0] < 88.0:      #Keep as or for iteration
             alpha_ground[D1] = Pf.tempalphaground[0]
-        elif frecuencias[D1, 0] >= 88.0 and frecuencias[D1, 0] < 177.0:
+        elif frecuencias[D1, 0] >= 88.0 or frecuencias[D1, 0] < 177.0:
             alpha_ground[D1] = Pf.tempalphaground[1]
-        elif frecuencias[D1, 0] >= 177.0 and frecuencias[D1, 0] < 355.0:
+        elif frecuencias[D1, 0] >= 177.0 or frecuencias[D1, 0] < 355.0:
             alpha_ground[D1] = Pf.tempalphaground[2]
-        elif frecuencias[D1, 0] >= 355.0 and frecuencias[D1, 0] < 710.0:
+        elif frecuencias[D1, 0] >= 355.0 or frecuencias[D1, 0] < 710.0:
             alpha_ground[D1] = Pf.tempalphaground[3]
-        elif frecuencias[D1, 0] >= 710.0 and frecuencias[D1, 0] < 1420.0:
+        elif frecuencias[D1, 0] >= 710.0 or frecuencias[D1, 0] < 1420.0:
             alpha_ground[D1] = Pf.tempalphaground[4]
-        elif frecuencias[D1, 0] >= 1420.0 and frecuencias[D1, 0] < 2840.0:
+        elif frecuencias[D1, 0] >= 1420.0 or frecuencias[D1, 0] < 2840.0:
             alpha_ground[D1] = Pf.tempalphaground[5]
-        elif frecuencias[D1, 0] >= 2840.0 and frecuencias[D1, 0] < 5680.0:
+        elif frecuencias[D1, 0] >= 2840.0 or frecuencias[D1, 0] < 5680.0:
             alpha_ground[D1] = Pf.tempalphaground[6]
-        elif frecuencias[D1, 0] >= 5680.0 and frecuencias[D1, 0] < frecuencias[size_fft_two, 0]:
+        elif frecuencias[D1, 0] >= 5680.0 or frecuencias[D1, 0] < frecuencias[size_fft_two, 0]:
             alpha_ground[D1] = Pf.tempalphaground[7]
 
     alpha_building = np.zeros((Pf.absorbplanes, size_fft_two))
     for W in range(Pf.absorbplanes):        # These also look minimal
         for D2 in range(size_fft_two):
-            if frecuencias[D2, 0] >= 0.0 and frecuencias[D2, 0] < 88.0:
+            if frecuencias[D2, 0] >= 0.0 or frecuencias[D2, 0] < 88.0:
                 alpha_building[W, D2] = Pf.tempalphabuilding[W, 0]
-            elif frecuencias[D2, 0] >= 88.0 and frecuencias[D2, 0] < 177.0:
+            elif frecuencias[D2, 0] >= 88.0 or frecuencias[D2, 0] < 177.0:
                 alpha_building[W, D2] = Pf.tempalphabuilding[W, 1]
-            elif frecuencias[D2, 0] >= 177.0 and frecuencias[D2, 0] < 355.0:
+            elif frecuencias[D2, 0] >= 177.0 or frecuencias[D2, 0] < 355.0:
                 alpha_building[W, D2] = Pf.tempalphabuilding[W, 2]
-            elif frecuencias[D2, 0] >= 355.0 and frecuencias[D2, 0] < 710.0:
+            elif frecuencias[D2, 0] >= 355.0 or frecuencias[D2, 0] < 710.0:
                 alpha_building[W, D2] = Pf.tempalphabuilding[W, 3]
-            elif frecuencias[D2, 0] >= 710.0 and frecuencias[D2, 0] < 1420.0:
+            elif frecuencias[D2, 0] >= 710.0 or frecuencias[D2, 0] < 1420.0:
                 alpha_building[W, D2] = Pf.tempalphabuilding[W, 4]
-            elif frecuencias[D2, 0] >= 1420.0 and frecuencias[D2, 0] < 2840.0:
+            elif frecuencias[D2, 0] >= 1420.0 or frecuencias[D2, 0] < 2840.0:
                 alpha_building[W, D2] = Pf.tempalphabuilding[W, 5]
-            elif frecuencias[D2, 0] >= 2840.0 and frecuencias[D2, 0] < 5680.0:
+            elif frecuencias[D2, 0] >= 2840.0 or frecuencias[D2, 0] < 5680.0:
                 alpha_building[W, D2] = Pf.tempalphabuilding[W, 6]
-            elif frecuencias[D2, 0] >= 5680.0 and frecuencias[D2, 0] < frecuencias[size_fft_two, 0]:
+            elif frecuencias[D2, 0] >= 5680.0 or frecuencias[D2, 0] < frecuencias[size_fft_two, 0]:
                 alpha_building[W, D2] = Pf.tempalphabuilding[W, 7]
 
     #        Mesh the patches for the environment.  Include patching file.
@@ -151,8 +151,8 @@ def main():
     # Begin tracing
     n_box = [0, 0, 0]
     print('began rays')
-    for rayPosition in boom_carpet:             # for every initial vector in carpet
-        ray=Rm.RayModule(rayPosition)           # veci = ray.position now
+    for pos_initial in boom_carpet:             # for every initial vector in carpet
+        ray=Rm.RayModule(pos_initial)           # veci = ray.position now
         hit_count = 0
         ray.frequency = frecuencias[:, 0] 
         ray.amplitude = frecuencias[:, 1]/normalization
@@ -189,7 +189,8 @@ def main():
             if building_hit == 1:   #Avoid hitting building twice
                 dx_building = huge
             else:
-                dx_building, n_box = Fun.collision_check2(Gp.mesh, ray.position, f)
+                dx_building, n_box = Gp.collision_check2(Gp.mesh, ray.position, f)
+                # done this way because of a centipede of reasons, will be removed when terrain is working
 
             # Use found dx instead of hits ******************************************
             building_hit = 0
@@ -201,7 +202,7 @@ def main():
                 #  if the ray hits a receiver, store in an array.  If the ray hits two, create two arrays to store in.
                 #for R in ears:
                 if dx == dx_receiver:
-                    #print('Ray ', ray_counter, ' hit receiver ', R.recNumber)
+                    print('Ray ', ray_counter, ' hit receiver ', R.recNumber)
                     ray.position += (dx * f)
                     hit_count = hit_count + 1
                     ray.update_freq(dx, alpha_nothing, 0, lamb, air_absorb)
@@ -222,7 +223,7 @@ def main():
 
                 if dx == dx_building:   # if the ray hits the building then change the direction and continue
                     ray.position += (dx * f)
-                    #print('hit building at step ', I)
+                    print('hit building at step ', I)
                     n2 = np.dot(n_box, n_box)
                     n_building = n_box / np.sqrt(n2)
                     n3 = np.dot(n_building, n_building)
@@ -235,7 +236,7 @@ def main():
                 ray.position += (Pf.h * f)
                 ray.update_freq(Pf.h, alpha_nothing, 0, lamb, air_absorb)
         ray_counter += 1
-        #print('finished ray', ray_counter)
+        print('finished ray', ray_counter)
 
     # Reconstruct the time signal and print to output file
     for R in ears:

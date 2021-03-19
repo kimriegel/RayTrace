@@ -54,7 +54,7 @@ class RayModule:
         self.phase     = np.array(RayModule.phase     )
         self.amplitude = np.array(RayModule.amplitude )
 
-        self.step = (foo(i) for i in range(Ray.imax))
+        #self.step = (foo(i) for i in range(Ray.imax))
         
     def update_freq(self,dx_update, alpha_update, diffusion_update, lamb, air_absorb):
         """
@@ -101,20 +101,20 @@ class RayModule:
 #    for j in step:
 #        print(j)
 
-# Sucessfully uses only one ray
-print(RayModule.rayList)
-Jeff = RayModule((1,1,1))
-print(RayModule.rayList)
-Jeff = RayModule((1,1,1))
-print(RayModule.rayList)
-Jeff.reset((1,1,1))
-print(RayModule.rayList)
-
-x=Jeff.position
-print(x is Jeff.position)
-print(Jeff.position)
-Jeff.position += 1
-print(Jeff.position)
-print(x)
-
+## Sucessfully uses only one ray
+#print(RayModule.rayList)
+#Jeff = RayModule((1,1,1))
+#print(RayModule.rayList)
+#Jeff = RayModule((1,1,1))
+#print(RayModule.rayList)
+#Jeff.reset((1,1,1))
+#print(RayModule.rayList)
 #
+#x=Jeff.position
+#print(x is Jeff.position)
+#print(Jeff.position)
+#Jeff.position += 1
+#print(Jeff.position)
+#print(x)
+#
+##
