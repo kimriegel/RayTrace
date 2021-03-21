@@ -224,18 +224,31 @@ def main():
                     ray.update_freq(dx_ground, alpha_ground, diffusion_ground, lamb, air_absorb)    #     Loop through all the frequencies
 
                 if dx == dx_building:   # if the ray hits the building then change the direction and continue
-                    print(ray.position)
-                    ray.position += (dx * f)
-                    print(ray.position)
+                    #print(ray.position)
+                    ray.position += (dx * f)                
+                    #print(ray.position)
+                    print(f)
                     print('hit building at step ', I)
-                    n2 = np.dot(n_box, n_box)
-                    n_building = n_box / np.sqrt(n2)
-                    n3 = np.dot(n_building, n_building)
-                    dot1 = np.dot(f, n_building)
-                    f -= (2.0 * (dot1 / n3 * n_building))
-                    building_hit = 1
+                    n2 = np.dot(n_box, n_box)               
+                    n_building = n_box / np.sqrt(n2)        
+                    #n3 = np.dot(n_building, n_building)    # Not equivalent to what it was used for, causes skips thru geometry
+                    dot1 = np.dot(f, n_building)            
+                    f -= (2.0 * (dot1 / n2 * n_building))   # n3 caused bugs
+                    print(f)
+                    building_hit = 1                        
                     alpha = alpha_building[0, :]
                     ray.update_freq(dx, alpha, diffusion, lamb, air_absorb)
+                    ##########################################################
+                    #    veci += (dx*F)                      #Y
+                    #    n2 = np.dot(nbox,nbox)              #Y
+                    #    nbuilding=nbox/np.sqrt(n2)          #Y
+                    #    dot1 = np.dot(F,nbuilding)          #Y
+                    #    r=F[:]-2.0*(dot1/n2)*nbuilding
+                    #    length = np.sqrt((np.dot(r,r)))
+                    #    F = r[:]
+                    #    F = F-2.0 * (dot1/n2)* nbuilding
+                    #    buildinghit=1                       #Y
+                    ##########################################################
             else:  # If there was no interaction with buildings then proceed with one step.
                 ray.position += (Pf.h * f)
                 ray.update_freq(Pf.h, alpha_nothing, 0, lamb, air_absorb)
