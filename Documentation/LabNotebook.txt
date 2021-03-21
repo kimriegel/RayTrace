@@ -1544,3 +1544,8 @@ Trying really hard to graduate in this span of time, not much progress
 
     Some of the variable names we added conflict with module names
     Did a quick sanity check
+
+3/20/21
+  Noticed that the debug params did not work
+    Afteer checking it seems ray does not interact with the receiver
+      As it hits building multiple times, it is likely ray is not bouncing off building properly

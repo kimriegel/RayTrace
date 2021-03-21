@@ -141,17 +141,19 @@ def main():
         print('h is less than 2r')
         raise SystemExit
 
-    # These are for debugging, Uncomment this block and comment out the for loop below
-    # ray = 606                     # @ Pf.boomSpacing = 1
-    # for i in range(606):
-    #      ray =      next(boom_carpet)
-    #      ray_counter += 1
-    # if ray:
-    #
+
+
     # Begin tracing
     n_box = [0, 0, 0]
     print('began rays')
-    for pos_initial in boom_carpet:             # for every initial vector in carpet
+    # These are for debugging, Uncomment this block and comment out the for loop below
+        # ray = 606                     # @ Pf.boomSpacing = 1
+    for i in range(606):
+        ray =      next(boom_carpet)
+        ray_counter += 1
+    if ray:
+        pos_initial= next(boom_carpet)
+    #for pos_initial in boom_carpet:             # for every initial vector in carpet
         ray=Rm.RayModule(pos_initial)           # veci = ray.position now
         hit_count = 0
         ray.frequency = frecuencias[:, 0] 
@@ -213,7 +215,7 @@ def main():
                     tmp = np.dot(ground_n, ray.position)
                     if tmp != ground_d:
                         ray.position[2] = 0
-                    #print('hit ground at ', I)
+                    print('hit ground at ', I)
                     dot1 = np.dot(f, ground_n)
                     n2 = np.dot(ground_n, ground_n)
                     f -= (2.0 * (dot1 / n2 * ground_n))
@@ -222,7 +224,9 @@ def main():
                     ray.update_freq(dx_ground, alpha_ground, diffusion_ground, lamb, air_absorb)    #     Loop through all the frequencies
 
                 if dx == dx_building:   # if the ray hits the building then change the direction and continue
+                    print(ray.position)
                     ray.position += (dx * f)
+                    print(ray.position)
                     print('hit building at step ', I)
                     n2 = np.dot(n_box, n_box)
                     n_building = n_box / np.sqrt(n2)
