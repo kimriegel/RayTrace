@@ -3,15 +3,16 @@ import time
 import warnings
 from matplotlib import pyplot as plt 
 
-warnings.filterwarnings("ignore", category=np.VisibleDeprecationWarning) 
-begin = time.time() #begins time measurements
-
 import matplotlib.font_manager as fm
 # Font
 stdfont = fm.FontProperties()
 stdfont.set_family('serif')
 stdfont.set_name('Times New Roman')
 stdfont.set_size(20)
+
+warnings.filterwarnings("ignore", category=np.VisibleDeprecationWarning) 
+begin = time.time() #begins time measurements
+
 
 def rayBend(position, direction, n, alpha, zModThing):
     """
@@ -26,12 +27,12 @@ def rayBend(position, direction, n, alpha, zModThing):
         #final = position+(d_building*d)
         position += (d_building* direction)
         direction -=  (2*((np.dot(direction,n))/((np.linalg.norm(n))**2))*n)
-        #print("We have reached the floor", final) # Ray reaches floor    #Issue: Keeps returning back to previous loop
+        #print("We have reached the floor", position) # Ray reaches floor    #Issue: Keeps returning back to previous loop
         #d = d - 2*((np.dot(d,n))/((np.linalg.norm(n))**2))*n
         #print("Dot product", np.dot(d,n))
         #print("This is d",d)
         #print("xx")
-        #print("Post bounce", final)
+        #print("Post bounce", position)
 
     else:
         position[2] += (alpha * zModThing)
@@ -43,13 +44,10 @@ def rayBend(position, direction, n, alpha, zModThing):
     return position, direction      #function
 
 
-Imax= 7000
-
 position = np.array([6.0,7.0, 500.0]) #start position
 h = 1.00 #step
 t0 = 20 #starting temperature
 alpha = -.0039 #Temperature coefficient 
-#alpha = -600 #Temperature coefficient 
 co = 331.4 + 0.6*alpha #co goes to cix, and ci
 #v initial =  np.array([331+.6*t,]) 
 # ci = np.array([co,co,co + alpha * start[2]])
@@ -60,9 +58,11 @@ d = np.array([np.cos(phi)*np.sin(theta),
               np.cos(theta)]) #Directional vector
 print("The start location", position) # prints loop
 n = np.array([0.0,0.0,1.0]) 
+
+Imax= 7000
+
 xAxis = np.zeros(Imax)
 yAxis = np.zeros(Imax)
-
 for i in range(Imax):
     ciz = co + (alpha *position[2])                 #since only z of ci was used
     position, d = rayBend(position,d,n,alpha,ciz)
@@ -102,7 +102,7 @@ plt.plot(xAxis, yAxis, '#780303')
 plt.grid(True)
 plt.xlabel('Longitude []',fontproperties=stdfont)
 plt.ylabel('Altitude []' ,fontproperties=stdfont)
-plt.title('Longitude vs Altitude of ray being tested ',
+plt.title('Longitude vs Altitude of Ray',
           fontproperties=stdfont,
           fontsize=16,
           fontweight='bold')
