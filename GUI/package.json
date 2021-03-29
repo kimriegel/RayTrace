@@ -1,0 +1,16 @@
+{
+    "name": "Hopefully Working",
+    "version": "1.0.0",
+    "description": "Trying to get this to work",
+    "scripts": {
+        "start":"elctron . "
+    },
+    "author":"George Seaton",
+    "license": "QuACs",
+    "dependencies": {
+        "electron" : "^1.7.6",
+        "python": "^3.8.7",
+            "numpy": "^1.17.5"
+    }
+        
+}

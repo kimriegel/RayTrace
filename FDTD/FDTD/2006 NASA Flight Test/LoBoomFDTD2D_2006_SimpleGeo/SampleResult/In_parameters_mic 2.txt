@@ -1,0 +1,12 @@
+// Microphone Selection
+// List the names of the microphones that should operate during the numerical simulation, separated by new lines.
+
+196
+197
+179
+180
+181
+182
+183
+184
+198

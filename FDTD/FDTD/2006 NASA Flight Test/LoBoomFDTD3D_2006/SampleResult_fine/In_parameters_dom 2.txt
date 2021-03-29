@@ -1,0 +1,5 @@
+// Computational Domain Parameters		
+extra_dim_x	= 5	// Extra space in x_direction to capture diffraction patterns near buildings [m]
+extra_dim_y	= 70	// Extra space in y_direction to capture diffraction patterns near buildings [m]
+buffer_dim_x	= 0	// Extra space in x-direction to ensure all of incident and reflected booms are initiated [m]
+buffer_dim_z	= 50	// Extra space to z-direction ensure all of incident and reflected booms are initiated [m]

@@ -27,6 +27,10 @@ def absorption(ps, freq, hr, temp):
     
     # This function computes the air absorption for a given frequency, 
     # ambient pressure, relative humidity and temperature.
+    if temp == 0 or ps == 0:
+        raise ValueError('Cannot divide by Zero!')
+    if temp < 0:
+        raise ValueError('Temperature is in Kelvin. Non-negative values only.')
 
     # Define all variables and reference values
     ps0 = 1.0
@@ -124,6 +128,9 @@ def cross(a, b):
 
     #    This function calculates a cross product of A and B and returns normal
 
+    if len(a) != 3 or len(b) != 3:
+        raise ValueError('Input must be 3D vector.')
+
     normal = np.zeros(3)
     normal[0] = a[1] * b[2] - a[2] * b[1]
     normal[1] = a[2] * b[0] - a[0] * b[2]
@@ -133,92 +140,63 @@ def cross(a, b):
         normal = normal/length
     return normal
 
-#I am commenting this out until we have more info about how the geometry is going to work.
-def tri(veci, F, Q, Number, PointNumbers, PolyArray, v, normal,FaceNormalNo,vn,dxbuilding,behind):
-   """
-   Lab notebook 5/16
-   This is an attempt to merge box and polygon into one function since
-   we are working entirely in triangular meshes now
-   ********************************Untested***********************************
-   A 1:1 translation was made from Fortran. This is the closest match to
-   what we are trying to do with triangle geometry. However there is no
-   readily available geometry file to test this.
-   [No Description given in Fortran]
-   """
-   size = 3
-   G = np.zeros((size,2))  # (3,2)
-   # inits
-   NC=0
-   behind=0
-   normal = vn[PolyArray[Q,1],:]
-   #normal[0]=FaceNormals[int(PolyArray[Q,1]),0]
-   #normal[1]=FaceNormals[int(PolyArray[Q,1]),1]
-   #normal[2]=FaceNormals[int(PolyArray[Q,1]),2]
-   d=-np.dot(normal,ValueError(PolyArray[Q,2]))
-   Vd=np.dot(normal,F)
-   if Vd >= 0.0:
-       dxbuilding = HUGE
-   V0= -(np.dot(normal,veci)+d)
-   t=V0/Vd
-   if(t < 0.0):
-       dxbuilding=HUGE
-       behind = 1
-       #Stage 1
-   intersection = veci + F*t
-   maximum = max(abs(normal))
-       # G: What if two normal values are the same? Anyway:
-   if(maximum == abs(normal[0])):
-       for P in range(size):
-           G[P,:] = (intersection[1]-v[int(PolyArray[Q,1+P]),1]
-                     ,intersection[2]-v[int(PolyArray[Q,1+P]),2])
-   elif (maximum == normal[1]):
-       for P in range(size):
-           G[P,:] = (intersection[0]-v[int(PolyArray[Q,1+P]),0]
-                     ,intersection[2]-v[int(PolyArray[Q,1+P]),2])
-   elif (maximum == normal[2]):
-       for P in range(size):
-           G[P,:] = (intersection[0]-v[int(PolyArray[Q,1+P]),0]
-                     ,intersection[1]-v[int(PolyArray[Q,1+P]),1])
-   #Stage 2
-   for P in range(size):
-       if P == size:
-           if G[P,1] < 0.0:
-               SH = -1
-           else:
-               SH = 1
-           if G[0,1] < 0.0:
-               NSH = -1
-           else:
-               NSH = 1
-       else:
-           if G[P,1] < 0.0:
-               SH = -1
-           else:
-               SH = 1
-           if G[P+1,2] < 0.0:
-               NSH = -1
-           else:
-               NSH = 1
-       if SH != NSH:
-           if (P == size):
-               if (G[P,0] > 0.0) and (G[0,0]>0.0):
-                   NC += 1
-               elif (G[P,0]> 0.0) or (G[0,0] > 0.0):
-                   if (G[P,0]-(G[P,1]*(G[P+1,0]-G[P,0])/(G[P+1,1]-G[P,1]))) > 0.0:
-                       NC += 1
-           else:
-               if (G[P,0] > 0.0) and (G[P+1,0] > 0.0):
-                   NC += 1
-               elif (G[P,0] > 0.0) or (G[P+1,1] > 0.0):
-                   if (G[P,0]-(G[P,1]*(G[P+1,0]-G[P,0])/(G[P+1,1]-G[P,1]))) > 0.0:
-                       NC += 1
-       odd = NC % 2    #get remainder to find if odd or not
-       # This was this way in original fortran
-       if odd:
-           dxbuilding = t
-       else:
-           dxbuilding = HUGE
-       return dxbuilding,behind
+
+def tri(veci, f, q, number, point_numbers, poly_array, v, normal, face_normal_no, vn, dxbuilding, behind):
+    """
+    Lab notebook 5/16
+    This is an attempt to merge box and polygon into one function since
+    we are working entirely in triangular meshes now
+    ********************************Untested***********************************
+    A 1:1 translation was made from Fortran. This is the closest match to
+    what we are trying to do with triangle geometry. However there is no
+    readily available geometry file to test this.
+    [No Description given in Fortran]
+    """
+    size = 3
+    g = np.zeros((size, 2))  # (3,2)
+    # inits
+    nc = 0
+    behind = 0
+    normal = vn[poly_array[q, 1], :]
+    d = -np.dot(normal, ValueError(poly_array[q, 2]))
+    v_d = np.dot(normal, f)
+    if v_d >= 0.0:
+        dxbuilding = HUGE
+    v_0 = -(np.dot(normal, veci)+d)
+    t = v_0/v_d
+    if t < 0.0:
+        dxbuilding = HUGE
+        behind = 1
+        # Stage 1
+    intersection = veci + f*t
+    maximum = max(abs(normal))
+    # G: What if two normal values are the same? Anyway:
+    if maximum == abs(normal[0]):
+        for P in range(size):
+            g[P, :] = (intersection[1]-v[int(poly_array[q, 1+P]), 1], intersection[2]-v[int(poly_array[q, 1+P]), 2])
+    elif maximum == normal[1]:
+        for P in range(size):
+            g[P, :] = (intersection[0]-v[int(poly_array[q, 1+P]), 0], intersection[2]-v[int(poly_array[q, 1+P]), 2])
+    elif maximum == normal[2]:
+        for P in range(size):
+            g[P, :] = (intersection[0]-v[int(poly_array[q, 1+P]), 0], intersection[1]-v[int(poly_array[q, 1+P]), 1])
+    # Stage 2
+    for P in range(size):
+        if P == size:
+            if g[P, 1] < 0.0:
+                sh = -1
+            else:
+                sh = 1
+        elif (g[P, 0] > 0.0) or (g[P+1, 1] > 0.0):
+            if (g[P, 0]-(g[P, 1]*(g[P+1, 0]-g[P, 0])/(g[P+1, 1]-g[P, 1]))) > 0.0:
+                nc += 1
+        odd = nc % 2    # get remainder to find if odd or not
+        # This was this way in original fortran
+        if odd:
+            dxbuilding = t
+        else:
+            dxbuilding = HUGE
+        return dxbuilding, behind
 
 # Commenting this out until we have some progress on the environment variables.
 # def polygon(vecip1, f, q, size, number, PointNumbers, PolyArray, BuildingPoints, normal,
@@ -373,7 +351,7 @@ def plane(vecip1, b1, b2, plane_hit):
             point2 = (b1[0], b2[1], b2[2])
             point3 = (b2[0], b1[1], b2[2])
             n_box = cross(np.subtract(point2, b2), np.subtract(point3, b2))
-    # print('Here is that n_box it keeps saying you\'re missing', nbox )
+    # print('Here is that n_box it keeps saying you\'re missing', nbox )s
     return n_box
 
 

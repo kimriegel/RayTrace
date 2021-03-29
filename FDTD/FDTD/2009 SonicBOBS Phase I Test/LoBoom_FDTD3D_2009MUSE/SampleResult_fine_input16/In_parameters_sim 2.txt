@@ -1,0 +1,15 @@
+// Simulation Parameters
+input_name	= InputBoom16.txt	
+fs		= 24000		// Sampling frequency of the input wave time series [Hz]
+input_length_i	= 24000		// Length of the input boom file [samples]
+boom_length_i	= 6000		// Length of the boom portion of the input boom file [samples]
+rho		= 1.21		// Volumetric density of the medium [kg/m^3]
+c0		= 350.783	// Speed of sound in the medium [m/s]
+dx		= 0.08		// Spatial spacing of a uniform grid [m]
+CFL		= 1.5		// Courant-Fredrich-Lewy number
+t_max		= 0.5		// Time elapsed from the beginning to the end of the simulation [s]
+sigma_m		= 2		// Damping coefficient for PML boundaries
+B		= 2		// Exponential factor for setting damping constants for PML boundaries
+D		= 20		// Thickness of PML boundaries [points]
+angle_elv		= 18.924		// Elevation angle of the incident boom direction [deg]
+angle_azm	= 266.531	// Azimuthal angle of the incident boom direction, measured from True North [deg]

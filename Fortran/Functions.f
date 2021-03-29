@@ -84,7 +84,7 @@ C            print*, tempfft
 C use fftw to compute the inverse fft.
          call dfftw_plan_dft_c2r_1d(invplan,sizefft,tempfft,
      *        timesignal, FFTW_ESTIMATE)
-            print*, timesignal
+C           print*, timesignal
          call dfftw_execute(invplan, tempfft, timesignal)
          call dfftw_destroy_plan(invplan)
          print*, 'created time signature'
