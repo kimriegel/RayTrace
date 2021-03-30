@@ -22,20 +22,14 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b1cdacbb-04ed-4032-a219-5d00b79fe37b" name="Default Changelist" comment="updating gitignore">
+    <list default="true" id="b1cdacbb-04ed-4032-a219-5d00b79fe37b" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Env/Environment.py" beforeDir="false" afterPath="$PROJECT_DIR$/Env/Environment.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Env/GeometryParser.py" beforeDir="false" afterPath="$PROJECT_DIR$/Env/GeometryParser.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Env/SimpleEMBuilding/SingleBuildingGeometry.py" beforeDir="false" afterPath="$PROJECT_DIR$/Env/SimpleEMBuilding/SingleBuildingGeometry.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RadiosityFunctions.py" beforeDir="false" afterPath="$PROJECT_DIR$/RayTrace/RadiosityFunctions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RayTrace/Functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/RayTrace/Functions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RayTrace/GeometryParser.py" beforeDir="false" afterPath="$PROJECT_DIR$/RayTrace/GeometryParser.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RayTrace/Parameterfile.py" beforeDir="false" afterPath="$PROJECT_DIR$/RayTrace/Parameterfile.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RayTrace/RayTrace.py" beforeDir="false" afterPath="$PROJECT_DIR$/RayTrace/RayTrace.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RayTrace/ReceiverPointSource.py" beforeDir="false" afterPath="$PROJECT_DIR$/RayTrace/ReceiverPointSource.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RayTrace/faceRec_plan.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/RayTrace/test_Functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/RayTrace/test_Functions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/setup.py" afterDir="false" />
     </list>
+    <ignored path="$PROJECT_DIR$/venv/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -44,40 +38,20 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/RayTrace/RayTrace.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="165">
-              <caret line="11" column="12" selection-start-line="11" selection-start-column="12" selection-end-line="11" selection-end-column="12" />
-              <folding>
-                <element signature="e#516#558#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
+        <entry file="file://$PROJECT_DIR$/TestGraph_compare4.png">
+          <provider selected="true" editor-type-id="images" />
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/RayTrace/ReceiverPointSource.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="369">
-              <caret line="161" selection-start-line="161" selection-end-line="161" />
-            </state>
-          </provider>
+        <entry file="file://$PROJECT_DIR$/TestGraph_compare5.png">
+          <provider selected="true" editor-type-id="images" />
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/RayTrace/test_Functions.py">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/RayTrace/GeometryParser.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15">
-              <caret line="1" column="7" selection-start-line="1" selection-start-column="7" selection-end-line="1" selection-end-column="7" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Env/GeometryParser.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="363">
-              <caret line="106" column="40" lean-forward="true" selection-start-line="106" selection-start-column="40" selection-end-line="106" selection-end-column="40" />
+            <state relative-caret-position="16">
+              <caret line="61" column="33" lean-forward="true" selection-start-line="61" selection-start-column="33" selection-end-line="61" selection-end-column="33" />
               <folding>
                 <element signature="e#101#119#0" expanded="true" />
               </folding>
@@ -86,20 +60,10 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Env/geometryPlan.py">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Env/monkey.mtl">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/runRays.py">
+        <entry file="file://$PROJECT_DIR$/Env/SimpleEMBuilding/SingleBuildingTest.obj">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="150">
-              <caret line="10" selection-start-line="10" selection-end-line="10" />
+            <state relative-caret-position="307">
+              <caret line="23" column="20" selection-start-line="23" selection-start-column="20" selection-end-line="23" selection-end-column="20" />
             </state>
           </provider>
         </entry>
@@ -107,22 +71,36 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/RayTrace/Parameterfile.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-539">
-              <caret line="13" column="17" selection-start-line="13" selection-start-column="17" selection-end-line="13" selection-end-column="17" />
+            <state relative-caret-position="105">
+              <caret line="7" column="49" selection-start-line="7" selection-start-column="49" selection-end-line="7" selection-end-column="49" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/RayTrace/BuildingGeometry.py">
-          <provider selected="true" editor-type-id="text-editor" />
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Env/SimpleEMBuilding/SingleBuildingGeometry.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-4572" />
+          </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Env/Environment.py">
+        <entry file="file://$PROJECT_DIR$/Env/SimpleEMBuilding/SingleBuildingGeometry.obj">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="459">
-              <caret line="102" column="4" selection-start-line="102" selection-start-column="4" selection-end-line="102" selection-end-column="4" />
+            <state relative-caret-position="347">
+              <caret line="25" column="21" selection-start-line="25" selection-start-column="21" selection-end-line="25" selection-end-column="21" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/RayTrace/RayTrace.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="238">
+              <caret line="235" column="21" selection-start-line="235" selection-start-column="21" selection-end-line="235" selection-end-column="21" />
+              <folding>
+                <element signature="e#516#557#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -138,43 +116,43 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>groundd</find>
-      <find>nground</find>
-      <find>alphab</find>
-      <find>diffusion_gro</find>
-      <find>diffusiongr</find>
-      <find>raycoun</find>
-      <find>nbox</find>
-      <find>hit_coun</find>
-      <find>double</find>
-      <find>doubleh</find>
-      <find>double_h</find>
-      <find>dxr</find>
-      <find>F</find>
-      <find>ground</find>
-      <find>dx_g</find>
-      <find>dx_building</find>
-      <find>receiver</find>
-      <find>fm</find>
-      <find>on_hit</find>
-      <find>spherech</find>
-      <find>sphere</find>
-      <find>timerec</find>
-      <find>timere</find>
-      <find>xj</find>
       <find>R1</find>
-      <find>initialize_rec</find>
       <find>Environment</find>
       <find>vertices</find>
       <find>step</find>
       <find>si</find>
+      <find>initialize_rec</find>
+      <find>timeHeader</find>
+      <find>timehea</find>
+      <find>rec</find>
+      <find>rece</find>
+      <find>60</find>
+      <find>position</find>
+      <find>ray.</find>
+      <find>box</find>
+      <find>hit gr</find>
+      <find>hit build</find>
+      <find>dxbuil</find>
+      <find>d</find>
+      <find>hit b</find>
+      <find>coll</find>
+      <find>hit builoding</find>
+      <find>hit building</find>
+      <find>ground_hit</find>
+      <find>hi</find>
+      <find>hit</find>
+      <find>hit buil</find>
+      <find>this happ</find>
+      <find>ray',</find>
+      <find>hit</find>
+      <find>print</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="r0ml" />
+        <entry key="$PROJECT_DIR$" value="master" />
       </map>
     </option>
   </component>
@@ -185,20 +163,21 @@
         <option value="$PROJECT_DIR$/RadiosityFunctions.py" />
         <option value="$PROJECT_DIR$/RayTrace/Functions.py" />
         <option value="$PROJECT_DIR$/RayTrace/RadiosityFunctions.py" />
-        <option value="$PROJECT_DIR$/RayTrace/Parameterfile.py" />
-        <option value="$PROJECT_DIR$/RayTrace/RayTrace.py" />
         <option value="$PROJECT_DIR$/RayTrace/ReceiverPointSource.py" />
         <option value="$PROJECT_DIR$/RayTrace/test_Functions.py" />
         <option value="$PROJECT_DIR$/Env/Environment.py" />
         <option value="$PROJECT_DIR$/Env/GeometryParser.py" />
+        <option value="$PROJECT_DIR$/RayTrace/Parameterfile.py" />
+        <option value="$PROJECT_DIR$/RayTrace/RayTrace.py" />
+        <option value="$PROJECT_DIR$/RayTrace/GeometryParser.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="79" />
-    <option name="y" value="23" />
-    <option name="width" value="1338" />
-    <option name="height" value="821" />
+    <option name="x" value="54" />
+    <option name="y" value="25" />
+    <option name="width" value="1468" />
+    <option name="height" value="739" />
   </component>
   <component name="ProjectId" id="1QjwSVMKhyzzmSqtVERiGNbvXg0" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -207,22 +186,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="RayTrace" type="b2602c69:ProjectViewProjectNode" />
-              <item name="RayTrace" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="RayTrace" type="b2602c69:ProjectViewProjectNode" />
-              <item name="RayTrace" type="462c0819:PsiDirectoryNode" />
-              <item name="RayTrace" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
       <pane id="Scope">
         <subPane subId="Scope 'Project Files'; set:Project Files; class com.intellij.psi.search.scope.ProjectFilesScope">
           <expand>
@@ -238,7 +201,7 @@
             <path>
               <item name="RayTrace" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
               <item name="~/PycharmProjects/RayTrace" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name="Env" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="Fortran" type="9f88c78c:ScopeViewTreeModel$FileNode" />
             </path>
             <path>
               <item name="RayTrace" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
@@ -249,6 +212,22 @@
               <item name="RayTrace" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
               <item name="~/PycharmProjects/RayTrace" type="442cc68d:ScopeViewTreeModel$RootNode" />
               <item name="RayTrace" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="RayTrace" type="b2602c69:ProjectViewProjectNode" />
+              <item name="RayTrace" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="RayTrace" type="b2602c69:ProjectViewProjectNode" />
+              <item name="RayTrace" type="462c0819:PsiDirectoryNode" />
+              <item name="RayTrace" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -350,7 +329,21 @@
       <option name="project" value="LOCAL" />
       <updated>1611330363689</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="PEP 8 fixes">
+      <created>1611785318750</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1611785318750</updated>
+    </task>
+    <task id="LOCAL-00003" summary="PEP 8 fixes... again">
+      <created>1611785396539</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1611785396539</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TodoView">
@@ -363,21 +356,21 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="79" y="23" width="1338" height="821" extended-state="0" />
+    <frame x="441" y="25" width="1468" height="739" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2627183" />
+      <window_info content_ui="combo" id="Project" order="0" weight="0.23911542" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.7699317" weight="0.3415638" />
-      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49810174" weight="0.39917696" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.7699317" visible="true" weight="0.5585023" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49810174" weight="0.3978159" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.499375" weight="0.3292517" />
-      <window_info anchor="bottom" id="Version Control" order="7" sideWeight="0.499375" weight="0.3292517" />
-      <window_info anchor="bottom" id="Terminal" order="8" />
+      <window_info anchor="bottom" id="Version Control" order="7" sideWeight="0.499375" weight="0.32918397" />
+      <window_info anchor="bottom" id="Terminal" order="8" weight="0.32918397" />
       <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5018982" side_tool="true" weight="0.39917696" />
       <window_info anchor="bottom" id="Python Console" order="10" sideWeight="0.499375" weight="0.3292517" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -385,19 +378,19 @@
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
     </layout>
     <layout-to-restore>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2627183" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.23911542" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.7699317" weight="0.3415638" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" sideWeight="0.49810174" visible="true" weight="0.39917696" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.7699317" visible="true" weight="0.5585023" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49810174" weight="0.3978159" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" sideWeight="0.499375" weight="0.3292517" />
-      <window_info anchor="bottom" id="Version Control" order="7" sideWeight="0.499375" weight="0.3292517" />
-      <window_info anchor="bottom" id="Terminal" order="8" />
-      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5018982" side_tool="true" visible="true" weight="0.39917696" />
+      <window_info anchor="bottom" id="Version Control" order="7" sideWeight="0.499375" weight="0.32918397" />
+      <window_info anchor="bottom" id="Terminal" order="8" weight="0.32918397" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.5018982" side_tool="true" weight="0.39917696" />
       <window_info anchor="bottom" id="Python Console" order="10" sideWeight="0.499375" weight="0.3292517" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -489,7 +482,9 @@
     <MESSAGE value="Added New obj files for corrected vertices." />
     <MESSAGE value="Updating from Seaton-Receivers by hand, currently very broken" />
     <MESSAGE value="updating gitignore" />
-    <option name="LAST_COMMIT_MESSAGE" value="updating gitignore" />
+    <MESSAGE value="PEP 8 fixes" />
+    <MESSAGE value="PEP 8 fixes... again" />
+    <option name="LAST_COMMIT_MESSAGE" value="PEP 8 fixes... again" />
   </component>
   <component name="WindowStateProjectService">
     <state width="1379" height="271" key="GridCell.Tab.0.bottom" />
@@ -527,9 +522,7 @@
     <entry file="file://$PROJECT_DIR$/requirements.txt">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/RayTrace/faceRec_plan.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
+    <entry file="file://$PROJECT_DIR$/RayTrace/faceRec_plan.txt" />
     <entry file="file://$PROJECT_DIR$/RayTrace/Functions.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
@@ -551,37 +544,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/runRays.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="10" selection-start-line="10" selection-end-line="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/RayTrace/Parameterfile.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-539">
-          <caret line="13" column="17" selection-start-line="13" selection-start-column="17" selection-end-line="13" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/RayTrace/RayTrace.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="11" column="12" selection-start-line="11" selection-start-column="12" selection-end-line="11" selection-end-column="12" />
-          <folding>
-            <element signature="e#516#558#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/RayTrace/ReceiverPointSource.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="369">
-          <caret line="161" selection-start-line="161" selection-end-line="161" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/RayTrace/test_Functions.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="15">
@@ -589,17 +551,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Env/Environment.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="459">
-          <caret line="102" column="4" selection-start-line="102" selection-start-column="4" selection-end-line="102" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Env/GeometryParser.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="363">
-          <caret line="106" column="40" lean-forward="true" selection-start-line="106" selection-start-column="40" selection-end-line="106" selection-end-column="40" />
+        <state relative-caret-position="1545">
+          <caret line="106" column="40" selection-start-line="106" selection-start-column="40" selection-end-line="106" selection-end-column="40" />
           <folding>
             <element signature="e#101#119#0" expanded="true" />
           </folding>
@@ -614,6 +569,138 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/RayTrace/BuildingGeometry.py">
       <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Env/Environment.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1500">
+          <caret line="102" column="4" selection-start-line="102" selection-start-column="4" selection-end-line="102" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/output/TestGraph1.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/output/TestGraph2.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/output/TestGraph3.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/output/TestGraph4.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/output/TestGraph5.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/runRays.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" selection-start-line="9" selection-end-line="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Env/Receivers/PointReceivers.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/RayTrace/ReceiverPointSource.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="46">
+          <caret line="110" column="5" selection-start-line="110" selection-start-column="5" selection-end-line="110" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TestGraph1.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TestGraph2.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TestGraph4.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TestGraph3.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TestGraph5.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TestGraph_compare1.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TestGraph_compare2.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TestGraph_compare3.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TestGraph_compare4.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TestGraph_compare5.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/RayTrace/Parameterfile.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="49" selection-start-line="7" selection-start-column="49" selection-end-line="7" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Env/SimpleEMBuilding/SingleBuilding.obj">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Env/SimpleEMBuilding/SingleBuildingTest.obj">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="307">
+          <caret line="23" column="20" selection-start-line="23" selection-start-column="20" selection-end-line="23" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Fortran/Functions.f">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3070">
+          <caret line="583" column="63" selection-start-line="583" selection-start-column="55" selection-end-line="583" selection-end-column="63" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Fortran/RayTrace.f">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="99">
+          <caret line="613" column="29" selection-start-line="613" selection-end-line="614" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Env/SimpleEMBuilding/SingleBuildingGeometry.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-4572" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Env/SimpleEMBuilding/SingleBuildingGeometry.obj">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="347">
+          <caret line="25" column="21" selection-start-line="25" selection-start-column="21" selection-end-line="25" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/RayTrace/RayTrace.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="235" column="21" selection-start-line="235" selection-start-column="21" selection-end-line="235" selection-end-column="21" />
+          <folding>
+            <element signature="e#516#557#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/RayTrace/GeometryParser.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="16">
+          <caret line="61" column="33" lean-forward="true" selection-start-line="61" selection-start-column="33" selection-end-line="61" selection-end-column="33" />
+          <folding>
+            <element signature="e#101#119#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
     </entry>
   </component>
 </project>

@@ -57,10 +57,10 @@ def collision_check2(face, veci, f):
     huge = 1000000.0
     n = face_normal_array(face)    # compute plane normal
     # Finding intersection [P]oint
-    # parallel check
+    # parallel check  WE DON'T ACTUALLY CHECK FOR PARALLEL HERE!!!  WE SHOULD DO THAT
     nf = np.dot(n, f)        # rayDir in notes, plane normal dot F
     w = veci-np.array(face)[:, 2]
-    si = np.einsum('ij,ij->i', n, w)/nf         # data compression thing
+    si = -np.einsum('ij,ij->i', n, w)/nf         # data compression thing
     p = veci + si[:, np.newaxis]*f
     tmp[0] = np.subtract(p, np.array(face)[:, 0])
     tmp[1] = np.subtract(p, np.array(face)[:, 1])
@@ -70,6 +70,7 @@ def collision_check2(face, veci, f):
     c = np.cross((np.array(face)[:, 0]-np.array(face)[:, 2]), tmp[2, :])
     cond = (np.einsum('ij,ij->i', a, n) < 0) | (np.einsum('ij,ij->i', b, n) < 0) | (np.einsum('ij,ij->i', c, n) < 0)
     si[np.where(cond | (abs(nf) < epsilon) | (si < 0.0) | (si > step_size))] = huge
+    # print('si',si)
     index = np.argmin(si)
     return si[index], n[index]
 
@@ -78,5 +79,5 @@ def face_normal_array(face):
     b = np.array(face)[:, 1]
     c = np.array(face)[:, 2]
     d = np.cross((b-a), (c-a))   # [D]irection
-#    e = d//np.sqrt(d.dot(d))
-    return d
+    e=np.sqrt(np.einsum('...i,...i', d, d))
+    return d/e[:,None]

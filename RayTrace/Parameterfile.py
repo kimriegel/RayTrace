@@ -5,7 +5,7 @@ Input Boom, Receiver Locations, and Env Files
 """
 INPUTFILE = "input/inputNASABOOM1.txt"
 RecInput = "Env/Receivers/PointReceivers.txt"
-ipname = 'Env/SimpleEMBuilding/SingleBuilding.obj'
+ipname = 'Env/SimpleEMBuilding/SingleBuildingTest.obj'
 """
 Signal Constants
 """

@@ -164,7 +164,6 @@ def main():
             # For each step we should return, location, phase and amplitude
             dx_receiver = huge        # Find the closest sphere and store that as the distance
             i = 0
-
             for R in ears:
                 # The way that tempReceiver works now, it's only used here and only should be used here.
                 # It's not defined inside the receiver because it's ray dependant.
@@ -227,14 +226,14 @@ def main():
                     #print(ray.position)
                     ray.position += (dx * f)                
                     #print(ray.position)
-                    print(f)
+                    #print(f)
                     print('hit building at step ', I)
                     n2 = np.dot(n_box, n_box)               
                     n_building = n_box / np.sqrt(n2)        
                     #n3 = np.dot(n_building, n_building)    # Not equivalent to what it was used for, causes skips thru geometry
                     dot1 = np.dot(f, n_building)            
                     f -= (2.0 * (dot1 / n2 * n_building))   # n3 caused bugs
-                    print(f)
+                    #print(f)
                     building_hit = 1                        
                     alpha = alpha_building[0, :]
                     ray.update_freq(dx, alpha, diffusion, lamb, air_absorb)
