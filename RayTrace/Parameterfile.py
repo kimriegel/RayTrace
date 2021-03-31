@@ -62,7 +62,7 @@ graphName = "TestGraph"
 Radiosity - Include diffuse reflections
 Binary 1-On, 0-Off
 """
-radiosity = 1
+radiosity = 0
 
 """
 Complex Absorption

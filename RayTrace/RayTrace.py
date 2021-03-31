@@ -148,12 +148,12 @@ def main():
     print('began rays')
     # These are for debugging, Uncomment this block and comment out the for loop below
         # ray = 606                     # @ Pf.boomSpacing = 1
-    for i in range(606):
-        ray =      next(boom_carpet)
-        ray_counter += 1
-    if ray:
-        pos_initial= next(boom_carpet)
-    #for pos_initial in boom_carpet:             # for every initial vector in carpet
+    #for i in range(606):
+    #    ray =      next(boom_carpet)
+    #    ray_counter += 1
+    #if ray:
+    #    pos_initial= next(boom_carpet)
+    for pos_initial in boom_carpet:             # for every initial vector in carpet
         ray=Rm.RayModule(pos_initial)           # veci = ray.position now
         hit_count = 0
         ray.frequency = frecuencias[:, 0] 
@@ -210,24 +210,24 @@ def main():
                     ears[tmp].on_hit(ray.amplitude, ray.phase)
 
                 if abs(dx - dx_ground) < tiny:  # If the ray hits the ground then bounce and continue
-                    ray.position += (dx_ground * f)
+                    ray.position += (dx * f)
                     tmp = np.dot(ground_n, ray.position)
                     if tmp != ground_d:
                         ray.position[2] = 0
-                    print('hit ground at ', I)
+                    #print('hit ground at ', I)
                     dot1 = np.dot(f, ground_n)
                     n2 = np.dot(ground_n, ground_n)
                     f -= (2.0 * (dot1 / n2 * ground_n))
                     ground_hit = 1
-                    #twoPiDx = np.pi * 2 * dx_ground
-                    ray.update_freq(dx_ground, alpha_ground, diffusion_ground, lamb, air_absorb)    #     Loop through all the frequencies
+                    #twoPiDx = np.pi * 2 * dx
+                    ray.update_freq(dx, alpha_ground, diffusion_ground, lamb, air_absorb)    #     Loop through all the frequencies
 
                 if dx == dx_building:   # if the ray hits the building then change the direction and continue
                     #print(ray.position)
                     ray.position += (dx * f)                
                     #print(ray.position)
                     #print(f)
-                    print('hit building at step ', I)
+                    #print('hit building at step ', I)
                     n2 = np.dot(n_box, n_box)               
                     n_building = n_box / np.sqrt(n2)        
                     #n3 = np.dot(n_building, n_building)    # Not equivalent to what it was used for, causes skips thru geometry
