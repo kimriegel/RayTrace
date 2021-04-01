@@ -142,9 +142,7 @@ def main():
         raise SystemExit
 
 
-
     # Begin tracing
-    n_box = [0, 0, 0]
     print('began rays')
     # These are for debugging, Uncomment this block and comment out the for loop below
         # ray = 606                     # @ Pf.boomSpacing = 1
@@ -155,7 +153,7 @@ def main():
     #    pos_initial= next(boom_carpet)
     for pos_initial in boom_carpet:             # for every initial vector in carpet
         ray=Rm.RayModule(pos_initial)           # veci = ray.position now
-        hit_count = 0
+        #hit_count = 0
         ray.frequency = frecuencias[:, 0] 
         ray.amplitude = frecuencias[:, 1]/normalization
         ray.phase = frecuencias[:, 2]
@@ -176,7 +174,6 @@ def main():
 
                 #     Check Intersection with ground plane
             ground_vd = np.dot(ground_n, f)
-            #ground_vd = ground_n[0] * f[0] + ground_n[1] * f[1] + ground_n[2] * f[2]
             if ground_hit == 1:
                 dx_ground = huge
             elif ground_vd != 0.0:
@@ -186,7 +183,7 @@ def main():
                     dx_ground = huge
             else:
                 dx_ground = huge
-                
+            #dx_building, n_box = Gp.collision_check2(Gp.mesh, ray.position, f)
             if building_hit == 1:   #Avoid hitting building twice
                 dx_building = huge
             else:
@@ -205,7 +202,6 @@ def main():
                 if dx == dx_receiver:
                     print('Ray ', ray_counter, ' hit receiver ', R.recNumber)
                     ray.position += (dx * f)
-                    hit_count = hit_count + 1
                     ray.update_freq(dx, alpha_nothing, 0, lamb, air_absorb)
                     ears[tmp].on_hit(ray.amplitude, ray.phase)
 
@@ -219,35 +215,18 @@ def main():
                     n2 = np.dot(ground_n, ground_n)
                     f -= (2.0 * (dot1 / n2 * ground_n))
                     ground_hit = 1
-                    #twoPiDx = np.pi * 2 * dx
                     ray.update_freq(dx, alpha_ground, diffusion_ground, lamb, air_absorb)    #     Loop through all the frequencies
 
                 if dx == dx_building:   # if the ray hits the building then change the direction and continue
-                    #print(ray.position)
                     ray.position += (dx * f)                
-                    #print(ray.position)
-                    #print(f)
                     #print('hit building at step ', I)
                     n2 = np.dot(n_box, n_box)               
                     n_building = n_box / np.sqrt(n2)        
-                    #n3 = np.dot(n_building, n_building)    # Not equivalent to what it was used for, causes skips thru geometry
                     dot1 = np.dot(f, n_building)            
                     f -= (2.0 * (dot1 / n2 * n_building))   # n3 caused bugs
-                    #print(f)
                     building_hit = 1                        
                     alpha = alpha_building[0, :]
                     ray.update_freq(dx, alpha, diffusion, lamb, air_absorb)
-                    ##########################################################
-                    #    veci += (dx*F)                      #Y
-                    #    n2 = np.dot(nbox,nbox)              #Y
-                    #    nbuilding=nbox/np.sqrt(n2)          #Y
-                    #    dot1 = np.dot(F,nbuilding)          #Y
-                    #    r=F[:]-2.0*(dot1/n2)*nbuilding
-                    #    length = np.sqrt((np.dot(r,r)))
-                    #    F = r[:]
-                    #    F = F-2.0 * (dot1/n2)* nbuilding
-                    #    buildinghit=1                       #Y
-                    ##########################################################
             else:  # If there was no interaction with buildings then proceed with one step.
                 ray.position += (Pf.h * f)
                 ray.update_freq(Pf.h, alpha_nothing, 0, lamb, air_absorb)
