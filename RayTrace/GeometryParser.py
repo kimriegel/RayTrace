@@ -52,25 +52,44 @@ def collision_check2(face, veci, f):
     Only exists here because of weird python things. Will eventually move to Terrain
     """
 
-    si = np.array([])
     tmp = np.zeros([3, len(face), 3])
     huge = 1000000.0
     n = face_normal_array(face)    # compute plane normal
-    # Finding intersection [P]oint
-    # parallel check  WE DON'T ACTUALLY CHECK FOR PARALLEL HERE!!!  WE SHOULD DO THAT
-    nf = np.dot(n, f)        # rayDir in notes, plane normal dot F
+    nf = n.dot(f)
+    isParallel = abs(nf) < epsilon  # Mask where faces are parallel to ray
+
     w = veci-np.array(face)[:, 2]
     si = -np.einsum('ij,ij->i', n, w)/nf         # data compression thing
-    p = veci + si[:, np.newaxis]*f
+
+    # Check if face is behind ray
+    d =  n.dot(face[:][0])
+    #print(face[:][0].shape)
+    print(np.array(face).shape)
+    print(np.array(face[:]).shape)
+    print(np.array(face[:][:][:]).shape)
+    print(np.array(face[0:][0:][0:]).shape)
+    print(np.array(face[:][:][0]).shape)
+    print(np.array(face[:][0][:]).shape)
+    print(np.array(face[0][:][:]).shape)
+    #print((face[0:-1][:][:]))
+    #print((face))
+    t = (n.dot(veci[:,None]) + d) / nf[:,None]      #veci and nf are rotated to match arrays
+    isBehind = t < 0                # Mask where faces are behind ray
+
+    p = veci + si[:, np.newaxis]*f          # Finding intersection [P]oint
+
     tmp[0] = np.subtract(p, np.array(face)[:, 0])
     tmp[1] = np.subtract(p, np.array(face)[:, 1])
     tmp[2] = np.subtract(p, np.array(face)[:, 2])
+
     a = np.cross((np.array(face)[:, 1]-np.array(face)[:, 0]), tmp[0, :])
     b = np.cross((np.array(face)[:, 2]-np.array(face)[:, 1]), tmp[1, :])
     c = np.cross((np.array(face)[:, 0]-np.array(face)[:, 2]), tmp[2, :])
-    cond = (np.einsum('ij,ij->i', a, n) < 0) | (np.einsum('ij,ij->i', b, n) < 0) | (np.einsum('ij,ij->i', c, n) < 0)
-    si[np.where(cond | (abs(nf) < epsilon) | (si < 0.0) | (si > step_size))] = huge
-    # print('si',si)
+
+    cond = ((np.einsum('ij,ij->i', a, n) < 0) |
+            (np.einsum('ij,ij->i', b, n) < 0) |
+            (np.einsum('ij,ij->i', c, n) < 0))
+    si[np.where(cond | (isParallel) | (isBehind) | (si > step_size))] = huge
     index = np.argmin(si)
     return si[index], n[index]
 
@@ -79,5 +98,5 @@ def face_normal_array(face):
     b = np.array(face)[:, 1]
     c = np.array(face)[:, 2]
     d = np.cross((b-a), (c-a))   # [D]irection
-    e=np.sqrt(np.einsum('...i,...i', d, d))
+    e=np.sqrt(np.einsum('...i,...i', d, d))     # normalize normal
     return d/e[:,None]

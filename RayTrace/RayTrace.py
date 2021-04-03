@@ -20,13 +20,11 @@ import GeometryParser as Gp
 import RayModule as Rm              # Meat of the code
 
 import time  # Time checks
-#t = time.time()
+#from tqdm import tqdm,trange #progress bar
 
 def main():
 
     t = time.time()
-    global twopi          # Do we use this varin this file anymore?
-    twopi = np.pi * 2
     radius2 = Pf.radius**2
 
     # Initialize counters
@@ -146,14 +144,13 @@ def main():
     print('began rays')
     # These are for debugging, Uncomment this block and comment out the for loop below
         # ray = 606                     # @ Pf.boomSpacing = 1
-    #for i in range(606):
-    #    ray =      next(boom_carpet)
-    #    ray_counter += 1
-    #if ray:
-    #    pos_initial= next(boom_carpet)
-    for pos_initial in boom_carpet:             # for every initial vector in carpet
+    for i in range(606):
+        ray =      next(boom_carpet)
+        ray_counter += 1
+    if ray:
+        pos_initial= next(boom_carpet)
+    #for pos_initial in boom_carpet:             # for every initial vector in carpet
         ray=Rm.RayModule(pos_initial)           # veci = ray.position now
-        #hit_count = 0
         ray.frequency = frecuencias[:, 0] 
         ray.amplitude = frecuencias[:, 1]/normalization
         ray.phase = frecuencias[:, 2]
@@ -223,8 +220,8 @@ def main():
                     n2 = np.dot(n_box, n_box)               
                     n_building = n_box / np.sqrt(n2)        
                     dot1 = np.dot(f, n_building)            
-                    f -= (2.0 * (dot1 / n2 * n_building))   # n3 caused bugs
-                    building_hit = 1                        
+                    f -= (2.0 * (dot1 * n_building / n2))
+                    building_hit = 1
                     alpha = alpha_building[0, :]
                     ray.update_freq(dx, alpha, diffusion, lamb, air_absorb)
             else:  # If there was no interaction with buildings then proceed with one step.
@@ -266,8 +263,6 @@ def main():
         pressure = R.signal
         i = R.recNumber
         # plt.figure(i)
-        # plt.figure(num = i, figsize=(19.20, 10.80), dpi=120, facecolor='#eeeeee', edgecolor='r')   # grey
-        # plt.figure(num = i, figsize=(19.20, 10.80), dpi=120, facecolor='#e0dae6', edgecolor='r')   # muted lilac
         plt.figure(num=i, figsize=(19.20, 10.80), dpi=120, facecolor='#e6e6fa', edgecolor='r')  # lavender
         # plt.plot(time_array,pressure,'r--')
         plt.grid(True)
