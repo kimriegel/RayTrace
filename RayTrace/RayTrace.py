@@ -184,7 +184,7 @@ def main():
             if building_hit == 1:   #Avoid hitting building twice
                 dx_building = huge
             else:
-                dx_building, n_box = Gp.collision_check2(Gp.mesh, ray.position, f)
+                dx_building, n_box = Gp.collision_check(Gp.mesh, ray.position, f)
                 # done this way because of a centipede of reasons, will be removed when terrain is working
 
             # Use found dx instead of hits ******************************************
