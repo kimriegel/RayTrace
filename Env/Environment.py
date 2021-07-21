@@ -8,6 +8,7 @@
 import numpy as np
 import pywavefront as pwf
 from pywavefront import ObjParser
+import itertools
 # import Parameterfile_methods
 
 
@@ -22,88 +23,49 @@ class Environment:
         # print(environment.parse_f)     # supposed to add .mtl file if it doesn't exist
 
         self.normals = environment.normals
-        self.vertices = environment.wavefront.vertices[0:len(environ.wavefront.vertices)//2]
+        numVert = len(environment.wavefront.vertices)
+        self.vertices = environment.wavefront.vertices[0:numVert//2]
         self.faces = environment.mesh.faces
-        # self.vertlength = [0,len(self.vertices)]
-        # self.sortvert=dict([len(self.vertices),self.vertices])
-    # def intersection(self,ray,faces):
+    
+    def IndexVertices(self):
+        length = len(self.vertices)
+        self.IndexedVertices = {}
+        for i in range(1,length+1):
+            self.IndexedVertices[i] = self.vertices[i-1]
 
-    def sortvert(self, vertices, axis):
+    def IndexedFaces(self):
+        length=len(self.faces)
+        self.IndexedFaces={}
+        for i in range(1,length+1):
+            self.IndexedFaces[i] = self.faces[i-1]
+
+    def SortVert(self, vertices, axis):
 
         # Sorts the list self.vertices into the list self.sortvert. List sorted by axis X-0, Y-1, Z-2
 
-        self.sortvert = []
-
-        def axissort(elem):
-            return elem[0][axis]
-        for index in range(0, len(vertices)):
-            self.sortvert.append([vertices[index], index])
-            self.sortvert.sort(axissort)
-        self.axismin = self.sortvert[0][0][axis]
-        self.axismax = self.sortvert[len(self.sortvert)-1][0][axis]
-        self.axisheight = self.axismax-self.axismin
-        self.bandwidth = self.axisheight/256
-
-    def rayinteraction(self, ray, axis, divisions):
-
-        subvert = []
-        subfaces = []
-        count = 0
-        if ray[axis] > self.axismax or ray[axis] < self.axismin:
-            pass
-        else:
-            subvert = self.sortvert
-            # print(len(subvert))
-            bandwidth = self.axisheight
-            for divide in range(0, divisions):
-                if bandwidth <= 2*self.bandwidth:
-                    pass
-                elif ray[axis] < subvert[len(subvert)//2][0][axis]:
-                    subvert = subvert[0:len(subvert)//2]
-                    # print(len(subvert))
-                else:
-                    # Rain drop     subvert chop chop
-                    subvert = subvert[len(subvert)//2:len(subvert)]
-                    # print(len(subvert))
-                axismin = subvert[0][0][axis]
-                axismax = subvert[len(subvert)-1][0][axis]
-                axisheight = axismax-axismin
-                bandwidth = axisheight
-        for vertex in range(0, len(subvert)):
-            vertindex = subvert[vertex][1]
-            for x in range(0, len(self.faces)):
-                if vertindex in self.faces[x]:
-                    subfaces.append(self.faces[x])
-        for face in range(0, len(subfaces)):
-            a = subfaces[face][0]
-            b = subfaces[face][1]
-            c = subfaces[face][2]
-            # print(self.sortvert)
-
-        print(subvert)
-        # print(len(subvert))
-        print(subfaces)
-        # print(len(subfaces))
-        return
-
-
-if __name__ != "__main__":      # Old code
-
-    environ = Environment('/Users/lovelace/Will Costa Version/monkey.obj')
-    Environment.sortvert(environ.vertices, 2)
-    Environment.rayinteraction([10, 20, 0], 2, 100)
+        self.sortedvertices = {k: v for k, v in sorted(self.IndexedVertices.items(), key=lambda item: item[1][axis])}
+    def bands(self, bandNumber):
+        zMin = self.sortedvertices[0][2]
+        zMax = self.sortedvertices[-1][2]
+        bandWidth = (zMax-zMin)/bandNumber
+        bandDictionary = {}
+        for i in range(1,bandNumber+1):
+            for val,group in itertools.groupby(self.sortedvertices, lambda x: x[2] >= zMin+(bandWidth*(i-1)) and x[2] <= (zMin+(bandWidth*i))):
+                if val:
+                    bandDictionary[i]=list(group)
 
 if __name__ == "__main__":          # What I'm writing now
     """
     when running file from here it will do this, else nothing
     """
-    # env = environment('EnvTest\SingleBuildingGeometry.obj')
-    env = Environment('EnvTest/SingleBuilding.obj')
-    # print(env.vertices)
-    # trying to target specific vertex from face
-    # print(env.faces)
-    # print(env.faces[1][2])
-    # print(env.vertices[env.faces[1][2]])        # works
-    # testVert = env.vertices[env.faces[1][2]]
-    # print(testVert)                             # output is value of specified vertex in list
-    print(env.normals)
+    environ = Environment('Env/monkey.obj')
+    
+    environ.IndexVertices()
+    environ.SortVert(environ.vertices,2)
+    environ.IndexedFaces()
+    print(environ.IndexedFaces)
+    #environ.bands(10)
+    #{10: (0.5, 0.09375, 0.6875)}
+
+    #vertices = {1: (x1,y1,z1), 2: (x2,y2,z2)}
+    #faces = {1: [vertices[1], vertices[2], vertices[2]]}
