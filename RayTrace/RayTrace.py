@@ -202,7 +202,7 @@ def main():
                     ray.update_freq(dx, alpha_nothing, 0, lamb, air_absorb)
                     ears[tmp].on_hit(ray.amplitude, ray.phase)
 
-                if abs(dx - dx_ground) < tiny:  # If the ray hits the ground then bounce and continue
+                if dx == dx_ground:  # If the ray hits the ground then bounce and continue
                     ray.position += (dx * f)
                     tmp = np.dot(ground_n, ray.position)
                     if tmp != ground_d:

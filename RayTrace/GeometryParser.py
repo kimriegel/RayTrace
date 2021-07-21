@@ -35,7 +35,7 @@ def collision_check(face, veci, f):
     isParallel = abs(nf) < epsilon  # Mask where faces are parallel to ray
 
     w = veci-np.array(face)[:, 2]
-    si = -np.einsum('ij,ij->i', n, w)/nf         # data compression thing
+    si = -1 * np.einsum('ij,ij->i', n, w)/nf         # data compression thing
 
     ## Check if face is behind ray
     #v0 = np.array(list(list(zip(*face))[0]))
@@ -58,10 +58,10 @@ def collision_check(face, veci, f):
     b = np.cross((np.array(face)[:, 2]-np.array(face)[:, 1]), tmp[1, :])
     c = np.cross((np.array(face)[:, 0]-np.array(face)[:, 2]), tmp[2, :])
 
-    cond = ((np.einsum('ij,ij->i', a, n) < 0) |
+    isInPoly = ((np.einsum('ij,ij->i', a, n) < 0) |
             (np.einsum('ij,ij->i', b, n) < 0) |
             (np.einsum('ij,ij->i', c, n) < 0))
-    si[np.where(cond | (isParallel) | (isBehind) | (si > step_size))] = huge
+    si[np.where(isInPoly | (isParallel) | (isBehind) | (si > step_size))] = huge
     index = np.argmin(si)
     return si[index], n[index]
 
