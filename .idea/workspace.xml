@@ -132,7 +132,14 @@
       <option name="project" value="LOCAL" />
       <updated>1611330363689</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="updating gitignore">
+      <created>1636127569909</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1636127569909</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TodoView">
@@ -212,34 +219,5 @@
     <MESSAGE value="Updating from Seaton-Receivers by hand, currently very broken" />
     <MESSAGE value="updating gitignore" />
     <option name="LAST_COMMIT_MESSAGE" value="updating gitignore" />
-  </component>
-  <component name="WindowStateProjectService">
-    <state width="1379" height="269" key="GridCell.Tab.0.bottom" timestamp="1618330609159">
-      <screen x="0" y="25" width="2048" height="1052" />
-    </state>
-    <state width="1379" height="271" key="GridCell.Tab.0.bottom/0.23.2048.1059@0.23.2048.1059" timestamp="1617151556698" />
-    <state width="1379" height="269" key="GridCell.Tab.0.bottom/0.25.2048.1052@0.25.2048.1052" timestamp="1618330609159" />
-    <state width="1379" height="269" key="GridCell.Tab.0.center" timestamp="1618330609159">
-      <screen x="0" y="25" width="2048" height="1052" />
-    </state>
-    <state width="1379" height="271" key="GridCell.Tab.0.center/0.23.2048.1059@0.23.2048.1059" timestamp="1617151556698" />
-    <state width="1379" height="269" key="GridCell.Tab.0.center/0.25.2048.1052@0.25.2048.1052" timestamp="1618330609159" />
-    <state width="1379" height="269" key="GridCell.Tab.0.left" timestamp="1618330609158">
-      <screen x="0" y="25" width="2048" height="1052" />
-    </state>
-    <state width="1379" height="271" key="GridCell.Tab.0.left/0.23.2048.1059@0.23.2048.1059" timestamp="1617151556698" />
-    <state width="1379" height="269" key="GridCell.Tab.0.left/0.25.2048.1052@0.25.2048.1052" timestamp="1618330609158" />
-    <state width="1379" height="269" key="GridCell.Tab.0.right" timestamp="1618330609159">
-      <screen x="0" y="25" width="2048" height="1052" />
-    </state>
-    <state width="1379" height="271" key="GridCell.Tab.0.right/0.23.2048.1059@0.23.2048.1059" timestamp="1617151556698" />
-    <state width="1379" height="269" key="GridCell.Tab.0.right/0.25.2048.1052@0.25.2048.1052" timestamp="1618330609159" />
-    <state x="1624" y="464" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1617151556698" />
-    <state x="1624" y="463" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.23.2048.1062@0.23.2048.1062" timestamp="1617151556698" />
-    <state x="1624" y="464" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.23.2048.1065@0.23.2048.1065" timestamp="1617151556698" />
-    <state x="1242" y="106" width="1035" height="682" key="dock-window-1" timestamp="1617151556698" />
-    <state x="1242" y="106" width="1035" height="682" key="dock-window-1/0.23.2048.1059@0.23.2048.1059" timestamp="1617151556698" />
-    <state x="1440" y="337" key="git4idea.merge.GitPullDialog" timestamp="1617151556698" />
-    <state x="1440" y="337" key="git4idea.merge.GitPullDialog/0.23.2048.1062@0.23.2048.1062" timestamp="1617151556698" />
   </component>
 </project>
