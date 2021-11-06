@@ -55,6 +55,7 @@ def collision_check2(face, veci, f):
     si = np.array([])
     tmp = np.zeros([3, len(face), 3])
     huge = 1000000.0
+#    print('face',face, 'face1 ',list(list(zip(*face))[0]))
     n = face_normal_array(face)    # compute plane normal
     # Finding intersection [P]oint
     # parallel check  WE DON'T ACTUALLY CHECK FOR PARALLEL HERE!!!  WE SHOULD DO THAT

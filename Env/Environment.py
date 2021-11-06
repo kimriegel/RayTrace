@@ -19,14 +19,11 @@ class Environment:
         self.wavefront = pwf.Wavefront(file_name)
         environment = ObjParser(self.wavefront, file_name, strict=False, encoding="utf-8", create_materials=False,
                             collect_faces=True, parse=True, cache=False)
-        # print(environment.parse_f)     # supposed to add .mtl file if it doesn't exist
 
         self.normals = environment.normals
-        self.vertices = environment.wavefront.vertices[0:len(environ.wavefront.vertices)//2]
+        print(environment.normals)
+        self.vertices = environment.wavefront.vertices[0:len(environment.wavefront.vertices)//2]
         self.faces = environment.mesh.faces
-        # self.vertlength = [0,len(self.vertices)]
-        # self.sortvert=dict([len(self.vertices),self.vertices])
-    # def intersection(self,ray,faces):
 
     def sortvert(self, vertices, axis):
 
@@ -87,23 +84,23 @@ class Environment:
         return
 
 
-if __name__ != "__main__":      # Old code
+# if __name__ != "__main__":      # Old code
+#
+#     environ = Environment('/Users/lovelace/Will Costa Version/monkey.obj')
+#     Environment.sortvert(environ.vertices, 2)
+#     Environment.rayinteraction([10, 20, 0], 2, 100)
 
-    environ = Environment('/Users/lovelace/Will Costa Version/monkey.obj')
-    Environment.sortvert(environ.vertices, 2)
-    Environment.rayinteraction([10, 20, 0], 2, 100)
-
-if __name__ == "__main__":          # What I'm writing now
-    """
-    when running file from here it will do this, else nothing
-    """
-    # env = environment('EnvTest\SingleBuildingGeometry.obj')
-    env = Environment('EnvTest/SingleBuilding.obj')
-    # print(env.vertices)
-    # trying to target specific vertex from face
-    # print(env.faces)
-    # print(env.faces[1][2])
-    # print(env.vertices[env.faces[1][2]])        # works
-    # testVert = env.vertices[env.faces[1][2]]
-    # print(testVert)                             # output is value of specified vertex in list
-    print(env.normals)
+# if __name__ == "__main__":          # What I'm writing now
+#     """
+#     when running file from here it will do this, else nothing
+#     """
+#     # env = environment('EnvTest\SingleBuildingGeometry.obj')
+#     env = Environment('EnvTest/SingleBuilding.obj')
+#     # print(env.vertices)
+#     # trying to target specific vertex from face
+#     # print(env.faces)
+#     # print(env.faces[1][2])
+#     # print(env.vertices[env.faces[1][2]])        # works
+#     # testVert = env.vertices[env.faces[1][2]]
+#     # print(testVert)                             # output is value of specified vertex in list
+#     print(env.normals)

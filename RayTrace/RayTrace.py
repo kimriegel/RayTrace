@@ -18,6 +18,7 @@ import Functions as Fun
 import ReceiverPointSource as Rps  # For receivers
 import GeometryParser as Gp
 import RayModule as Rm              # Meat of the code
+import Env.Environment as Env
 
 import time  # Time checks
 #t = time.time()
@@ -72,6 +73,8 @@ def main():
     boom_carpet = ((Fun.vex(d4, f_initial, y, z), y, z) for z in ray_z for y in ray_y)
     # Create a receiver array, include a receiver file.
     alpha_nothing = np.zeros(size_fft_two)
+
+    Atmosphere = Env.Environment(Pf.ipname)
 
     # Making specific receiver points using receiver module
     Rps.Receiver.initialize(Pf.RecInput)
@@ -148,12 +151,12 @@ def main():
     print('began rays')
     # These are for debugging, Uncomment this block and comment out the for loop below
         # ray = 606                     # @ Pf.boomSpacing = 1
-    for i in range(606):
-        ray =      next(boom_carpet)
-        ray_counter += 1
-    if ray:
-        pos_initial= next(boom_carpet)
-    #for pos_initial in boom_carpet:             # for every initial vector in carpet
+    # for i in range(606):
+    #     ray =next(boom_carpet)
+    #     ray_counter += 1
+    # if ray:
+    #     pos_initial= next(boom_carpet)
+    for pos_initial in boom_carpet:             # for every initial vector in carpet
         ray=Rm.RayModule(pos_initial)           # veci = ray.position now
         hit_count = 0
         ray.frequency = frecuencias[:, 0] 
@@ -173,7 +176,6 @@ def main():
             temp_receiver[np.where((temp_receiver < (tiny)))] = huge
             tmp = np.argmin(temp_receiver)
             dx_receiver = temp_receiver[tmp]
-
                 #     Check Intersection with ground plane
             ground_vd = np.dot(ground_n, f)
             #ground_vd = ground_n[0] * f[0] + ground_n[1] * f[1] + ground_n[2] * f[2]
