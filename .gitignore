@@ -5,3 +5,4 @@ workspace.xml
 .DS_Store
 /output/
 .vscode/settings.json
+.idea/
