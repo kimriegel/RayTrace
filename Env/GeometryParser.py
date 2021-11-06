@@ -91,16 +91,15 @@ def collision_check2(face, veci, f):
 
     # the caps lock just reinforces that the variables are only used inside this function set
 
-    si = np.array([])
     tmp = np.zeros([3, len(face), 3])
     huge = 1000000.0
     n = face_normal_array(face)    # compute plane normal
     # Finding intersection [P]oint
     # parallel check
     nf = np.dot(n, f)        # rayDir in notes, plane normal dot F
+#
 #    si[(np.where((abs(NF) < epsilon)))] = HUGE
 #    isParallel = (abs(NF) < epsilon)    # bool, vD in old code
-
 #    if isParallel:
 #        return HUGE        #ray does not hit, find an output to express that
     w = veci-np.array(face)[:, 2]
