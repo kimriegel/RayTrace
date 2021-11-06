@@ -2,6 +2,8 @@
 # Python 3.7.0 
 
 import numpy as np
+#import matplotlib.pyplot as plt         # for graphing
+#import matplotlib.font_manager as fm    # fonts
 
 
 class Receiver:
@@ -44,11 +46,8 @@ class Receiver:
         Modifies direction and magnitude of rays with respect to each receiver
         """
         xj = complex(0, 1)
-        # print('initiating hit function')
-
         temp1 = abs(self.magnitude) * np.exp(xj*self.direction)
         temp2 = abs(amplitude[:]) * np.exp(xj*phase[:])
-
         temp3 = temp1 + temp2 
 
         self.magnitude = abs(temp3)
@@ -67,7 +66,6 @@ class Receiver:
 
         s_c = self.position
         oc = s_c - veci
-        # L2OC = np.sum( (oc*oc),axis=1)
         l2_oc = np.dot(oc, oc)    # Equivalent?
         tca = np.dot(oc, f)
         t2hc = sr_2 - l2_oc + (tca**2)
@@ -79,8 +77,6 @@ class Receiver:
             dx = huge
         else:
             dx = tca - (t2hc**(1/2))
-        # Hey future me, remember to delete one of these later
-        # No, lmao
 
         self.dx = dx
         return dx
@@ -102,12 +98,9 @@ class Receiver:
         else:                                   # If not then calculate the timesignal 
             tempfft = abs(self.magnitude[:]) * np.exp(xj*self.direction)
             tempfft = np.append(0, tempfft)
-            # print(list(np.real(tempfft)))
             # Compute ifft using numpy
             self.signal = np.fft.irfft(tempfft, int(sizefft)) * sizefft
-            # print('time signal @receiver 2: \n',list(self.signal[:100]))
 
-    # def timeheader(cls,f,time,sizex,sizey,sizez,planename):
     @classmethod
     def time_header(cls, f, time, w):
         """
@@ -116,7 +109,6 @@ class Receiver:
         omega (w) is the signal in that receiver at the specified time
         """
 
-        # time = pass
         f.write('ZONE T=" %s "\n' % (planename, ))  # this worked in the command line
         f.write('STRANDID=1, SOLUTIONTIME= %f \n' % time)                     # timearray tiempo/PF.Fs
         f.write('I= %d\t J= %d\t K=%d\t ZONETYPE=Ordered\n' % (sizex, sizey, sizez))
@@ -127,6 +119,36 @@ class Receiver:
             print('\t%f\t%f\t%f\t%f' % (R.position[0], R.position[1], R.position[2], R.signal[w]), file=f)
             # time signal
         return 
+
+    #@classmethod
+    #def saveGraphs(cls):
+    #    # Font
+    #    stdfont = fm.FontProperties()
+    #    stdfont.set_family('serif')
+    #    stdfont.set_name('Times New Roman')
+    #    stdfont.set_size(20)
+    #
+    #    for R in cls.rList:
+    #        # For N wave
+    #        pressure = R.signal
+    #        i = R.recNumber
+    #        # plt.figure(i)
+    #        plt.figure(num=i, figsize=(19.20, 10.80), dpi=120, facecolor='#e6e6fa', edgecolor='r')  # lavender
+    #        # plt.plot(time_array,pressure,'r--')
+    #        plt.grid(True)
+    #        plt.plot(time_array, pressure, '#780303')
+    #        # Labeling axes
+    #        plt.xlabel('Time [s]', fontproperties=stdfont)
+    #        plt.ylabel('Pressure [Pa]', fontproperties=stdfont)
+    #        plt.title('Pressure vs Time of Receiver ' + str(i),
+    #                  fontproperties=stdfont,
+    #                  fontsize=26,
+    #                  fontweight='bold')
+    #
+    #        # Saving
+    #        plt.savefig(Pf.graphName + str(i) + '.png', facecolor='#e6e6fa')  # lavender
+    #        print('Saved receiver', i)
+
 
     @classmethod
     def initialize(cls, ipfile):

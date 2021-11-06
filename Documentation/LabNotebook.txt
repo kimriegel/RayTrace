@@ -1549,3 +1549,25 @@ Trying really hard to graduate in this span of time, not much progress
   Noticed that the debug params did not work
     Afteer checking it seems ray does not interact with the receiver
       As it hits building multiple times, it is likely ray is not bouncing off building properly
+
+3/31/21
+  Problem with Diffusion for building
+    When ray hits mesh the diffusion causes amplitude to become 0
+  *Fixed
+    Diffusion being a bool to a float makes it become 1, which chokes out all amplitudes when a building is hit
+    Changed to 0, but also we don't even use Radiosity anymore, will remove later
+
+    playing with step size:
+      h     t
+      20    90.535
+      40    84.627
+      80    83.091
+      10    83.454
+      5     103.33
+
+
+7/13/21
+  Distracted by life things
+  reading old notes
+  I am m own worst enemy
+  
