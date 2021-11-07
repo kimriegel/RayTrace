@@ -12,11 +12,11 @@
 # Initialize variables and functions
 import numpy as np  # matrices and arrays
 import matplotlib.pyplot as plt  # for graphing
-
 import Parameterfile as Pf
 import Functions as Fun
 import ReceiverPointSource as Rps  # For receivers
 import GeometryParser as Gp
+from Atmosphere import Atmosphere
 
 
 # import GeometryParser as Bg
@@ -108,7 +108,10 @@ def main():
     size_fft = k
     size_fft_two = size_fft // 2
     output_signal = np.fft.rfft(input_signal, size_fft)
+    # Create Atmosphere
 
+    atmos=Atmosphere(Pf.Temp,Pf.strat_height,Pf.type)
+    print('height and sound', atmos.strata, atmos.sound_speed)
     # Create initial signal
     frecuencias = initial_signal(size_fft, output_signal)      # Equivalent to inputArray in original
     air_absorb = Fun.absorption(Pf.ps, frecuencias[:, 0], Pf.hr, Pf.Temp)   # size_fft_two
