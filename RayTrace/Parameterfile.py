@@ -11,14 +11,14 @@ zinitial = 0.0
 radius = .15
 soundspeed = 348.537
 ps = 1.0
-Temp = 302.182778
+Temp = 301.5938943
 time = .01
 hr = 20.0
 theta = 1.6863372
 phi = 3.44458181
 boomspacing = 0.6   # .6
 strat_height = 5
-type = 1
+type = 2
 # boomspacing= 0.035
 # boomspacing= 0.1
 # boomspacing= 1
@@ -34,7 +34,7 @@ absorbplanes = 1
 # allocate(tempalphabuilding(absorbplanes,8))
 # Find way to rephrase
 # outputfile = 'PythonTest1.txt'
-outputfile = "PythonTestSimple" + str(boomspacing) + ".txt"       # debugging
+outputfile = "PythonTestSimple" + str(boomspacing) + "_newlambda.txt"       # debugging
 graphName = "TestGraph"                                     # No not use full file extension here
 # Will's
 # outputfile = "PythonTestEnv" + str(boomspacing) + ".txt"       # debugging

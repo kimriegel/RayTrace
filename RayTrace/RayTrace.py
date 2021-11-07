@@ -63,7 +63,6 @@ def update_freq(dx_update, alpha_update, diffusion_update, lamb, air_absorb):
     zwei = ein % twopi
     masque = zwei > np.pi
     drei = masque * zwei - twopi
- 
     phase = np.where(masque, drei, ein)
     amplitude *= ((1.0 - alpha_update) * (1.0 - diffusion_update) * np.exp(-air_absorb * dx_update))
 
@@ -115,6 +114,15 @@ def main():
     # Create initial signal
     frecuencias = initial_signal(size_fft, output_signal)      # Equivalent to inputArray in original
     air_absorb = Fun.absorption(Pf.ps, frecuencias[:, 0], Pf.hr, Pf.Temp)   # size_fft_two
+    i = 0
+    all_lamb=np.zeros([len(atmos.sound_speed), len(frecuencias)])
+    for i in range(len(atmos.sound_speed)):
+        if i == len(atmos.sound_speed)-1:
+            speed = atmos.sound_speed[i]
+        else:
+            speed=(atmos.sound_speed[i] + atmos.sound_speed[i+1])/2
+        all_lamb[i, :] = speed/frecuencias[:, 0]
+        i+=1
     lamb = Pf.soundspeed/frecuencias[:, 0]     # Used for updating frequencies in update function
     time_array = np.arange(k) / Pf.Fs
 
@@ -243,6 +251,14 @@ def main():
             # For each step we should return, location, phase and amplitude
             dx_receiver = huge
             # Find the closest sphere and store that as the distance
+            for index in range(len(atmos.strata) - 1):
+                if veci[2] >= atmos.strata[index] and veci[2] < atmos.strata[index + 1]:
+                    strat_no = index
+                    deriv_alpha = (atmos.sound_speed[index]-atmos.sound_speed[index+1])/(atmos.strata[index]-atmos.strata[index+1])
+                elif veci[2] > atmos.strata[index + 1]:
+                    strat_no = index + 1
+                    deriv_alpha = 0
+
             i = 0
             for R in ears:
                 # The way that tempReceiver works now, it's only used here and only should be used here.
@@ -353,13 +369,14 @@ def main():
         #        for R in ears:
                 if dx == dx_receiver:
                     print('Ray ', ray_counter, ' hit receiver ', R.recNumber)
-                    veci += (dx * f)
+                    veci = veci + (dx * f)
+                    f = f-dx*deriv_alpha/atmos.sound_speed[strat_no]
                     # receiver_hit = 1
                     # checkDirection = f
                     # if double_hit == 1:
                     #    receiver_hit = 2
                     hit_count = hit_count + 1
-                    update_freq(dx, alpha_nothing, 0, lamb, air_absorb)
+                    update_freq(dx, alpha_nothing, 0, all_lamb[strat_no, :], air_absorb)
                     # last_receiver = receiver_point
                     output_array1[:, 0] = frecuencias[:, 0]
                     output_array1[:, 1:4] = receiver_point[:]
@@ -391,10 +408,11 @@ def main():
 
                 if abs(dx - dx_ground) < 10.0**(-13.0):  # If the ray hits the ground then bounce and continue
                     veci += (dx_ground * f)
+                    f = f - dx * deriv_alpha / atmos.sound_speed[strat_no]
                     tmp = np.dot(ground_n, veci)
                     if tmp != ground_d:
                         veci[2] = 0
-                    print('hit ground at ', I)
+#                    print('hit ground at ', I)
                     dot1 = np.dot(f, ground_n)
                     n2 = np.dot(ground_n, ground_n)
                     f -= (2.0 * (dot1 / n2 * ground_n))
@@ -402,7 +420,7 @@ def main():
                     ground_hit = 1
 #                    twoPiDx = np.pi * 2 * dx_ground
                     #     Loop through all the frequencies
-                    update_freq(dx_ground, alpha_ground, diffusion_ground, lamb, air_absorb)
+                    update_freq(dx_ground, alpha_ground, diffusion_ground, all_lamb[strat_no,:], air_absorb)
     #                if Pf.radiosity == 1 and (diffusion_ground != 0.0):
     #                    for Q in range(0, PatchNo):
     #                        if formFactors[0, Q, 1] == 1:
@@ -421,7 +439,8 @@ def main():
     #                                        patchArray[Q, W, 7] = np.arctan(temp4.imag,temp4.real)
                 if dx == dx_building:   # if the ray hits the building then change the direction and continue
                     veci += (dx * f)
-                    print('hit building at step ', I)
+                    f = f - dx * deriv_alpha / atmos.sound_speed[strat_no]
+#                    print('hit building at step ', I)
                     n2 = np.dot(n_box, n_box)
                     n_building = n_box / np.sqrt(n2)
                     n3 = np.dot(n_building, n_building)
@@ -445,10 +464,11 @@ def main():
     #                            alpha = alpha_building[4, :]
     #                else:
                     alpha = alpha_building[0, :]
-                    update_freq(dx, alpha, diffusion, lamb, air_absorb)
+                    update_freq(dx, alpha, diffusion, all_lamb[strat_no,:], air_absorb)
             else:  # If there was no interaction with buildings then proceed with one step.
                 veci += (Pf.h * f)
-                update_freq(Pf.h, alpha_nothing, 0, lamb, air_absorb)
+                f = f - Pf.h * deriv_alpha / atmos.sound_speed[strat_no]
+                update_freq(Pf.h, alpha_nothing, 0, all_lamb[strat_no,:], air_absorb)
         ray_counter += 1
         print('finished ray', ray_counter)
 
@@ -465,7 +485,7 @@ def main():
 
     with open(fileid, 'a') as file:
         for w in range(size_fft):
-            Rps.Receiver.timeHeader(file, time_array[w], w)
+            Rps.Receiver.time_header(file, time_array[w], w)
     print('time: ', time.time()-t)
 
     # Outputting graphs
