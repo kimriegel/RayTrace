@@ -18,7 +18,7 @@ theta = 1.6863372
 phi = 3.44458181
 boomspacing = 0.6   # .6
 strat_height = 5
-type = 2
+type = 1
 # boomspacing= 0.035
 # boomspacing= 0.1
 # boomspacing= 1
@@ -39,7 +39,7 @@ graphName = "TestGraph"                                     # No not use full fi
 # Will's
 # outputfile = "PythonTestEnv" + str(boomspacing) + ".txt"       # debugging
 # Turn Radiosity on or off.  This will include diffuse reflections
-radiosity = 1
+radiosity = 0
 # Turn on complex absorption
 complexabsorption = 0
 
