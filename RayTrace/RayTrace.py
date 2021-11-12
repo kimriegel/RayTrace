@@ -238,11 +238,11 @@ def main():
     n_box = [0, 0, 0]
     veci = np.array([0, 0, 0])
     print('began rays')
+    n_strata=[0.0,0.0,1.0]
     for ray in boom_carpet:              # Written like this for readability
         veci = ray      # initial ray position
         hit_count = 0
         double_hit = 0
-
         amplitude = frecuencias[:, 1]/normalization
         phase = frecuencias[:, 2]
 
@@ -250,15 +250,29 @@ def main():
         for I in range(Pf.IMAX):      # Making small steps along the ray path.
             # For each step we should return, location, phase and amplitude
             dx_receiver = huge
+#            print('veci',veci)
             # Find the closest sphere and store that as the distance
-            for index in range(len(atmos.strata) - 1):
+            for index in range(len(atmos.strata)-1):
                 if veci[2] >= atmos.strata[index] and veci[2] < atmos.strata[index + 1]:
+
                     strat_no = index
                     deriv_alpha = (atmos.sound_speed[index]-atmos.sound_speed[index+1])/(atmos.strata[index]-atmos.strata[index+1])
-                elif veci[2] > atmos.strata[index + 1]:
-                    strat_no = index + 1
+            if veci[2] >= atmos.strata[len(atmos.strata)-1]:
+                    strat_no = len(atmos.strata)-1
                     deriv_alpha = 0
 
+            #     Check Intersection with ground plane
+            strata_vd = np.dot(n_strata, f)
+            if(strata_vd < 0):
+                strata_vo = ((np.dot(n_strata, veci)) + atmos.strata[strat_no])
+                dx_strata = -strata_vo / strata_vd
+            #            ground_vd = ground_n[0] * f[0] + ground_n[1] * f[1] + ground_n[2] * f[2]
+            elif(strat_no+1<len(atmos.strata)):
+                strata_vd=-strata_vd
+                strata_vo = ((np.dot(np.negative(n_strata), veci)) + atmos.strata[strat_no+1])
+                dx_strata = -strata_vo / strata_vd
+            else:
+                dx_strata = Pf.h
             i = 0
             for R in ears:
                 # The way that tempReceiver works now, it's only used here and only should be used here.
@@ -298,17 +312,6 @@ def main():
                 receiver_point = ears[tmp].position
 
                 #     Check Intersection with ground plane
-            ground_vd = np.dot(ground_n, f)
-#            ground_vd = ground_n[0] * f[0] + ground_n[1] * f[1] + ground_n[2] * f[2]
-            if ground_hit == 1:
-                dx_ground = huge
-            elif ground_vd != 0.0:
-                ground_vo = ((np.dot(ground_n, veci)) + ground_d)
-                dx_ground = -ground_vo / ground_vd
-                if dx_ground < 0.0:
-                    dx_ground = huge
-            else:
-                dx_ground = huge
 
             #     Check intersection with building
             # dx_building = huge
@@ -358,12 +361,17 @@ def main():
             #                    dx_building = dxNear
             #                    n_box = normal
             #                    whichBox = Q
+            if(ground_hit == 1):
+                dx_ground=huge
+            elif (strat_no == 0):
+                dx_ground = dx_strata
+
             building_hit = 0
             receiver_hit = 0
             ground_hit = 0
 
             #     Check to see if ray hits within step size
-            if dx_receiver < Pf.h or dx_ground < Pf.h or dx_building < Pf.h:
+            if dx_receiver <= dx_strata or dx_ground <= dx_strata or dx_building <= dx_strata:
                 dx = min(dx_receiver, dx_ground, dx_building)
                 #  if the ray hits a receiver, store in an array.  If the ray hits two, create two arrays to store in.
         #        for R in ears:
@@ -466,9 +474,9 @@ def main():
                     alpha = alpha_building[0, :]
                     update_freq(dx, alpha, diffusion, all_lamb[strat_no,:], air_absorb)
             else:  # If there was no interaction with buildings then proceed with one step.
-                veci += (Pf.h * f)
-                f = f - Pf.h * deriv_alpha / atmos.sound_speed[strat_no]
-                update_freq(Pf.h, alpha_nothing, 0, all_lamb[strat_no,:], air_absorb)
+                veci += (dx_strata * f)
+                f = f - dx_strata * deriv_alpha / atmos.sound_speed[strat_no]
+                update_freq(dx_strata, alpha_nothing, 0, all_lamb[strat_no,:], air_absorb)
         ray_counter += 1
         print('finished ray', ray_counter)
 
