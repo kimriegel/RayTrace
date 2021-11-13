@@ -227,7 +227,7 @@ def main():
         raise SystemExit
 
     # These are for debugging, Uncomment this block and comment out the for loop below
-    # ray = 606                     # @ Pf.boomSpacing = 1
+    # ray = 1389                    # @ Pf.boomSpacing = 1
     # for i in range(606):
     #      ray =      next(boom_carpet)
     #      ray_counter += 1
@@ -239,6 +239,13 @@ def main():
     veci = np.array([0, 0, 0])
     print('began rays')
     n_strata=[0.0,0.0,1.0]
+    dx_ground=huge
+    # ray = 1389                    # @ Pf.boomSpacing = 1
+    # for i in range(1389):
+    #      ray =      next(boom_carpet)
+    #      ray_counter += 1
+    # #
+    # if ray:
     for ray in boom_carpet:              # Written like this for readability
         veci = ray      # initial ray position
         hit_count = 0
@@ -250,11 +257,11 @@ def main():
         for I in range(Pf.IMAX):      # Making small steps along the ray path.
             # For each step we should return, location, phase and amplitude
             dx_receiver = huge
-#            print('veci',veci)
+#            print('veci',veci, f)
             # Find the closest sphere and store that as the distance
             for index in range(len(atmos.strata)-1):
+#                print(atmos.strata[index],atmos.strata[index+1],veci[2])
                 if veci[2] >= atmos.strata[index] and veci[2] < atmos.strata[index + 1]:
-
                     strat_no = index
                     deriv_alpha = (atmos.sound_speed[index]-atmos.sound_speed[index+1])/(atmos.strata[index]-atmos.strata[index+1])
             if veci[2] >= atmos.strata[len(atmos.strata)-1]:
@@ -263,14 +270,25 @@ def main():
 
             #     Check Intersection with ground plane
             strata_vd = np.dot(n_strata, f)
+#            print(strat_no,n_strata,f,strata_vd )
             if(strata_vd < 0):
-                strata_vo = ((np.dot(n_strata, veci)) + atmos.strata[strat_no])
+                strata_vo = ((np.dot(n_strata, veci)) - atmos.strata[strat_no])
                 dx_strata = -strata_vo / strata_vd
+#                print('strata_vd is negative',strata_vo, atmos.strata[strat_no],dx_strata)
             #            ground_vd = ground_n[0] * f[0] + ground_n[1] * f[1] + ground_n[2] * f[2]
+                if dx_strata ==0:
+#                    print('still zero')
+                    if (strat_no+1)>=len(atmos.strata):
+                        dx_strata = Pf.h
+                    else:
+                        strata_vo = ((np.dot(n_strata, veci)) - atmos.strata[strat_no+1])
+                        dx_strata = -strata_vo / strata_vd
+
             elif(strat_no+1<len(atmos.strata)):
                 strata_vd=-strata_vd
                 strata_vo = ((np.dot(np.negative(n_strata), veci)) + atmos.strata[strat_no+1])
                 dx_strata = -strata_vo / strata_vd
+#                print('Why am I doing this?')
             else:
                 dx_strata = Pf.h
             i = 0
@@ -308,6 +326,8 @@ def main():
             temp_receiver[np.where((temp_receiver < (10.0**(-13.0))))] = huge
             tmp = np.argmin(temp_receiver)
             dx_receiver = temp_receiver[tmp]
+            if receiver_hit == 1:
+                dx_receiver=huge
             if dx_receiver != huge:
                 receiver_point = ears[tmp].position
 
@@ -369,20 +389,20 @@ def main():
             building_hit = 0
             receiver_hit = 0
             ground_hit = 0
-            print('veci',veci)
-            print(dx_receiver, dx_ground, dx_building,dx_strata)
+#            print(veci)
+#            print(dx_receiver, dx_ground, dx_building,dx_strata)
             #     Check to see if ray hits within step size
             if dx_receiver <= dx_strata or dx_ground <= dx_strata or dx_building <= dx_strata:
 
                 dx = min(dx_receiver, dx_ground, dx_building)
-                print('dx',dx)
+                #print('dx',dx)
                 #  if the ray hits a receiver, store in an array.  If the ray hits two, create two arrays to store in.
         #        for R in ears:
                 if dx == dx_receiver:
                     print('Ray ', ray_counter, ' hit receiver ', R.recNumber)
                     veci = veci + (dx * f)
                     f = f-dx*deriv_alpha/atmos.sound_speed[strat_no]
-                    # receiver_hit = 1
+                    receiver_hit = 1
                     # checkDirection = f
                     # if double_hit == 1:
                     #    receiver_hit = 2

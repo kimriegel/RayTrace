@@ -35,7 +35,7 @@ absorbplanes = 1
 # Find way to rephrase
 # outputfile = 'PythonTest1.txt'
 outputfile = "PythonTestSimple" + str(boomspacing) + "_Plane.txt"       # debugging
-graphName = "Plane"                                     # No not use full file extension here
+graphName = "Plane_small"                                     # No not use full file extension here
 # Will's
 # outputfile = "PythonTestEnv" + str(boomspacing) + ".txt"       # debugging
 # Turn Radiosity on or off.  This will include diffuse reflections
