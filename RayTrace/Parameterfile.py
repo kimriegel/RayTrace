@@ -16,10 +16,10 @@ time = .01
 hr = 20.0
 theta = 1.6863372
 phi = 3.44458181
-boomspacing = 0.3   # .6
-strat_height = 5
+boomspacing = 0.06   # .6
+strat_height = 5.0
 type = 1
-#boomspacing= 0.035
+# boomspacing= 0.035
 # boomspacing= 0.1
 # boomspacing= 1
 xmin = -1
@@ -34,8 +34,8 @@ absorbplanes = 1
 # allocate(tempalphabuilding(absorbplanes,8))
 # Find way to rephrase
 # outputfile = 'PythonTest1.txt'
-outputfile = "PythonTestSimple" + str(boomspacing) + "_Plane.txt"       # debugging
-graphName = "Plane_small"                                     # No not use full file extension here
+outputfile = "Strat_Test" + str(boomspacing) + ".txt"       # debugging
+graphName = "TestGraph"                                     # No not use full file extension here
 # Will's
 # outputfile = "PythonTestEnv" + str(boomspacing) + ".txt"       # debugging
 # Turn Radiosity on or off.  This will include diffuse reflections
@@ -45,11 +45,10 @@ complexabsorption = 0
 
 tempalphabuilding = np.zeros([absorbplanes, 8])
 if complexabsorption == 1:
-
-    # tempalphabuilding[1] = [0.55,0.55,0.25,0.18,0.12,0.07,0.04,0.04]
-    tempalphabuilding[:, 1] = [0.55, 0.55, 0.25, 0.18, 0.12, 0.07, 0.04, 0.04]
+    tempalphabuilding[0] = [0.55, 0.55, 0.25, 0.18, 0.12, 0.07, 0.04, 0.04]
 else:
-    tempalphabuilding = np.zeros([1, 8])
+    tempalphabuilding = np.zeros([absorbplanes, 8])
+
 # Enter an array for absorption of alpha ground octave bands between
 # 63 and 8000
 tempalphaground = [0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.03, 0.03]

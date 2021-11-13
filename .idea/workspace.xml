@@ -25,20 +25,9 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b1cdacbb-04ed-4032-a219-5d00b79fe37b" name="Default Changelist" comment="">
+    <list default="true" id="b1cdacbb-04ed-4032-a219-5d00b79fe37b" name="Default Changelist" comment="updating gitignore">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Atmosphere/Atmosphere.py" beforeDir="false" afterPath="$PROJECT_DIR$/Atmosphere/Atmosphere.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Env/GeometryParser.py" beforeDir="false" afterPath="$PROJECT_DIR$/Env/GeometryParser.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Fortran/BuildingGeometry.f" beforeDir="false" afterPath="$PROJECT_DIR$/Fortran/BuildingGeometry.f" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Fortran/Parameterfile.f" beforeDir="false" afterPath="$PROJECT_DIR$/Fortran/Parameterfile.f" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Fortran/RayTrace" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Fortran/RayTrace.exe" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Fortran/RayTrace.f" beforeDir="false" afterPath="$PROJECT_DIR$/Fortran/RayTrace.f" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Fortran/functions.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Fortran/radiosityfunctions.o" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Fortran/raytrace.o" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/RayTrace/Parameterfile.py" beforeDir="false" afterPath="$PROJECT_DIR$/RayTrace/Parameterfile.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RayTrace/RayTrace.py" beforeDir="false" afterPath="$PROJECT_DIR$/RayTrace/RayTrace.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,45 +43,45 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>update</find>
-      <find>veci[</find>
-      <find>range</find>
-      <find>all_lamb</find>
-      <find>for index</find>
-      <find>strat_no</find>
-      <find>lamb</find>
-      <find>index</find>
-      <find>f_initial</find>
-      <find>temp_</find>
-      <find>sphere</find>
-      <find>collision</find>
-      <find>type</find>
-      <find>h</find>
-      <find>Pf.h</find>
-      <find>pf.h</find>
-      <find>strata</find>
-      <find>ground_hit</find>
+      <find>groundd</find>
+      <find>nground</find>
+      <find>alphab</find>
+      <find>diffusion_gro</find>
+      <find>diffusiongr</find>
+      <find>raycoun</find>
+      <find>nbox</find>
+      <find>hit_coun</find>
+      <find>double</find>
+      <find>doubleh</find>
+      <find>double_h</find>
+      <find>dxr</find>
+      <find>F</find>
       <find>ground</find>
-      <find>dx_ground</find>
-      <find>alpha</find>
-      <find>deriv_alpha</find>
-      <find>alph</find>
-      <find>ground hit</find>
-      <find>dx</find>
-      <find>print</find>
-      <find>hit</find>
-      <find>building</find>
-      <find>veci</find>
-      <find>buil</find>
+      <find>dx_g</find>
+      <find>dx_building</find>
+      <find>receiver</find>
+      <find>fm</find>
+      <find>on_hit</find>
+      <find>spherech</find>
+      <find>sphere</find>
+      <find>timerec</find>
+      <find>timere</find>
+      <find>xj</find>
+      <find>R1</find>
+      <find>initialize_rec</find>
+      <find>Environment</find>
+      <find>vertices</find>
+      <find>step</find>
+      <find>si</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="master" />
+        <entry key="$PROJECT_DIR$" value="StratifiedAtmospherePlanes" />
       </map>
     </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/RayTrace/RayTrace.py" root0="FORCE_HIGHLIGHTING" />
@@ -112,22 +101,20 @@
         <option value="$PROJECT_DIR$/RadiosityFunctions.py" />
         <option value="$PROJECT_DIR$/RayTrace/Functions.py" />
         <option value="$PROJECT_DIR$/RayTrace/RadiosityFunctions.py" />
+        <option value="$PROJECT_DIR$/RayTrace/Parameterfile.py" />
+        <option value="$PROJECT_DIR$/RayTrace/RayTrace.py" />
         <option value="$PROJECT_DIR$/RayTrace/ReceiverPointSource.py" />
         <option value="$PROJECT_DIR$/RayTrace/test_Functions.py" />
         <option value="$PROJECT_DIR$/Env/Environment.py" />
         <option value="$PROJECT_DIR$/Env/GeometryParser.py" />
-        <option value="$PROJECT_DIR$/runRays.py" />
-        <option value="$PROJECT_DIR$/Atmosphere/Atmosphere.py" />
-        <option value="$PROJECT_DIR$/RayTrace/Parameterfile.py" />
-        <option value="$PROJECT_DIR$/RayTrace/RayTrace.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-20" />
-    <option name="y" value="391" />
-    <option name="width" value="1468" />
-    <option name="height" value="823" />
+    <option name="x" value="79" />
+    <option name="y" value="23" />
+    <option name="width" value="1338" />
+    <option name="height" value="821" />
   </component>
   <component name="ProjectId" id="1QjwSVMKhyzzmSqtVERiGNbvXg0" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -163,11 +150,6 @@
               <item name="RayTrace" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
               <item name="~/PycharmProjects/RayTrace" type="442cc68d:ScopeViewTreeModel$RootNode" />
               <item name=".idea" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-            </path>
-            <path>
-              <item name="RayTrace" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="~/PycharmProjects/RayTrace" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name="Atmosphere" type="9f88c78c:ScopeViewTreeModel$FileNode" />
             </path>
             <path>
               <item name="RayTrace" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
@@ -272,35 +254,7 @@
       <option name="project" value="LOCAL" />
       <updated>1611330363689</updated>
     </task>
-    <task id="LOCAL-00002" summary="Added Atmosphere Class">
-      <created>1636255635575</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1636255635576</updated>
-    </task>
-    <task id="LOCAL-00003" summary="Implimented Non-Homogeneous Atmosphere (ISO only)">
-      <created>1636324869332</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1636324869332</updated>
-    </task>
-    <task id="LOCAL-00004" summary="Updated working Version">
-      <created>1636426518743</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1636426518743</updated>
-    </task>
-    <task id="LOCAL-00005" summary="Adding Stratified propagation">
-      <created>1636688080647</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1636688080647</updated>
-    </task>
-    <option name="localTasksCounter" value="6" />
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TodoView">
@@ -313,15 +267,15 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-20" y="391" width="1468" height="823" extended-state="0" />
+    <frame x="79" y="23" width="1338" height="821" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2494817" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2627183" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.7699317" visible="true" weight="0.52689654" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.7699317" weight="0.3415638" />
       <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49810174" weight="0.39917696" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -421,12 +375,7 @@
     <MESSAGE value="Added New obj files for corrected vertices." />
     <MESSAGE value="Updating from Seaton-Receivers by hand, currently very broken" />
     <MESSAGE value="updating gitignore" />
-    <MESSAGE value="Testing master code to ensure working version" />
-    <MESSAGE value="Added Atmosphere Class" />
-    <MESSAGE value="Implimented Non-Homogeneous Atmosphere (ISO only)" />
-    <MESSAGE value="Updated working Version" />
-    <MESSAGE value="Adding Stratified propagation" />
-    <option name="LAST_COMMIT_MESSAGE" value="Adding Stratified propagation" />
+    <option name="LAST_COMMIT_MESSAGE" value="updating gitignore" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/.gitignore">
@@ -447,11 +396,58 @@
     <entry file="file://$PROJECT_DIR$/requirements.txt">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/RayTrace/faceRec_plan.txt" />
+    <entry file="file://$PROJECT_DIR$/RayTrace/faceRec_plan.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/RayTrace/Functions.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="466" column="26" selection-start-line="466" selection-start-column="26" selection-end-line="466" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/RayTrace/RadiosityFunctions.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="211">
+          <caret line="117" column="39" selection-start-line="117" selection-start-column="39" selection-end-line="117" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/setup.py">
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <caret column="20" selection-start-column="20" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/runRays.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="10" selection-start-line="10" selection-end-line="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/RayTrace/Parameterfile.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-539">
+          <caret line="13" column="17" selection-start-line="13" selection-start-column="17" selection-end-line="13" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/RayTrace/RayTrace.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="11" column="12" selection-start-line="11" selection-start-column="12" selection-end-line="11" selection-end-column="12" />
+          <folding>
+            <element signature="e#516#558#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/RayTrace/ReceiverPointSource.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="369">
+          <caret line="161" selection-start-line="161" selection-end-line="161" />
         </state>
       </provider>
     </entry>
@@ -469,67 +465,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Env/monkey.mtl">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/runRays.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="10" selection-start-line="10" selection-end-line="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/RayTrace/Functions.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="765">
-          <caret line="52" column="63" selection-start-line="52" selection-start-column="58" selection-end-line="52" selection-end-column="63" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/TestGraph2.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/TestGraph3.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/TestGraph4.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/TestGraph5.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/TestGraph1.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/RayTrace/RadiosityFunctions.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="30" column="53" selection-start-line="30" selection-start-column="53" selection-end-line="30" selection-end-column="53" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/RayTrace/BuildingGeometry.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/Env/GeometryParser.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1740">
-          <caret line="120" column="8" selection-start-line="120" selection-start-column="2" selection-end-line="120" selection-end-column="8" />
+        <state relative-caret-position="363">
+          <caret line="106" column="40" lean-forward="true" selection-start-line="106" selection-start-column="40" selection-end-line="106" selection-end-column="40" />
           <folding>
             <element signature="e#101#119#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Env/SimpleEMBuilding/SingleBuilding.obj">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Atmosphere/Atmosphere.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="9" column="17" selection-start-line="9" selection-start-column="17" selection-end-line="9" selection-end-column="17" />
-          <folding>
-            <element signature="e#140#166#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -537,37 +478,11 @@
     <entry file="file://$PROJECT_DIR$/Env/geometryPlan.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/RayTrace/ReceiverPointSource.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="930">
-          <caret line="62" column="42" selection-start-line="62" selection-start-column="42" selection-end-line="62" selection-end-column="42" />
-        </state>
-      </provider>
+    <entry file="file://$PROJECT_DIR$/Env/monkey.mtl">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/RayTrace/Parameterfile.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="555">
-          <caret line="37" column="18" selection-start-line="37" selection-start-column="18" selection-end-line="37" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/PythonTestSimple0.6_Plane.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-63" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Plane1.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/RayTrace/RayTrace.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="33">
-          <caret line="271" column="94" lean-forward="true" selection-start-line="271" selection-start-column="94" selection-end-line="271" selection-end-column="94" />
-          <folding>
-            <element signature="e#516#557#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
+    <entry file="file://$PROJECT_DIR$/RayTrace/BuildingGeometry.py">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
   </component>
 </project>
