@@ -16,8 +16,8 @@ time = .01
 hr = 20.0
 theta = 1.6863372
 phi = 3.44458181
-boomspacing = 0.3   # .6
-strat_height = 5.0
+boomspacing = 0.06   # .6
+strat_height = 2.0
 type = 1
 # boomspacing= 0.035
 # boomspacing= 0.1
@@ -34,7 +34,7 @@ absorbplanes = 1
 # allocate(tempalphabuilding(absorbplanes,8))
 # Find way to rephrase
 # outputfile = 'PythonTest1.txt'
-outputfile = "Strat_Test" + str(boomspacing) + ".txt"       # debugging
+outputfile = "Strat_test_H2_S" + str(boomspacing) + ".txt"       # debugging
 graphName = "Plane_small"                                     # No not use full file extension here
 # Will's
 # outputfile = "PythonTestEnv" + str(boomspacing) + ".txt"       # debugging
