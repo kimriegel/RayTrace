@@ -240,8 +240,8 @@ def main():
     print('began rays')
     n_strata=[0.0,0.0,1.0]
     dx_ground=huge
-    # ray = 3739                    # @ Pf.boomSpacing = 1
-    # for i in range(3739):
+    # ray = 1122                   # @ Pf.boomSpacing = 1
+    # for i in range(1395):
     #      ray =      next(boom_carpet)
     #      ray_counter += 1
     # #
@@ -295,23 +295,6 @@ def main():
                 # It's not defined inside the receiver because it's ray dependant.
                 temp_receiver[i] = R.sphere_check(radius2, f, veci)    # Distance to receiver
                 i += 1
-
-                # if receiver_hit >= 1:  # if you hit a receiver last time, don't hit it again
-                #     if np.all(R.position == last_receiver):
-                #         tempReceiver = huge
-                #     if np.all(f == check_direction):
-                #         OC = R.position - veci
-                #         OCLength = np.dot(OC, OC)
-                #         if OCLength < radius2:
-                #             tempReceiver = huge
-                # if receiver_hit >= 2:
-                #     if np.all(R.position == last_receiver):
-                #         tempReceiver = huge
-                # if tempReceiver < dx_receiver:
-                #     dx_receiver = tempReceiver
-                #     receiver_point = R.position
-                # elif tempReceiver == dx_receiver and tempReceiver != huge:
-                #     receiverCheck = tempReceiver
 
     # We need to double check that double hit actually works.  R2 is not really
     # a thing, we should make sure it is doing what we want.
@@ -382,7 +365,7 @@ def main():
             #                    whichBox = Q
             if(ground_hit == 1):
                 dx_ground=huge
-            elif (strat_no == 0):
+            elif (veci[2] == 0.0):
                 dx_ground = dx_strata
 
             building_hit = 0
@@ -442,7 +425,7 @@ def main():
                     tmp = np.dot(ground_n, veci)
                     if tmp != ground_d:
                         veci[2] = 0
-#                    print('hit ground at ', I)
+                    print('hit ground at ', I)
                     dot1 = np.dot(f, ground_n)
                     n2 = np.dot(ground_n, ground_n)
                     f -= (2.0 * (dot1 / n2 * ground_n))

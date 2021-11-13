@@ -16,7 +16,7 @@ time = .01
 hr = 20.0
 theta = 1.6863372
 phi = 3.44458181
-boomspacing = 0.06   # .6
+boomspacing = 0.3   # .6
 strat_height = 5.0
 type = 1
 # boomspacing= 0.035
@@ -35,7 +35,7 @@ absorbplanes = 1
 # Find way to rephrase
 # outputfile = 'PythonTest1.txt'
 outputfile = "Strat_Test" + str(boomspacing) + ".txt"       # debugging
-graphName = "TestGraph"                                     # No not use full file extension here
+graphName = "Plane_small"                                     # No not use full file extension here
 # Will's
 # outputfile = "PythonTestEnv" + str(boomspacing) + ".txt"       # debugging
 # Turn Radiosity on or off.  This will include diffuse reflections
