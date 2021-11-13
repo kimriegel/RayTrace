@@ -7,7 +7,7 @@ C     BigBertha
       radius=.15
       soundspeed=348.537
       ps=1.0
-      Temp=302.182778
+      Temp=301.5938943
       time=.01
       hr=20.0
       theta=1.6863372
@@ -25,7 +25,7 @@ C     BigBertha
       allocate(tempalphabuilding(absorbplanes,8))
       OUTPUTFILE='Fortran_SimpleBuildingComp_0035.dat'
 C     Turn Radiosity on or off.  This will include diffuse reflections
-      radiosity=1
+      radiosity=0
 C     Turn on complex absorption
       complexabsorption=0
       if(complexabsorption.eq.1)then

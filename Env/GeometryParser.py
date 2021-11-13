@@ -80,9 +80,13 @@ def face_normal_array(face):
     a = np.array(face)[:, 0]
     b = np.array(face)[:, 1]
     c = np.array(face)[:, 2]
-    d = np.cross((b-a), (c-a))   # [D]irection
-#    e = d//np.sqrt(d.dot(d))
-    return d
+    d = np.cross((b-a), (c-a))  # [D]irection
+    d_n=np.sqrt(np.einsum("ij,ij->i",d,d))
+    e=np.zeros([len(d),3])
+    for i in np.arange(len(d)):
+        e[i] = np.divide(d[i],d_n[i] )
+#    #print('d', len(d), len(np.sqrt(np.einsum("ij,ij->i", d, d))))
+    return e
 
 
 def collision_check2(face, veci, f):
@@ -95,6 +99,7 @@ def collision_check2(face, veci, f):
     tmp = np.zeros([3, len(face), 3])
     huge = 1000000.0
     n = face_normal_array(face)    # compute plane normal
+#    print('n',n)
     # Finding intersection [P]oint
     # parallel check
     nf = np.dot(n, f)        # rayDir in notes, plane normal dot F
@@ -105,7 +110,9 @@ def collision_check2(face, veci, f):
 #        return HUGE        #ray does not hit, find an output to express that
     w = veci-np.array(face)[:, 2]
     si = -np.einsum('ij,ij->i', n, w)/nf
+#    print('si',si)
     p = veci + si[:, np.newaxis]*f
+#    print('p',p)
     tmp[0] = np.subtract(p, np.array(face)[:, 0])
     tmp[1] = np.subtract(p, np.array(face)[:, 1])
     tmp[2] = np.subtract(p, np.array(face)[:, 2])
@@ -113,8 +120,9 @@ def collision_check2(face, veci, f):
     b = np.cross((np.array(face)[:, 2]-np.array(face)[:, 1]), tmp[1, :])
     c = np.cross((np.array(face)[:, 0]-np.array(face)[:, 2]), tmp[2, :])
     cond = (np.einsum('ij,ij->i', a, n) < 0) | (np.einsum('ij,ij->i', b, n) < 0) | (np.einsum('ij,ij->i', c, n) < 0)
-    si[np.where(cond | (abs(nf) < epsilon) | (si < 0.0) | (si > step_size))] = huge
+    si[np.where(cond | (abs(nf) < epsilon) | (si < 0.0))] = huge
     index = np.argmin(si)
+#    print('si',si)
     return si[index], n[index]
 
 

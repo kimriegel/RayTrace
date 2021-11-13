@@ -27,6 +27,16 @@
   <component name="ChangeListManager">
     <list default="true" id="b1cdacbb-04ed-4032-a219-5d00b79fe37b" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Atmosphere/Atmosphere.py" beforeDir="false" afterPath="$PROJECT_DIR$/Atmosphere/Atmosphere.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Env/GeometryParser.py" beforeDir="false" afterPath="$PROJECT_DIR$/Env/GeometryParser.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Fortran/BuildingGeometry.f" beforeDir="false" afterPath="$PROJECT_DIR$/Fortran/BuildingGeometry.f" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Fortran/Parameterfile.f" beforeDir="false" afterPath="$PROJECT_DIR$/Fortran/Parameterfile.f" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Fortran/RayTrace" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Fortran/RayTrace.exe" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Fortran/RayTrace.f" beforeDir="false" afterPath="$PROJECT_DIR$/Fortran/RayTrace.f" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Fortran/functions.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Fortran/radiosityfunctions.o" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Fortran/raytrace.o" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/RayTrace/Parameterfile.py" beforeDir="false" afterPath="$PROJECT_DIR$/RayTrace/Parameterfile.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RayTrace/RayTrace.py" beforeDir="false" afterPath="$PROJECT_DIR$/RayTrace/RayTrace.py" afterDir="false" />
     </list>
@@ -83,6 +93,17 @@
         <entry key="$PROJECT_DIR$" value="master" />
       </map>
     </option>
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/RayTrace/RayTrace.py" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Env/geometryPlan.py" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Env/GeometryParser.py" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/RayTrace/ReceiverPointSource.py" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Env/SimpleEMBuilding/SingleBuildingTest.obj" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Fortran/BuildingGeometry.f" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/RayTrace/Parameterfile.py" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/runRays.py" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/RayTrace/BuildingGeometry.py" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -211,17 +232,17 @@
       <method v="2" />
     </configuration>
     <configuration name="runRays" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
-      <module name="RayTrace" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="" />
+      <option name="SDK_HOME" value="/usr/bin/python3" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
+      <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/runRays.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />

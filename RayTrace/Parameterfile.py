@@ -16,10 +16,10 @@ time = .01
 hr = 20.0
 theta = 1.6863372
 phi = 3.44458181
-boomspacing = 0.6   # .6
+boomspacing = 0.3   # .6
 strat_height = 5
 type = 1
-# boomspacing= 0.035
+#boomspacing= 0.035
 # boomspacing= 0.1
 # boomspacing= 1
 xmin = -1
@@ -45,7 +45,7 @@ complexabsorption = 0
 
 tempalphabuilding = np.zeros([absorbplanes, 8])
 if complexabsorption == 1:
-    
+
     # tempalphabuilding[1] = [0.55,0.55,0.25,0.18,0.12,0.07,0.04,0.04]
     tempalphabuilding[:, 1] = [0.55, 0.55, 0.25, 0.18, 0.12, 0.07, 0.04, 0.04]
 else:

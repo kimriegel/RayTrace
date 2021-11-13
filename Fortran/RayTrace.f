@@ -452,7 +452,7 @@ C     Allocate absorption coefficients for each surface for each frequency
 
 C     Mesh the patches for the environment.  Include patching file. 
       if(radiosity.eq.1)then
-         INCLUDE 'SingleBuildingGeometry.f'
+C         INCLUDE 'SingleBuildingGeometry.f'
 C         INCLUDE 'SingleBuildingGeometryVal.f'
 C         INCLUDE 'NASAEMBuilding.f'
 C         INCLUDE 'NASAMuseBuilding.f'
@@ -502,8 +502,8 @@ C         INCLUDE 'UrbanCanyonG2H24L14Geo.f'
       count=0
 C      print*, 'normalization',normalization
 C     Loop through the intial ray locations
-C      DO 40 ray=1,RAYMAX,1
-      DO 40 ray=607,612,1
+      DO 40 ray=1,RAYMAX,1
+C      DO 40 ray=607,612,1
 C         ray = 607
          hitcount=0
          tmpsum=0.0

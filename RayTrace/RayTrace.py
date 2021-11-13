@@ -109,7 +109,7 @@ def main():
     output_signal = np.fft.rfft(input_signal, size_fft)
     # Create Atmosphere
 
-    atmos=Atmosphere(Pf.Temp,Pf.strat_height,Pf.type)
+    atmos = Atmosphere(Pf.Temp,Pf.strat_height,Pf.type)
     print('height and sound', atmos.strata, atmos.sound_speed)
     # Create initial signal
     frecuencias = initial_signal(size_fft, output_signal)      # Equivalent to inputArray in original
@@ -240,8 +240,8 @@ def main():
     print('began rays')
     n_strata=[0.0,0.0,1.0]
     dx_ground=huge
-    # ray = 1389                    # @ Pf.boomSpacing = 1
-    # for i in range(1389):
+    # ray = 3739                    # @ Pf.boomSpacing = 1
+    # for i in range(3739):
     #      ray =      next(boom_carpet)
     #      ray_counter += 1
     # #
@@ -257,7 +257,6 @@ def main():
         for I in range(Pf.IMAX):      # Making small steps along the ray path.
             # For each step we should return, location, phase and amplitude
             dx_receiver = huge
-#            print('veci',veci, f)
             # Find the closest sphere and store that as the distance
             for index in range(len(atmos.strata)-1):
 #                print(atmos.strata[index],atmos.strata[index+1],veci[2])
@@ -272,25 +271,24 @@ def main():
             strata_vd = np.dot(n_strata, f)
 #            print(strat_no,n_strata,f,strata_vd )
             if(strata_vd < 0):
+                # This means that the ray is going down
                 strata_vo = ((np.dot(n_strata, veci)) - atmos.strata[strat_no])
                 dx_strata = -strata_vo / strata_vd
 #                print('strata_vd is negative',strata_vo, atmos.strata[strat_no],dx_strata)
             #            ground_vd = ground_n[0] * f[0] + ground_n[1] * f[1] + ground_n[2] * f[2]
-                if dx_strata ==0:
-#                    print('still zero')
-                    if (strat_no+1)>=len(atmos.strata):
-                        dx_strata = Pf.h
-                    else:
-                        strata_vo = ((np.dot(n_strata, veci)) - atmos.strata[strat_no+1])
-                        dx_strata = -strata_vo / strata_vd
-
+                if dx_strata == 0 and strat_no != 0:
+                    # This means that it hit the strata in the previous iteration
+                    strata_vo = ((np.dot(n_strata, veci)) - atmos.strata[strat_no-1])
+                    dx_strata = -strata_vo / strata_vd
             elif(strat_no+1<len(atmos.strata)):
+                #this means that the ray is going up
                 strata_vd=-strata_vd
                 strata_vo = ((np.dot(np.negative(n_strata), veci)) + atmos.strata[strat_no+1])
                 dx_strata = -strata_vo / strata_vd
-#                print('Why am I doing this?')
             else:
+                # this means that we are above the top strata
                 dx_strata = Pf.h
+
             i = 0
             for R in ears:
                 # The way that tempReceiver works now, it's only used here and only should be used here.
@@ -350,6 +348,7 @@ def main():
                 dx_building = huge
             else:
                 dx_building, n_box = Gp.collision_check2(Gp.mesh, veci, f)
+#                print('nope this happens', dx_building, Gp.mesh, veci, f)
                 # for face in Gp.mesh:
                 #     dxnear, nTemp = Gp.collisionCheck(face, veci, f)
                 #     if dxnear < dx_building:
@@ -389,7 +388,7 @@ def main():
             building_hit = 0
             receiver_hit = 0
             ground_hit = 0
-#            print(veci)
+#            print(veci,f)
 #            print(dx_receiver, dx_ground, dx_building,dx_strata)
             #     Check to see if ray hits within step size
             if dx_receiver <= dx_strata or dx_ground <= dx_strata or dx_building <= dx_strata:
@@ -476,8 +475,9 @@ def main():
                     n_building = n_box / np.sqrt(n2)
                     n3 = np.dot(n_building, n_building)
                     dot1 = np.dot(f, n_building)
+#                    print('f pre',f)
                     f -= (2.0 * (dot1 / n3 * n_building))
-
+#                    print('f post',f)
 #                    length = np.sqrt(np.dot(f, f))
                     building_hit = 1
                     # We need to look into complex absorption and see if this is really the best way.
