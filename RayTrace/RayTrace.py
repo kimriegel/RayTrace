@@ -243,13 +243,13 @@ def main():
     print('began rays')
     n_strata=[0.0,0.0,1.0]
     dx_ground=huge
-    # ray = 1122                   # @ Pf.boomSpacing = 1
-    # for i in range(1395):
-    #      ray =      next(boom_carpet)
-    #      ray_counter += 1
-    # #
-    # if ray:
-    for ray in boom_carpet:              # Written like this for readability
+    ray = 1122                   # @ Pf.boomSpacing = 1
+    for i in range(1995):
+         ray =      next(boom_carpet)
+         ray_counter += 1
+    #
+    if ray:
+    #for ray in boom_carpet:              # Written like this for readability
         veci = ray      # initial ray position
         hit_count = 0
         double_hit = 0
@@ -381,7 +381,7 @@ def main():
             building_hit = 0
             receiver_hit = 0
             ground_hit = 0
-#            print(veci,f)
+            print(veci,f)
 #            print(dx_receiver, dx_ground, dx_building,dx_strata)
             #     Check to see if ray hits within step size
             if dx_receiver <= dx_strata or dx_ground <= dx_strata or dx_building <= dx_strata:

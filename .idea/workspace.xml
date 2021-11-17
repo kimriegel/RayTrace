@@ -25,9 +25,8 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b1cdacbb-04ed-4032-a219-5d00b79fe37b" name="Default Changelist" comment="Adding all Environment Files">
+    <list default="true" id="b1cdacbb-04ed-4032-a219-5d00b79fe37b" name="Default Changelist" comment="EVERYTHING WORKS, test runs match original Python">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Env/GeometryParser.py" beforeDir="false" afterPath="$PROJECT_DIR$/Env/GeometryParser.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RayTrace/Parameterfile.py" beforeDir="false" afterPath="$PROJECT_DIR$/RayTrace/Parameterfile.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RayTrace/RayTrace.py" beforeDir="false" afterPath="$PROJECT_DIR$/RayTrace/RayTrace.py" afterDir="false" />
     </list>
@@ -84,14 +83,6 @@
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-  </component>
-  <component name="GitSEFilterConfiguration">
-    <file-type-list>
-      <filtered-out-file-type name="LOCAL_BRANCH" />
-      <filtered-out-file-type name="REMOTE_BRANCH" />
-      <filtered-out-file-type name="TAG" />
-      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
-    </file-type-list>
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/RayTrace/RayTrace.py" root0="FORCE_HIGHLIGHTING" />
@@ -285,14 +276,7 @@
       <option name="project" value="LOCAL" />
       <updated>1636815403095</updated>
     </task>
-    <task id="LOCAL-00005" summary="Adding all Environment Files">
-      <created>1636949964759</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1636949964759</updated>
-    </task>
-    <option name="localTasksCounter" value="6" />
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TodoView">
@@ -415,8 +399,7 @@
     <MESSAGE value="updating gitignore" />
     <MESSAGE value="Still too high reflection" />
     <MESSAGE value="EVERYTHING WORKS, test runs match original Python" />
-    <MESSAGE value="Adding all Environment Files" />
-    <option name="LAST_COMMIT_MESSAGE" value="Adding all Environment Files" />
+    <option name="LAST_COMMIT_MESSAGE" value="EVERYTHING WORKS, test runs match original Python" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/.gitignore">
