@@ -16,7 +16,7 @@ time = .01
 hr = 20.0
 theta = 1.6863372
 phi = 3.44458181
-boomspacing = 0.06   # .6
+boomspacing = 0.6   # .6
 strat_height = 2.0
 type = 1
 # boomspacing= 0.035
@@ -34,8 +34,8 @@ absorbplanes = 1
 # allocate(tempalphabuilding(absorbplanes,8))
 # Find way to rephrase
 # outputfile = 'PythonTest1.txt'
-outputfile = "Strat_test_H2_S" + str(boomspacing) + ".txt"       # debugging
-graphName = "Plane_small"                                     # No not use full file extension here
+outputfile = "Test_build" + str(boomspacing) + ".txt"       # debugging
+graphName = "Test_build"                                     # No not use full file extension here
 # Will's
 # outputfile = "PythonTestEnv" + str(boomspacing) + ".txt"       # debugging
 # Turn Radiosity on or off.  This will include diffuse reflections

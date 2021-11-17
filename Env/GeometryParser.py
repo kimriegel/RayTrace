@@ -2,6 +2,8 @@
 # much of it is hardcoded, but that can all be fixes
 import numpy as np
 import pywavefront as pwf
+from typing import List
+from Parameterfile import strat_height
 from Parameterfile import ipname
 from Parameterfile import h as step_size     # temporary, just used to make sure we do not overstep
 # FaceNormals = [(-1,0,0),(0,1,0),(1,0,0),(0,-1,0),(0,0,1)]  Desired
@@ -125,13 +127,13 @@ def collision_check2(face, veci, f):
 #    print('si',si)
     return si[index], n[index]
 
-
-# ipname = 'Env/duckscaled.obj'
-ipfile = pwf.Wavefront(ipname)    # Read in geometry file
-env = pwf.ObjParser(ipfile, ipname, strict=False, encoding="utf-8",
+def mesh_build(ipname, atmosphere):
+    # ipname = 'Env/duckscaled.obj'
+    ipfile = pwf.Wavefront(ipname)    # Read in geometry file
+    env = pwf.ObjParser(ipfile, ipname, strict=False, encoding="utf-8",
                     create_materials=True, collect_faces=True, parse=True, cache=False)
-vertices = env.wavefront.vertices                                           # useful
-faces = env.mesh.faces       # list of keys to vertices
+    vertices = env.wavefront.vertices                                           # useful
+    faces = env.mesh.faces       # list of keys to vertices
 # Boxnumber = 1     # supposed to import from s, come back to this later
 # Is this similar to Will's bands?
 # Boxarraynear=np.array([10,10,0])
@@ -139,12 +141,29 @@ faces = env.mesh.faces       # list of keys to vertices
 
 # mesh = [np.array((vertices[f[0]],vertices[f[1]],vertices[f[2]])) for f in env.mesh.faces]
 
-mesh = [np.array((
-        (vertices[f[0]][0], vertices[f[0]][1], vertices[f[0]][2]),
-        (vertices[f[1]][0], vertices[f[1]][1], vertices[f[1]][2]),
-        (vertices[f[2]][0], vertices[f[2]][1], vertices[f[2]][2])))
-        for f in env.mesh.faces]    # Brute force technique just to get source to x,y,z
+    mesh = [np.array((
+            (vertices[f[0]][0], vertices[f[0]][1], vertices[f[0]][2]),
+            (vertices[f[1]][0], vertices[f[1]][1], vertices[f[1]][2]),
+            (vertices[f[2]][0], vertices[f[2]][1], vertices[f[2]][2])))
+            for f in env.mesh.faces]    # Brute force technique just to get source to x,y,z
+    height1=[]
+    strat_mesh: List[List[np.array]]= [[] for _ in range(len(atmosphere.strata))]
+    for m in mesh:
+        height1 = np.append(height1,[abs(m[0][2]-m[1][2]), abs(m[0][2]-m[2][2])])
+    min_dim = min(np.where(height1==0.,1000000,height1))
+    if (min_dim>2*strat_height):
+        print('Your minimum dimension is greater than the strata height so the building will not be stratified')
+        strat_mesh = mesh
+    else:
+        for m in mesh:
+            for s in np.arange(len(atmosphere.strata)):
+                if s < len(atmosphere.strata)-1:
+                    if(np.any((m[:,2] < atmosphere.strata[s+1]) & (m[:,2] >= atmosphere.strata[s]))):
+                        strat_mesh[s].append(m)
+    return strat_mesh,min_dim
 
+
+#Small_dim=mesh[0][0][2]
 # for face in mesh:
 #    #print(face)
 #    foo = collisionCheck(face,veci,F)

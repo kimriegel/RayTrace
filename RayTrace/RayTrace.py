@@ -111,6 +111,9 @@ def main():
 
     atmos = Atmosphere(Pf.Temp,Pf.strat_height,Pf.type)
     print('height and sound', atmos.strata, atmos.sound_speed)
+
+    #mesh Building
+    strat_mesh, min_dim = Gp.mesh_build(Pf.ipname, atmos)
     # Create initial signal
     frecuencias = initial_signal(size_fft, output_signal)      # Equivalent to inputArray in original
     air_absorb = Fun.absorption(Pf.ps, frecuencias[:, 0], Pf.hr, Pf.Temp)   # size_fft_two
@@ -330,7 +333,14 @@ def main():
             if building_hit == 1:
                 dx_building = huge
             else:
-                dx_building, n_box = Gp.collision_check2(Gp.mesh, veci, f)
+                if (min_dim > 2 * Pf.strat_height):
+                    dx_building, n_box = Gp.collision_check2(strat_mesh, veci, f)
+
+                else:
+                    if len(strat_mesh[strat_no]) == 0:
+                        dx_building=huge
+                    else:
+                        dx_building, n_box = Gp.collision_check2(strat_mesh[strat_no],veci,f)
 #                print('nope this happens', dx_building, Gp.mesh, veci, f)
                 # for face in Gp.mesh:
                 #     dxnear, nTemp = Gp.collisionCheck(face, veci, f)
