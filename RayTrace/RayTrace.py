@@ -332,10 +332,10 @@ def main():
             #   Implement Geometry parser
             if building_hit == 1:
                 dx_building = huge
+                print('this happens')
             else:
                 if (min_dim > 2 * Pf.strat_height):
                     dx_building, n_box = Gp.collision_check2(strat_mesh, veci, f)
-
                 else:
                     if len(strat_mesh[strat_no]) == 0:
                         dx_building=huge
@@ -381,8 +381,8 @@ def main():
             building_hit = 0
             receiver_hit = 0
             ground_hit = 0
-            print(veci,f)
-#            print(dx_receiver, dx_ground, dx_building,dx_strata)
+            print('veci',veci,f)
+            print('dx',dx_receiver, dx_ground, dx_building,dx_strata)
             #     Check to see if ray hits within step size
             if dx_receiver <= dx_strata or dx_ground <= dx_strata or dx_building <= dx_strata:
 
