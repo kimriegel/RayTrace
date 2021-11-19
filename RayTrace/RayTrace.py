@@ -243,13 +243,13 @@ def main():
     print('began rays')
     n_strata=[0.0,0.0,1.0]
     dx_ground=huge
-    ray = 1122                   # @ Pf.boomSpacing = 1
-    for i in range(1995):
-         ray =      next(boom_carpet)
-         ray_counter += 1
-    #
-    if ray:
-    #for ray in boom_carpet:              # Written like this for readability
+    #ray = 1122                   # @ Pf.boomSpacing = 1
+    #for i in range(1746):
+    #     ray =      next(boom_carpet)
+    #     ray_counter += 1
+
+    #if ray:
+    for ray in boom_carpet:              # Written like this for readability
         veci = ray      # initial ray position
         hit_count = 0
         double_hit = 0
@@ -332,16 +332,28 @@ def main():
             #   Implement Geometry parser
             if building_hit == 1:
                 dx_building = huge
-                print('this happens')
             else:
                 if (min_dim > 2 * Pf.strat_height):
                     dx_building, n_box = Gp.collision_check2(strat_mesh, veci, f)
                 else:
                     if len(strat_mesh[strat_no]) == 0:
                         dx_building=huge
+                        #print('this happens')
                     else:
-                        dx_building, n_box = Gp.collision_check2(strat_mesh[strat_no],veci,f)
-#                print('nope this happens', dx_building, Gp.mesh, veci, f)
+                        if f[2]<0:
+                            #print('downward')
+                            if strat_mesh[strat_no-1] == []:
+                                dx_building = huge
+                            else:
+                                dx_building, n_box = Gp.collision_check2(strat_mesh[strat_no-1],veci,f)
+                        else:
+                            #print('upward')
+                            if strat_mesh[strat_no] == []:
+                                dx_building = huge
+                            else:
+                                dx_building, n_box = Gp.collision_check2(strat_mesh[strat_no], veci, f)
+#
+            #                ('nope this happens', dx_building, Gp.mesh, veci, f)
                 # for face in Gp.mesh:
                 #     dxnear, nTemp = Gp.collisionCheck(face, veci, f)
                 #     if dxnear < dx_building:
@@ -381,8 +393,8 @@ def main():
             building_hit = 0
             receiver_hit = 0
             ground_hit = 0
-            print('veci',veci,f)
-            print('dx',dx_receiver, dx_ground, dx_building,dx_strata)
+            #print('veci',veci,f)
+            #print('dx',dx_receiver, dx_ground, dx_building,dx_strata)
             #     Check to see if ray hits within step size
             if dx_receiver <= dx_strata or dx_ground <= dx_strata or dx_building <= dx_strata:
 
