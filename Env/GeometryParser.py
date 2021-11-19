@@ -154,7 +154,6 @@ def mesh_build(ipname, atmosphere):
     for m in mesh:
         height1 = np.append(height1,[abs(m[0][2]-m[1][2]), abs(m[0][2]-m[2][2])])
     min_dim = min(np.where(height1==0.,1000000,height1))
-    print('min',min_dim,'strat', atmosphere.strata[1]-atmosphere.strata[0])
     if (min_dim>2*strat_height):
         print('Your minimum dimension is greater than the strata height so the building will not be stratified')
         strat_mesh = mesh
