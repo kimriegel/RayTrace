@@ -83,11 +83,15 @@ def face_normal_array(face):
     b = np.array(face)[:, 1]
     c = np.array(face)[:, 2]
     d = np.cross((b-a), (c-a))  # [D]irection
+    #print('points',a[1],b[1],c[1])
     d_n=np.sqrt(np.einsum("ij,ij->i",d,d))
+    #print('d',d[1],d_n[1])
     e=np.zeros([len(d),3])
+
     for i in np.arange(len(d)):
         e[i] = np.divide(d[i],d_n[i] )
 #    #print('d', len(d), len(np.sqrt(np.einsum("ij,ij->i", d, d))))
+    #print(e[1])
     return e
 
 

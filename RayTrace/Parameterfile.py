@@ -3,7 +3,7 @@
 import numpy as np
 INPUTFILE = "input/inputNASABOOM1.txt"
 RecInput = "Env/Receivers/PointReceivers.txt"
-ipname = 'Env/SimpleEMBuilding/SingleBuildingTest_3cut.obj'
+ipname = 'Env/SimpleEMBuilding/SingleBuildingTest.obj'
 Fs = 24000.0
 xinitial = 145.0
 yinitial = 35.0
@@ -16,9 +16,9 @@ time = .01
 hr = 20.0
 theta = 1.6863372
 phi = 3.44458181
-boomspacing = 0.6   # .6
+boomspacing = 0.5   # .6
 strat_height = 2.0
-type = 1
+type = 2
 # boomspacing= 0.035
 # boomspacing= 0.1
 # boomspacing= 1
@@ -27,15 +27,15 @@ ymin = 30.0
 zmin = 0.0
 xmax = -1
 ymax = 100.0
-zmax = 25.0
+zmax = 30.0
 IMAX = 75
 h = 10.0
 absorbplanes = 1
 # allocate(tempalphabuilding(absorbplanes,8))
 # Find way to rephrase
 # outputfile = 'PythonTest1.txt'
-outputfile = "Test_build3" + str(boomspacing) + ".txt"       # debugging
-graphName = "Test_build3"                                     # No not use full file extension here
+outputfile = "ISO_Comp_Build" + str(boomspacing) + ".txt"       # debugging
+graphName = "ISO_Comp_Build"                                     # No not use full file extension here
 # Will's
 # outputfile = "PythonTestEnv" + str(boomspacing) + ".txt"       # debugging
 # Turn Radiosity on or off.  This will include diffuse reflections

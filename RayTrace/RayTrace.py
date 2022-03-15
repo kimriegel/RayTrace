@@ -393,7 +393,7 @@ def main():
             building_hit = 0
             receiver_hit = 0
             ground_hit = 0
-            #print('veci',veci,f)
+            #print(veci)
             #print('dx',dx_receiver, dx_ground, dx_building,dx_strata)
             #     Check to see if ray hits within step size
             if dx_receiver <= dx_strata or dx_ground <= dx_strata or dx_building <= dx_strata:
@@ -447,7 +447,7 @@ def main():
                     tmp = np.dot(ground_n, veci)
                     if tmp != ground_d:
                         veci[2] = 0
-                    print('hit ground at ', I)
+                    #print('hit ground at ', I)
                     dot1 = np.dot(f, ground_n)
                     n2 = np.dot(ground_n, ground_n)
                     f -= (2.0 * (dot1 / n2 * ground_n))
@@ -475,7 +475,7 @@ def main():
                 if dx == dx_building:   # if the ray hits the building then change the direction and continue
                     veci += (dx * f)
                     f = f - dx * deriv_alpha / atmos.sound_speed[strat_no]
-                    print('hit building at step ', I)
+                    #print('hit building at step ', I)
                     n2 = np.dot(n_box, n_box)
                     n_building = n_box / np.sqrt(n2)
                     n3 = np.dot(n_building, n_building)
