@@ -16,12 +16,15 @@ import matplotlib.pyplot as plt  # for graphing
 import Parameterfile as Pf
 import Functions as Fun
 import ReceiverPointSource as Rps  # For receivers
-import GeometryParser as Gp
+import Env.GeometryParser as Gp
+import random as ran
+import math
 
 
 # import GeometryParser as Bg
 
-import time  # Time checks
+import time
+
 t = time.time()
 phase = 0
 amplitude = 0
@@ -80,6 +83,7 @@ def main():
     global amplitude
     global twopi
     twopi = np.pi * 2
+
     t = time.time()
 
     # port and import receiver file
@@ -203,12 +207,10 @@ def main():
 
     #        Mesh the patches for the environment.  Include patching file.
     diffusion_ground = 0.0
-    if Pf.radiosity:  # If it exists as a non-zero number
-        #    import SingleBuildingGeometry
-        diffusion = Pf.radiosity
-    else:
-        diffusion = 0.0
-
+     # If it exists as a non-zero number
+    #    import SingleBuildingGeometry
+    #diffusion = Pf.radiosity
+    
     ray_counter = 0
 
     if Pf.h < (2 * Pf.radius):
@@ -216,18 +218,20 @@ def main():
         raise SystemExit
 
     # These are for debugging, Uncomment this block and comment out the for loop below
-    # ray = 606                     # @ Pf.boomSpacing = 1
-    # for i in range(606):
-    #      ray =      next(boom_carpet)
-    #      ray_counter += 1
-    #
-    # if ray:
+    ray = 606                     # @ Pf.boomSpacing = 1
+    for i in range(606):
+         ray =      next(boom_carpet)
+         ray_counter += 1
+    
+    
     # Begin tracing
     check_direction = [0, 0, 0]
     n_box = [0, 0, 0]
     veci = np.array([0, 0, 0])
     print('began rays')
-    for ray in boom_carpet:              # Written like this for readability
+    #for ray in boom_carpet:              # Written like this for readability
+    if ray:
+
         veci = ray      # initial ray position
         hit_count = 0
         double_hit = 0
@@ -238,6 +242,7 @@ def main():
         f = np.array(f_initial)                                      # Direction
         for I in range(Pf.IMAX):      # Making small steps along the ray path.
             # For each step we should return, location, phase and amplitude
+            print(veci)
             dx_receiver = huge
             # Find the closest sphere and store that as the distance
             i = 0
@@ -391,7 +396,7 @@ def main():
                     tmp = np.dot(ground_n, veci)
                     if tmp != ground_d:
                         veci[2] = 0
-#                    print('hit ground at ', I)
+                    print('hit ground at ', I)
                     dot1 = np.dot(f, ground_n)
                     n2 = np.dot(ground_n, ground_n)
                     f -= (2.0 * (dot1 / n2 * ground_n))
@@ -418,12 +423,28 @@ def main():
     #                                        patchArray[Q, W, 7] = np.arctan(temp4.imag,temp4.real)
                 if dx == dx_building:   # if the ray hits the building then change the direction and continue
                     veci += (dx * f)
-#                    print('hit building at step ', I)
-                    n2 = np.dot(n_box, n_box)
-                    n_building = n_box / np.sqrt(n2)
-                    n3 = np.dot(n_building, n_building)
-                    dot1 = np.dot(f, n_building)
-                    f -= (2.0 * (dot1 / n3 * n_building))
+                    print('hit building at step ', I)
+                    if Pf.stochastic == 1:
+                        RanDiffuse = ran.random()
+                        if RanDiffuse <= Pf.diffusion:
+                            z1=ran.random()
+                            z2=ran.random()
+                            theta=math.acos(math.sqrt(z1))
+                            phi=2*math.pi*z2
+                            f = np.array([np.cos(phi)*np.sin(theta),np.sin(theta)*np.sin(phi),np.cos(theta)])  #direction vector
+                            print("Diffuse")
+                        else:
+                            n2 = np.dot(n_box, n_box)
+                            n_building = n_box / np.sqrt(n2)
+                            n3 = np.dot(n_building, n_building)
+                            dot1 = np.dot(f, n_building)
+                            f -= (2.0 * (dot1 / n3 * n_building))
+                    else:  
+                        n2 = np.dot(n_box, n_box)
+                        n_building = n_box / np.sqrt(n2)
+                        n3 = np.dot(n_building, n_building)
+                        dot1 = np.dot(f, n_building)
+                        f -= (2.0 * (dot1 / n3 * n_building))
 
 #                    length = np.sqrt(np.dot(f, f))
                     building_hit = 1
@@ -442,7 +463,7 @@ def main():
     #                            alpha = alpha_building[4, :]
     #                else:
                     alpha = alpha_building[0, :]
-                    update_freq(dx, alpha, diffusion, lamb, air_absorb)
+                    update_freq(dx, alpha, Pf.diffusion, lamb, air_absorb)
             else:  # If there was no interaction with buildings then proceed with one step.
                 veci += (Pf.h * f)
                 update_freq(Pf.h, alpha_nothing, 0, lamb, air_absorb)
