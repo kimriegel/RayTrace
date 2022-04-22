@@ -5,7 +5,7 @@ import numpy as np
 INPUTFILE = "input/inputNASABOOM1.txt"
 RecInput = "Env/Receivers/PointReceivers.txt"
 ipname = 'Env/SimpleEMBuilding/SingleBuildingTest.obj'
-diffusion=0.5
+diffusion= 0.10
 Fs = 24000.0
 xinitial = 145.0
 yinitial = 35.0
@@ -34,7 +34,7 @@ absorbplanes = 1
 # allocate(tempalphabuilding(absorbplanes,8))
 # Find way to rephrase
 # outputfile = 'PythonTest1.txt'
-outputfile = "PythonTestSimple" + str(diffusion)+ str(boomspacing) + "NASABoom_withdecl.txt"       # debugging
+outputfile = "PythonTestSimple" + "Diffusion010"+ "Boomspacing0035" + "NASABoom_withdecl.txt"       # debugging
 #outputfile = "PythonTestSimple"
 graphName = "TestGraph"                                  # No not use full file extension here
 # Will's
