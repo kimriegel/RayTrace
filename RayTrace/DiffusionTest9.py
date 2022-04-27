@@ -5,7 +5,7 @@ import numpy as np
 INPUTFILE = "input/inputPulse.txt"
 RecInput = "Env/Receivers/PointReceivers.txt"
 ipname = 'Env/SimpleEMBuilding/SingleBuildingTest.obj'
-diffusion= 0.10
+diffusion= 0.20
 Fs = 24000.0
 xinitial = 145.0
 yinitial = 35.0
@@ -34,7 +34,7 @@ absorbplanes = 1
 # allocate(tempalphabuilding(absorbplanes,8))
 # Find way to rephrase
 # outputfile = 'PythonTest1.txt'
-outputfile = "PythonTestSimple" + "Diffusion010"+ "Boomspacing0035" + "Pulse_withdecl.txt"       # debugging
+outputfile = "PythonTestSimple" + "Diffusion020"+ "Boomspacing0035" + "Pulse_withdecl.txt"       # debugging
 #outputfile = "PythonTestSimple"
 graphName = "TestGraph"                                  # No not use full file extension here
 # Will's
@@ -42,7 +42,7 @@ graphName = "TestGraph"                                  # No not use full file 
 # Turn Stochastic Ray Tracing  on or off.  This will include diffuse reflections
 stochastic = 1
 if stochastic == 1:
-    diffusion = 0.1
+    diffusion = 0.20
 else:
     diffusion ==  0
 # Turn on complex absorption

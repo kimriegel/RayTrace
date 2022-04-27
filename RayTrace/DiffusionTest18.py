@@ -5,7 +5,7 @@ import numpy as np
 INPUTFILE = "input/inputNWAVE.txt"
 RecInput = "Env/Receivers/PointReceivers.txt"
 ipname = 'Env/SimpleEMBuilding/SingleBuildingTest.obj'
-diffusion=0.5
+diffusion=1
 Fs = 24000.0
 xinitial = 145.0
 yinitial = 35.0
@@ -21,7 +21,7 @@ phi = 3.44458181
 #boomspacing = 0.6   # .6
 # boomspacing= 0.035
 # boomspacing= 0.1
-boomspacing= 0.0035
+boomspacing= 0.6
 xmin = -1
 ymin = 30.0
 zmin = 0.0
@@ -34,7 +34,7 @@ absorbplanes = 1
 # allocate(tempalphabuilding(absorbplanes,8))
 # Find way to rephrase
 # outputfile = 'PythonTest1.txt'
-outputfile = "PythonTestSimple" + "Diffusion05"+ "Boomspacing0035" + "NWAVE_withdecl.txt"       # debugging
+outputfile = "PythonTestSimple" + "Diffusion1"+ "Boomspacing06" + "NWAVE_withdecl.txt"       # debugging
 #outputfile = "PythonTestSimple"
 graphName = "TestGraph"                                  # No not use full file extension here
 # Will's

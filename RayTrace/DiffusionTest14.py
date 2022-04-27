@@ -21,7 +21,7 @@ phi = 3.44458181
 #boomspacing = 0.6   # .6
 # boomspacing= 0.035
 # boomspacing= 0.1
-boomspacing= 0.2
+boomspacing= 0.1
 xmin = -1
 ymin = 30.0
 zmin = 0.0
@@ -34,7 +34,7 @@ absorbplanes = 1
 # allocate(tempalphabuilding(absorbplanes,8))
 # Find way to rephrase
 # outputfile = 'PythonTest1.txt'
-outputfile = "PythonTestSimple" + "Diffusion1"+ "Boomspacing02" + "Pulse_withdecl.txt"       # debugging
+outputfile = "PythonTestSimple" + "Diffusion1"+ "Boomspacing01" + "Pulse_withdecl.txt"       # debugging
 #outputfile = "PythonTestSimple"
 graphName = "TestGraph"                                  # No not use full file extension here
 # Will's
