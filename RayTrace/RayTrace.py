@@ -243,10 +243,10 @@ def main():
     print('began rays')
     n_strata=[0.0,0.0,1.0]
     dx_ground=huge
-    #ray = 1122                   # @ Pf.boomSpacing = 1
-    #for i in range(1746):
-    #     ray =      next(boom_carpet)
-    #     ray_counter += 1
+    ray = 1122                   # @ Pf.boomSpacing = 1
+    for i in range(1746):
+         ray =      next(boom_carpet)
+         ray_counter += 1
 
     #if ray:
     for ray in boom_carpet:              # Written like this for readability
@@ -338,16 +338,16 @@ def main():
                 else:
                     if len(strat_mesh[strat_no]) == 0:
                         dx_building=huge
-                        #print('this happens')
+                        print('this happens')
                     else:
                         if f[2]<0:
-                            #print('downward')
+                            print('downward')
                             if strat_mesh[strat_no-1] == []:
                                 dx_building = huge
                             else:
                                 dx_building, n_box = Gp.collision_check2(strat_mesh[strat_no-1],veci,f)
                         else:
-                            #print('upward')
+                            print('upward')
                             if strat_mesh[strat_no] == []:
                                 dx_building = huge
                             else:
@@ -393,13 +393,13 @@ def main():
             building_hit = 0
             receiver_hit = 0
             ground_hit = 0
-            #print(veci)
-            #print('dx',dx_receiver, dx_ground, dx_building,dx_strata)
+            print(veci)
+            print('dx',dx_receiver, dx_ground, dx_building,dx_strata)
             #     Check to see if ray hits within step size
             if dx_receiver <= dx_strata or dx_ground <= dx_strata or dx_building <= dx_strata:
 
                 dx = min(dx_receiver, dx_ground, dx_building)
-                #print('dx',dx)
+                print('dx',dx)
                 #  if the ray hits a receiver, store in an array.  If the ray hits two, create two arrays to store in.
         #        for R in ears:
                 if dx == dx_receiver:
@@ -447,7 +447,7 @@ def main():
                     tmp = np.dot(ground_n, veci)
                     if tmp != ground_d:
                         veci[2] = 0
-                    #print('hit ground at ', I)
+                    print('hit ground at ', I)
                     dot1 = np.dot(f, ground_n)
                     n2 = np.dot(ground_n, ground_n)
                     f -= (2.0 * (dot1 / n2 * ground_n))
@@ -475,7 +475,7 @@ def main():
                 if dx == dx_building:   # if the ray hits the building then change the direction and continue
                     veci += (dx * f)
                     f = f - dx * deriv_alpha / atmos.sound_speed[strat_no]
-                    #print('hit building at step ', I)
+                    print('hit building at step ', I)
                     n2 = np.dot(n_box, n_box)
                     n_building = n_box / np.sqrt(n2)
                     n3 = np.dot(n_building, n_building)
