@@ -1,9 +1,9 @@
 #     BigBertha
 #   Same as NASABOOM1EMParameterFile
 import numpy as np
-INPUTFILE = "input/inputNASABOOM1.txt"
-RecInput = "Env/Receivers/PointReceivers.txt"
-ipname = 'Env/SimpleEMBuilding/SingleBuildingTest.obj'
+INPUTFILE = "inputNASABOOM1.txt"
+RecInput = "Receivers/PointReceivers.txt"
+ipname = 'SimpleEMBuilding/SingleBuildingTest.obj'
 Fs = 24000.0
 xinitial = 145.0
 yinitial = 35.0
@@ -16,7 +16,7 @@ time = .01
 hr = 20.0
 theta = 1.6863372
 phi = 3.44458181
-boomspacing = 1   # .6
+boomspacing = 0.6   # 1
 strat_height = 2.0
 type = 2
 # boomspacing= 0.035
@@ -39,7 +39,7 @@ graphName = "ISO_Comp_Build"                                     # No not use fu
 # Will's
 # outputfile = "PythonTestEnv" + str(boomspacing) + ".txt"       # debugging
 # Turn Radiosity on or off.  This will include diffuse reflections
-radiosity = 0
+radiosity = 1
 # Turn on complex absorption
 complexabsorption = 0
 
@@ -56,7 +56,7 @@ tempalphaground = [0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.03, 0.03]
 # 63 and 8000
 tempalphabuilding[0, :] = [0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.03, 0.03]
 # what percentage of the energy is reflected diffusely between 0,1
-percentdiffuse = 0.0
+percentdiffuse = 1.0
 
 # Broken all down to:
 # complexabsorption = 1

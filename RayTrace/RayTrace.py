@@ -17,7 +17,8 @@ import Functions as Fun
 import ReceiverPointSource as Rps  # For receivers
 import GeometryParser as Gp
 from Atmosphere import Atmosphere
-
+import random
+import math
 
 # import GeometryParser as Bg
 
@@ -230,10 +231,10 @@ def main():
         raise SystemExit
 
     # These are for debugging, Uncomment this block and comment out the for loop below
-    # ray = 1389                    # @ Pf.boomSpacing = 1
-    # for i in range(606):
-    #      ray =      next(boom_carpet)
-    #      ray_counter += 1
+    ray = 1389                    # @ Pf.boomSpacing = 1
+    for i in range(606):
+          ray =      next(boom_carpet)
+          ray_counter += 1
     #
     # if ray:
     # Begin tracing
@@ -243,10 +244,10 @@ def main():
     print('began rays')
     n_strata=[0.0,0.0,1.0]
     dx_ground=huge
-    ray = 1122                   # @ Pf.boomSpacing = 1
-    for i in range(1746):
-         ray =      next(boom_carpet)
-         ray_counter += 1
+    #ray = 1122                   # @ Pf.boomSpacing = 1
+    #for i in range(1746):
+      #   ray =      next(boom_carpet)
+       #  ray_counter += 1
 
     #if ray:
     for ray in boom_carpet:              # Written like this for readability
@@ -393,8 +394,8 @@ def main():
             building_hit = 0
             receiver_hit = 0
             ground_hit = 0
-            print(veci)
-            print('dx',dx_receiver, dx_ground, dx_building,dx_strata)
+            #print(veci)
+            #print('dx',dx_receiver, dx_ground, dx_building,dx_strata)
             #     Check to see if ray hits within step size
             if dx_receiver <= dx_strata or dx_ground <= dx_strata or dx_building <= dx_strata:
 
@@ -403,7 +404,7 @@ def main():
                 #  if the ray hits a receiver, store in an array.  If the ray hits two, create two arrays to store in.
         #        for R in ears:
                 if dx == dx_receiver:
-                    print('Ray ', ray_counter, ' hit receiver ', R.recNumber)
+                    #print('Ray ', ray_counter, ' hit receiver ', R.recNumber)
                     veci = veci + (dx * f)
                     f = f-dx*deriv_alpha/atmos.sound_speed[strat_no]
                     receiver_hit = 1
@@ -476,12 +477,41 @@ def main():
                     veci += (dx * f)
                     f = f - dx * deriv_alpha / atmos.sound_speed[strat_no]
                     print('hit building at step ', I)
-                    n2 = np.dot(n_box, n_box)
-                    n_building = n_box / np.sqrt(n2)
-                    n3 = np.dot(n_building, n_building)
-                    dot1 = np.dot(f, n_building)
-#                    print('f pre',f)
-                    f -= (2.0 * (dot1 / n3 * n_building))
+                    if Pf.radiosity == 1:
+                        diff = random.uniform(0,1)
+                        if diff <= Pf.percentdiffuse:
+                            z1 = random.uniform(0,1)
+                            z2 = random.uniform(0,1)
+                            theta = (math.acos(math.sqrt(z1)))
+                            fi = 2 * np.pi * z2
+                            direction1 = [math.cos(fi),math.sin(fi),1]
+                            direction2 = [math.sin(theta),math.sin(theta),math.cos(theta)]
+                            d1 = np.array(direction1)
+                            d2 = np.array(direction2)
+                            direction = d1 * d2
+                            abnormal = [0,1,0]
+                            #prop = np.dot(abnormal,n_strata)
+                            #if prop > 0.9:
+                            #    abnormal = [1,0,0]
+                            tperp = np.cross(abnormal,n_strata)
+                            sperp = np.cross(tperp,n_strata)
+                            s1st = direction[0] * np.array(sperp)
+                            t1st = direction[1] * np.array(tperp)
+                            n1st = direction[2] * np.array(n_strata)
+                            f = s1st + t1st + n1st
+                        else:
+                            n2 = np.dot(n_box, n_box)
+                            n_building = n_box / np.sqrt(n2)
+                            n3 = np.dot(n_building, n_building)
+                            dot1 = np.dot(f, n_building)
+                            f -= (2.0 * (dot1 / n3 * n_building))
+                        
+                    else:
+                        n2 = np.dot(n_box, n_box)
+                        n_building = n_box / np.sqrt(n2)
+                        n3 = np.dot(n_building, n_building)
+                        dot1 = np.dot(f, n_building)
+                        f -= (2.0 * (dot1 / n3 * n_building))
 #                    print('f post',f)
 #                    length = np.sqrt(np.dot(f, f))
                     building_hit = 1
@@ -506,6 +536,7 @@ def main():
                 f = f - dx_strata * deriv_alpha / atmos.sound_speed[strat_no]
                 update_freq(dx_strata, alpha_nothing, 0, all_lamb[strat_no,:], air_absorb)
         ray_counter += 1
+        print('f post',f)
         print('finished ray', ray_counter)
 
     # Radiosity removed for readability
