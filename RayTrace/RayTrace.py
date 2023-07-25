@@ -103,6 +103,7 @@ def main():
     k = len(input_signal)
     # masque = input_signal > 0
     huge = 1000000.0
+    temp_counter=0
 
     # Allocate the correct size to the signal and fft arrays
     size_fft = k
@@ -220,7 +221,7 @@ def main():
     diffusion_ground = 0.0
     if Pf.radiosity:  # If it exists as a non-zero number
         #    import SingleBuildingGeometry
-        diffusion = Pf.radiosity
+        diffusion = Pf.percentdiffuse
     else:
         diffusion = 0.0
 
@@ -231,10 +232,10 @@ def main():
         raise SystemExit
 
     # These are for debugging, Uncomment this block and comment out the for loop below
-    ray = 1389                    # @ Pf.boomSpacing = 1
-    for i in range(606):
-          ray =      next(boom_carpet)
-          ray_counter += 1
+    #ray = 1389                    # @ Pf.boomSpacing = 1
+    #for i in range(606):
+          #ray =      next(boom_carpet)
+          #ray_counter += 1
     #
     # if ray:
     # Begin tracing
@@ -245,22 +246,28 @@ def main():
     n_strata=[0.0,0.0,1.0]
     dx_ground=huge
     #ray = 1122                   # @ Pf.boomSpacing = 1
-    #for i in range(1746):
-      #   ray =      next(boom_carpet)
-       #  ray_counter += 1
+    #for i in range(1122):      #limit 6100
+         #ray =      next(boom_carpet)
+         #ray_counter += 1
+    
+    building_count = 0
+    diff_count = 0
+    spec_count = 0
 
     #if ray:
     for ray in boom_carpet:              # Written like this for readability
-        veci = ray      # initial ray position
+        veci = ray  # initial ray position
         hit_count = 0
         double_hit = 0
         amplitude = frecuencias[:, 1]/normalization
         phase = frecuencias[:, 2]
 
-        f = np.array(f_initial)                                      # Direction
+        f = np.array(f_initial)
+        # Direction
         for I in range(Pf.IMAX):      # Making small steps along the ray path.
             # For each step we should return, location, phase and amplitude
             dx_receiver = huge
+            #print(veci)
             # Find the closest sphere and store that as the distance
             for index in range(len(atmos.strata)-1):
 #                print(atmos.strata[index],atmos.strata[index+1],veci[2])
@@ -273,11 +280,13 @@ def main():
 
             #     Check Intersection with ground plane
             strata_vd = np.dot(n_strata, f)
+            #print(strata_vd)
 #            print(strat_no,n_strata,f,strata_vd )
             if(strata_vd < 0):
                 # This means that the ray is going down
                 strata_vo = ((np.dot(n_strata, veci)) - atmos.strata[strat_no])
                 dx_strata = -strata_vo / strata_vd
+                #print("Start:",dx_strata)
 #                print('strata_vd is negative',strata_vo, atmos.strata[strat_no],dx_strata)
             #            ground_vd = ground_n[0] * f[0] + ground_n[1] * f[1] + ground_n[2] * f[2]
                 if dx_strata == 0 and strat_no != 0:
@@ -333,22 +342,23 @@ def main():
             #   Implement Geometry parser
             if building_hit == 1:
                 dx_building = huge
+                    #ax.plot3D(xcoor,ycoor,zcoor,color='r')
             else:
                 if (min_dim > 2 * Pf.strat_height):
                     dx_building, n_box = Gp.collision_check2(strat_mesh, veci, f)
                 else:
                     if len(strat_mesh[strat_no]) == 0:
                         dx_building=huge
-                        print('this happens')
+                        #print('this happens')
                     else:
                         if f[2]<0:
-                            print('downward')
+                            #print('downward')
                             if strat_mesh[strat_no-1] == []:
                                 dx_building = huge
                             else:
                                 dx_building, n_box = Gp.collision_check2(strat_mesh[strat_no-1],veci,f)
                         else:
-                            print('upward')
+                            #print('upward')
                             if strat_mesh[strat_no] == []:
                                 dx_building = huge
                             else:
@@ -389,6 +399,7 @@ def main():
             if(ground_hit == 1):
                 dx_ground=huge
             elif (veci[2] == 0.0):
+                #print('Switch')
                 dx_ground = dx_strata
 
             building_hit = 0
@@ -397,10 +408,12 @@ def main():
             #print(veci)
             #print('dx',dx_receiver, dx_ground, dx_building,dx_strata)
             #     Check to see if ray hits within step size
+            #print('dx pre',dx_receiver, dx_ground, dx_building,dx_strata)
+
             if dx_receiver <= dx_strata or dx_ground <= dx_strata or dx_building <= dx_strata:
 
                 dx = min(dx_receiver, dx_ground, dx_building)
-                print('dx',dx)
+                #print('dx',dx)
                 #  if the ray hits a receiver, store in an array.  If the ray hits two, create two arrays to store in.
         #        for R in ears:
                 if dx == dx_receiver:
@@ -448,7 +461,7 @@ def main():
                     tmp = np.dot(ground_n, veci)
                     if tmp != ground_d:
                         veci[2] = 0
-                    print('hit ground at ', I)
+                    #print('hit ground at ', I)
                     dot1 = np.dot(f, ground_n)
                     n2 = np.dot(ground_n, ground_n)
                     f -= (2.0 * (dot1 / n2 * ground_n))
@@ -473,13 +486,16 @@ def main():
     #                                        temp4 = temp2 + temp3
     #                                        patchArray[Q, W, 6] = abs(temp4)
     #                                        patchArray[Q, W, 7] = np.arctan(temp4.imag,temp4.real)
-                if dx == dx_building:   # if the ray hits the building then change the direction and continue
+                if dx == dx_building:  # if the ray hits the building then change the direction and continue
+                    building_count += 1
                     veci += (dx * f)
                     f = f - dx * deriv_alpha / atmos.sound_speed[strat_no]
-                    print('hit building at step ', I)
+                    #print('original f',f)
+                    #print('hit building at step ', I)
                     if Pf.radiosity == 1:
                         diff = random.uniform(0,1)
                         if diff <= Pf.percentdiffuse:
+                            diff_count += 1
                             z1 = random.uniform(0,1)
                             z2 = random.uniform(0,1)
                             theta = (math.acos(math.sqrt(z1)))
@@ -490,21 +506,24 @@ def main():
                             d2 = np.array(direction2)
                             direction = d1 * d2
                             abnormal = [0,1,0]
-                            #prop = np.dot(abnormal,n_strata)
-                            #if prop > 0.9:
-                            #    abnormal = [1,0,0]
-                            tperp = np.cross(abnormal,n_strata)
-                            sperp = np.cross(tperp,n_strata)
+                            prop = np.dot(abnormal,n_box)
+                            if prop > 0.9:
+                                abnormal = [1,0,0]
+                            tperp = np.cross(abnormal,n_box)
+                            sperp = np.cross(tperp,n_box)
                             s1st = direction[0] * np.array(sperp)
                             t1st = direction[1] * np.array(tperp)
-                            n1st = direction[2] * np.array(n_strata)
+                            n1st = direction[2] * np.array(n_box)
                             f = s1st + t1st + n1st
+                           # print('newf for diffuse', f)
                         else:
+                            spec_count += 1
                             n2 = np.dot(n_box, n_box)
                             n_building = n_box / np.sqrt(n2)
                             n3 = np.dot(n_building, n_building)
                             dot1 = np.dot(f, n_building)
                             f -= (2.0 * (dot1 / n3 * n_building))
+                            #print('new f for spec',f)
                         
                     else:
                         n2 = np.dot(n_box, n_box)
@@ -536,14 +555,33 @@ def main():
                 f = f - dx_strata * deriv_alpha / atmos.sound_speed[strat_no]
                 update_freq(dx_strata, alpha_nothing, 0, all_lamb[strat_no,:], air_absorb)
         ray_counter += 1
-        print('f post',f)
-        print('finished ray', ray_counter)
-
+        temp_counter += 1
+        if (temp_counter == 10000):
+            temp_counter = 0
+            print('finish ray', ray_counter)
+       # print('f post',f)
+        #print('finished ray', ray_counter)
+    #ax.plot3D(xcoor[0],ycoor[0],zcoor[0])
+    #plt.show()
     # Radiosity removed for readability
 
     # Reconstruct the time signal and print to output file
     for R in ears:
         R.time_reconstruct(size_fft)
+
+    #s = len(xcoor)
+    #putty = Pf.putty
+    #with open(putty, 'a') as file:
+        #while s > 0:
+            #print('\t%f\t%f\t%f\t%f' % (xcoor, str(ycoor), str(zcoor)), file=putty)
+        #file.write("xcoor"+"\n"+str(xcoor)+"\n")
+        #file.write("ycoor"+"\n"+str(ycoor)+'\n')
+        #file.write("zcoor"+"\n"+str(zcoor)+'\n')
+            
+    print('hit the building',building_count)
+    print('diffusion rays =',diff_count)
+    print('spectular rays =',spec_count)
+    print('Percent diffuse', Pf.percentdiffuse)
 
     print('Writing to output file')
     fileid = Pf.outputfile
@@ -594,3 +632,5 @@ def main():
         plt.savefig(Pf.graphName + str(i) + '.png', facecolor='#e6e6fa')  # lavender
         print('Saved receiver', i)
     print('Graph time: ', time.time() - t)
+    
+
