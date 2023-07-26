@@ -65,7 +65,10 @@ def update_freq(dx_update, alpha_update, diffusion_update, lamb, air_absorb):
     drei = masque * zwei - twopi
     phase = np.where(masque, drei, ein)
     amplitude *= ((1.0 - alpha_update) * (1.0 - diffusion_update) * np.exp(-air_absorb * dx_update))
-
+    #print('alpha update', alpha_update)
+    #print('diffusion update', diffusion_update)
+    #print('air_absorb', air_absorb)
+    #print('dx update', dx_update)
 
 def vex(d, f_initial, y, z):
     """The x coordinate of the ray 
@@ -136,6 +139,7 @@ def main():
     zeta_initial = np.cos(Pf.theta)
     length = np.sqrt(xi_initial * xi_initial + n_initial * n_initial + zeta_initial * zeta_initial)
     f_initial = np.array([xi_initial, n_initial, zeta_initial])
+    print('initial direction vector' ,f_initial)
     d4 = np.dot(f_initial, v_initial)   # equivalent to tmp
     #       Create initial boom array
     #  Roll this all into a function later
@@ -244,18 +248,21 @@ def main():
     n_strata=[0.0,0.0,1.0]
     dx_ground=huge
     #ray = 1122                   # @ Pf.boomSpacing = 1
-    #for i in range(1746):
-    #     ray =      next(boom_carpet)
-    #     ray_counter += 1
-
-    #if ray:
-    for ray in boom_carpet:              # Written like this for readability
+    for i in range(1122):
+         #print(i)
+         ray =      next(boom_carpet)
+         ray_counter += 1
+    print(ray,i)
+    if i==1121:
+    #for ray in boom_carpet:              # Written like this for readability
         veci = ray      # initial ray position
         hit_count = 0
         double_hit = 0
         amplitude = frecuencias[:, 1]/normalization
+        #print('AMPLITUDE' , amplitude) #checking to make sure this prints out the amplitude 
         phase = frecuencias[:, 2]
-
+        #print('PHASE' , phase) #checking to make sure this prints out the phase
+        print('Initial Position', veci)
         f = np.array(f_initial)                                      # Direction
         for I in range(Pf.IMAX):      # Making small steps along the ray path.
             # For each step we should return, location, phase and amplitude
@@ -269,7 +276,6 @@ def main():
             if veci[2] >= atmos.strata[len(atmos.strata)-1]:
                     strat_no = len(atmos.strata)-1
                     deriv_alpha = 0
-
             #     Check Intersection with ground plane
             strata_vd = np.dot(n_strata, f)
 #            print(strat_no,n_strata,f,strata_vd )
@@ -277,7 +283,7 @@ def main():
                 # This means that the ray is going down
                 strata_vo = ((np.dot(n_strata, veci)) - atmos.strata[strat_no])
                 dx_strata = -strata_vo / strata_vd
-#                print('strata_vd is negative',strata_vo, atmos.strata[strat_no],dx_strata)
+                #print('strata_vd is negative',strata_vo, atmos.strata[strat_no],dx_strata)
             #            ground_vd = ground_n[0] * f[0] + ground_n[1] * f[1] + ground_n[2] * f[2]
                 if dx_strata == 0 and strat_no != 0:
                     # This means that it hit the strata in the previous iteration
@@ -291,6 +297,7 @@ def main():
             else:
                 # this means that we are above the top strata
                 dx_strata = Pf.h
+            #print('dx_strata' , dx_strata)
 
             i = 0
             for R in ears:
@@ -359,8 +366,8 @@ def main():
                 #     if dxnear < dx_building:
                 #         dx_building1 = dxnear
                 #         n_box1 = nTemp
-                # if (ray_counter == 606):
-                #     print('original',dx_building,n_box)
+                #if (ray_counter == 606):
+                #print('original',dx_building,n_box)
 
             # This part doesn't really work well.  We have not incorporated it.
             # Eventually all interactions will be triangles anyway so I'm leaving it here to be updated.
@@ -393,7 +400,9 @@ def main():
             building_hit = 0
             receiver_hit = 0
             ground_hit = 0
-            #print(veci)
+            #print('NextRay',veci) #This was commented but I am uncommenting it on 6/27/23 to check ray position
+
+            
             #print('dx',dx_receiver, dx_ground, dx_building,dx_strata)
             #     Check to see if ray hits within step size
             if dx_receiver <= dx_strata or dx_ground <= dx_strata or dx_building <= dx_strata:
@@ -405,7 +414,9 @@ def main():
                 if dx == dx_receiver:
                     print('Ray ', ray_counter, ' hit receiver ', R.recNumber)
                     veci = veci + (dx * f)
+                    print('Ray hit Receiver' , veci)
                     f = f-dx*deriv_alpha/atmos.sound_speed[strat_no]
+                    #print('Direction Vector Receiver', f)
                     receiver_hit = 1
                     # checkDirection = f
                     # if double_hit == 1:
@@ -440,22 +451,30 @@ def main():
                     #      Using objects may circumvent the need to have this, but it stays for now
                     #      count+=1
                     # count+=1
+                    #print('PHASE RECEIVER HIT', phase)
+                    #print('AMPLTITUDE RECEIVER HIT', amplitude)
 
                 if abs(dx - dx_ground) < 10.0**(-13.0):  # If the ray hits the ground then bounce and continue
                     veci += (dx_ground * f)
+                    print('Ray hit ground', veci)
                     f = f - dx * deriv_alpha / atmos.sound_speed[strat_no]
+                    #print('Direction Vector Ground Hit', f)
                     tmp = np.dot(ground_n, veci)
                     if tmp != ground_d:
                         veci[2] = 0
-                    #print('hit ground at ', I)
+                    print('HIT GROUND AT ', I)
                     dot1 = np.dot(f, ground_n)
                     n2 = np.dot(ground_n, ground_n)
+                    #print('pre ground f', f)
                     f -= (2.0 * (dot1 / n2 * ground_n))
+                    #print('post ground f', f)
 #                    length = np.sqrt(np.dot(f, f))
                     ground_hit = 1
 #                    twoPiDx = np.pi * 2 * dx_ground
                     #     Loop through all the frequencies
                     update_freq(dx_ground, alpha_ground, diffusion_ground, all_lamb[strat_no,:], air_absorb)
+                    #print("PHASE GROUND HIT", phase)
+                    #print('AMPLITUDE GROUND HIT', amplitude)
     #                if Pf.radiosity == 1 and (diffusion_ground != 0.0):
     #                    for Q in range(0, PatchNo):
     #                        if formFactors[0, Q, 1] == 1:
@@ -474,15 +493,20 @@ def main():
     #                                        patchArray[Q, W, 7] = np.arctan(temp4.imag,temp4.real)
                 if dx == dx_building:   # if the ray hits the building then change the direction and continue
                     veci += (dx * f)
+                    print('Ray hit building', veci)
                     f = f - dx * deriv_alpha / atmos.sound_speed[strat_no]
-                    #print('hit building at step ', I)
+                    #print('dx' , dx)
+                    #print('deriv_alpha', deriv_alpha)
+                    #print('atmos' , atmos.sound_speed)
+                    #print('Direction Vector building hit', f)
+                    print('HIT BUILDING AT STEP ', I)
                     n2 = np.dot(n_box, n_box)
                     n_building = n_box / np.sqrt(n2)
                     n3 = np.dot(n_building, n_building)
                     dot1 = np.dot(f, n_building)
-#                    print('f pre',f)
+                    #print('f pre',f)
                     f -= (2.0 * (dot1 / n3 * n_building))
-#                    print('f post',f)
+                    #print('f post',f)
 #                    length = np.sqrt(np.dot(f, f))
                     building_hit = 1
                     # We need to look into complex absorption and see if this is really the best way.
@@ -500,14 +524,24 @@ def main():
     #                            alpha = alpha_building[4, :]
     #                else:
                     alpha = alpha_building[0, :]
+                    print('alpha' , alpha)
                     update_freq(dx, alpha, diffusion, all_lamb[strat_no,:], air_absorb)
+                    #print('AMPLITUDE BUILDING HIT', amplitude)
+                    #print('PHASE BUILDING HIT', phase)
             else:  # If there was no interaction with buildings then proceed with one step.
                 veci += (dx_strata * f)
                 f = f - dx_strata * deriv_alpha / atmos.sound_speed[strat_no]
+                #print('Direction Vector Normal', f)
                 update_freq(dx_strata, alpha_nothing, 0, all_lamb[strat_no,:], air_absorb)
+                #print('DISTANCE', dx_strata )
+                #print('LAMBDA' , lamb)
+                #print('NORMAL phase', phase)
         ray_counter += 1
-        print('finished ray', ray_counter)
+        tenthou = divmod(ray_counter,10000)
+        #if(tenthou[1]==0):
 
+        print('finished ray', ray_counter)
+        
     # Radiosity removed for readability
 
     # Reconstruct the time signal and print to output file
@@ -544,7 +578,7 @@ def main():
         i = R.recNumber
         # plt.figure(i)
         # plt.figure(num = i, figsize=(19.20, 10.80), dpi=120, facecolor='#eeeeee', edgecolor='r')   # grey
-        # plt.figure(num = i, figsize=(19.20, 10.80), dpi=120, facecolor='#e0dae6', edgecolor='r')   # muted lilac
+        #plt.figure(num = i, figsize=(19.20, 10.80), dpi=120, facecolor='#e0dae6', edgecolor='r')   # muted lilac
         plt.figure(num=i, figsize=(19.20, 10.80), dpi=120, facecolor='#e6e6fa', edgecolor='r')  # lavender
         # plt.plot(time_array,pressure,'r--')
         plt.grid(True)
@@ -563,3 +597,4 @@ def main():
         plt.savefig(Pf.graphName + str(i) + '.png', facecolor='#e6e6fa')  # lavender
         print('Saved receiver', i)
     print('Graph time: ', time.time() - t)
+

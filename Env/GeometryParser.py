@@ -49,6 +49,7 @@ def collision_check(face, veci, f):
     huge = 1000000.0
 #    F = np.array(F)         # hotfix
     n = face_normal(face)    # compute plane normal
+
     # Finding intersection [P]oint
     # parallel check
     n_f = n.dot(f)        # rayDir in notes, plane normal dot F
@@ -83,7 +84,7 @@ def face_normal_array(face):
     b = np.array(face)[:, 1]
     c = np.array(face)[:, 2]
     d = np.cross((b-a), (c-a))  # [D]irection
-    #print('points',a[1],b[1],c[1])
+    print('points',a[1],b[1],c[1])
     d_n=np.sqrt(np.einsum("ij,ij->i",d,d))
     #print('d',d[1],d_n[1])
     e=np.zeros([len(d),3])
@@ -92,6 +93,15 @@ def face_normal_array(face):
         e[i] = np.divide(d[i],d_n[i] )
 #    #print('d', len(d), len(np.sqrt(np.einsum("ij,ij->i", d, d))))
     #print(e[1])
+
+        if(d_n[i]==0.0):
+            print('uh oh')
+            print('a', a[i])
+            print('b', b[i])
+            print('c', c[i])
+            print('d', d[i])
+            #print(d_n[i])
+            #print(d[i])
     return e
 
 
