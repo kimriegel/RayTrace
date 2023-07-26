@@ -129,6 +129,13 @@ class Receiver:
             # time signal
         return 
 
+    #@classmethod
+    #def row:
+     #   #trying to just print the x,y,& z coordinates into putty
+      #  putty.write('xcoor ycoor zcoor')
+       # for R in cls.rList:
+        #    print('\t%f\t%f\t%f\t%f' % (veci[0], veci[1], veci[2]), file=putty)
+
     @classmethod
     def initialize(cls, ipfile):
 
