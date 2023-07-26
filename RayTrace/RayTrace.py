@@ -10,8 +10,10 @@
 # Dr. Riegel, William Costa, and George Seaton porting program from Fortran to python
 
 # Initialize variables and functions
+import sys
 import numpy as np  # matrices and arrays
 import matplotlib.pyplot as plt  # for graphing
+
 import Parameterfile as Pf
 import Functions as Fun
 import ReceiverPointSource as Rps  # For receivers
@@ -89,6 +91,7 @@ def main():
     # Initialize counters
     xj = complex(0.0, 1.0)
     radius2 = Pf.radius**2
+    temp_counter=0
     ray_sum = 0
 
     # Initialize receiver variables
@@ -506,7 +509,10 @@ def main():
                 f = f - dx_strata * deriv_alpha / atmos.sound_speed[strat_no]
                 update_freq(dx_strata, alpha_nothing, 0, all_lamb[strat_no,:], air_absorb)
         ray_counter += 1
-        print('finished ray', ray_counter)
+        temp_counter += 1
+        if (temp_counter ==10000):
+            temp_counter =0
+            print('finished ray', ray_counter)
 
     # Radiosity removed for readability
 

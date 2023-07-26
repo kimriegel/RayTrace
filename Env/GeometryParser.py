@@ -83,15 +83,10 @@ def face_normal_array(face):
     b = np.array(face)[:, 1]
     c = np.array(face)[:, 2]
     d = np.cross((b-a), (c-a))  # [D]irection
-    #print('points',a[1],b[1],c[1])
     d_n=np.sqrt(np.einsum("ij,ij->i",d,d))
-    #print('d',d[1],d_n[1])
     e=np.zeros([len(d),3])
-
     for i in np.arange(len(d)):
-        e[i] = np.divide(d[i],d_n[i] )
-#    #print('d', len(d), len(np.sqrt(np.einsum("ij,ij->i", d, d))))
-    #print(e[1])
+        e[i] = np.divide(d[i],d_n[i])
     return e
 
 
@@ -104,6 +99,7 @@ def collision_check2(face, veci, f):
     si = np.array([])
     tmp = np.zeros([3, len(face), 3])
     huge = 1000000.0
+    #print('face',face)
     n = face_normal_array(face)    # compute plane normal
 
     #print('n',n, face)
@@ -137,10 +133,13 @@ def collision_check2(face, veci, f):
 def mesh_build(ipname, atmosphere):
     # ipname = 'Env/duckscaled.obj'
     ipfile = pwf.Wavefront(ipname)    # Read in geometry file
+    print(ipname)
     env = pwf.ObjParser(ipfile, ipname, strict=False, encoding="utf-8",
                     create_materials=True, collect_faces=True, parse=True, cache=False)
+
     vertices = env.wavefront.vertices                                           # useful
     faces = env.mesh.faces       # list of keys to vertices
+    #print(faces)
 # Boxnumber = 1     # supposed to import from s, come back to this later
 # Is this similar to Will's bands?
 # Boxarraynear=np.array([10,10,0])
@@ -154,6 +153,7 @@ def mesh_build(ipname, atmosphere):
             (vertices[f[2]][0], vertices[f[2]][1], vertices[f[2]][2])))
             for f in env.mesh.faces]    # Brute force technique just to get source to x,y,z
     height1=[]
+    #print(mesh)
     strat_mesh: List[List[np.array]]= [[] for _ in range(len(atmosphere.strata))]
     for m in mesh:
         height1 = np.append(height1,[abs(m[0][2]-m[1][2]), abs(m[0][2]-m[2][2])])
