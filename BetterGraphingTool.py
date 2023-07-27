@@ -3,6 +3,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+c = 'OrigFor_radiosity_50_006.dat' #Putting Fortran file into a variable for function
+
+a = 'ISO_Comp_Build_PD0.50.06.txt'  #putting Python file into a variable for function
+
+#Python Reader Function 
 def PythonReader(a):
 
     time_arrayP = np.array([])
@@ -52,6 +57,7 @@ def PythonReader(a):
     f.close()
     return time_arrayP, pressure1_arrayP, pressure2_arrayP, pressure3_arrayP, pressure4_arrayP, pressure5_arrayP
 
+#Fortran Reader Function
 
 def FortranReader(c):
     # Fortran Reader Code
@@ -112,10 +118,7 @@ def FortranReader(c):
 
 #FortranRead
 
-c = 'OrigFor_radiosity_50_006.dat'
-
-a = 'StratPython_comparison_0.03.txt'
-
+############### Fortran Plotter ####################
 timef, fr1, fr2, fr3, fr4, fr5 = FortranReader(c)
 
 ReceiverListF = fr1, fr2, fr3, fr4, fr5 
@@ -134,9 +137,9 @@ for x in ReceiverListF:
     plt.show()
     i = i + 1 
 
-#End Fortran Plot
+############ End Fortran Plotter ###############
 
-#Python Plotter
+############ Python Plotter ################
 
 timep, pr1, pr2, pr3, pr4, pr5 = PythonReader(a)
 
@@ -156,7 +159,10 @@ for x in ReceiverListP:
     plt.show()
     i = i + 1 
 
-#Fortran vs Python Plotter 
+############### End Python Plotter ##############
+
+
+################ Fortran vs Python Plotter ################
 
 i = 1
 
@@ -172,7 +178,7 @@ for x, z in zip(ReceiverListP, ReceiverListF):
     plt.show()
     i = i + 1 
 
-    
+############################################################
 
 
 
