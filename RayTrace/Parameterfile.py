@@ -3,7 +3,7 @@
 import numpy as np
 INPUTFILE = "input/inputNASABOOM1.txt"
 RecInput = "Env/Receivers/PointReceivers.txt"
-ipname = 'Env/ComplexEMBuilding/ComplexBuilding.obj'
+ipname = 'Env/ComplexEMBuilding/ComplexBuildingFixed3.obj'
 Fs = 24000.0
 xinitial = 145.0
 yinitial = 35.0
@@ -39,7 +39,7 @@ graphName = "StratPy_comparison_Complex" + str(boomspacing)                     
 # Will's
 # outputfile = "PythonTestEnv" + str(boomspacing) + ".txt"       # debugging
 # Turn Radiosity on or off.  This will include diffuse reflections
-radiosity = 1
+radiosity = 0
 # Turn on complex absorption
 complexabsorption = 0
 
