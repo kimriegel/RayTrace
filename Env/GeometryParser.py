@@ -85,8 +85,10 @@ def face_normal_array(face):
     d = np.cross((b-a), (c-a))  # [D]irection
     d_n=np.sqrt(np.einsum("ij,ij->i",d,d))
     e=np.zeros([len(d),3])
+    #print('testing a b c',a[1], b[1], c[1], d[1], d_n)
     for i in np.arange(len(d)):
         e[i] = np.divide(d[i],d_n[i])
+        #print('testing e',a[i],b[i],c[i],e[i], d[i],d_n[i])
     return e
 
 
@@ -106,27 +108,38 @@ def collision_check2(face, veci, f):
     # Finding intersection [P]oint
     # parallel check
     nf = np.dot(n, f)        # rayDir in notes, plane normal dot F
+    #print('checking vd',n[2],f,nf[2]<epsilon)#, f, nf[1]<epsilon[1])
 #    si[(np.where((abs(NF) < epsilon)))] = HUGE
 #    isParallel = (abs(NF) < epsilon)    # bool, vD in old code
-
+    #strata_vo = ((np.dot(n, veci)) - atmos.strata[strat_no])
+    #dx_strata = -strata_vo / nf
 #    if isParallel:
 #        return HUGE        #ray does not hit, find an output to express that
     w = veci-np.array(face)[:, 2]
-    #print('w',np.array(face)[:, 2])
+
+    #for i in range(len(n)):
+    #    print('planeeq', n[i], plane_eq[i],numerator[i])
+    #    print('n and plane',i, n[i], veci,plane_eq[i], numerator[i])
+        #print('plane_eq',np.einsum('ij,ij->i',n,plane_eq)[i]
     si = -np.einsum('ij,ij->i', n, w)/nf
     p = veci + si[:, np.newaxis]*f
-    #print('p',p)
     tmp[0] = np.subtract(p, np.array(face)[:, 0])
     tmp[1] = np.subtract(p, np.array(face)[:, 1])
     tmp[2] = np.subtract(p, np.array(face)[:, 2])
-    a = np.cross((np.array(face)[:, 1]-np.array(face)[:, 0]), tmp[0, :])
-    b = np.cross((np.array(face)[:, 2]-np.array(face)[:, 1]), tmp[1, :])
-    c = np.cross((np.array(face)[:, 0]-np.array(face)[:, 2]), tmp[2, :])
-    cond = (np.einsum('ij,ij->i', a, n) < 0) | (np.einsum('ij,ij->i', b, n) < 0) | (np.einsum('ij,ij->i', c, n) < 0)
+    a = np.cross((np.array(face)[:, 1]-np.array(face)[:, 0]), tmp[0])
+    b = np.cross((np.array(face)[:, 2]-np.array(face)[:, 1]), tmp[1])
+    c = np.cross((np.array(face)[:, 0]-np.array(face)[:, 2]), tmp[2])
+
+    #print('a and n', np.einsum('ij,ij->i', a, n), np.einsum('ij,ij->i', b, n), np.einsum('ij,ij->i', c, n))
+    #print('conditions', abs(nf))
+    #print('booleans', cond)
+            #cond=(np.dot(a,n)<0,np.dot(a,n)<0,np.dot(,n)<0
     #print('si before',si)
-    si[np.where(cond | (abs(nf) < epsilon) | (si < 0.0))] = huge
+    cond = (np.einsum('ij,ij->i', a, n) < 0) | (np.einsum('ij,ij->i', b, n) < 0) | (np.einsum('ij,ij->i', c, n) < 0)
+    #print('si before',a,n,np.einsum('ij,ij->i', a, n) )
+    si[np.where(cond | (nf > epsilon) | (si < 0.0))] = huge
+
     index = np.argmin(si)
-    #print('si after',si)
 
     return si[index], n[index]
 
@@ -164,9 +177,16 @@ def mesh_build(ipname, atmosphere):
     else:
         for m in mesh:
             for s in np.arange(len(atmosphere.strata)):
+                #print('first s',s)
                 if s < len(atmosphere.strata)-1:
+
+                    #if atmosphere.strata[s]== 8.0:
+                    #    print('atmostrata',atmosphere.strata[s + 1],atmosphere.strata[s],m)
                     if(np.any((m[:,2] < atmosphere.strata[s+1]) & (m[:,2] >= atmosphere.strata[s]))):
+
                         strat_mesh[s].append(m)
+                        #print('what is this?',strat_mesh[s])
+    #print(strat_mesh[4], atmosphere.strata[4])
     return strat_mesh,min_dim
 
 

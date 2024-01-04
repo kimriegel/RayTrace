@@ -3,7 +3,8 @@
 import numpy as np
 INPUTFILE = "input/inputNASABOOM1.txt"
 RecInput = "Env/Receivers/PointReceivers.txt"
-ipname = 'Env/ComplexEMBuilding/ComplexBuildingFixed3.obj'
+ipname = 'Env/SimpleEMBuilding/SingleBuildingTest_7cut.obj'
+#ipname = 'Env/ComplexEMBuilding/ComplexBuilding_CorrectAxis.obj'
 Fs = 24000.0
 xinitial = 145.0
 yinitial = 35.0
@@ -34,8 +35,8 @@ absorbplanes = 1
 # allocate(tempalphabuilding(absorbplanes,8))
 # Find way to rephrase
 # outputfile = 'PythonTest1.txt'
-outputfile = "StratPy_comparison_Complex" + str(boomspacing) + ".txt"       # debugging
-graphName = "StratPy_comparison_Complex" + str(boomspacing)                                     # No not use full file extension here
+outputfile = "Validation_Simple7cut_Type1_BS" + str(boomspacing) + ".txt"       # debugging
+graphName = "Validation_Simple7cut_Type1_BS" + str(boomspacing)                                     # No not use full file extension here
 # Will's
 # outputfile = "PythonTestEnv" + str(boomspacing) + ".txt"       # debugging
 # Turn Radiosity on or off.  This will include diffuse reflections
@@ -56,7 +57,7 @@ tempalphaground = [0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.03, 0.03]
 # 63 and 8000
 tempalphabuilding[0, :] = [0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.03, 0.03]
 # what percentage of the energy is reflected diffusely between 0,1
-percentdiffuse = 50.0
+percentdiffuse = 0.0
 
 # Broken all down to:
 # complexabsorption = 1

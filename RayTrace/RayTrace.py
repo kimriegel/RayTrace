@@ -10,10 +10,9 @@
 # Dr. Riegel, William Costa, and George Seaton porting program from Fortran to python
 
 # Initialize variables and functions
-import sys
+
 import numpy as np  # matrices and arrays
 import matplotlib.pyplot as plt  # for graphing
-
 import Parameterfile as Pf
 import Functions as Fun
 import ReceiverPointSource as Rps  # For receivers
@@ -27,6 +26,7 @@ import time  # Time checks
 t = time.time()
 phase = 0
 amplitude = 0
+twopi = np.pi * 2
 print(Pf.Fs)
 
 
@@ -79,9 +79,7 @@ def main():
 
     global phase
     global amplitude
-    global twopi
-    twopi = np.pi * 2
-    t = time.time()
+    timer = time.time()
 
     # port and import receiver file
     receiver_hit = 0
@@ -89,16 +87,14 @@ def main():
     building_hit = 0
 
     # Initialize counters
-    xj = complex(0.0, 1.0)
     radius2 = Pf.radius**2
-    temp_counter=0
-    ray_sum = 0
+    temp_counter = 0
 
     # Initialize receiver variables
-    last_receiver = np.zeros(3)
-    last_receiver2 = np.zeros(3)
+    # last_receiver = np.zeros(3)
+    # last_receiver2 = np.zeros(3)
     receiver_point = np.zeros(3)
-    receiver_point2 = np.zeros(3)
+    # receiver_point2 = np.zeros(3)
 
     # Read in input file
     input_signal = np.loadtxt(Pf.INPUTFILE)
@@ -112,16 +108,16 @@ def main():
     output_signal = np.fft.rfft(input_signal, size_fft)
     # Create Atmosphere
 
-    atmos = Atmosphere(Pf.Temp,Pf.strat_height,Pf.type)
+    atmos = Atmosphere(Pf.Temp, Pf.strat_height, Pf.type)
     print('height and sound', atmos.strata, atmos.sound_speed)
 
-    #mesh Building
+    # mesh Building
     strat_mesh, min_dim = Gp.mesh_build(Pf.ipname, atmos)
     # Create initial signal
     frecuencias = initial_signal(size_fft, output_signal)      # Equivalent to inputArray in original
     air_absorb = Fun.absorption(Pf.ps, frecuencias[:, 0], Pf.hr, Pf.Temp)   # size_fft_two
     i = 0
-    all_lamb=np.zeros([len(atmos.sound_speed), len(frecuencias)])
+    all_lamb = np.zeros([len(atmos.sound_speed), len(frecuencias)])
     for i in range(len(atmos.sound_speed)):
         if i == len(atmos.sound_speed)-1:
             speed = atmos.sound_speed[i]
@@ -246,12 +242,17 @@ def main():
     print('began rays')
     n_strata=[0.0,0.0,1.0]
     dx_ground=huge
-    #ray = 1122                   # @ Pf.boomSpacing = 1
-    #for i in range(1746):
-    #     ray =      next(boom_carpet)
-    #     ray_counter += 1
-
+    # newboom=[]
+    # # #ray = 1122                   # @ Pf.boomSpacing = 1
+    # for i in range(ray_max):
+    #      ray =      next(boom_carpet)
+    #      if i >=204000 and i<210000:
+    #          newboom.append(ray)
+    #  #        print('newboom',ray, newboom)
+    #
+    # ray_counter = 203999
     #if ray:
+    # for ray in newboom:
     for ray in boom_carpet:              # Written like this for readability
         veci = ray      # initial ray position
         hit_count = 0
@@ -263,11 +264,14 @@ def main():
         for I in range(Pf.IMAX):      # Making small steps along the ray path.
             # For each step we should return, location, phase and amplitude
             dx_receiver = huge
+            #print(I,veci,f)
+            index=0
             # Find the closest sphere and store that as the distance
             for index in range(len(atmos.strata)-1):
-#                print(atmos.strata[index],atmos.strata[index+1],veci[2])
+                #print('starta stuff',atmos.strata[index],atmos.strata[index+1],veci[2])
                 if veci[2] >= atmos.strata[index] and veci[2] < atmos.strata[index + 1]:
                     strat_no = index
+                    #print('index', strat_no,atmos.strata[index],atmos.strata[index+1])
                     deriv_alpha = (atmos.sound_speed[index]-atmos.sound_speed[index+1])/(atmos.strata[index]-atmos.strata[index+1])
             if veci[2] >= atmos.strata[len(atmos.strata)-1]:
                     strat_no = len(atmos.strata)-1
@@ -333,28 +337,41 @@ def main():
             #              whichBox = Q
             #              n_box = Fun.plane(Vecip1, Bg.BoxArrayNear[whichBox], Bg.BoxArrayFar[whichBox], planeHit)
             #   Implement Geometry parser
+            #print(strat_no,len(strat_mesh[strat_no-1]))
             if building_hit == 1:
                 dx_building = huge
             else:
                 if (min_dim > 2 * Pf.strat_height):
                     dx_building, n_box = Gp.collision_check2(strat_mesh, veci, f)
                 else:
-                    if len(strat_mesh[strat_no]) == 0:
-                        dx_building=huge
-                        #print('this happens')
-                    else:
-                        if f[2]<0:
-                            #print('downward')
-                            if strat_mesh[strat_no-1] == []:
+                    if f[2]<0:
+                        #print(strat_no,atmos.strata[strat_no],veci)
+                        if (veci[2]== atmos.strata[strat_no]):
+                            if strat_mesh[strat_no - 1] == []:
+                                #print('this happens 1')
                                 dx_building = huge
                             else:
                                 dx_building, n_box = Gp.collision_check2(strat_mesh[strat_no-1],veci,f)
+                        #elif len(strat_mesh[strat_no]) == 0:
+                                #print('this happens 2')
+                        #    dx_building = huge
                         else:
-                            #print('upward')
                             if strat_mesh[strat_no] == []:
+                                #print('this happens 3')
                                 dx_building = huge
                             else:
-                                dx_building, n_box = Gp.collision_check2(strat_mesh[strat_no], veci, f)
+                                #print('this happens 4')
+                                #print ('strat mesh',ray_counter,atmos.strata[strat_no],strat_no,strat_mesh[strat_no],veci,f)
+                                dx_building, n_box = Gp.collision_check2(strat_mesh[strat_no],veci,f)
+                            #print(dx_building)
+                    else:
+                        #print('upward')
+                        if strat_mesh[strat_no] == []:
+                            #print('this happens 4')
+                            dx_building = huge
+                        else:
+                            #print('this happens 5')
+                            dx_building, n_box = Gp.collision_check2(strat_mesh[strat_no], veci, f)
 #
             #                ('nope this happens', dx_building, Gp.mesh, veci, f)
                 # for face in Gp.mesh:
@@ -402,13 +419,14 @@ def main():
             if dx_receiver <= dx_strata or dx_ground <= dx_strata or dx_building <= dx_strata:
 
                 dx = min(dx_receiver, dx_ground, dx_building)
-                #print('dx',dx)
+                #print('chosen dx',dx)
                 #  if the ray hits a receiver, store in an array.  If the ray hits two, create two arrays to store in.
         #        for R in ears:
                 if dx == dx_receiver:
-                    print('Ray ', ray_counter, ' hit receiver ', R.recNumber)
                     veci = veci + (dx * f)
                     f = f-dx*deriv_alpha/atmos.sound_speed[strat_no]
+                    if (tmp == 2):
+                        print('hit receiver', tmp, ray, ray_counter)
                     receiver_hit = 1
                     # checkDirection = f
                     # if double_hit == 1:
@@ -528,10 +546,10 @@ def main():
     with open(fileid, 'a') as file:
         for w in range(size_fft):
             Rps.Receiver.time_header(file, time_array[w], w)
-    print('time: ', time.time()-t)
+    print('time: ', time.time()-timer)
 
     # Outputting graphs
-    t = time.time()
+    timer = time.time()
 
     # ######################################################################
     # Will eventually be moved to a receiver function,
@@ -568,4 +586,4 @@ def main():
         # plt.savefig(Pf.graphName + str(i) + '.png', facecolor='#e0dae6')    # muted lilac
         plt.savefig(Pf.graphName + str(i) + '.png', facecolor='#e6e6fa')  # lavender
         print('Saved receiver', i)
-    print('Graph time: ', time.time() - t)
+    print('Graph time: ', time.time() - timer)
