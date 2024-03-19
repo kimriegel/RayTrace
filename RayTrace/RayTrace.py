@@ -528,9 +528,9 @@ def main():
                 update_freq(dx_strata, alpha_nothing, 0, all_lamb[strat_no,:], air_absorb)
         ray_counter += 1
         temp_counter += 1
-        if (temp_counter ==10000):
-            temp_counter =0
-            print('finished ray', ray_counter)
+#        if (temp_counter ==10000):
+#           temp_counter =0
+        print('finished ray', ray_counter)
 
     # Radiosity removed for readability
 
