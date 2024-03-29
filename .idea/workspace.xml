@@ -26,18 +26,65 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b1cdacbb-04ed-4032-a219-5d00b79fe37b" name="Default Changelist" comment="Added OBJ files">
-      <change afterPath="$PROJECT_DIR$/DataVisualizationScripts/BetterGraphingTool.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ValidationRuns/OrigFor_complex_comparison_006.dat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ValidationRuns/OrigFortran_comparison_003.dat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ValidationRuns/OrigFortran_comparison_006.dat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ValidationRuns/OrigFortran_comparison_01.dat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ValidationRuns/OrigFortran_comparison_03.dat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ValidationRuns/OrigFortran_comparison_06.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_7_26_23__11_47_AM__Default_Changelist_.xml" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/APRIL2206Z.grb2.nc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/APRIL2212Z.grb2.nc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/APRIL2218Z.grb2.nc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/AUGUST2200Z.grb2.nc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/AUGUST2206Z.grb2.nc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/AUGUST2212Z.grb2.nc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/AUGUST2218Z.grb2.nc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/DECEMBER2200Z.grb2.nc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/DECEMBER2206Z.grb2.nc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/DECEMBER2212Z.grb2.nc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/DECEMBER2218Z.grb2.nc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/FEBRUARY2200Z.grb2.nc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/FEBRUARY2206Z.grb2.nc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/FEBRUARY2212Z.grb2.nc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/FEBRUARY2218Z.grb2.nc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/JANUARY2200Z.grb2.nc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/JANUARY2206Z.grb2.nc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/JANUARY2212Z.grb2.nc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/JANUARY2218Z.grb2.nc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/JULY2200Z.grb2.nc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/JULY2206Z.grb2.nc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/JULY2212Z.grb2.nc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/JULY2218Z.grb2.nc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/JUNE2200Z.grb2.nc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/JUNE2206Z.grb2.nc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/JUNE2212Z.grb2.nc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/JUNE2218Z.grb2.nc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/MARCH2200Z.grb2.nc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/MARCH2206Z.grb2.nc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/MARCH2212Z.grb2.nc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/MARCH2218Z.grb2.nc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/MAY2200Z.grb2.nc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/MAY2206Z.grb2.nc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/MAY2212Z.grb2.nc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/MAY2218Z.grb2.nc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/NOVEMBER2200Z.grb2.nc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/NOVEMBER2206Z.grb2.nc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/NOVEMBER2212Z.grb2.nc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/NOVEMBER2218Z.grb2.nc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/OCTOBER2200Z.grb2.nc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/OCTOBER2206Z.grb2.nc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/OCTOBER2212Z.grb2.nc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/OCTOBER2218Z.grb2.nc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/SEPTEMBER2200Z.grb2.nc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/SEPTEMBER2206Z.grb2.nc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/SEPTEMBER2212Z.grb2.nc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/SEPTEMBER2218Z.grb2.nc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/dos-wget.673529.bat" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/unix-curl.673529.csh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RayTrace/AtmosphereProfiles/unix-wget.673529.csh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_11_20_21__1_22_PM__Default_Changelist_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_11_20_21__1_22_PM__Default_Changelist_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_11_20_21__1_47_PM__Default_Changelist_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_11_20_21__1_47_PM__Default_Changelist_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_11_22_21__12_08_AM__Default_Changelist_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_11_22_21__12_08_AM__Default_Changelist_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_11_23_21__1_44_PM__Default_Changelist_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_11_23_21__1_44_PM__Default_Changelist_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_4_25_23__11_03_PM__Default_Changelist_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_4_25_23__11_03_PM__Default_Changelist_.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Env/GeometryParser.py" beforeDir="false" afterPath="$PROJECT_DIR$/Env/GeometryParser.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Atmosphere/Atmosphere.py" beforeDir="false" afterPath="$PROJECT_DIR$/Atmosphere/Atmosphere.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RayTrace/Parameterfile.py" beforeDir="false" afterPath="$PROJECT_DIR$/RayTrace/Parameterfile.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RayTrace/RayTrace.py" beforeDir="false" afterPath="$PROJECT_DIR$/RayTrace/RayTrace.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -125,6 +172,10 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "customColor": "",
+  "associatedIndex": 2
+}]]></component>
   <component name="ProjectFrameBounds">
     <option name="x" value="38" />
     <option name="y" value="25" />
@@ -202,12 +253,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;git-widget-placeholder&quot;: &quot;StratifiedBuilding&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.RunRays.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "git-widget-placeholder": "StratifiedBuilding",
+    "last_opened_file_path": "C:/Users/jonat/PycharmProjects/NonLinearRayTracing/atmoDataDict.py",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "project.propVCSSupport.Mappings",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/Env" />
@@ -219,9 +278,10 @@
       <recent name="$PROJECT_DIR$/RayTrace" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.BetterGraphingTool">
+  <component name="RunManager" selected="Python.RunRays">
     <configuration name="BetterGraphingTool" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="RayTrace" />
+      <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
@@ -232,6 +292,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/DataVisualizationScripts/BetterGraphingTool.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
@@ -243,6 +304,7 @@
     </configuration>
     <configuration name="RunRays" type="PythonConfigurationType" factoryName="Python">
       <module name="RayTrace" />
+      <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
@@ -253,6 +315,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/runRays.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
@@ -264,6 +327,7 @@
     </configuration>
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <module name="RayTrace" />
+      <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
@@ -274,6 +338,7 @@
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
@@ -289,6 +354,13 @@
       </list>
     </recent_temporary>
   </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-5a2391486177-2887949eec09-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-233.13763.11" />
+      </set>
+    </attachedChunks>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
@@ -300,6 +372,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1604287669229</updated>
+      <workItem from="1711464103652" duration="11006000" />
     </task>
     <task id="LOCAL-00001" summary="updating gitignore">
       <created>1611330363689</created>
@@ -397,6 +470,9 @@
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
     </layout-to-restore>
   </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="RECENT_FILTERS">
       <map>
@@ -487,6 +563,10 @@
     <MESSAGE value="Adding Stratified propagation" />
     <MESSAGE value="Still buggy propagation" />
     <option name="LAST_COMMIT_MESSAGE" value="Still buggy propagation" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/RayTrace$runRays.coverage" NAME="runRays Coverage Results" MODIFIED="1709323483750" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/RayTrace$RunRays.coverage" NAME="RunRays Coverage Results" MODIFIED="1711727654500" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/.gitignore">

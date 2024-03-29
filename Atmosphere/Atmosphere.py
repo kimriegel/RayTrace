@@ -34,7 +34,6 @@ class Atmosphere:
             # generalize linear equation between files.
 
             # code for user input for specific file requests.
-
             data_month = input("Enter the month in ALL Capital letters: ")
             data_year = input("Enter the last 2 digits of the year: ")
             data_time = input("Enter the first two digits of the Zulu time (00Z, 06Z, 12Z, 18Z): ")
@@ -72,8 +71,84 @@ class Atmosphere:
             vspeedIntegersArray = np.array(vspeed_array)
             geopotentialIntegersArray = np.array(geopotential_array)
 
+            print("Temp integers array before insertion: ", tempIntegersArray)
+
+            #inserts the user input ground temperature in order to gauge a slope and compare against standard.
+
+            geopotentialIntegersArray = np.insert(geopotentialIntegersArray, 0, 0)
+
+            print("temp at potential height size: ", len(tempIntegersArray), tempIntegersArray)
+            print("geo potential height size: ", len(geopotentialIntegersArray), geopotentialIntegersArray)
+
+            tempGradientArray = []
+            tempGradientArrayPost = []
+            windGradientArray = []
+            vspeedGradientArray = []
+            geopotentialGradientArray = []
+            geopotentialGradientArrayPost = []
+
+            # calculates change in temp array
+
+            print("Temp integers Array Range: ", tempIntegersArray)
+
+            # add null value into temp at first ele
+
+            for i in range(1, len(tempIntegersArray) - 1):
+                diffTemp = tempIntegersArray[i + 1] - tempIntegersArray[i]
+                tempGradientArray.append(diffTemp)
+                # geopotentialGradientArray.append(diffGeoPot)
+            print("Size and values Temp Gradient array in : ", len(tempGradientArray), tempGradientArray)
+            # print("Size and Values geopotential gradient array: ", len(geopotentialGradientArray))
+
+            tempSlope = []
+
+
+            # Calculates change in geopotential array up to 10,207.7ft
+
+            for j in range(1, len(geopotentialIntegersArray) - 1):
+                diffGeoPot = geopotentialIntegersArray[j] - geopotentialIntegersArray[j-1]
+                geopotentialGradientArray.append(diffGeoPot)
+            print("Length of geopotential gradient array, and geopotarray in : ", len(geopotentialGradientArray), geopotentialGradientArray)
+                # slope = geopotentialGradientArray[j] / tempGradientArray[j]
+
+            # calculates slope divided by 1000 meters. should have 0.006
+
+            for i in range(1, len(tempGradientArray)):
+                slope = (geopotentialGradientArray[i] / tempGradientArray[i]) / 1000
+                tempSlope.append(slope)
+
+            print("Rate of change in : ", tempSlope)
+            print("Slope from ground to first geopotential height: ", tempSlope[0])
+                # tempGeoSlope = geopotentialGradientArray[i] / tempGradientArray[i]
+
+            # calculates ground_temp and assigns it to ground_temp
+
+            ground_temp = tempIntegersArray[0] + (geopotentialIntegersArray[1] * tempSlope[0])/1000
+
+            print("Ground temp is approximately: ", ground_temp)
+
+            #
+            # print("tempIntegersArray: ", len(tempIntegersArray))
+            # print("tempgradientarray: ", len(tempGradientArray))
+            # print("geopotentialgradarray length: ", len(geopotentialGradientArray))
+            # print("temp height slope: ", len(tempSlope))
+
+            # slope = np.mean(tempGeoSlope)
+
+            self.strata = np.linspace(0, geopotentialIntegersArray[-1],int((geopotentialIntegersArray[-1] / strat_height) + 1))
+            self.sound_speed = np.ones(len(self.strata)) * 331.3 + 0.606*(ground_temp-273.15)
+            # self.sound_speed =
+
+           # print("Temperature slope: ", slope)
+
             # need to figure out a way to take the above, and fit them for parameter file in order to work the array
             # behavior over the building domains.
 
-            self.strata = np.linspace(0, Pf.zmax, Pf.zmax / strat_height)
+            # self.strata = np.linspace(0, Pf.zmax, Pf.zmax / strat_height)
 
+            # Find out what strat height in paramter file means, and what Temp in parameter file means.
+            # is it a height interval for it to iterate the ray over or?
+            # is it the temperature at the lowest ground height etc?
+
+# strat_height is
+# temp is
