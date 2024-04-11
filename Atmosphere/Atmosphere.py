@@ -34,22 +34,29 @@ class Atmosphere:
             # generalize linear equation between files.
 
             # code for user input for specific file requests.
+            # cant be hardcoded. need to figure out how to commit to github without erroring when applying.
+
             data_month = input("Enter the month in ALL Capital letters: ")
             data_year = input("Enter the last 2 digits of the year: ")
             data_time = input("Enter the first two digits of the Zulu time (00Z, 06Z, 12Z, 18Z): ")
             FILE_NAME = data_month + data_year + data_time
             print("This is a debug line for type 3")
+
             # input file directory containing all the nCDF4 files here
-            # NOTE: Variable names should probably be changed to class match class inputs.
-            # important variables right now are: Geopotential, temp, and wind.
-            # proabbly future important variables would append vspeed into account
+            # NOTE: Variable names should probably be changed to match class inputs.
+            # important variables right now are: Geopotential, and temp.
+            # important future variables will be vspeed and wind speed.
 
             # takes user input and parses through input directory to look for proper .nc files
+            # file directory below is what will need to be recoded for github
 
             data_dir = r'RayTrace/AtmosphereProfiles/'
             file_name_stuff=r''+data_dir+FILE_NAME+'.grb2.nc'
             print('file name', file_name_stuff)
             f = Dataset(data_dir+FILE_NAME+'.grb2.nc')
+
+            # the rest of this should be fine for non hardcoded directory. SHOULD.
+
             temp = f.variables['TMP_L100_Avg']
             long = f.variables['lon']
             level0 = f.variables['level0']
@@ -152,6 +159,7 @@ class Atmosphere:
             plt.title(data_month + " " + data_year + " " + data_time + " Speed of Sound as a function of Temperature")
             plt.grid(True)
             plt.show()
+            # plt.savefig(filename, )
 
             plt.plot(self.sound_speed, geopotentialIntegersArray)
             plt.xlabel('Speed of Sound (m/s)')
@@ -159,5 +167,6 @@ class Atmosphere:
             plt.title(data_month + " " + data_year + " " + data_time + " Speed of Sound as a function of Geopotential Height")
             plt.grid(True)
             plt.show()
+            # plt.savefig()J\
 
 
