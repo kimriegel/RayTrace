@@ -307,7 +307,8 @@ def main():
             if building_hit == 1:
                 dx_building = huge
             else:
-                dx_building, n_box = Gp.collision_check2(Gp.mesh, veci, f)
+                dx_building, face_index, n_box = Gp.collision_check2(mesh, veci, f)
+
                 # for face in Gp.mesh:
                 #     dxnear, nTemp = Gp.collisionCheck(face, veci, f)
                 #     if dxnear < dx_building:
