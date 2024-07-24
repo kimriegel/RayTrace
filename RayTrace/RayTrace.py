@@ -10,18 +10,16 @@
 # Dr. Riegel, William Costa, and George Seaton porting program from Fortran to python
 
 # Initialize variables and functions
+
 import numpy as np  # matrices and arrays
 import matplotlib.pyplot as plt  # for graphing
-
 import Parameterfile as Pf
 import Functions as Fun
 import ReceiverPointSource as Rps  # For receivers
 import GeometryParserTest as Gp
 from ObjectParser import parse_obj_file
 from materials import material_absorption
-
-
-
+from Atmosphere import Atmosphere
 
 
 # import GeometryParser as Bg
@@ -30,6 +28,7 @@ import time  # Time checks
 t = time.time()
 phase = 0
 amplitude = 0
+twopi = np.pi * 2
 print(Pf.Fs)
 
 
@@ -83,7 +82,6 @@ def update_freq(dx_update, alpha_update, diffusion_update, lamb, air_absorb):
     zwei = ein % twopi
     masque = zwei > np.pi
     drei = masque * zwei - twopi
- 
     phase = np.where(masque, drei, ein)
     amplitude *= ((1.0 - alpha_update) * (1.0 - diffusion_update) * np.exp(-air_absorb * dx_update))
 
@@ -98,9 +96,7 @@ def main():
 
     global phase
     global amplitude
-    global twopi
-    twopi = np.pi * 2
-    t = time.time()
+    timer = time.time()
 
     # Load face material information
     obj_file_path = Pf.ipname
@@ -128,15 +124,14 @@ def main():
     building_hit = 0
 
     # Initialize counters
-    xj = complex(0.0, 1.0)
     radius2 = Pf.radius**2
-    ray_sum = 0
+    temp_counter = 0
 
     # Initialize receiver variables
-    last_receiver = np.zeros(3)
-    last_receiver2 = np.zeros(3)
+    # last_receiver = np.zeros(3)
+    # last_receiver2 = np.zeros(3)
     receiver_point = np.zeros(3)
-    receiver_point2 = np.zeros(3)
+    # receiver_point2 = np.zeros(3)
 
     # Read in input file
     input_signal = np.loadtxt(Pf.INPUTFILE)
@@ -148,10 +143,25 @@ def main():
     size_fft = k
     size_fft_two = size_fft // 2
     output_signal = np.fft.rfft(input_signal, size_fft)
+    # Create Atmosphere
 
+    atmos = Atmosphere(Pf.Temp, Pf.strat_height, Pf.type)
+    print('height and sound', atmos.strata, atmos.sound_speed)
+
+    # mesh Building
+    strat_mesh, min_dim = Gp.mesh_build(Pf.ipname, atmos)
     # Create initial signal
     frecuencias = initial_signal(size_fft, output_signal)      # Equivalent to inputArray in original
     air_absorb = Fun.absorption(Pf.ps, frecuencias[:, 0], Pf.hr, Pf.Temp)   # size_fft_two
+    i = 0
+    all_lamb = np.zeros([len(atmos.sound_speed), len(frecuencias)])
+    for i in range(len(atmos.sound_speed)):
+        if i == len(atmos.sound_speed)-1:
+            speed = atmos.sound_speed[i]
+        else:
+            speed=(atmos.sound_speed[i] + atmos.sound_speed[i+1])/2
+        all_lamb[i, :] = speed/frecuencias[:, 0]
+        i+=1
     lamb = Pf.soundspeed/frecuencias[:, 0]     # Used for updating frequencies in update function
     time_array = np.arange(k) / Pf.Fs
 
@@ -256,7 +266,7 @@ def main():
         raise SystemExit
 
     # These are for debugging, Uncomment this block and comment out the for loop below
-    # ray = 606                     # @ Pf.boomSpacing = 1
+    # ray = 1389                    # @ Pf.boomSpacing = 1
     # for i in range(606):
     #      ray =      next(boom_carpet)
     #      ray_counter += 1
@@ -267,11 +277,23 @@ def main():
     n_box = [0, 0, 0]
     veci = np.array([0, 0, 0])
     print('began rays')
+    n_strata=[0.0,0.0,1.0]
+    dx_ground=huge
+    # newboom=[]
+    # # #ray = 1122                   # @ Pf.boomSpacing = 1
+    # for i in range(ray_max):
+    #      ray =      next(boom_carpet)
+    #      if i >=204000 and i<210000:
+    #          newboom.append(ray)
+    #  #        print('newboom',ray, newboom)
+    #
+    # ray_counter = 203999
+    #if ray:
+    # for ray in newboom:
     for ray in boom_carpet:              # Written like this for readability
         veci = ray      # initial ray position
         hit_count = 0
         double_hit = 0
-
         amplitude = frecuencias[:, 1]/normalization
         phase = frecuencias[:, 2]
 
@@ -279,30 +301,47 @@ def main():
         for I in range(Pf.IMAX):      # Making small steps along the ray path.
             # For each step we should return, location, phase and amplitude
             dx_receiver = huge
+            #print(I,veci,f)
+            index=0
             # Find the closest sphere and store that as the distance
+            for index in range(len(atmos.strata)-1):
+                #print('starta stuff',atmos.strata[index],atmos.strata[index+1],veci[2])
+                if veci[2] >= atmos.strata[index] and veci[2] < atmos.strata[index + 1]:
+                    strat_no = index
+                    #print('index', strat_no,atmos.strata[index],atmos.strata[index+1])
+                    deriv_alpha = (atmos.sound_speed[index]-atmos.sound_speed[index+1])/(atmos.strata[index]-atmos.strata[index+1])
+            if veci[2] >= atmos.strata[len(atmos.strata)-1]:
+                    strat_no = len(atmos.strata)-1
+                    deriv_alpha = 0
+
+            #     Check Intersection with ground plane
+            strata_vd = np.dot(n_strata, f)
+#            print(strat_no,n_strata,f,strata_vd )
+            if(strata_vd < 0):
+                # This means that the ray is going down
+                strata_vo = ((np.dot(n_strata, veci)) - atmos.strata[strat_no])
+                dx_strata = -strata_vo / strata_vd
+#                print('strata_vd is negative',strata_vo, atmos.strata[strat_no],dx_strata)
+            #            ground_vd = ground_n[0] * f[0] + ground_n[1] * f[1] + ground_n[2] * f[2]
+                if dx_strata == 0 and strat_no != 0:
+                    # This means that it hit the strata in the previous iteration
+                    strata_vo = ((np.dot(n_strata, veci)) - atmos.strata[strat_no-1])
+                    dx_strata = -strata_vo / strata_vd
+            elif(strat_no+1<len(atmos.strata)):
+                #this means that the ray is going up
+                strata_vd=-strata_vd
+                strata_vo = ((np.dot(np.negative(n_strata), veci)) + atmos.strata[strat_no+1])
+                dx_strata = -strata_vo / strata_vd
+            else:
+                # this means that we are above the top strata
+                dx_strata = Pf.h
+
             i = 0
             for R in ears:
                 # The way that tempReceiver works now, it's only used here and only should be used here.
                 # It's not defined inside the receiver because it's ray dependant.
                 temp_receiver[i] = R.sphere_check(radius2, f, veci)    # Distance to receiver
                 i += 1
-
-                # if receiver_hit >= 1:  # if you hit a receiver last time, don't hit it again
-                #     if np.all(R.position == last_receiver):
-                #         tempReceiver = huge
-                #     if np.all(f == check_direction):
-                #         OC = R.position - veci
-                #         OCLength = np.dot(OC, OC)
-                #         if OCLength < radius2:
-                #             tempReceiver = huge
-                # if receiver_hit >= 2:
-                #     if np.all(R.position == last_receiver):
-                #         tempReceiver = huge
-                # if tempReceiver < dx_receiver:
-                #     dx_receiver = tempReceiver
-                #     receiver_point = R.position
-                # elif tempReceiver == dx_receiver and tempReceiver != huge:
-                #     receiverCheck = tempReceiver
 
     # We need to double check that double hit actually works.  R2 is not really
     # a thing, we should make sure it is doing what we want.
@@ -315,6 +354,8 @@ def main():
             temp_receiver[np.where((temp_receiver < (10.0**(-13.0))))] = huge
             tmp = np.argmin(temp_receiver)
             dx_receiver = temp_receiver[tmp]
+            if receiver_hit == 1:
+                dx_receiver=huge
             if dx_receiver != huge:
                 receiver_point = ears[tmp].position
                 # Print receiver details
@@ -322,17 +363,6 @@ def main():
 
 
                 #     Check Intersection with ground plane
-            ground_vd = np.dot(ground_n, f)
-#            ground_vd = ground_n[0] * f[0] + ground_n[1] * f[1] + ground_n[2] * f[2]
-            if ground_hit == 1:
-                dx_ground = huge
-            elif ground_vd != 0.0:
-                ground_vo = ((np.dot(ground_n, veci)) + ground_d)
-                dx_ground = -ground_vo / ground_vd
-                if dx_ground < 0.0:
-                    dx_ground = huge
-            else:
-                dx_ground = huge
 
             #     Check intersection with building
             # dx_building = huge
@@ -347,12 +377,44 @@ def main():
             #              whichBox = Q
             #              n_box = Fun.plane(Vecip1, Bg.BoxArrayNear[whichBox], Bg.BoxArrayFar[whichBox], planeHit)
             #   Implement Geometry parser
+            #print(strat_no,len(strat_mesh[strat_no-1]))
             if building_hit == 1:
                 dx_building = huge
             else:
-                dx_building, face_index, n_box = Gp.collision_check2Test(mesh, veci, f)
-                
-                
+
+                if (min_dim > 2 * Pf.strat_height):
+                    dx_building, n_box = Gp.collision_check2Test(strat_mesh, veci, f)
+                else:
+                    if f[2]<0:
+                        #print(strat_no,atmos.strata[strat_no],veci)
+                        if (veci[2]== atmos.strata[strat_no]):
+                            if strat_mesh[strat_no - 1] == []:
+                                #print('this happens 1')
+                                dx_building = huge
+                            else:
+                                dx_building, n_box = Gp.collision_check2(strat_mesh[strat_no-1],veci,f)
+                        #elif len(strat_mesh[strat_no]) == 0:
+                                #print('this happens 2')
+                        #    dx_building = huge
+                        else:
+                            if strat_mesh[strat_no] == []:
+                                #print('this happens 3')
+                                dx_building = huge
+                            else:
+                                #print('this happens 4')
+                                #print ('strat mesh',ray_counter,atmos.strata[strat_no],strat_no,strat_mesh[strat_no],veci,f)
+                                dx_building, n_box = Gp.collision_check2(strat_mesh[strat_no],veci,f)
+                            #print(dx_building)
+                    else:
+                        #print('upward')
+                        if strat_mesh[strat_no] == []:
+                            #print('this happens 4')
+                            dx_building = huge
+                        else:
+                            #print('this happens 5')
+                            dx_building, n_box = Gp.collision_check2(strat_mesh[strat_no], veci, f)
+#
+            #                ('nope this happens', dx_building, Gp.mesh, veci, f)
                 # for face in Gp.mesh:
                 #     dxnear, nTemp = Gp.collisionCheck(face, veci, f)
                 #     if dxnear < dx_building:
@@ -384,24 +446,34 @@ def main():
             #                    dx_building = dxNear
             #                    n_box = normal
             #                    whichBox = Q
+            if(ground_hit == 1):
+                dx_ground=huge
+            elif (veci[2] == 0.0):
+                dx_ground = dx_strata
+
             building_hit = 0
             receiver_hit = 0
             ground_hit = 0
-
+            #print(veci)
+            #print('dx',dx_receiver, dx_ground, dx_building,dx_strata)
             #     Check to see if ray hits within step size
-            if dx_receiver < Pf.h or dx_ground < Pf.h or dx_building < Pf.h:
+            if dx_receiver <= dx_strata or dx_ground <= dx_strata or dx_building <= dx_strata:
+
                 dx = min(dx_receiver, dx_ground, dx_building)
+                #print('chosen dx',dx)
                 #  if the ray hits a receiver, store in an array.  If the ray hits two, create two arrays to store in.
         #        for R in ears:
                 if dx == dx_receiver:
-                    print('Ray ', ray_counter, ' hit receiver ', R.recNumber)
-                    veci += (dx * f)
-                    # receiver_hit = 1
+                    veci = veci + (dx * f)
+                    f = f-dx*deriv_alpha/atmos.sound_speed[strat_no]
+                    if (tmp == 2):
+                        print('hit receiver', tmp, ray, ray_counter)
+                    receiver_hit = 1
                     # checkDirection = f
                     # if double_hit == 1:
                     #    receiver_hit = 2
                     hit_count = hit_count + 1
-                    update_freq(dx, alpha_nothing, 0, lamb, air_absorb)
+                    update_freq(dx, alpha_nothing, 0, all_lamb[strat_no, :], air_absorb)
                     # last_receiver = receiver_point
                     output_array1[:, 0] = frecuencias[:, 0]
                     output_array1[:, 1:4] = receiver_point[:]
@@ -433,10 +505,12 @@ def main():
 
                 if abs(dx - dx_ground) < 10.0**(-13.0):  # If the ray hits the ground then bounce and continue
                     veci += (dx_ground * f)
+                    f = f - dx * deriv_alpha / atmos.sound_speed[strat_no]
                     tmp = np.dot(ground_n, veci)
                     if tmp != ground_d:
                         veci[2] = 0
-                    print('hit ground at ', veci)
+
+                    #print('hit ground at ', I)
                     dot1 = np.dot(f, ground_n)
                     n2 = np.dot(ground_n, ground_n)
                     f -= (2.0 * (dot1 / n2 * ground_n))
@@ -444,7 +518,7 @@ def main():
                     ground_hit = 1
 #                    twoPiDx = np.pi * 2 * dx_ground
                     #     Loop through all the frequencies
-                    update_freq(dx_ground, alpha_ground, diffusion_ground, lamb, air_absorb)
+                    update_freq(dx_ground, alpha_ground, diffusion_ground, all_lamb[strat_no,:], air_absorb)
     #                if Pf.radiosity == 1 and (diffusion_ground != 0.0):
     #                    for Q in range(0, PatchNo):
     #                        if formFactors[0, Q, 1] == 1:
@@ -463,7 +537,9 @@ def main():
     #                                        patchArray[Q, W, 7] = np.arctan(temp4.imag,temp4.real)
                 if dx == dx_building:   # if the ray hits the building then change the direction and continue
                     veci += (dx * f)
-#                    print('hit building at step ', I)
+
+                    f = f - dx * deriv_alpha / atmos.sound_speed[strat_no]
+                    #print('hit building at step ', I)
                     n2 = np.dot(n_box, n_box)
                     n_building = n_box / np.sqrt(n2)
                     # Print the current ray position, the normal vector of the intersected building face, the material of the face,
@@ -476,8 +552,9 @@ def main():
                     #print(f"Ray at position {veci} hit building face {face_index} with material {material} having absorption coefficients {absorption_coefficient}")
                     n3 = np.dot(n_building, n_building)
                     dot1 = np.dot(f, n_building)
+#                    print('f pre',f)
                     f -= (2.0 * (dot1 / n3 * n_building))
-
+#                    print('f post',f)
 #                    length = np.sqrt(np.dot(f, f))
                     building_hit = 1
                     # We need to look into complex absorption and see if this is really the best way.
@@ -495,14 +572,17 @@ def main():
     #                            alpha = alpha_building[4, :]
     #                else:
                     alpha = alpha_building[0, :]
-                    # print('alpha',alpha)
-                    update_freq(dx, alpha, diffusion, lamb, air_absorb)
-                    
+
+                    update_freq(dx, alpha, diffusion, all_lamb[strat_no,:], air_absorb)
             else:  # If there was no interaction with buildings then proceed with one step.
-                veci += (Pf.h * f)
-                update_freq(Pf.h, alpha_nothing, 0, lamb, air_absorb)
+                veci += (dx_strata * f)
+                f = f - dx_strata * deriv_alpha / atmos.sound_speed[strat_no]
+                update_freq(dx_strata, alpha_nothing, 0, all_lamb[strat_no,:], air_absorb)
         ray_counter += 1
-        print('finished ray', ray_counter)
+        temp_counter += 1
+        if (temp_counter ==10000):
+            temp_counter =0
+            print('finished ray', ray_counter)
 
     # Radiosity removed for readability
 
@@ -518,10 +598,11 @@ def main():
     with open(fileid, 'a') as file:
         for w in range(size_fft):
             Rps.Receiver.time_header(file, time_array[w], w)
-    print('time: ', time.time()-t)
+
+    print('time: ', time.time()-timer)
 
     # Outputting graphs
-    t = time.time()
+    timer = time.time()
 
     # ######################################################################
     # Will eventually be moved to a receiver function,
@@ -558,4 +639,4 @@ def main():
         # plt.savefig(Pf.graphName + str(i) + '.png', facecolor='#e0dae6')    # muted lilac
         plt.savefig(Pf.graphName + str(i) + '.png', facecolor='#e6e6fa')  # lavender
         print('Saved receiver', i)
-    print('Graph time: ', time.time() - t)
+    print('Graph time: ', time.time() - timer)
