@@ -8,7 +8,7 @@ from Parameterfile import h as step_size     # temporary, just used to make sure
 epsilon = 1e-6  # how small angle between ray and plane has to be to count as parallel
 
 
-def face_normal(face):
+def face_normal(face):  
     a = np.array(face[0])
     b = np.array(face[1])
     c = np.array(face[2])

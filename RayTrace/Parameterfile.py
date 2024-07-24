@@ -3,7 +3,7 @@
 import numpy as np
 INPUTFILE = "input/inputNASABOOM1.txt"
 RecInput = "Env/Receivers/PointReceivers.txt"
-ipname = 'Env/SimpleEMBuilding/SingleBuilding.obj'
+ipname = ipname = 'Env/SimpleEMBuilding/SingleBuildingTest3.obj'
 Fs = 24000.0
 xinitial = 145.0
 yinitial = 35.0
@@ -16,7 +16,7 @@ time = .01
 hr = 20.0
 theta = 1.6863372
 phi = 3.44458181
-boomspacing = 0.6   # .6
+boomspacing = 0.6  # .6
 # boomspacing= 0.035
 # boomspacing= 0.1
 # boomspacing= 1

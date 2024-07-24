@@ -16,7 +16,12 @@ import matplotlib.pyplot as plt  # for graphing
 import Parameterfile as Pf
 import Functions as Fun
 import ReceiverPointSource as Rps  # For receivers
-import GeometryParser as Gp
+import GeometryParserTest as Gp
+from ObjectParser import parse_obj_file
+from materials import material_absorption
+
+
+
 
 
 # import GeometryParser as Bg
@@ -34,6 +39,21 @@ print(Pf.Fs)
       Have a way of reading in complex geometries - Yes, but not yet integrated
       Anything resembling radiosity
 """
+
+
+def get_alpha(material, frequency):
+    """
+Fetches the sound absorption coefficient (alpha) for a specified material at a given frequency.
+:param material: The type of material.
+:param frequency: The sound frequency.
+:return: The absorption coefficient for the material at the specified frequency.
+"""
+    frequency_bands = [(0, 88), (88, 177), (177, 355), (355, 710), (710, 1420), (1420, 2840), (2840, 5680), (5680, float('inf'))]
+    alpha_values = material_absorption.get(material)
+    for index, (low, high) in enumerate(frequency_bands):
+        if low <= frequency < high:
+            return alpha_values[index]
+    return None  # Return None if no band matches
 
 
 def initial_signal(signal_length, fft_output):
@@ -81,6 +101,26 @@ def main():
     global twopi
     twopi = np.pi * 2
     t = time.time()
+
+    # Load face material information
+    obj_file_path = Pf.ipname
+    mesh, face_materials = parse_obj_file(obj_file_path)
+
+    input_signal = np.loadtxt(Pf.INPUTFILE)
+    size_fft = len(input_signal)
+    output_signal = np.fft.rfft(input_signal, size_fft)
+    frecuencias = initial_signal(size_fft, output_signal)
+
+    # Precompute alpha values for all materials and frequencies
+    alpha_values_for_materials = {}
+    for material in set(face_materials.values()):
+        alpha_values_for_materials[material] = np.array([get_alpha(material, freq) for freq in frecuencias[:, 0]])
+
+
+    # Additional debug print to verify materials
+    for i, material in face_materials.items():
+        print(f"Assigned material {material} to face {i}")
+
 
     # port and import receiver file
     receiver_hit = 0
@@ -277,6 +317,9 @@ def main():
             dx_receiver = temp_receiver[tmp]
             if dx_receiver != huge:
                 receiver_point = ears[tmp].position
+                # Print receiver details
+            # print(f"Ray {ray_counter} hit receiver {R.recNumber}")
+
 
                 #     Check Intersection with ground plane
             ground_vd = np.dot(ground_n, f)
@@ -307,8 +350,9 @@ def main():
             if building_hit == 1:
                 dx_building = huge
             else:
-                dx_building, face_index, n_box = Gp.collision_check2(mesh, veci, f)
-
+                dx_building, face_index, n_box = Gp.collision_check2Test(mesh, veci, f)
+                
+                
                 # for face in Gp.mesh:
                 #     dxnear, nTemp = Gp.collisionCheck(face, veci, f)
                 #     if dxnear < dx_building:
@@ -392,7 +436,7 @@ def main():
                     tmp = np.dot(ground_n, veci)
                     if tmp != ground_d:
                         veci[2] = 0
-#                    print('hit ground at ', I)
+                    print('hit ground at ', veci)
                     dot1 = np.dot(f, ground_n)
                     n2 = np.dot(ground_n, ground_n)
                     f -= (2.0 * (dot1 / n2 * ground_n))
@@ -422,6 +466,14 @@ def main():
 #                    print('hit building at step ', I)
                     n2 = np.dot(n_box, n_box)
                     n_building = n_box / np.sqrt(n2)
+                    # Print the current ray position, the normal vector of the intersected building face, the material of the face,
+                    # and the index of the face in the mesh data. This provides detailed information about the ray-face intersection.
+                    material = face_materials.get(face_index, 'default')
+                    absorption_coefficient = material_absorption.get(material)
+                    current_alphas = alpha_values_for_materials[material]
+                    update_freq(dx, current_alphas, diffusion, lamb, air_absorb)
+                    print(f"Ray at position {veci}, Hit material '{material}', with alpha values {current_alphas}")
+                    #print(f"Ray at position {veci} hit building face {face_index} with material {material} having absorption coefficients {absorption_coefficient}")
                     n3 = np.dot(n_building, n_building)
                     dot1 = np.dot(f, n_building)
                     f -= (2.0 * (dot1 / n3 * n_building))
@@ -443,7 +495,9 @@ def main():
     #                            alpha = alpha_building[4, :]
     #                else:
                     alpha = alpha_building[0, :]
+                    # print('alpha',alpha)
                     update_freq(dx, alpha, diffusion, lamb, air_absorb)
+                    
             else:  # If there was no interaction with buildings then proceed with one step.
                 veci += (Pf.h * f)
                 update_freq(Pf.h, alpha_nothing, 0, lamb, air_absorb)

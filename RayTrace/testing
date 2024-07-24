@@ -1,0 +1,37 @@
+if dx == dx_building:   # if the ray hits the building then change the direction and continue
+    veci += (dx * f)
+    
+    # Calculate the normal of the building face
+    n2 = np.dot(n_box, n_box)
+    n_building = n_box / np.sqrt(n2)
+    
+    # Output the ray position and face normal
+    print(f"Ray at position {veci} hit building face with normal {n_building}")
+
+    # Calculate the reflection direction
+    dot1 = np.dot(f, n_building)
+    f -= (2.0 * (dot1 / n2 * n_building))
+    
+    building_hit = 1
+
+    # We need to look into complex absorption and see if this is really the best way.
+    # if Pf.complexAbsorption:
+    #     if Pf.absorbPlanes == 2:
+    #         if (veci[2] > 0.0) and (veci[2] < height1):
+    #             alpha = alpha_building[0, :]
+    #         elif veci[2] > height1 and veci[2] <= height2:
+    #             alpha = alpha_building[1, :]
+    #     if Pf.absorbPlanes == 3:
+    #         if veci[2] > height2 and veci[2] <= height3:
+    #             alpha = alpha_building[2, :]
+    #     if Pf.absorbPlanes == 4:
+    #         if veci[2] > height3:
+    #             alpha = alpha_building[4, :]
+    # else:
+    alpha = alpha_building[0, :]
+    update_freq(dx, alpha, diffusion, lamb, air_absorb)
+else:  # If there was no interaction with buildings then proceed with one step.
+    veci += (Pf.h * f)
+    update_freq(Pf.h, alpha_nothing, 0, lamb, air_absorb)
+ray_counter += 1
+print('finished ray', ray_counter)
