@@ -2,7 +2,7 @@
 
 # Blender 4.1.1
 # www.blender.org
-mtllib FiberGlass_texture.mtl
+mtllib SingleBuildingTest4.mtl
 o Cube
 v 64.432205 46.930000 8.242292
 v 64.432205 46.930000 -0.000008
