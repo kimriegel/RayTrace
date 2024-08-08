@@ -4,7 +4,7 @@ import numpy as np
 INPUTFILE = "input/inputNASABOOM1.txt"
 RecInput = "Env/Receivers/PointReceivers.txt"
 
-ipname = 'Env/SimpleEMBuilding/SingleBuildingTest3.obj'
+ipname = 'Env/SimpleEMBuilding/SingleBuildingTest4.obj'
 #ipname = 'Env/ComplexEMBuilding/ComplexBuilding_CorrectAxis.obj'
 
 Fs = 24000.0

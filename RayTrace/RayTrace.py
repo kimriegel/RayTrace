@@ -412,7 +412,7 @@ def main():
                             else:
                                 #print('this happens 4')
                                 #print ('strat mesh',ray_counter,atmos.strata[strat_no],strat_no,strat_mesh[strat_no],veci,f)
-                                dx_building, n_box, face_index = Gp.collision_check3Test(strat_mesh[strat_no],veci,f) # modified to read the collision check in the update geometry parser
+                                dx_building, face_index, n_box = Gp.collision_check3Test(strat_mesh[strat_no],veci,f) # modified to read the collision check in the update geometry parser
                             #print(dx_building)
                     else:
                         #print('upward')
