@@ -52,9 +52,9 @@ def collision_check(face, veci, f):
     # Finding intersection [P]oint
     # parallel check
     n_f = n.dot(f)        # rayDir in notes, plane normal dot F
-    is_parallel = (abs(n_f) < epsilon)    # bool, vD in old code
+    is_parallel = (np.abs(n_f) < epsilon)    # bool, vD in old code
     # print('NF ',NF)
-    if is_parallel:
+    if np.any(is_parallel): # Check if any direction component is parallel
         return huge        # ray does not hit, find an output to express that
     w = veci-face[2]
     si = -n.dot(w)/n_f
@@ -142,6 +142,35 @@ def collision_check2(face, veci, f):
     index = np.argmin(si)
 
     return si[index], n[index]
+
+def collision_check3Test(mesh, veci, f):
+    closest_distance = float('inf')
+    closest_face_index = -1
+    closest_normal = None
+    #print("veci collision",veci)
+    for i, face in enumerate(mesh):
+        distance, normal = collision_check(face, veci, f)
+        if distance < closest_distance:
+            closest_distance = distance
+            closest_face_index = i
+            closest_normal = normal
+    
+    #print(f"closest_distance: {closest_distance}, closest_face_index: {closest_face_index}, closest_normal: {closest_normal}")
+    return closest_distance, closest_face_index, closest_normal
+
+# Initialize the mesh from the obj file
+ipfile = pwf.Wavefront(ipname)
+env = pwf.ObjParser(ipfile, ipname, strict=False, encoding="utf-8",
+                    create_materials=True, collect_faces=True, parse=True, cache=False)
+vertices = env.wavefront.vertices
+faces = env.mesh.faces
+
+mesh = [np.array((
+    (vertices[f[0]][0], vertices[f[0]][1], vertices[f[0]][2]),
+    (vertices[f[1]][0], vertices[f[1]][1], vertices[f[1]][2]),
+    (vertices[f[2]][0], vertices[f[2]][1], vertices[f[2]][2])))
+    for f in env.mesh.faces]
+# print("mesh Geometry Parser",mesh)
 
 def mesh_build(ipname, atmosphere):
     # ipname = 'Env/duckscaled.obj'

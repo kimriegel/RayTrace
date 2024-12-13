@@ -16,8 +16,13 @@ import matplotlib.pyplot as plt  # for graphing
 import Parameterfile as Pf
 import Functions as Fun
 import ReceiverPointSource as Rps  # For receivers
-import GeometryParser as Gp
+import GeometryParserTest2 as Gp # changed geometry parser to be able to read the stratified building
+from ObjectParser import parse_obj_file
+from materials import material_absorption
 from Atmosphere import Atmosphere
+
+# Set NumPy print options to ensure all elements are displayed
+# np.set_printoptions(threshold=np.inf)
 
 
 # import GeometryParser as Bg
@@ -29,7 +34,6 @@ amplitude = 0
 twopi = np.pi * 2
 print(Pf.Fs)
 
-
 # What it does not do
 """
       Interacts with geometry parser
@@ -37,6 +41,15 @@ print(Pf.Fs)
       Anything resembling radiosity
 """
 
+def get_alpha(material, frequency):
+    """
+Fetches the sound absorption coefficient (alpha) for a specified material at a given frequency.""" # added a comment to describe the lines of code below
+    frequency_bands = [(0, 88), (88, 177), (177, 355), (355, 710), (710, 1420), (1420, 2840), (2840, 5680), (5680, float('inf'))]
+    alpha_values = material_absorption.get(material)
+    for index, (low, high) in enumerate(frequency_bands):
+        if low <= frequency < high:
+            return alpha_values[index]
+    
 
 def initial_signal(signal_length, fft_output):
     """
@@ -54,7 +67,6 @@ def initial_signal(signal_length, fft_output):
 
     return output_frequency
 
-
 def update_freq(dx_update, alpha_update, diffusion_update, lamb, air_absorb):
     """
     Update ray phase and amplitude
@@ -68,18 +80,44 @@ def update_freq(dx_update, alpha_update, diffusion_update, lamb, air_absorb):
     phase = np.where(masque, drei, ein)
     amplitude *= ((1.0 - alpha_update) * (1.0 - diffusion_update) * np.exp(-air_absorb * dx_update))
 
-
 def vex(d, f_initial, y, z):
     """The x coordinate of the ray 
     Used for veci"""
     return (d - f_initial[1] * y - f_initial[2] * z) / f_initial[0]
-
 
 def main():
 
     global phase
     global amplitude
     timer = time.time()
+
+    # Load face material information
+    obj_file_path = Pf.ipname
+    strat_mesh, face_material_mapping = parse_obj_file(obj_file_path) # modified the mesh to for stratified building mesh
+
+    # Additional debug print to verify materials
+    for i, material in face_material_mapping.items():
+        print(f"Assigned material {material} to face {i}")
+
+    input_signal = np.loadtxt(Pf.INPUTFILE)
+    size_fft = len(input_signal)
+    output_signal = np.fft.rfft(input_signal, size_fft)
+    frecuencias = initial_signal(size_fft, output_signal)
+    
+    # Loop through and print each frequency from the FFT results in 'frecuencias'.
+    for freq in frecuencias[:, 0]:
+        ("Processing frequency:", freq)
+
+    "Precompute alpha values for all materials and frequencies"
+    alpha_values_for_materials = {}
+    # Iterate over each unique material present in the 'face_material_mapping' dictionary values
+    for material in set(face_material_mapping.values()):
+        # Calculate the alpha values for the current 'material' across different frequencies.
+        # 'frecuencias[:, 0]' extracts the first column from 'frecuencias', assumed to contain frequency values.
+        # 'get_alpha(material, freq)' computes the alpha value for each frequency for the given material.
+        # The results for each frequency are stored in a numpy array and assigned to the dictionary with the material as the key.
+        alpha_values_for_materials[material] = np.array([get_alpha(material, freq) for freq in frecuencias[:, 0]])
+
 
     # port and import receiver file
     receiver_hit = 0
@@ -194,23 +232,32 @@ def main():
     alpha_building = np.zeros((Pf.absorbplanes, size_fft_two))
     for W in range(Pf.absorbplanes):        # These also look minimal
         for D2 in range(size_fft_two):
-            if frecuencias[D2, 0] >= 0.0 or frecuencias[D2, 0] < 88.0:
+            if frecuencias[D2, 0] >= 0.0 and frecuencias[D2, 0] < 88.0:
                 alpha_building[W, D2] = Pf.tempalphabuilding[W, 0]
-            elif frecuencias[D2, 0] >= 88.0 or frecuencias[D2, 0] < 177.0:
+                #print(f"Frequency {frecuencias[D2,0]:.2f} Hz: Plane {W}, Alpha: {alpha_building[W, D2]:.4f}, Temp Alpha Building: {Pf.tempalphabuilding[W, 0]:.4f}")
+            elif frecuencias[D2, 0] >= 88.0 and frecuencias[D2, 0] < 177.0:
                 alpha_building[W, D2] = Pf.tempalphabuilding[W, 1]
-            elif frecuencias[D2, 0] >= 177.0 or frecuencias[D2, 0] < 355.0:
+                #print(f"Frequency {freq:.2f} Hz: Plane {W}, Alpha: {alpha_building[W, D2]:.4f}, Temp Alpha Building: {Pf.tempalphabuilding[W, 1]:.4f}")
+            elif frecuencias[D2, 0] >= 177.0 and frecuencias[D2, 0] < 355.0:
                 alpha_building[W, D2] = Pf.tempalphabuilding[W, 2]
-            elif frecuencias[D2, 0] >= 355.0 or frecuencias[D2, 0] < 710.0:
+                #print(f"Frequency {freq:.2f} Hz: Plane {W}, Alpha: {alpha_building[W, D2]:.4f}, Temp Alpha Building: {Pf.tempalphabuilding[W, 2]:.4f}")
+            elif frecuencias[D2, 0] >= 355.0 and frecuencias[D2, 0] < 710.0:
                 alpha_building[W, D2] = Pf.tempalphabuilding[W, 3]
-            elif frecuencias[D2, 0] >= 710.0 or frecuencias[D2, 0] < 1420.0:
+                #print(f"Frequency {freq:.2f} Hz: Plane {W}, Alpha: {alpha_building[W, D2]:.4f}, Temp Alpha Building: {Pf.tempalphabuilding[W, 3]:.4f}")
+            elif frecuencias[D2, 0] >= 710.0 and frecuencias[D2, 0] < 1420.0:
                 alpha_building[W, D2] = Pf.tempalphabuilding[W, 4]
-            elif frecuencias[D2, 0] >= 1420.0 or frecuencias[D2, 0] < 2840.0:
+                #print(f"Frequency {freq:.2f} Hz: Plane {W}, Alpha: {alpha_building[W, D2]:.4f}, Temp Alpha Building: {Pf.tempalphabuilding[W, 4]:.4f}")
+            elif frecuencias[D2, 0] >= 1420.0 and frecuencias[D2, 0] < 2840.0:
                 alpha_building[W, D2] = Pf.tempalphabuilding[W, 5]
-            elif frecuencias[D2, 0] >= 2840.0 or frecuencias[D2, 0] < 5680.0:
+                #print(f"Frequency {freq:.2f} Hz: Plane {W}, Alpha: {alpha_building[W, D2]:.4f}, Temp Alpha Building: {Pf.tempalphabuilding[W, 5]:.4f}")
+            elif frecuencias[D2, 0] >= 2840.0 and frecuencias[D2, 0] < 5680.0:
                 alpha_building[W, D2] = Pf.tempalphabuilding[W, 6]
-            elif frecuencias[D2, 0] >= 5680.0 or frecuencias[D2, 0] < frecuencias[size_fft_two, 0]:
+                #print(f"Frequency {freq:.2f} Hz: Plane {W}, Alpha: {alpha_building[W, D2]:.4f}, Temp Alpha Building: {Pf.tempalphabuilding[W, 6]:.4f}")
+            elif frecuencias[D2, 0] >= 5680.0 and frecuencias[D2, 0] < frecuencias[size_fft_two-1, 0]:
                 alpha_building[W, D2] = Pf.tempalphabuilding[W, 7]
+                #print(f"Frequency {freq:.2f} Hz: Plane {W}, Alpha: {alpha_building[W, D2]:.4f}, Temp Alpha Building: {Pf.tempalphabuilding[W, 7]:.4f}")
 
+    # print("Alpha Building Matrix:", alpha_building)
     # This does not appear to be used, so I commented it out -- r0ml
     # D = np.dot(f_initial, v_initial)   # Hotfix  We used this name right above
 
@@ -321,6 +368,8 @@ def main():
                 dx_receiver=huge
             if dx_receiver != huge:
                 receiver_point = ears[tmp].position
+                # Print receiver details
+            # print(f"Ray {ray_counter} hit receiver {R.recNumber}")
 
                 #     Check Intersection with ground plane
 
@@ -341,8 +390,9 @@ def main():
             if building_hit == 1:
                 dx_building = huge
             else:
+
                 if (min_dim > 2 * Pf.strat_height):
-                    dx_building, n_box = Gp.collision_check2(strat_mesh, veci, f)
+                    dx_building, face_index, n_box = Gp.collision_check3Test(strat_mesh, veci, f) # modified to read the collision check in the update geometry parser
                 else:
                     if f[2]<0:
                         #print(strat_no,atmos.strata[strat_no],veci)
@@ -351,7 +401,7 @@ def main():
                                 #print('this happens 1')
                                 dx_building = huge
                             else:
-                                dx_building, n_box = Gp.collision_check2(strat_mesh[strat_no-1],veci,f)
+                                dx_building, face_index, n_box = Gp.collision_check3Test(strat_mesh[strat_no-1],veci,f) # modified to read the collision check in the update geometry parser
                         #elif len(strat_mesh[strat_no]) == 0:
                                 #print('this happens 2')
                         #    dx_building = huge
@@ -362,7 +412,7 @@ def main():
                             else:
                                 #print('this happens 4')
                                 #print ('strat mesh',ray_counter,atmos.strata[strat_no],strat_no,strat_mesh[strat_no],veci,f)
-                                dx_building, n_box = Gp.collision_check2(strat_mesh[strat_no],veci,f)
+                                dx_building, face_index, n_box = Gp.collision_check3Test(strat_mesh[strat_no],veci,f) # modified to read the collision check in the update geometry parser
                             #print(dx_building)
                     else:
                         #print('upward')
@@ -371,7 +421,7 @@ def main():
                             dx_building = huge
                         else:
                             #print('this happens 5')
-                            dx_building, n_box = Gp.collision_check2(strat_mesh[strat_no], veci, f)
+                            dx_building, face_index, n_box = Gp.collision_check3Test(strat_mesh[strat_no], veci, f) # modified to read the collision check in the update geometry parser
 #
             #                ('nope this happens', dx_building, Gp.mesh, veci, f)
                 # for face in Gp.mesh:
@@ -468,7 +518,9 @@ def main():
                     tmp = np.dot(ground_n, veci)
                     if tmp != ground_d:
                         veci[2] = 0
-                    #print('hit ground at ', I)
+                    print('hit ground at ', veci)
+
+                    # print('hit ground at ', I)
                     dot1 = np.dot(f, ground_n)
                     n2 = np.dot(ground_n, ground_n)
                     f -= (2.0 * (dot1 / n2 * ground_n))
@@ -495,10 +547,21 @@ def main():
     #                                        patchArray[Q, W, 7] = np.arctan(temp4.imag,temp4.real)
                 if dx == dx_building:   # if the ray hits the building then change the direction and continue
                     veci += (dx * f)
+
                     f = f - dx * deriv_alpha / atmos.sound_speed[strat_no]
                     #print('hit building at step ', I)
                     n2 = np.dot(n_box, n_box)
                     n_building = n_box / np.sqrt(n2)
+                    material = face_material_mapping.get(face_index, 'default') # added comment for describtion 
+                    # Retrieve the absorption coefficient values (alpha values) for the specified material and store them in `current_alphas`.
+                    current_alphas = alpha_values_for_materials[material]
+                    # Iterate over each frequency and its corresponding alpha value from `current_alphas`. # added comment for describtion 
+                    for freq, alpha in zip(frecuencias[:, 0], current_alphas):
+                          # Update frequency-related properties for the current simulation step using the provided parameters.
+                        update_freq(dx, current_alphas, diffusion, lamb, air_absorb)
+                        # Output information about the ray's interaction with a building face, detailing the position (`veci`), the face index (`face_index`),
+                        # the material of the face, and the alpha values associated with that material. # added comment for describtion 
+                    print(f"Ray at position {veci}, hit building face {face_index}, with material {material}, having alpha values {current_alphas}")
                     n3 = np.dot(n_building, n_building)
                     dot1 = np.dot(f, n_building)
 #                    print('f pre',f)
@@ -520,7 +583,12 @@ def main():
     #                        if veci[2] > height3:
     #                            alpha = alpha_building[4, :]
     #                else:
-                    alpha = alpha_building[0, :]
+                    alpha = current_alphas
+                    # for i in range(len(alpha)):
+                        # print(f"All current alphas for {material}: {current_alphas}") 
+                        #print("All old alphas:", (alpha))
+
+
                     update_freq(dx, alpha, diffusion, all_lamb[strat_no,:], air_absorb)
             else:  # If there was no interaction with buildings then proceed with one step.
                 veci += (dx_strata * f)
@@ -530,7 +598,7 @@ def main():
         temp_counter += 1
         if (temp_counter ==10000):
             temp_counter =0
-            print('finished ray', ray_counter)
+        print('finished ray', ray_counter)
 
     # Radiosity removed for readability
 
@@ -546,6 +614,7 @@ def main():
     with open(fileid, 'a') as file:
         for w in range(size_fft):
             Rps.Receiver.time_header(file, time_array[w], w)
+
     print('time: ', time.time()-timer)
 
     # Outputting graphs
