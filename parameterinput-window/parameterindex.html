@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sonic Boom Simulation Parameters</title>
+    <link rel="stylesheet" href="./parameterstyles.css" />
+</head>
+
+<body>
+
+    <h1>Want to hear a sonic boom?</h1>
+
+    <main class="story-container">
+        <div class="btn-container">
+            <label>Sampling Frequency:</label>
+            <input id="Fs" type="number" value="24000">
+        
+            <label>X Initial:</label>
+            <input id="xinitial" type="number" value="145">
+            
+            <label>Y Initial:</label>
+            <input id="yinitial" type="number" value="35">
+            
+            <label>Boom Spacing:</label>
+            <input id="boomspacing" type="number" step="0.01" value="0.6">
+
+            <label>Step Size:</label>
+            <input id="h" type="number" value="10">
+            
+            <!-- <input id="user-input" placeholder="Type something..." /> -->
+            
+
+            <button id="run-btn">Run Simulation</button>
+
+        </div>
+        <p id="result"></p>
+    </main>
+    <script src="./parameterscript.js"></script>
+
+</body>
+
+</html>

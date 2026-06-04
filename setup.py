@@ -1,3 +1,5 @@
+import newparameterfile as nPf
+
 from distutils.core import setup, Extension
 
 module1 = Extension('helloworld',

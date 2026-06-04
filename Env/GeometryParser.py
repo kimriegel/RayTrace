@@ -2,8 +2,10 @@
 # much of it is hardcoded, but that can all be fixes
 import numpy as np
 import pywavefront as pwf
-from Parameterfile import ipname
-from Parameterfile import h as step_size     # temporary, just used to make sure we do not overstep
+import sys
+print("THIS IS THE THING I WANT",sys.path)
+from newparameterfile import ipname
+from newparameterfile import h as step_size     # temporary, just used to make sure we do not overstep
 # FaceNormals = [(-1,0,0),(0,1,0),(1,0,0),(0,-1,0),(0,0,1)]  Desired
 epsilon = 1e-6  # how small angle between ray and plane has to be to count as parallel
 

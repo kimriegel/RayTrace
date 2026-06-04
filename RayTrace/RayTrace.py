@@ -12,7 +12,7 @@
 # Initialize variables and functions
 import numpy as np  # matrices and arrays
 import matplotlib.pyplot as plt  # for graphing
-
+import newparameterfile as nPf
 import Parameterfile as Pf
 import Functions as Fun
 import ReceiverPointSource as Rps  # For receivers
@@ -25,7 +25,7 @@ import time  # Time checks
 t = time.time()
 phase = 0
 amplitude = 0
-print(Pf.Fs)
+print(nPf.Fs)
 
 
 # What it does not do
@@ -45,7 +45,7 @@ def initial_signal(signal_length, fft_output):
     output_frequency = np.zeros((signal_length2, 3))  # Making output array equivalent to input_array in old code
     throw_array = np.arange(1, signal_length2 + 1)  # Helps get rid of for-loops in old version
 
-    output_frequency[:, 0] = throw_array * Pf.Fs / signal_length  # Tried simplifying the math a bit from original
+    output_frequency[:, 0] = throw_array * nPf.Fs / signal_length  # Tried simplifying the math a bit from original
     output_frequency[:, 1] = abs(fft_output[1:1 + signal_length2] / signal_length)  # Only go up to size_ftt_two
     output_frequency[:, 2] = np.arctan2(np.imag(fft_output[1:1 + signal_length2] / signal_length),
                                         np.real(fft_output[1:1 + signal_length2] / signal_length))
@@ -89,7 +89,7 @@ def main():
 
     # Initialize counters
     xj = complex(0.0, 1.0)
-    radius2 = Pf.radius**2
+    radius2 = nPf.radius**2
     ray_sum = 0
 
     # Initialize receiver variables
@@ -99,7 +99,7 @@ def main():
     receiver_point2 = np.zeros(3)
 
     # Read in input file
-    input_signal = np.loadtxt(Pf.INPUTFILE)
+    input_signal = np.loadtxt(nPf.INPUTFILE)
     k = len(input_signal)
     # masque = input_signal > 0
     huge = 1000000.0
@@ -111,22 +111,22 @@ def main():
 
     # Create initial signal
     frecuencias = initial_signal(size_fft, output_signal)      # Equivalent to inputArray in original
-    air_absorb = Fun.absorption(Pf.ps, frecuencias[:, 0], Pf.hr, Pf.Temp)   # size_fft_two
-    lamb = Pf.soundspeed/frecuencias[:, 0]     # Used for updating frequencies in update function
-    time_array = np.arange(k) / Pf.Fs
+    air_absorb = Fun.absorption(nPf.ps, frecuencias[:, 0], nPf.hr, nPf.Temp)   # size_fft_two
+    lamb = nPf.soundspeed/frecuencias[:, 0]     # Used for updating frequencies in update function
+    time_array = np.arange(k) / nPf.Fs
 
     #       Set initial values
-    v_initial = np.array([Pf.xinitial, Pf.yinitial, Pf.zinitial])
-    xi_initial = np.cos(Pf.phi) * np.sin(Pf.theta)
-    n_initial = np.sin(Pf.phi) * np.sin(Pf.theta)
-    zeta_initial = np.cos(Pf.theta)
+    v_initial = np.array([nPf.xinitial, nPf.yinitial, nPf.zinitial])
+    xi_initial = np.cos(nPf.phi) * np.sin(nPf.theta)
+    n_initial = np.sin(nPf.phi) * np.sin(nPf.theta)
+    zeta_initial = np.cos(nPf.theta)
     length = np.sqrt(xi_initial * xi_initial + n_initial * n_initial + zeta_initial * zeta_initial)
     f_initial = np.array([xi_initial, n_initial, zeta_initial])
     d4 = np.dot(f_initial, v_initial)   # equivalent to tmp
     #       Create initial boom array
     #  Roll this all into a function later
-    y_space = Pf.boomspacing * abs(np.cos(Pf.phi))
-    z_space = Pf.boomspacing * abs(np.sin(Pf.theta))
+    y_space = nPf.boomspacing * abs(np.cos(nPf.phi))
+    z_space = nPf.boomspacing * abs(np.sin(nPf.theta))
     if Pf.xmin == Pf.xmax:
         ray_max = int((Pf.ymax - Pf.ymin) / y_space) * int((Pf.zmax - Pf.zmin) / z_space)
         print(ray_max, ' is the ray_max')
@@ -141,14 +141,14 @@ def main():
     alpha_nothing = np.zeros(size_fft_two)
 
     # Making specific receiver points using receiver module
-    Rps.Receiver.initialize(Pf.RecInput)
+    Rps.Receiver.initialize(nPf.RecInput)
     ears = Rps.Receiver.rList           # easier to write
     for R in ears:          # hotfix
         R.magnitude = np.zeros(size_fft_two)
         R.direction = np.zeros(size_fft_two)
     temp_receiver = np.array(np.zeros(len(ears)))
     #       Initialize normalization factor
-    normalization = (np.pi*radius2)/(Pf.boomspacing**2)
+    normalization = (np.pi*radius2)/(nPf.boomspacing**2)
 
     output_array1 = np.zeros((size_fft_two, 6))
     dh_output_array1 = np.zeros((size_fft_two, 6))
@@ -162,56 +162,56 @@ def main():
     alpha_ground = np.zeros(size_fft_two)
     for D1 in range(0, size_fft_two):       # This loop has a minimal impact on performance
         if frecuencias[D1, 0] >= 0.0 or frecuencias[D1, 0] < 88.0:
-            alpha_ground[D1] = Pf.tempalphaground[0]
+            alpha_ground[D1] = nPf.tempalphaground[0]
         elif frecuencias[D1, 0] >= 88.0 or frecuencias[D1, 0] < 177.0:
-            alpha_ground[D1] = Pf.tempalphaground[1]
+            alpha_ground[D1] = nPf.tempalphaground[1]
         elif frecuencias[D1, 0] >= 177.0 or frecuencias[D1, 0] < 355.0:
-            alpha_ground[D1] = Pf.tempalphaground[2]
+            alpha_ground[D1] = nPf.tempalphaground[2]
         elif frecuencias[D1, 0] >= 355.0 or frecuencias[D1, 0] < 710.0:
-            alpha_ground[D1] = Pf.tempalphaground[3]
+            alpha_ground[D1] = nPf.tempalphaground[3]
         elif frecuencias[D1, 0] >= 710.0 or frecuencias[D1, 0] < 1420.0:
-            alpha_ground[D1] = Pf.tempalphaground[4]
+            alpha_ground[D1] = nPf.tempalphaground[4]
         elif frecuencias[D1, 0] >= 1420.0 or frecuencias[D1, 0] < 2840.0:
-            alpha_ground[D1] = Pf.tempalphaground[5]
+            alpha_ground[D1] = nPf.tempalphaground[5]
         elif frecuencias[D1, 0] >= 2840.0 or frecuencias[D1, 0] < 5680.0:
-            alpha_ground[D1] = Pf.tempalphaground[6]
+            alpha_ground[D1] = nPf.tempalphaground[6]
         elif frecuencias[D1, 0] >= 5680.0 or frecuencias[D1, 0] < frecuencias[size_fft_two, 0]:
-            alpha_ground[D1] = Pf.tempalphaground[7]
+            alpha_ground[D1] = nPf.tempalphaground[7]
 
     alpha_building = np.zeros((Pf.absorbplanes, size_fft_two))
     for W in range(Pf.absorbplanes):        # These also look minimal
         for D2 in range(size_fft_two):
             if frecuencias[D2, 0] >= 0.0 or frecuencias[D2, 0] < 88.0:
-                alpha_building[W, D2] = Pf.tempalphabuilding[W, 0]
+                alpha_building[W, D2] = nPf.tempalphabuilding[W, 0]
             elif frecuencias[D2, 0] >= 88.0 or frecuencias[D2, 0] < 177.0:
-                alpha_building[W, D2] = Pf.tempalphabuilding[W, 1]
+                alpha_building[W, D2] = nPf.tempalphabuilding[W, 1]
             elif frecuencias[D2, 0] >= 177.0 or frecuencias[D2, 0] < 355.0:
-                alpha_building[W, D2] = Pf.tempalphabuilding[W, 2]
+                alpha_building[W, D2] = nPf.tempalphabuilding[W, 2]
             elif frecuencias[D2, 0] >= 355.0 or frecuencias[D2, 0] < 710.0:
-                alpha_building[W, D2] = Pf.tempalphabuilding[W, 3]
+                alpha_building[W, D2] = nPf.tempalphabuilding[W, 3]
             elif frecuencias[D2, 0] >= 710.0 or frecuencias[D2, 0] < 1420.0:
-                alpha_building[W, D2] = Pf.tempalphabuilding[W, 4]
+                alpha_building[W, D2] = nPf.tempalphabuilding[W, 4]
             elif frecuencias[D2, 0] >= 1420.0 or frecuencias[D2, 0] < 2840.0:
-                alpha_building[W, D2] = Pf.tempalphabuilding[W, 5]
+                alpha_building[W, D2] = nPf.tempalphabuilding[W, 5]
             elif frecuencias[D2, 0] >= 2840.0 or frecuencias[D2, 0] < 5680.0:
-                alpha_building[W, D2] = Pf.tempalphabuilding[W, 6]
+                alpha_building[W, D2] = nPf.tempalphabuilding[W, 6]
             elif frecuencias[D2, 0] >= 5680.0 or frecuencias[D2, 0] < frecuencias[size_fft_two, 0]:
-                alpha_building[W, D2] = Pf.tempalphabuilding[W, 7]
+                alpha_building[W, D2] = nPf.tempalphabuilding[W, 7]
 
     # This does not appear to be used, so I commented it out -- r0ml
     # D = np.dot(f_initial, v_initial)   # Hotfix  We used this name right above
 
     #        Mesh the patches for the environment.  Include patching file.
     diffusion_ground = 0.0
-    if Pf.radiosity:  # If it exists as a non-zero number
+    if nPf.radiosity:  # If it exists as a non-zero number
         #    import SingleBuildingGeometry
-        diffusion = Pf.radiosity
+        diffusion = nPf.radiosity
     else:
         diffusion = 0.0
 
     ray_counter = 0
 
-    if Pf.h < (2 * Pf.radius):
+    if nPf.h < (2 * nPf.radius):
         print('h is less than 2r')
         raise SystemExit
 
@@ -344,7 +344,7 @@ def main():
             ground_hit = 0
 
             #     Check to see if ray hits within step size
-            if dx_receiver < Pf.h or dx_ground < Pf.h or dx_building < Pf.h:
+            if dx_receiver < nPf.h or dx_ground < nPf.h or dx_building < nPf.h:
                 dx = min(dx_receiver, dx_ground, dx_building)
                 #  if the ray hits a receiver, store in an array.  If the ray hits two, create two arrays to store in.
         #        for R in ears:
@@ -444,8 +444,8 @@ def main():
                     alpha = alpha_building[0, :]
                     update_freq(dx, alpha, diffusion, lamb, air_absorb)
             else:  # If there was no interaction with buildings then proceed with one step.
-                veci += (Pf.h * f)
-                update_freq(Pf.h, alpha_nothing, 0, lamb, air_absorb)
+                veci += (nPf.h * f)
+                update_freq(nPf.h, alpha_nothing, 0, lamb, air_absorb)
         ray_counter += 1
         print('finished ray', ray_counter)
 
@@ -456,7 +456,7 @@ def main():
         R.time_reconstruct(size_fft)
 
     print('Writing to output file')
-    fileid = Pf.outputfile
+    fileid = nPf.outputfile
     with open(fileid, 'w') as file:
         Fun.header(fileid)
 

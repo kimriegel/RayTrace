@@ -17,6 +17,7 @@
 # Eventually get to seeing how much memory it eats
 import numpy as np
 import math as m
+import newparameterfile as nPf
 
 # Using to check how long functions take
 HUGE = 1000000.0

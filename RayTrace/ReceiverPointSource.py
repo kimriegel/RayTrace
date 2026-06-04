@@ -2,6 +2,7 @@
 # Python 3.7.0 
 
 import numpy as np
+import newparameterfile as nPf
 
 
 class Receiver:
