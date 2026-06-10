@@ -40,6 +40,9 @@ def run_simulation(params: SimulationParameters):
     )
     print(simulation_params)
     import RayTrace
+    print(RayTrace)
+    print(RayTrace.__file__)
+    print(dir(RayTrace))
     RayTrace.main()
 
     return {

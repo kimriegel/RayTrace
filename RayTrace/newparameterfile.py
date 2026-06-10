@@ -2,6 +2,43 @@ import Parameterfile as Pf
 import numpy as np
 
 
+Fs = 24000.0     #sampling frequency
+xinitial = 145.0   #boom starts
+yinitial = 35.0
+boomspacing = 0.6   # .6   # in between all testing points
+h = 10.0           # step size in meters
+
+
+radiosity = 1
+complexabsorption = 0
+
+INPUTFILE = "input/inputNASABOOM1.txt"
+RecInput = "Env/Receivers/PointReceivers.txt"
+ipname = 'Env/SimpleEMBuilding/SingleBuilding.obj' #geometry building 3D #blender ENVIRONMENT (*ENVIRONMENT/geometry file)
+
+
+tempalphabuilding = np.zeros([Pf.absorbplanes, 8])
+
+if complexabsorption == 1:
+    tempalphabuilding[0] = [0.55, 0.55, 0.25, 0.18, 0.12, 0.07, 0.04, 0.04]
+else:
+    tempalphabuilding = np.zeros([Pf.absorbplanes, 8])
+
+tempalphaground = [0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.03, 0.03]
+tempalphabuilding[0, :] = [0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.03, 0.03]
+
+percentdiffuse = 0.0
+
+
+zinitial = 0.0
+radius = 0.15
+soundspeed = 348.537
+ps = 1.0
+Temp = 302.182778
+hr = 20.0
+theta = 1.6863372
+phi = 3.44458181
+
 def create_parameters(Fs, xinitial, yinitial, boomspacing, h):
     zinitial = 0.0
     radius = 0.15
