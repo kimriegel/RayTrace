@@ -6,6 +6,7 @@
 #     This function creates patch lengths using a geometric sum.
 
 import numpy as np
+import newparameterfile as nPf
 
 
 def patches_short(patch_min, patch_max, n, q, dd):

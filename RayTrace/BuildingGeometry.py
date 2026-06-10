@@ -1,4 +1,5 @@
 import numpy as np
+import newparameterfile as nPf
 
 FaceNormalNo = 5
 FaceNormals = [(-1, 0, 0), (0, 1, 0), (1, 0, 0), (0, -1, 0), (0, 0, 1)]

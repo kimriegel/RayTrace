@@ -1,5 +1,6 @@
 import unittest
 import Functions
+import newparameterfile as nPf
 
 
 class TestFunctions(unittest.TestCase):
