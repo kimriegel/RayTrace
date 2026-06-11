@@ -10,7 +10,6 @@ h = 10.0           # step size in meters
 
 outputfile = "PythonTestSimple" + str(boomspacing) + "_withdecl.txt"
 
-
 radiosity = 1
 complexabsorption = 0
 
