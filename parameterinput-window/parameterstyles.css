@@ -45,13 +45,27 @@ h1 {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    gap: 10px;
 }
 
-@media (min-width: 760px) {
-    .btn-container {
-        flex-direction: row;
-    }
+
+.input-row {
+    display: flex;
+    align-items: center;
+    width: 450px;
 }
+
+.input-row label {
+    width: 220px;
+    text-align: right;
+    margin-right: 15px;
+}
+
+.input-row input {
+    width: 200px;
+    padding: 4px;
+}
+
 
 #result {
     margin-top: 15px;

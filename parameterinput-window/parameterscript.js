@@ -6,6 +6,14 @@ runBtn.addEventListener("click", async () => {
     Fs: Number(document.getElementById("Fs").value),
     xinitial: Number(document.getElementById("xinitial").value),
     yinitial: Number(document.getElementById("yinitial").value),
+    zinitial: Number(document.getElementById("zinitial").value),
+    radius: Number(document.getElementById("radius").value),
+    soundspeed: Number(document.getElementById("soundspeed").value),
+    ps: Number(document.getElementById("ps").value),
+    Temp: Number(document.getElementById("Temp").value),
+    hr: Number(document.getElementById("hr").value),
+    theta: Number(document.getElementById("theta").value),
+    phi: Number(document.getElementById("phi").value),
     boomspacing: Number(document.getElementById("boomspacing").value),
     h: Number(document.getElementById("h").value),
   };
@@ -29,6 +37,14 @@ runBtn.addEventListener("click", async () => {
       Fs = ${data.parameters.Fs}<br>
       xinitial = ${data.parameters.xinitial}<br>
       yinitial = ${data.parameters.yinitial}<br>
+      zinitial= ${data.parameters.zinitial}<br>
+      radius= ${data.parameters.radius}<br>
+      soundspeed= ${data.parameters.soundspeed}<br>
+      ps= ${data.parameters.ps}<br>
+      Temp= ${data.parameters.Temp}<br>
+      hr= ${data.parameters.hr}<br>
+      theta= ${data.parameters.theta}<br>
+      phi= ${data.parameters.phi}<br>
       boomspacing = ${data.parameters.boomspacing}<br>
       h = ${data.parameters.h}
     `;

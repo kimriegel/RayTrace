@@ -129,7 +129,7 @@ def main():
     z_space = nPf.boomspacing * abs(np.sin(nPf.theta))
     if Pf.xmin == Pf.xmax:
         ray_max = int((Pf.ymax - Pf.ymin) / y_space) * int((Pf.zmax - Pf.zmin) / z_space)
-        print(ray_max, ' is the ray_max')
+        print(ray_max, ' is the ray_max', nPf.boomspacing)
 
     j = np.arange(1, 1 + int((Pf.ymax-Pf.ymin) // y_space))
     k_2 = np.arange(1, 1 + int((Pf.zmax-Pf.zmin) // z_space))
