@@ -132,6 +132,9 @@ class Receiver:
     @classmethod
     def initialize(cls, ipfile):
 
+        cls.rList = []
+        cls.arraysize = 1 
+
         # Reads in receiver points from the txt file and translates them to be used in our receiver method
         # Receivers are automatically initialized from given inputfile
 
@@ -145,7 +148,9 @@ class Receiver:
 
 
 # Initializing receivers
-def initialize_receivers():     
+def initialize_receivers():    
+
+     
 
     # Create Individual receivers
     # For debugging, do not use
