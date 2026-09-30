@@ -80,14 +80,23 @@
                 <input id="h" type="number" value="10">
             </div>
             
-            <!-- <input id="user-input" placeholder="Type something..." /> -->
-            
 
             <button id="run-btn">Run Simulation</button>
+            
+            <button id="stop-btn" disabled>Stop Simulation</button>
+            
+            <div class="progress-container">
+                <progress id="progress-bar" value="0" max="100"></progress>
+                <span id="progress-percent">0%</span>
+            </div>
 
         </div>
         <p id="result"></p>
+
+        <div id="graphs"></div> <!-- js will use to fine correct place for graph-->
     </main>
+    <!-- needs to be first so that js can use it  -->
+    <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script> 
     <script src="./parameterscript.js"></script>
 
 </body>

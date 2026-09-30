@@ -30,6 +30,9 @@ runBtn.addEventListener("click", async () => {
 
     const data = await response.json();
 
+    console.log(data.graph_data) //new for graphs
+    console.log("Number of receivers:", data.graph_data.receivers.length); //TO CHECK IF TOO MANY FROM PYTHON
+
     // resultParagraph.textContent = data.message;
     resultParagraph.innerHTML = `
       <strong>${data.message}</strong><br><br>
@@ -48,23 +51,51 @@ runBtn.addEventListener("click", async () => {
       boomspacing = ${data.parameters.boomspacing}<br>
       h = ${data.parameters.h}
     `;
+
+    // gets the graph data from Python
+    const graphData = data.graph_data;
+
+    // finds HTML container for all graphs
+    const graphsContainer = document.getElementById("graphs");
+
+    // clears any graphs from a previous simulation just in case didnt refresh webpage will discard old and create new, otherwise would keep adding 5 graphs 
+    graphsContainer.innerHTML = "";
+
+    // makes a separate graph for each receiver that python sends
+    graphData.receivers.forEach((receiver) => {
+
+      // creates a new div for this receiver's graph
+      const graphDiv = document.createElement("div");
+
+      // Add the new div to the webpage
+      graphsContainer.appendChild(graphDiv);
+
+
+      // creates the graphs
+      Plotly.newPlot(graphDiv, [
+        {
+          x: graphData.time,
+          y: receiver.pressure,
+          type: "scatter",
+          mode: "lines",
+          name: "Receiver " + receiver.receiver
+        }
+      ], {
+        title: "Pressure vs Time of Receiver " + receiver.receiver,
+        xaxis: {
+          title: "Time [s]"
+        },
+        yaxis: {
+          title: "Pressure [Pa]"
+        }
+      }, {
+        responsive: true
+      });
+
+    });
+
   } catch (error) {
     resultParagraph.textContent = "Error connecting to Python/FastAPI.";
     console.error(error);
   }
 });
-
-
-// const sendBtn = document.getElementById("send-btn");
-
-// sendBtn.addEventListener("click", async () => {
-//   const userInput = document.getElementById("user-input").value;
-
-//   const response = await fetch(
-//     `http://127.0.0.1:8000/inputparameters?h=${encodeURIComponent(userInput)}`
-//   );
-
-//   const data = await response.json();
-
-//   resultParagraph.textContent = data.message;
-// });

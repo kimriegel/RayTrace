@@ -118,29 +118,7 @@ def set_parameters(
 
 # h = 10.0           # step size in meters
 
-# outputfile = "PythonTestSimple" + str(boomspacing) + "_withdecl.txt"       # debugging? pressure signatures
-
-
 # # Turn Radiosity on or off.  This will include diffuse reflections
 # radiosity = 1   #different kind of reflection 
 # # Turn on complex absorption
 # complexabsorption = 0
-
-
-# INPUTFILE = "input/inputNASABOOM1.txt" #pressure signature of boom
-# RecInput = "Env/Receivers/PointReceivers.txt" #location of recievers (MICROPHONES) xyz coordinates (*RECIEVER FILE)
-# ipname = 'Env/SimpleEMBuilding/SingleBuilding.obj' #geometry building 3D #blender ENVIRONMENT (*ENVIRONMENT/geometry file)
-
-# tempalphabuilding = np.zeros([Pf.absorbplanes, 8])
-# if complexabsorption == 1:
-#     tempalphabuilding[0] = [0.55, 0.55, 0.25, 0.18, 0.12, 0.07, 0.04, 0.04]
-# else:
-#     tempalphabuilding = np.zeros([Pf.absorbplanes, 8])
-# # Enter an array for absorption of alpha ground octave bands between
-# # 63 and 8000
-# tempalphaground = [0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.03, 0.03]
-# # Enter an array for absorption of Alpha Building octave bands between
-# # 63 and 8000
-# tempalphabuilding[0, :] = [0.01, 0.01, 0.01, 0.02, 0.02, 0.02, 0.03, 0.03]
-# # what percentage of the energy is reflected diffusely between 0,1
-# percentdiffuse = 0.0

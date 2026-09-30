@@ -11,12 +11,13 @@
 
 # Initialize variables and functions
 import numpy as np  # matrices and arrays
-import matplotlib.pyplot as plt  # for graphing
+#import matplotlib.pyplot as plt  # for graphing
 import newparameterfile as nPf
 import Parameterfile as Pf
 import Functions as Fun
 import ReceiverPointSource as Rps  # For receivers
 import GeometryParser as Gp
+
 
 
 # import GeometryParser as Bg
@@ -140,12 +141,19 @@ def main():
     # Create a receiver array, include a receiver file.
     alpha_nothing = np.zeros(size_fft_two)
 
+
+#ETESTINGGGGG
+    ears = []
+#TESTINGGGGG
     # Making specific receiver points using receiver module
     Rps.Receiver.initialize(nPf.RecInput)
     ears = Rps.Receiver.rList           # easier to write
     for R in ears:          # hotfix
         R.magnitude = np.zeros(size_fft_two)
         R.direction = np.zeros(size_fft_two)
+
+        print(R.recNumber) # HELPPPPPPPHELPPPP  ISEFHSKHFUIHYFUKJNJSDHFUJHNKJFNXDKJFHUSDHFKJXN
+
     temp_receiver = np.array(np.zeros(len(ears)))
     #       Initialize normalization factor
     normalization = (np.pi*radius2)/(nPf.boomspacing**2)
@@ -457,50 +465,76 @@ def main():
 
     print('Writing to output file')
     fileid = nPf.outputfile
+
     with open(fileid, 'w') as file:
         Fun.header(fileid)
 
     with open(fileid, 'a') as file:
         for w in range(size_fft):
             Rps.Receiver.time_header(file, time_array[w], w)
+
     print('time: ', time.time()-t)
 
-    # Outputting graphs
-    t = time.time()
+# the list sophie created
 
-    # ######################################################################
-    # Will eventually be moved to a receiver function,
-    # here now for ease of access of others reading this
-    # ######################################################################
-    import matplotlib.font_manager as fm
-    # Font
-    stdfont = fm.FontProperties()
-    stdfont.set_family('serif')
-    stdfont.set_name('Times New Roman')
-    stdfont.set_size(20)
+    receiver_data = []
 
     for R in ears:
-        # For N wave
-        pressure = R.signal
-        i = R.recNumber
-        # plt.figure(i)
-        # plt.figure(num = i, figsize=(19.20, 10.80), dpi=120, facecolor='#eeeeee', edgecolor='r')   # grey
-        # plt.figure(num = i, figsize=(19.20, 10.80), dpi=120, facecolor='#e0dae6', edgecolor='r')   # muted lilac
-        plt.figure(num=i, figsize=(19.20, 10.80), dpi=120, facecolor='#e6e6fa', edgecolor='r')  # lavender
-        # plt.plot(time_array,pressure,'r--')
-        plt.grid(True)
-        plt.plot(time_array, pressure, '#780303')
-        # Labeling axes
-        plt.xlabel('Time [s]', fontproperties=stdfont)
-        plt.ylabel('Pressure [Pa]', fontproperties=stdfont)
-        plt.title('Pressure vs Time of Receiver ' + str(i),
-                  fontproperties=stdfont,
-                  fontsize=26,
-                  fontweight='bold')
+        receiver_data.append({
+            "receiver": int(R.recNumber),
+            "pressure": R.signal.tolist()
+        
+        })
+        print(R.recNumber)
 
-        # Saving
-        # plt.savefig(Pf.graphName + str(i) + '.png', facecolor='#eeeeee')    # grey
-        # plt.savefig(Pf.graphName + str(i) + '.png', facecolor='#e0dae6')    # muted lilac
-        plt.savefig(Pf.graphName + str(i) + '.png', facecolor='#e6e6fa')  # lavender
-        print('Saved receiver', i)
-    print('Graph time: ', time.time() - t)
+
+    return {
+        "time": time_array.tolist(),
+        "receivers": receiver_data
+    }
+    
+
+
+
+
+    # SOPHIE - We dont need this anymore bc no more matplotlib causing to crash \/ \/ \/
+
+    # # Outputting graphs
+    # t = time.time()
+
+    # # ######################################################################
+    # # Will eventually be moved to a receiver function,
+    # # here now for ease of access of others reading this
+    # # ######################################################################
+    # import matplotlib.font_manager as fm
+    # # Font
+    # stdfont = fm.FontProperties()
+    # stdfont.set_family('serif')
+    # stdfont.set_name('Times New Roman')
+    # stdfont.set_size(20)
+
+    # for R in ears:
+    #     # For N wave
+    #     pressure = R.signal
+    #     i = R.recNumber
+    #     # plt.figure(i)
+    #     # plt.figure(num = i, figsize=(19.20, 10.80), dpi=120, facecolor='#eeeeee', edgecolor='r')   # grey
+    #     # plt.figure(num = i, figsize=(19.20, 10.80), dpi=120, facecolor='#e0dae6', edgecolor='r')   # muted lilac
+    #     plt.figure(num=i, figsize=(19.20, 10.80), dpi=120, facecolor='#e6e6fa', edgecolor='r')  # lavender
+    #     # plt.plot(time_array,pressure,'r--')
+    #     plt.grid(True)
+    #     plt.plot(time_array, pressure, '#780303')
+    #     # Labeling axes
+    #     plt.xlabel('Time [s]', fontproperties=stdfont)
+    #     plt.ylabel('Pressure [Pa]', fontproperties=stdfont)
+    #     plt.title('Pressure vs Time of Receiver ' + str(i),
+    #               fontproperties=stdfont,
+    #               fontsize=26,
+    #               fontweight='bold')
+
+    #     # Saving
+    #     # plt.savefig(Pf.graphName + str(i) + '.png', facecolor='#eeeeee')    # grey
+    #     # plt.savefig(Pf.graphName + str(i) + '.png', facecolor='#e0dae6')    # muted lilac
+    #     plt.savefig(Pf.graphName + str(i) + '.png', facecolor='#e6e6fa')  # lavender
+    #     print('Saved receiver', i)
+    # print('Graph time: ', time.time() - t)

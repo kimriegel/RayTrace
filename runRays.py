@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import sys
-import importlib 
+
 
 sys.path.insert(0, "Env/")
 sys.path.insert(0, "input")
@@ -68,18 +68,18 @@ def run_simulation(params: SimulationParameters):
 
     import RayTrace
 
-    importlib.reload(RayTrace)
-
     print(RayTrace)
     print(RayTrace.__file__)
     print(dir(RayTrace))
 
-    RayTrace.main()
+    graph_data = RayTrace.main()   
+    #Run simulation, when RayTrace gives graph information back, save it in variable graph_data
 
     return {
         "message": "Simulation parameters were successfully ran and sent to Python.",
-        # "parameters": params
-    }
+        "parameters": params,
+        "graph_data": graph_data
+}
 
 
 

@@ -4,7 +4,6 @@
 import numpy as np
 import newparameterfile as nPf
 
-
 class Receiver:
 
     """
