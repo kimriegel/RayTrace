@@ -1,7 +1,28 @@
 const runBtn = document.getElementById("run-btn");
 const resultParagraph = document.getElementById("result");
 
+// progress bar add
+const progressBar = document.getElementById("progress-bar");
+const stopBtn = document.getElementById("stop-btn");
+const progressPercent = document.getElementById("progress-percent");
+
+stopBtn.addEventListener("click", async () => {
+
+  await fetch("http://127.0.0.1:8000/stop-simulation", {
+    method: "POST"
+  });
+
+  console.log("Stop requested");
+});
+
 runBtn.addEventListener("click", async () => {
+  //progress bar
+  progressBar.value = 0;
+  progressPercent.textContent = "0%";
+
+  stopBtn.disabled = false;
+  runBtn.disabled = true;
+
   const params = {
     Fs: Number(document.getElementById("Fs").value),
     xinitial: Number(document.getElementById("xinitial").value),
@@ -20,6 +41,21 @@ runBtn.addEventListener("click", async () => {
 
   try {
 
+    // this checks python for simulation progress every half second
+    const progressChecker = setInterval(async () => {
+
+      const progressResponse = await fetch("http://127.0.0.1:8000/progress");
+
+      const progressData = await progressResponse.json();
+
+      console.log("Progress:", progressData.progress + "%");
+
+      progressBar.value = progressData.progress;
+      progressPercent.textContent = progressData.progress + "%";
+
+    }, 500);
+
+
     const response = await fetch("http://127.0.0.1:8000/run-simulation", {
       method: "POST",
       headers: {
@@ -28,10 +64,36 @@ runBtn.addEventListener("click", async () => {
       body: JSON.stringify(params),
     });
 
+
+
     const data = await response.json();
 
-    console.log(data.graph_data) //new for graphs
-    console.log("Number of receivers:", data.graph_data.receivers.length); //TO CHECK IF TOO MANY FROM PYTHON
+    clearInterval(progressChecker);
+
+    stopBtn.disabled = true;
+    runBtn.disabled = false;
+
+    if (data.stopped) {
+
+      // Keep the progress bar at the percentage where it stopped
+      const progressResponse = await fetch("http://127.0.0.1:8000/progress");
+      const progressData = await progressResponse.json();
+
+      progressBar.value = progressData.progress;
+      progressPercent.textContent = progressData.progress + "%";
+
+    } else {
+
+      // Only show 100% if the simulation finished normally
+      progressBar.value = 100;
+      progressPercent.textContent = "100%";
+    }
+//end
+
+
+// trying to fix for stop sim button so moved rn to test 
+    // console.log(data.graph_data) //new for graphs
+    // console.log("Number of receivers:", data.graph_data.receivers.length); //TO CHECK IF TOO MANY FROM PYTHON
 
     // resultParagraph.textContent = data.message;
     resultParagraph.innerHTML = `
@@ -51,6 +113,19 @@ runBtn.addEventListener("click", async () => {
       boomspacing = ${data.parameters.boomspacing}<br>
       h = ${data.parameters.h}
     `;
+
+
+    // FOR STOP SIM BUTTON
+    if (data.stopped) {
+      // Remove graphs from any previous simulation
+      document.getElementById("graphs").innerHTML = "";
+
+      return;
+    }
+
+    // checkiung to see if should go here 
+    console.log(data.graph_data);
+    console.log("Number of receivers:", data.graph_data.receivers.length);
 
     // gets the graph data from Python
     const graphData = data.graph_data;

@@ -28,6 +28,11 @@ phase = 0
 amplitude = 0
 print(nPf.Fs)
 
+# for progress bar
+progress = 0
+stop_request = False
+
+
 
 # What it does not do
 """
@@ -80,6 +85,12 @@ def main():
     global phase
     global amplitude
     global twopi
+
+    global progress #progress bar
+    global stop_request
+    progress = 0
+    stop_request = False
+
     twopi = np.pi * 2
     t = time.time()
 
@@ -142,9 +153,9 @@ def main():
     alpha_nothing = np.zeros(size_fft_two)
 
 
-#ETESTINGGGGG
+#TESTING
     ears = []
-#TESTINGGGGG
+#TESTING
     # Making specific receiver points using receiver module
     Rps.Receiver.initialize(nPf.RecInput)
     ears = Rps.Receiver.rList           # easier to write
@@ -236,6 +247,13 @@ def main():
     veci = np.array([0, 0, 0])
     print('began rays')
     for ray in boom_carpet:              # Written like this for readability
+
+            #stop sim button
+        if stop_request:
+            print("Simulation stopped by user")
+            break
+
+
         veci = ray      # initial ray position
         hit_count = 0
         double_hit = 0
@@ -454,8 +472,19 @@ def main():
             else:  # If there was no interaction with buildings then proceed with one step.
                 veci += (nPf.h * f)
                 update_freq(nPf.h, alpha_nothing, 0, lamb, air_absorb)
+        
+        
         ray_counter += 1
+
+        progress = (ray_counter / ray_max) * 100    #just added for progress bar
+
         print('finished ray', ray_counter)
+
+        print('Progress:', round(progress), '%')  #just added for progress bar
+
+    # If the user stopped the simulation, do not create graph data
+    if stop_request:
+        return None
 
     # Radiosity removed for readability
 
@@ -492,49 +521,3 @@ def main():
         "time": time_array.tolist(),
         "receivers": receiver_data
     }
-    
-
-
-
-
-    # SOPHIE - We dont need this anymore bc no more matplotlib causing to crash \/ \/ \/
-
-    # # Outputting graphs
-    # t = time.time()
-
-    # # ######################################################################
-    # # Will eventually be moved to a receiver function,
-    # # here now for ease of access of others reading this
-    # # ######################################################################
-    # import matplotlib.font_manager as fm
-    # # Font
-    # stdfont = fm.FontProperties()
-    # stdfont.set_family('serif')
-    # stdfont.set_name('Times New Roman')
-    # stdfont.set_size(20)
-
-    # for R in ears:
-    #     # For N wave
-    #     pressure = R.signal
-    #     i = R.recNumber
-    #     # plt.figure(i)
-    #     # plt.figure(num = i, figsize=(19.20, 10.80), dpi=120, facecolor='#eeeeee', edgecolor='r')   # grey
-    #     # plt.figure(num = i, figsize=(19.20, 10.80), dpi=120, facecolor='#e0dae6', edgecolor='r')   # muted lilac
-    #     plt.figure(num=i, figsize=(19.20, 10.80), dpi=120, facecolor='#e6e6fa', edgecolor='r')  # lavender
-    #     # plt.plot(time_array,pressure,'r--')
-    #     plt.grid(True)
-    #     plt.plot(time_array, pressure, '#780303')
-    #     # Labeling axes
-    #     plt.xlabel('Time [s]', fontproperties=stdfont)
-    #     plt.ylabel('Pressure [Pa]', fontproperties=stdfont)
-    #     plt.title('Pressure vs Time of Receiver ' + str(i),
-    #               fontproperties=stdfont,
-    #               fontsize=26,
-    #               fontweight='bold')
-
-    #     # Saving
-    #     # plt.savefig(Pf.graphName + str(i) + '.png', facecolor='#eeeeee')    # grey
-    #     # plt.savefig(Pf.graphName + str(i) + '.png', facecolor='#e0dae6')    # muted lilac
-    #     plt.savefig(Pf.graphName + str(i) + '.png', facecolor='#e6e6fa')  # lavender
-    #     print('Saved receiver', i)
-    # print('Graph time: ', time.time() - t)

@@ -63,8 +63,7 @@ def run_simulation(params: SimulationParameters):
         params.boomspacing,
         params.h
     )
-    # print("Printed params runRays", simulation_params) 
-    # print("boomspacing runRays",params.boomspacing)
+    
 
     import RayTrace
 
@@ -75,19 +74,39 @@ def run_simulation(params: SimulationParameters):
     graph_data = RayTrace.main()   
     #Run simulation, when RayTrace gives graph information back, save it in variable graph_data
 
+    # Check whether the user stopped the simulation
+    if graph_data is None:
+        return {
+            "message": "Simulation stopped by user.",
+            "parameters": params,
+            "graph_data": None,
+            "stopped": True
+        }
+
     return {
         "message": "Simulation parameters were successfully ran and sent to Python.",
         "parameters": params,
-        "graph_data": graph_data
+        "graph_data": graph_data,
+        "stopped": False   #FIXXXXXXXXX
 }
 
+#progress bar
+@app.get("/progress")
+def get_progress():
+    import RayTrace
+
+    return {
+        "progress": round(RayTrace.progress)
+    }
 
 
-# #!/usr/bin/python3
+@app.post("/stop-simulation")
+def stop_simulation():
 
-# if __name__ == "__main__":
-#     import sys
-#     sys.path.insert(0, "RayTrace")
+    import RayTrace
 
-#     import RayTrace
-#     RayTrace.main()
+    RayTrace.stop_request = True
+
+    return {
+        "message": "Stop requested"
+    }
