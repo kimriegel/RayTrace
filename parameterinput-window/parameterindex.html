@@ -79,7 +79,32 @@
                 <label>Step Size:</label>
                 <input id="h" type="number" value="10">
             </div>
-            
+
+            <!-- adding in the files -->
+            <h2>Upload your files here</h2>
+
+            <p>
+                Upload your own files to customize your simulation.
+                If no files are uploaded, the default file(s) will be used.
+            </p>
+
+            <div class="input-row">
+                <label for="environmentFile">Environment File (.obj):</label>
+                <input id="environmentFile" type="file" accept=".obj">
+            </div>
+
+            <div class="input-row">
+                <label for="receiverFile">Receiver File (.txt):</label>
+                <input id="receiverFile" type="file" accept=".txt">
+            </div>
+
+            <div class="input-row">
+                <label for="boomFile">Input Boom File (.txt):</label>
+                <input id="boomFile" type="file" accept=".txt">
+            </div>
+
+        
+            <!-- adding in the files -->
 
             <button id="run-btn">Run Simulation</button>
             

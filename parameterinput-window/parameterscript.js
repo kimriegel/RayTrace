@@ -39,6 +39,34 @@ runBtn.addEventListener("click", async () => {
     h: Number(document.getElementById("h").value),
   };
 
+// ADDING FOR FILE IMPLEMENTATION
+// Get the files selected by the user
+    const environmentFile = document.getElementById("environmentFile").files[0];
+    const receiverFile = document.getElementById("receiverFile").files[0];
+    const boomFile = document.getElementById("boomFile").files[0];
+
+    // Create a package to send parameters and files to Python
+    const formData = new FormData();
+
+    // Add all 13 simulation parameters as JSON
+    formData.append("params", JSON.stringify(params));
+
+    // Only add a file if the user selected one
+    if (environmentFile) {
+      formData.append("environmentFile", environmentFile);
+    }
+
+    if (receiverFile) {
+      formData.append("receiverFile", receiverFile);
+    }
+
+    if (boomFile) {
+      formData.append("boomFile", boomFile);
+    }
+
+    // END OF FILE IMPLEMENTATION 
+
+
   try {
 
     // this checks python for simulation progress every half second
@@ -56,17 +84,26 @@ runBtn.addEventListener("click", async () => {
     }, 500);
 
 
+    // const response = await fetch("http://127.0.0.1:8000/run-simulation", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify(params),
+    // });
+
+// THE ABOVE SECTION BEING REPLACED WITH THE BELOW FOR FILE IMPLEMENTATION
     const response = await fetch("http://127.0.0.1:8000/run-simulation", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(params),
+      body: formData,
     });
 
-
-
     const data = await response.json();
+    
+    // check if good
+    if (!response.ok) {
+      throw new Error(data.detail || "Simulation failed.");
+    }
 
     clearInterval(progressChecker);
 
@@ -168,9 +205,18 @@ runBtn.addEventListener("click", async () => {
       });
 
     });
-
   } catch (error) {
-    resultParagraph.textContent = "Error connecting to Python/FastAPI.";
+    resultParagraph.textContent = "Simulation error: " + error.message;
     console.error(error);
+
+    // Re-enable the Run button if something goes wrong
+    runBtn.disabled = false;
+    stopBtn.disabled = true;
   }
+
+  // } catch (error) {
+  //   resultParagraph.textContent = "Error connecting to Python/FastAPI.";
+  //   console.error(error);
+  // }
+
 });
