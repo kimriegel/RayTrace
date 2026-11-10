@@ -104,7 +104,7 @@
             </div>
 
         
-            <!-- adding in the files -->
+            <!-- end adding in the files -->
 
             <button id="run-btn">Run Simulation</button>
             
@@ -118,7 +118,56 @@
         </div>
         <p id="result"></p>
 
-        <div id="graphs"></div> <!-- js will use to fine correct place for graph-->
+        
+        <!-- SIMULATION GRAPH SECTION -->
+        <section id="graph-section" style="display: none;">
+
+            <h2>Simulation Results</h2>
+            <p>View and compare receiver pressure waveforms.</p>
+
+            <!-- Choose how to view graphs -->
+            <div class="graph-mode">
+                <button id="single-mode" type="button">
+                    Single Receiver
+                </button>
+
+                <button id="compare-mode" type="button">
+                    Compare Receivers
+                </button>
+            </div>
+
+            <!-- Dropdown for choosing one receiver -->
+            <div id="single-controls">
+                <label for="receiver-select">Select Receiver:</label>
+
+                <select id="receiver-select"></select>
+            </div>
+
+            <!-- Checkboxes for comparing multiple receivers -->
+            <div id="compare-controls" style="display: none;">
+
+                <div class="compare-header">
+                    <p>Select receivers to compare:</p>
+
+                    <div class="compare-actions">
+                        <button id="select-all-btn" type="button">
+                            Select All
+                        </button>
+
+                        <button id="reset-selection-btn" type="button">
+                            Reset
+                        </button>
+                    </div>
+                </div>
+
+                <div id="receiver-checkboxes"></div>
+
+            </div>
+
+            <!-- One graph for all selected receivers -->
+            <div id="graphs"></div>
+
+        </section>
     </main>
     <!-- needs to be first so that js can use it  -->
     <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script> 

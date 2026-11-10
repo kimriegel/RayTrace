@@ -1,6 +1,31 @@
 const runBtn = document.getElementById("run-btn");
 const resultParagraph = document.getElementById("result");
 
+
+// GRAPH DASHBOARD ELEMENTS
+const graphSection = document.getElementById("graph-section");
+const receiverSelect = document.getElementById("receiver-select");
+const graphsContainer = document.getElementById("graphs");
+
+// FOR COMPARISON ELEMENTS
+const singleModeBtn = document.getElementById("single-mode");
+const compareModeBtn = document.getElementById("compare-mode");
+
+const singleControls = document.getElementById("single-controls");
+const compareControls = document.getElementById("compare-controls");
+
+const receiverCheckboxes = document.getElementById("receiver-checkboxes");
+
+// COMPARISON SELECTION BUTTONS
+const selectAllBtn = document.getElementById("select-all-btn");
+const resetSelectionBtn = document.getElementById("reset-selection-btn");
+
+// Tracks which graph mode the user is viewing
+let graphMode = "single";
+
+// Stores the results from the most recent simulation
+let graphData = null;
+
 // progress bar add
 const progressBar = document.getElementById("progress-bar");
 const stopBtn = document.getElementById("stop-btn");
@@ -22,6 +47,12 @@ runBtn.addEventListener("click", async () => {
 
   stopBtn.disabled = false;
   runBtn.disabled = true;
+
+  // Clear and hide graphs from the previous simulation for new ones
+  graphSection.style.display = "none";
+  graphData = null;
+  Plotly.purge(graphsContainer);
+
 
   const params = {
     Fs: Number(document.getElementById("Fs").value),
@@ -66,11 +97,12 @@ runBtn.addEventListener("click", async () => {
 
     // END OF FILE IMPLEMENTATION 
 
+let progressChecker;
 
   try {
 
     // this checks python for simulation progress every half second
-    const progressChecker = setInterval(async () => {
+    progressChecker = setInterval(async () => {
 
       const progressResponse = await fetch("http://127.0.0.1:8000/progress");
 
@@ -154,8 +186,10 @@ runBtn.addEventListener("click", async () => {
 
     // FOR STOP SIM BUTTON
     if (data.stopped) {
-      // Remove graphs from any previous simulation
-      document.getElementById("graphs").innerHTML = "";
+
+      Plotly.purge(graphsContainer);
+      graphSection.style.display = "none";
+      graphData = null;
 
       return;
     }
@@ -164,59 +198,368 @@ runBtn.addEventListener("click", async () => {
     console.log(data.graph_data);
     console.log("Number of receivers:", data.graph_data.receivers.length);
 
-    // gets the graph data from Python
-    const graphData = data.graph_data;
+    // Store the graph data returned by Python
+    graphData = data.graph_data;
 
-    // finds HTML container for all graphs
-    const graphsContainer = document.getElementById("graphs");
+    // Clear any graph from the previous simulation
+    Plotly.purge(graphsContainer);
 
-    // clears any graphs from a previous simulation just in case didnt refresh webpage will discard old and create new, otherwise would keep adding 5 graphs 
-    graphsContainer.innerHTML = "";
+    // Clear the old dropdown options
+    receiverSelect.innerHTML = "";
 
-    // makes a separate graph for each receiver that python sends
-    graphData.receivers.forEach((receiver) => {
+    // Create one dropdown option for each receiver
+    graphData.receivers.forEach((receiver, index) => {
 
-      // creates a new div for this receiver's graph
-      const graphDiv = document.createElement("div");
+      const option = document.createElement("option");
 
-      // Add the new div to the webpage
-      graphsContainer.appendChild(graphDiv);
+      option.value = index;
+      option.textContent = "Receiver " + receiver.receiver;
 
-
-      // creates the graphs
-      Plotly.newPlot(graphDiv, [
-        {
-          x: graphData.time,
-          y: receiver.pressure,
-          type: "scatter",
-          mode: "lines",
-          name: "Receiver " + receiver.receiver
-        }
-      ], {
-        title: "Pressure vs Time of Receiver " + receiver.receiver,
-        xaxis: {
-          title: "Time [s]"
-        },
-        yaxis: {
-          title: "Pressure [Pa]"
-        }
-      }, {
-        responsive: true
-      });
+      receiverSelect.appendChild(option);
 
     });
+
+
+    // Clear checkboxes from any previous simulation
+    receiverCheckboxes.innerHTML = "";
+
+    // Create a checkbox for every receiver
+    graphData.receivers.forEach((receiver, index) => {
+
+      const label = document.createElement("label");
+
+      const checkbox = document.createElement("input");
+
+      checkbox.type = "checkbox";
+      checkbox.value = index;
+
+      // Select the first two receivers automatically
+      checkbox.checked = index < 2;
+
+      // Update the graph whenever a checkbox changes
+      checkbox.addEventListener("change", compareReceivers);
+
+      label.appendChild(checkbox);
+
+      label.appendChild(
+        document.createTextNode(" Receiver " + receiver.receiver)
+      );
+
+      receiverCheckboxes.appendChild(label);
+
+    });
+
+
+
+    // Start each simulation in Single Receiver mode
+    graphMode = "single";
+
+    // Highlight the Single Receiver button
+    singleModeBtn.classList.add("active");
+    compareModeBtn.classList.remove("active");
+
+    singleControls.style.display = "block";
+    compareControls.style.display = "none";
+
+    // Show the graph dashboard
+    graphSection.style.display = "block";
+
+    // Display the first receiver automatically
+    receiverSelect.value = "0";
+    showReceiver(0);
+
+    
   } catch (error) {
     resultParagraph.textContent = "Simulation error: " + error.message;
     console.error(error);
+
+    clearInterval(progressChecker);
 
     // Re-enable the Run button if something goes wrong
     runBtn.disabled = false;
     stopBtn.disabled = true;
   }
 
-  // } catch (error) {
-  //   resultParagraph.textContent = "Error connecting to Python/FastAPI.";
-  //   console.error(error);
-  // }
+});
+
+
+// DISPLAY ONE RECEIVER'S GRAPH
+function showReceiver(index) {
+
+  if (!graphData) return;
+
+  // Get the selected receiver
+  const receiver = graphData.receivers[index];
+
+  // Create the waveform
+  const trace = {
+    x: graphData.time,
+    y: receiver.pressure,
+    type: "scatter",
+    mode: "lines",
+    name: "Receiver " + receiver.receiver,
+    line: {
+      color: "#2563eb",
+      width: 2
+    }
+  };
+
+  // Graph appearance
+  const layout = {
+    title: {
+      text: "Pressure vs. Time",
+      font: {
+        size: 18,
+        color: "#171717"
+      }
+    },
+
+    xaxis: {
+      title: "Time [s]",
+      showgrid: true,
+      gridcolor: "#e5e7eb",
+      zeroline: false
+    },
+
+    yaxis: {
+      title: "Pressure [Pa]",
+      showgrid: true,
+      gridcolor: "#e5e7eb",
+      zeroline: false
+    },
+
+    hovermode: "x unified",
+
+    showlegend: true,
+
+    legend: {
+      orientation: "h",
+      x: 0.5,
+      xanchor: "center",
+      y: -0.3
+    },
+
+    paper_bgcolor: "white",
+    plot_bgcolor: "white",
+
+    margin: {
+      l: 65,
+      r: 25,
+      t: 65,
+      b: 100
+    }
+  };
+
+  // Draw the graph PLOTLY GRAPH CONTROLS
+  Plotly.react(graphsContainer, [trace], layout, {
+    responsive: true,
+    displaylogo: false,
+
+    // Export graph as a PNG image
+    toImageButtonOptions: {
+      format: "png",
+      filename: "sonic-boom-receiver-" + receiver.receiver,
+      height: 650,
+      width: 1100,
+      scale: 2
+    },
+
+    // Remove tools we don't need
+    modeBarButtonsToRemove: [
+      "lasso2d",
+      "select2d"
+    ]
+  });
+
+}
+
+// When the user selects another receiver
+receiverSelect.addEventListener("change", () => {
+
+  const selectedIndex = Number(receiverSelect.value);
+
+  showReceiver(selectedIndex);
+
+});
+
+// THIS IS TO DISPLAY MULTIPLE RECEIVERS ON ONE GRAPH
+function compareReceivers() {
+
+  if (!graphData) return;
+
+  // Find all the checked receiver boxes
+  const checkedBoxes = document.querySelectorAll(
+    '#receiver-checkboxes input[type="checkbox"]:checked'
+  );
+
+  // Create a separate trace for every selected receiver
+  const traces = [];
+
+  const colors = [
+    "#2563eb", // Blue
+    "#e76f51", // Orange
+    "#16a085", // Teal
+    "#a855f7", // Purple
+    "#d69e23"  // Gold
+  ];
+
+  checkedBoxes.forEach((checkbox) => {
+
+    // Find the receiver using its position in the list
+    const index = Number(checkbox.value);
+
+    const receiver = graphData.receivers[index];
+
+    // Create one waveform for this receiver
+    traces.push({
+      x: graphData.time,
+      y: receiver.pressure,
+      type: "scatter",
+      mode: "lines",
+      name: "Receiver " + receiver.receiver,
+      line: {
+        color: colors[index % colors.length],
+        width: 2
+      }
+    });
+
+  });
+
+  // Graph appearance
+  const layout = {
+    title: {
+      text: "Pressure vs. Time",
+      font: {
+        size: 18,
+        color: "#171717"
+      }
+    },
+
+    xaxis: {
+      title: "Time [s]",
+      showgrid: true,
+      gridcolor: "#e5e7eb",
+      zeroline: false
+    },
+
+    yaxis: {
+      title: "Pressure [Pa]",
+      showgrid: true,
+      gridcolor: "#e5e7eb",
+      zeroline: false
+    },
+
+    hovermode: "x unified",
+
+    showlegend: true,
+
+    legend: {
+      orientation: "h",
+      x: 0.5,
+      xanchor: "center",
+      y: -0.3
+    },
+
+    paper_bgcolor: "white",
+    plot_bgcolor: "white",
+
+    margin: {
+      l: 65,
+      r: 25,
+      t: 65,
+      b: 100
+    }
+  };
+
+  // Update the existing graph with the selected receivers
+  Plotly.react(graphsContainer, traces, layout, {
+    responsive: true,
+    displaylogo: false,
+
+    toImageButtonOptions: {
+      format: "png",
+      filename: "sonic-boom-receiver-comparison",
+      height: 650,
+      width: 1100,
+      scale: 2
+    },
+
+    modeBarButtonsToRemove: [
+      "lasso2d",
+      "select2d"
+    ]
+  });
+
+}
+
+
+// SINGLE RECEIVER BUTTON
+singleModeBtn.addEventListener("click", () => {
+
+  graphMode = "single";
+
+  // Show dropdown and hide checkboxes
+  singleControls.style.display = "block";
+  compareControls.style.display = "none";
+
+  // Display the receiver selected in the dropdown
+  showReceiver(Number(receiverSelect.value));
+
+  singleModeBtn.classList.add("active");
+  compareModeBtn.classList.remove("active");
+
+});
+
+
+// COMPARE RECEIVERS BUTTON
+compareModeBtn.addEventListener("click", () => {
+
+  graphMode = "compare";
+
+  // Hide dropdown and show checkboxes
+  singleControls.style.display = "none";
+  compareControls.style.display = "block";
+
+  // Display all checked receivers together
+  compareReceivers();
+
+  compareModeBtn.classList.add("active");
+  singleModeBtn.classList.remove("active");
+
+});
+
+
+// SELECT ALL RECEIVERS
+selectAllBtn.addEventListener("click", () => {
+
+  const checkboxes = receiverCheckboxes.querySelectorAll(
+    'input[type="checkbox"]'
+  );
+
+  // Check every receiver
+  checkboxes.forEach((checkbox) => {
+    checkbox.checked = true;
+  });
+
+  // Update the graph
+  compareReceivers();
+
+});
+
+
+// RESET RECEIVER SELECTION
+resetSelectionBtn.addEventListener("click", () => {
+
+  const checkboxes = receiverCheckboxes.querySelectorAll(
+    'input[type="checkbox"]'
+  );
+
+  // Select only the first two receivers
+  checkboxes.forEach((checkbox, index) => {
+    checkbox.checked = index < 2;
+  });
+
+  // Update the graph
+  compareReceivers();
 
 });
